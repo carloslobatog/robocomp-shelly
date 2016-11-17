@@ -18,6 +18,10 @@
  */
 
  #include "specificworker.h"
+ #include <math.h> 
+
+
+ #define PI 3.14159265
 
 /**
 * \brief Default constructor
@@ -77,7 +81,11 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 
 	//Timed slot to read TrajectoryRobot2D state
 	connect(&trajReader, SIGNAL(timeout()), this, SLOT(readTrajState()));
+	connect(gaussiana,SIGNAL(clicked()),this,SLOT(gauss()));
 	//trajReader.start(1000);
+
+	
+	Py_Initialize();
 }
 
 /**
@@ -87,11 +95,79 @@ SpecificWorker::~SpecificWorker()
 {
 }
 
+void SpecificWorker::gauss(){
+  
+  //   PyObject *script;
+//  			
+// 	PyObject  *modulo, *clase,  *argumentos, *objeto, *metodo;
+// 	
+// 	script = PyFile_FromString("personalspace.py","r"); 
+//  	PyRun_SimpleFile(PyFile_AsFile(script),"r");
+  
+// 	modulo = PyImport_ImportModule("personalspace");
+// 	clase = PyObject_GetAttrString(modulo, "Person");
+// 	argumentos = Py_BuildValue("i",person.x,person.z,person.rot);
+// 
+// 	objeto = PyEval_CallObject(clase, argumentos);
+// 	metodo=PyObject_GetAttrString(objeto,"draw");
+// 	
+// 	argumentos=Py_BuildValue("ii",true);
+// 	PyEval_CallObject(metodo, argumentos);
+  
+
+  //EJEMPLO SUMA
+	qDebug()<<"Paso 1";
+	
+  PyObject *FileScript;
+	
+// 	FileScript = PyFile_FromString("personalspace.py","r");
+// 	PyRun_SimpleFile(PyFile_AsFile(FileScript),"r");
+
+	qDebug()<<"Paso2";
+	
+	PyObject *retorno, *modulo, *clase, *metodo, *argumentos, *objeto;
+	int *resultado=0;
+	
+	qDebug()<<"Paso 3";
+	
+	modulo = PyImport_ImportModule("personalspace");
+	
+	qDebug()<<"Paso 4";
+	
+	
+	//AQUI FALLA
+	clase = PyObject_GetAttrString(modulo, "Numeros");
+	qDebug()<<"Paso 5";
+	
+	argumentos = Py_BuildValue("ii",5,11);
+	qDebug()<<"Paso 6";
+	
+	objeto = PyEval_CallObject(clase, argumentos);
+
+	qDebug()<<"Paso 7";
+	
+	metodo = PyObject_GetAttrString(objeto, "suma");
+
+	
+	
+	argumentos = Py_BuildValue("()");
+	
+	retorno = PyEval_CallObject(metodo,argumentos);
+	
+	PyArg_Parse(retorno, "i", &resultado);
+	
+	cout<<"El resultado es: "<<resultado<<endl;
+  
+}
+
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
-{
+{ 
+
+
 	Period = 200;
 	timer.start(Period);
 	return true;
+	
 }
 
 void SpecificWorker::compute( )
@@ -104,7 +180,7 @@ void SpecificWorker::compute( )
 	{
 		qLog::getInstance()->setProxy("both", logger_proxy);
 		rDebug2(("navigationAgent started"));
-	//	first = false;
+		//first = false;
 	}
 
 	if (worldModel->getIdentifierByType("robot") < 0)
@@ -134,25 +210,80 @@ void SpecificWorker::compute( )
 				break;
 			      }
 			}
+			
 			AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(personSymbolId, "RT");
 			
 			AGMModelEdge &edgeRT  = worldModel->getEdgeByIdentifiers(personParent->identifier, personSymbolId, "RT");
-			
+			 
 	if (first||cambiopos==true){
 	  
-			x=str2float(edgeRT.attributes["tx"]);
-			z=str2float(edgeRT.attributes["tz"]);
-			rot=str2float(edgeRT.attributes["ry"]);
-	
-			qDebug() << "Coordenada x"<< x << "Coordenada z"<< z << "Rotacion "<< rot;
-			qDebug() << "---------------------------------------------------";	
+	  //En la clase person almaceno los valores de la posicion en metros
+			person.x=(str2float(edgeRT.attributes["tx"]))/1000;
+			person.z=str2float(edgeRT.attributes["tz"])/1000;
+			person.rot=str2float(edgeRT.attributes["ry"]);
+			
+			qDebug() << "------------------------------------------------------------";
+			qDebug() << "Coordenada x"<< person.x << "Coordenada z"<< person.z << "Rotacion "<< person.rot;
+				
 		
 			cambiopos=false;
 			first=false;
-		 }	  
+		
+			
+			agaussian(person,3.5,1.5);
+			
+ 			
+
+		 }	
+		 
 	
 	//actionExecution();
+	
 }
+
+double SpecificWorker::agaussian(Person person, float x, float y){
+
+  
+  double sigma_h=2.0;
+  double sigma_r=1.0;
+  double sigma_s=4/3;
+  
+  double alpha;
+  double nalpha;
+  double sigma;
+  
+  //falta comprobar que tetha esta bien y representarlo
+  
+  float tetha= PI/2 - person.rot;
+     
+ 
+  
+      alpha= atan2(y-person.z,x-person.x)- tetha + PI/2;
+      qDebug()<<"alpha"<<alpha;
+     
+     nalpha= atan2(sin(alpha),cos(alpha));
+     qDebug()<<"alpha normalizado"<<nalpha;
+    
+     if (nalpha<=0)
+	sigma=sigma_r;
+     else
+	sigma=sigma_h;
+   
+    
+	double    a = pow(cos(tetha),2)/(2*pow(sigma,2)) + pow(sin(tetha),2)/(2*pow(sigma_s,2));
+	double    b =  (sin(2*tetha))/(4*pow(sigma,2)) - (sin(2*tetha))/(4*pow(sigma_s,2));
+	double    c = pow(sin(tetha),2)/(2*pow(sigma,2))+ pow(cos(tetha),2)/(2*pow(sigma_s,2));
+     
+	qDebug()<<"a"<<a<<"b"<<b<<"c"<<c;
+
+	double  g = exp(-(a*pow((x - person.x),2) + 2*b*(x - person.x)*(y - person.z) + c*pow((y - person.z),2))) ;    
+     
+     
+        qDebug()<<"El valor de la gaussiana g es "<<g;
+ return g;
+ 
+} 
+
 
 /**
  * \brief ESTE ES EL VERDADERO COMPUTE
@@ -1232,7 +1363,7 @@ void SpecificWorker::symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence &m
 
 
 void SpecificWorker::edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &modifications)
-{	qDebug()<<"edgesUpdated";
+{	//qDebug()<<"edgesUpdated";
   cambiopos=true;
 	QMutexLocker lockIM(mutex);
 	
