@@ -31,6 +31,8 @@
 #include <TrajectoryRobot2D.h>
 #include <Logger.h>
 #include <OmniRobot.h>
+#include <GenericBase.h>
+#include <SocialNavigationGaussian.h>
 #include <agm.h>
 
 #define CHECK_PERIOD 5000
@@ -43,6 +45,8 @@ using namespace std;
 using namespace RoboCompTrajectoryRobot2D;
 using namespace RoboCompAGMWorldModel;
 using namespace RoboCompOmniRobot;
+using namespace RoboCompSocialNavigationGaussian;
+using namespace RoboCompGenericBase;
 using namespace RoboCompAGMExecutive;
 using namespace RoboCompPlanning;
 using namespace RoboCompLogger;
@@ -80,6 +84,7 @@ public:
 
 	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;
 	LoggerPrx logger_proxy;
+	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
 	OmniRobotPrx omnirobot_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 

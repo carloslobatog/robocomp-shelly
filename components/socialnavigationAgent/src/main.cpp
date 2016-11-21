@@ -86,6 +86,8 @@
 #include <TrajectoryRobot2D.h>
 #include <Logger.h>
 #include <OmniRobot.h>
+#include <GenericBase.h>
+#include <SocialNavigationGaussian.h>
 
 
 // User includes here
@@ -135,8 +137,9 @@ int ::socialnavigationAgent::run(int argc, char* argv[])
 	int status=EXIT_SUCCESS;
 
 	LoggerPrx logger_proxy;
-	OmniRobotPrx omnirobot_proxy;
+	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
 	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;
+	OmniRobotPrx omnirobot_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 
 	string proxy, tmp;
@@ -145,19 +148,19 @@ int ::socialnavigationAgent::run(int argc, char* argv[])
 
 	try
 	{
-		if (not GenericMonitor::configGetString(communicator(), prefix, "OmniRobotProxy", proxy, ""))
+		if (not GenericMonitor::configGetString(communicator(), prefix, "SocialNavigationGaussianProxy", proxy, ""))
 		{
-			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy OmniRobotProxy\n";
+			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy SocialNavigationGaussianProxy\n";
 		}
-		omnirobot_proxy = OmniRobotPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
+		socialnavigationgaussian_proxy = SocialNavigationGaussianPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
 	}
 	catch(const Ice::Exception& ex)
 	{
 		cout << "[" << PROGRAM_NAME << "]: Exception: " << ex;
 		return EXIT_FAILURE;
 	}
-	rInfo("OmniRobotProxy initialized Ok!");
-	mprx["OmniRobotProxy"] = (::IceProxy::Ice::Object*)(&omnirobot_proxy);//Remote server proxy creation example
+	rInfo("SocialNavigationGaussianProxy initialized Ok!");
+	mprx["SocialNavigationGaussianProxy"] = (::IceProxy::Ice::Object*)(&socialnavigationgaussian_proxy);//Remote server proxy creation example
 
 
 	try
@@ -175,6 +178,23 @@ int ::socialnavigationAgent::run(int argc, char* argv[])
 	}
 	rInfo("TrajectoryRobot2DProxy initialized Ok!");
 	mprx["TrajectoryRobot2DProxy"] = (::IceProxy::Ice::Object*)(&trajectoryrobot2d_proxy);//Remote server proxy creation example
+
+
+	try
+	{
+		if (not GenericMonitor::configGetString(communicator(), prefix, "OmniRobotProxy", proxy, ""))
+		{
+			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy OmniRobotProxy\n";
+		}
+		omnirobot_proxy = OmniRobotPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
+	}
+	catch(const Ice::Exception& ex)
+	{
+		cout << "[" << PROGRAM_NAME << "]: Exception: " << ex;
+		return EXIT_FAILURE;
+	}
+	rInfo("OmniRobotProxy initialized Ok!");
+	mprx["OmniRobotProxy"] = (::IceProxy::Ice::Object*)(&omnirobot_proxy);//Remote server proxy creation example
 
 
 	try

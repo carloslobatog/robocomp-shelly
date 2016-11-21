@@ -1,0 +1,11 @@
+import "/robocomp/interfaces/IDSLs/SocialNavigationGaussian.idsl";
+
+Component socialnavigationGaussian
+{
+	Communications
+	{
+		implements SocialNavigationGaussian;
+	};
+	language python;
+};
+

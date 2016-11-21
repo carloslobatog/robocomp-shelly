@@ -85,7 +85,6 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	//trajReader.start(1000);
 
 	
-	Py_Initialize();
 }
 
 /**
@@ -97,17 +96,26 @@ SpecificWorker::~SpecificWorker()
 
 void SpecificWorker::gauss(){
   
-  //   PyObject *script;
+ 
+// 	PyObject *script;
 //  			
 // 	PyObject  *modulo, *clase,  *argumentos, *objeto, *metodo;
 // 	
-// 	script = PyFile_FromString("personalspace.py","r"); 
-//  	PyRun_SimpleFile(PyFile_AsFile(script),"r");
-  
+// 	
+// //  	script = PyFile_FromString("personalspace.py","r"); 
+// //  	PyRun_SimpleFile(PyFile_AsFile(script),"r");
+//   
+// 	
+// 	qDebug()<<"Paso 1";
 // 	modulo = PyImport_ImportModule("personalspace");
+// 	qDebug()<<"Paso 2";
+// 	
+//       //AQUI falla
 // 	clase = PyObject_GetAttrString(modulo, "Person");
+// 	qDebug()<<"Paso 3";
 // 	argumentos = Py_BuildValue("i",person.x,person.z,person.rot);
 // 
+// 	qDebug()<<"Paso 4";
 // 	objeto = PyEval_CallObject(clase, argumentos);
 // 	metodo=PyObject_GetAttrString(objeto,"draw");
 // 	
@@ -115,48 +123,64 @@ void SpecificWorker::gauss(){
 // 	PyEval_CallObject(metodo, argumentos);
   
 
-  //EJEMPLO SUMA
+//   //EJEMPLO SUMA
 	qDebug()<<"Paso 1";
 	
-  PyObject *FileScript;
 	
-// 	FileScript = PyFile_FromString("personalspace.py","r");
-// 	PyRun_SimpleFile(PyFile_AsFile(FileScript),"r");
-
+	Py_Initialize();
+	PyRun_SimpleString("print 'Hola Mundo'\n");
+	
+	PyObject *FileScript;
+  	FileScript = PyFile_FromString("scriptprueba.py","r");
+  	PyRun_SimpleFile(PyFile_AsFile(FileScript),"r");
+ 	
+	PyRun_SimpleString("import sys; sys.path.insert(0,/home/araceli/mirobocomp/robocomp-shelly/components/socialnavigationAgent/)");
+	
 	qDebug()<<"Paso2";
 	
-	PyObject *retorno, *modulo, *clase, *metodo, *argumentos, *objeto;
-	int *resultado=0;
+	PyObject *retorno, *modulo, *metodo, *argumentos, *objeto;
+	
+	int *resultado;
 	
 	qDebug()<<"Paso 3";
 	
-	modulo = PyImport_ImportModule("personalspace");
+	
+	modulo = PyImport_ImportModule("scriptprueba.py");
+	
+	if (modulo==NULL)
+	  qDebug()<<"EROOR MODULO";
 	
 	qDebug()<<"Paso 4";
 	
 	
 	//AQUI FALLA
-	clase = PyObject_GetAttrString(modulo, "Numeros");
+	
+	PyObject *clase = PyObject_GetAttrString(modulo, "Numeros");
+	
+
+	
 	qDebug()<<"Paso 5";
 	
 	argumentos = Py_BuildValue("ii",5,11);
 	qDebug()<<"Paso 6";
 	
+	
 	objeto = PyEval_CallObject(clase, argumentos);
 
 	qDebug()<<"Paso 7";
 	
+	//AQUI TAMBIEN FALLA
 	metodo = PyObject_GetAttrString(objeto, "suma");
-
-	
 	
 	argumentos = Py_BuildValue("()");
 	
 	retorno = PyEval_CallObject(metodo,argumentos);
-	
+	qDebug()<<"Paso 9";
 	PyArg_Parse(retorno, "i", &resultado);
 	
 	cout<<"El resultado es: "<<resultado<<endl;
+	
+	Py_Finalize();
   
 }
 

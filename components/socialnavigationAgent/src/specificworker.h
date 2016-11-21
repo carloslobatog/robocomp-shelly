@@ -21,6 +21,11 @@
 
 #include <genericworker.h>
 #include <python2.7/Python.h>
+#include <iostream>
+#include <stdio.h>
+
+
+
 
 //PROBLEMA: con python 3.5 da error al compilar
 
