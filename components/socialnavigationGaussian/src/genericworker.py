@@ -32,7 +32,10 @@ import RoboCompCommonBehavior
 
 preStr = "-I/opt/robocomp/interfaces/ -I"+ROBOCOMP+"/interfaces/ --all /opt/robocomp/interfaces/"
 Ice.loadSlice(preStr+"SocialNavigationGaussian.ice")
+print preStr+"SocialNavigationGaussian.ice"
+print preStr+"SocialNavigationGaussian.ice"
 from RoboCompSocialNavigationGaussian import *
+import RoboCompSocialNavigationGaussian
 
 
 from socialnavigationgaussianI import *
