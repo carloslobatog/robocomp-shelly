@@ -85,7 +85,7 @@ void SpecificWorker::includeInAGM()
 	{
 		printf("%d %d\n", idx, personSymbolId);
 		if (idx > 4) exit(0);
-		if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == "fakeperson")
+		if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == "fakeperson1")
 		{
 			printf("found %d!!\n", personSymbolId);
 			break;
@@ -103,7 +103,7 @@ void SpecificWorker::includeInAGM()
 	AGMModelSymbol::SPtr person1 =   newModel->newSymbol("person1");
 	personSymbolId = person1->identifier;
 	printf("Got personSymbolId: %d\n", personSymbolId);
-	person1->setAttribute("imName", "fakeperson");
+	person1->setAttribute("imName", "fakeperson1");
 	person1->setAttribute("imType", "transform");
 	AGMModelSymbol::SPtr personSt = newModel->newSymbol("personSt");
 	printf("person %d status %d\n", person1->identifier, personSt->identifier);
@@ -129,7 +129,7 @@ void SpecificWorker::includeInAGM()
 	AGMModelSymbol::SPtr personMesh = newModel->newSymbol("mesh");
 	printf("personMesh %d\n", personMesh->identifier);
 	personMesh->setAttribute("collidable", "false");
-	personMesh->setAttribute("imName", "fakepersonMesh");
+	personMesh->setAttribute("imName", "fakepersonMesh1");
 	personMesh->setAttribute("imType", "mesh");
 	personMesh->setAttribute("path", "/home/araceli/tfg/models/human02.3ds");
 	personMesh->setAttribute("render", "NormalRendering");
