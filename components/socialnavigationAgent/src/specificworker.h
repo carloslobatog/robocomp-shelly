@@ -61,6 +61,7 @@ struct Person{
 };	
 
 Person person;
+
 	
 	//////////////
 	/// SERVANTS

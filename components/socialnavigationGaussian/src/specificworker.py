@@ -58,8 +58,16 @@ class Person(object):
 
             Z = self._calculatePersonalSpace(X, Y)
             # print(Z)
-
+            # http://www.python-course.eu/matplotlib_contour_plot.php
+            # https://es.mathworks.com/matlabcentral/answers/230934-how-to-extract-x-and-y-position-of-contour-line
             CS = plt.contour(X, Y, Z, 10)
+            dat0 = CS.allsegs[5][0]
+            print(dat0)
+            plt.plot(dat0[:, 0], dat0[:, 1],'*')
+
+
+
+            #CS = plt.contour(X, Y, Z, 10)
             # surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
 
         # Corpo
@@ -80,9 +88,8 @@ class Person(object):
         sigma_h = 2.0
         sigma_r = 1.0
         sigma_s = 4 / 3
+        rot= pi/2 - self.th
 
-	rot= pi/2 - self.th 
-	
         alpha = np.arctan2(y - self.y, x - self.x) - rot - pi/2
         nalpha = np.arctan2(np.sin(alpha), np.cos(alpha))  # Normalizando no intervalo [-pi, pi)
 
@@ -132,9 +139,9 @@ class SpecificWorker(GenericWorker):
     # getPolyline
     #
     def getPolyline(self, x, z, angle, v):
-
+	
         plt.close('all')
-         # fig = plt.figure()
+        #fig = plt.figure()
          #  ax = fig.add_subplot(111, projection='3d')
         fig, ax = plt.subplots()
         ax.grid(True)
@@ -152,5 +159,5 @@ class SpecificWorker(GenericWorker):
         #  plt.ylim(-6, 6)
         plt.axis('equal')
         plt.show()
-        return
+        return 
 

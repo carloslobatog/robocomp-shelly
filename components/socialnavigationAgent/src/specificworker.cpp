@@ -96,7 +96,7 @@ SpecificWorker::~SpecificWorker()
 
 void SpecificWorker::gauss()
 {
-	 socialnavigationgaussian_proxy->getPolyline(person.x, person.z, person.rot, 0);
+ socialnavigationgaussian_proxy->getPolyline(person.x, person.z, person.rot, 0);
 	
 }
 
@@ -168,7 +168,7 @@ void SpecificWorker::compute( )
 			first=false;
 		
 			
-			agaussian(person,3.5,1.5);
+// 			agaussian(person,3.5,1.5);
 			
  			
 
@@ -179,48 +179,48 @@ void SpecificWorker::compute( )
 	
 }
 
-double SpecificWorker::agaussian(Person person, float x, float y){
-
-  
-  double sigma_h=2.0;
-  double sigma_r=1.0;
-  double sigma_s=4/3;
-  
-  double alpha;
-  double nalpha;
-  double sigma;
-  
-  //falta comprobar que tetha esta bien y representarlo
-  
-  float tetha= PI/2 - person.rot;
-     
- 
-  
-      alpha= atan2(y-person.z,x-person.x)- tetha + PI/2;
-      qDebug()<<"alpha"<<alpha;
-     
-     nalpha= atan2(sin(alpha),cos(alpha));
-     qDebug()<<"alpha normalizado"<<nalpha;
-    
-     if (nalpha<=0)
-	sigma=sigma_r;
-     else
-	sigma=sigma_h;
-   
-    
-	double    a = pow(cos(tetha),2)/(2*pow(sigma,2)) + pow(sin(tetha),2)/(2*pow(sigma_s,2));
-	double    b =  (sin(2*tetha))/(4*pow(sigma,2)) - (sin(2*tetha))/(4*pow(sigma_s,2));
-	double    c = pow(sin(tetha),2)/(2*pow(sigma,2))+ pow(cos(tetha),2)/(2*pow(sigma_s,2));
-     
-	qDebug()<<"a"<<a<<"b"<<b<<"c"<<c;
-
-	double  g = exp(-(a*pow((x - person.x),2) + 2*b*(x - person.x)*(y - person.z) + c*pow((y - person.z),2))) ;    
-     
-     
-        qDebug()<<"El valor de la gaussiana g es "<<g;
- return g;
- 
-} 
+// double SpecificWorker::agaussian(Person person, float x, float y){
+// 
+//   
+//   double sigma_h=2.0;
+//   double sigma_r=1.0;
+//   double sigma_s=4/3;
+//   
+//   double alpha;
+//   double nalpha;
+//   double sigma;
+//   
+//   //falta comprobar que tetha esta bien y representarlo
+//   
+//   float tetha= PI/2 - person.rot;
+//      
+//  
+//   
+//       alpha= atan2(y-person.z,x-person.x)- tetha + PI/2;
+//       qDebug()<<"alpha"<<alpha;
+//      
+//      nalpha= atan2(sin(alpha),cos(alpha));
+//      qDebug()<<"alpha normalizado"<<nalpha;
+//     
+//      if (nalpha<=0)
+// 	sigma=sigma_r;
+//      else
+// 	sigma=sigma_h;
+//    
+//     
+// 	double    a = pow(cos(tetha),2)/(2*pow(sigma,2)) + pow(sin(tetha),2)/(2*pow(sigma_s,2));
+// 	double    b =  (sin(2*tetha))/(4*pow(sigma,2)) - (sin(2*tetha))/(4*pow(sigma_s,2));
+// 	double    c = pow(sin(tetha),2)/(2*pow(sigma,2))+ pow(cos(tetha),2)/(2*pow(sigma_s,2));
+//      
+// 	qDebug()<<"a"<<a<<"b"<<b<<"c"<<c;
+// 
+// 	double  g = exp(-(a*pow((x - person.x),2) + 2*b*(x - person.x)*(y - person.z) + c*pow((y - person.z),2))) ;    
+//      
+//      
+//         qDebug()<<"El valor de la gaussiana g es "<<g;
+//  return g;
+//  
+// } 
 
 
 /**
@@ -1302,7 +1302,7 @@ void SpecificWorker::symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence &m
 
 void SpecificWorker::edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &modifications)
 {	//qDebug()<<"edgesUpdated";
-  cambiopos=true;
+	cambiopos=true;
 	QMutexLocker lockIM(mutex);
 	
 	
