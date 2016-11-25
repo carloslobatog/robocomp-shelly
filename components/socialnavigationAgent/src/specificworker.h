@@ -60,8 +60,10 @@ struct Person{
 	float rot=0;
 };	
 
-Person person;
-
+	Person person1;	
+	Person person2;
+	int32_t personSymbolIdp1;
+	int32_t personSymbolIdp2;
 	
 	//////////////
 	/// SERVANTS
@@ -112,7 +114,7 @@ private:
 	bool haveTarget;
 	QTimer trajReader;
 	
-	int32_t personSymbolId;	
+		
 
 	RoboCompTrajectoryRobot2D::NavState planningState;
 
