@@ -96,8 +96,11 @@ SpecificWorker::~SpecificWorker()
 
 void SpecificWorker::gauss()
 {
- //socialnavigationgaussian_proxy->getPolyline(person2.x, person2.z, person2.rot, 0);
-socialnavigationgaussian_proxy->getPolyline(person1.x, person1.z, person1.rot, 0);	
+	SNGPersonSeq persons;
+	//push back es para incluir a la persona en el vector de personas
+	persons.push_back(person1);
+	persons.push_back(person2);
+	SNGPolylineSeq secuencia = socialnavigationgaussian_proxy->getPolylines(persons, 0, false);
 }
 
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
@@ -173,17 +176,17 @@ void SpecificWorker::compute( )
 			
 			person1.x=(str2float(edgeRTp1.attributes["tx"]))/1000;
 			person1.z=str2float(edgeRTp1.attributes["tz"])/1000;
-			person1.rot=str2float(edgeRTp1.attributes["ry"]);
+			person1.angle=str2float(edgeRTp1.attributes["ry"]);
 			
 			qDebug() << "------------------------------------------------------------";
-			qDebug() <<"PERSONA 1\n" <<"Coordenada x"<< person1.x << "Coordenada z"<< person1.z << "Rotacion "<< person1.rot;
+			qDebug() <<"PERSONA 1\n" <<"Coordenada x"<< person1.x << "Coordenada z"<< person1.z << "Rotacion "<< person1.angle;
 			
 			person2.x=(str2float(edgeRTp2.attributes["tx"]))/1000;
 			person2.z=str2float(edgeRTp2.attributes["tz"])/1000;
-			person2.rot=str2float(edgeRTp2.attributes["ry"]);
+			person2.angle=str2float(edgeRTp2.attributes["ry"]);
 			
 			qDebug() << "------------------------------------------------------------";
-			qDebug() <<"PERSONA 2\n" <<"Coordenada x"<< person2.x << "Coordenada z"<< person2.z << "Rotacion "<< person2.rot;
+			qDebug() <<"PERSONA 2\n" <<"Coordenada x"<< person2.x << "Coordenada z"<< person2.z << "Rotacion "<< person2.angle;
 				
 			
  			cambiopos=false;
@@ -214,7 +217,7 @@ void SpecificWorker::compute( )
 //   
 //   //falta comprobar que tetha esta bien y representarlo
 //   
-//   float tetha= PI/2 - person.rot;
+//   float tetha= PI/2 - person.angle;
 //      
 //  
 //   

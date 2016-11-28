@@ -5,7 +5,7 @@
 #define USE_QTGUI
 
 
-#define PROGRAM_NAME    "fakeHumanAgent"
-#define SERVER_FULL_NAME   "RoboComp fakeHumanAgent:: fakeHumanAgent"
+#define PROGRAM_NAME    "fakeHumanAgentNew"
+#define SERVER_FULL_NAME   "RoboComp fakeHumanAgentNew:: fakeHumanAgentNew"
 
 #endif

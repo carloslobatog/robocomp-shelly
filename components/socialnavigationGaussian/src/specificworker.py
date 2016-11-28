@@ -32,7 +32,7 @@ class Person(object):
     x = 0
     y = 0
     th = 0
-
+    puntos = []
     xdot = 0
     ydot = 0
 
@@ -44,6 +44,7 @@ class Person(object):
         self.x = x
         self.y = y
         self.th = th
+
 
     def draw(self, drawPersonalSpace=False):
 
@@ -62,7 +63,8 @@ class Person(object):
             # https://es.mathworks.com/matlabcentral/answers/230934-how-to-extract-x-and-y-position-of-contour-line
             CS = plt.contour(X, Y, Z, 10)
             dat0 = CS.allsegs[5][0]
-            print(dat0)
+            self.puntos = dat0
+           # print(dat0)
             plt.plot(dat0[:, 0], dat0[:, 1],'*')
 
 
@@ -88,7 +90,7 @@ class Person(object):
         sigma_h = 2.0
         sigma_r = 1.0
         sigma_s = 4 / 3
-        rot= pi/2 - self.th
+        rot = pi/2 - self.th
 
         alpha = np.arctan2(y - self.y, x - self.x) - rot - pi/2
         nalpha = np.arctan2(np.sin(alpha), np.cos(alpha))  # Normalizando no intervalo [-pi, pi)
@@ -138,26 +140,42 @@ class SpecificWorker(GenericWorker):
     #
     # getPolyline
     #
-    def getPolyline(self, x, z, angle, v):
-	
-        plt.close('all')
-        #fig = plt.figure()
-         #  ax = fig.add_subplot(111, projection='3d')
-        fig, ax = plt.subplots()
-        ax.grid(True)
-        # x = y = np.arange(-3.0, 3.0, 0.05)
-        #  X, Y = np.meshgrid(x, y)
-        #  zs = np.array([fun(x,y) for x,y in zip(np.ravel(X), np.ravel(Y))])
-        #  Z = zs.reshape(X.shape)
-        p1 = Person(x, z, angle)
-        p1.draw(drawPersonalSpace=True)
-        # p2 = Person(0, 5)
-        #  p2.draw(ax, drawPersonalSpace=True)
-        plt.xlabel('X')
-        plt.ylabel('Y')
-        # plt.xlim(-6, 6)
-        #  plt.ylim(-6, 6)
-        plt.axis('equal')
-        plt.show()
-        return 
+    def getPolylines (self, persons, v, d):
+        polylines = []
+
+        for p in persons:
+            plt.close('all')
+            #fig = plt.figure()
+             #  ax = fig.add_subplot(111, projection='3d')
+            fig, ax = plt.subplots()
+            ax.grid(True)
+            # x = y = np.arange(-3.0, 3.0, 0.05)
+            #  X, Y = np.meshgrid(x, y)
+            #  zs = np.array([fun(x,y) for x,y in zip(np.ravel(X), np.ravel(Y))])
+            #  Z = zs.reshape(X.shape)
+
+            print('Pose x', p.x, 'Pose z', p.z, 'Rotacion', p.angle)
+            pn = Person(p.x, p.z, p.angle)
+
+            pn.draw(drawPersonalSpace=True)
+            polyline = []
+            for punto in pn.puntos:
+                point = SNGPoint2D()
+                point.x = punto[0]
+                point.z = punto[1]
+                polyline.append(point)
+            polylines.append(polyline)
+
+            # p2 = Person(0, 5)
+            #  p2.draw(ax, drawPersonalSpace=True)
+            plt.xlabel('X')
+            plt.ylabel('Y')
+            # plt.xlim(-6, 6)
+            #  plt.ylim(-6, 6)
+            plt.axis('equal')
+            plt.show()
+
+
+        return polylines
+
 

@@ -53,15 +53,11 @@ public:
 //bool para indicar si se ha movido la persona, lo utilizare para imprimir la coordenada de la persona cada vez que se mueva
 	bool cambiopos=false;
 	
-struct Person{
-  
-	float x=0;
-	float z=0;
-	float rot=0;
-};	
 
-	Person person1;	
-	Person person2;
+
+	SNGPerson person1;
+	SNGPerson person2;
+	
 	int32_t personSymbolIdp1;
 	int32_t personSymbolIdp2;
 	
@@ -83,7 +79,7 @@ struct Person{
 	void  edgeUpdated(const RoboCompAGMWorldModel::Edge& modification);
 	void edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &modifications);
 
-	double agaussian(Person person, float x, float y);
+	//double agaussian(SNGPerson person, float x, float y);
 
 public slots:
  	void compute();

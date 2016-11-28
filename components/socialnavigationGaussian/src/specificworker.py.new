@@ -52,10 +52,10 @@ class SpecificWorker(GenericWorker):
 
 
 	#
-	# getPolyline
+	# getPolylines
 	#
-	def getPolyline(self, x, z, angle, v):
-		ret = SNGPolyline()
+	def getPolylines(self, persons, v, d):
+		ret = SNGPolylineSeq()
 		#
 		#implementCODE
 		#

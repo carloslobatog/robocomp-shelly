@@ -39,8 +39,8 @@ class SocialNavigationGaussianI(SocialNavigationGaussian):
 	def __init__(self, worker):
 		self.worker = worker
 
-	def getPolyline(self, x, z, angle, v, c):
-		return self.worker.getPolyline(x, z, angle, v)
+	def getPolylines(self, persons, v, d, c):
+		return self.worker.getPolylines(persons, v, d)
 
 
 
