@@ -143,39 +143,53 @@ class SpecificWorker(GenericWorker):
     def getPolylines (self, persons, v, d):
         polylines = []
 
-        for p in persons:
-            plt.close('all')
-            #fig = plt.figure()
-             #  ax = fig.add_subplot(111, projection='3d')
-            fig, ax = plt.subplots()
-            ax.grid(True)
-            # x = y = np.arange(-3.0, 3.0, 0.05)
-            #  X, Y = np.meshgrid(x, y)
-            #  zs = np.array([fun(x,y) for x,y in zip(np.ravel(X), np.ravel(Y))])
-            #  Z = zs.reshape(X.shape)
+        plt.close('all')
 
-            print('Pose x', p.x, 'Pose z', p.z, 'Rotacion', p.angle)
-            pn = Person(p.x, p.z, p.angle)
+        #fig = plt.figure()
+       # ax = fig.add_subplot(111, projection='3d')
 
-            pn.draw(drawPersonalSpace=True)
-            polyline = []
-            for punto in pn.puntos:
-                point = SNGPoint2D()
-                point.x = punto[0]
-                point.z = punto[1]
-                polyline.append(point)
-            polylines.append(polyline)
+        fig, ax = plt.subplots()
+        ax.grid(True)
 
-            # p2 = Person(0, 5)
-            #  p2.draw(ax, drawPersonalSpace=True)
-            plt.xlabel('X')
-            plt.ylabel('Y')
-            # plt.xlim(-6, 6)
-            #  plt.ylim(-6, 6)
-            plt.axis('equal')
-            plt.show()
+        # x = y = np.arange(-3.0, 3.0, 0.05)
+        # X, Y = np.meshgrid(x, y)
+        # zs = np.array([fun(x,y) for x,y in zip(np.ravel(X), np.ravel(Y))])
+        # Z = zs.reshape(X.shape)
 
+        p1 = Person(persons[0].x, persons[0].z, persons[0].angle)
+        print('Pose x', p1.x, 'Pose z', p1.y, 'Rotacion', p1.th)
+
+        p2 = Person(persons[1].x, persons[1].z, persons[1].angle)
+        print('Pose x', p2.x, 'Pose z', p2.y, 'Rotacion', p2.th)
+
+        p1.draw(drawPersonalSpace=True)
+        p2.draw(drawPersonalSpace=True)
+
+        polyline1 = []
+        for punto in p1.puntos:
+            point = SNGPoint2D()
+            point.x = punto[0]
+            point.z = punto[1]
+            polyline1.append(point)
+        polylines.append(polyline1)
+
+        polyline2 = []
+        for punto in p2.puntos:
+            point = SNGPoint2D()
+            point.x = punto[0]
+            point.z = punto[1]
+            polyline2.append(point)
+        polylines.append(polyline2)
+        
+        plt.xlabel('X')
+        plt.ylabel('Y')
+
+        plt.xlim(-6, 6)
+        plt.ylim(-6, 6)
+
+        # Z = z1 + z2
+
+        plt.axis('equal')
+        plt.show()
 
         return polylines
-
-
