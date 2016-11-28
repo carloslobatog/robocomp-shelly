@@ -32,7 +32,7 @@ class Person(object):
     x = 0
     y = 0
     th = 0
-    puntos = []
+    polyline = []
     xdot = 0
     ydot = 0
 
@@ -62,8 +62,8 @@ class Person(object):
             # http://www.python-course.eu/matplotlib_contour_plot.php
             # https://es.mathworks.com/matlabcentral/answers/230934-how-to-extract-x-and-y-position-of-contour-line
             CS = plt.contour(X, Y, Z, 10)
-            dat0 = CS.allsegs[5][0]
-            self.puntos = dat0
+            dat0 = CS.allsegs[3][0]
+            self.polyline = dat0
            # print(dat0)
             plt.plot(dat0[:, 0], dat0[:, 1],'*')
 
@@ -165,29 +165,19 @@ class SpecificWorker(GenericWorker):
         p1.draw(drawPersonalSpace=True)
         p2.draw(drawPersonalSpace=True)
 
-        polyline1 = []
-        for punto in p1.puntos:
-            point = SNGPoint2D()
-            point.x = punto[0]
-            point.z = punto[1]
-            polyline1.append(point)
-        polylines.append(polyline1)
 
-        polyline2 = []
-        for punto in p2.puntos:
-            point = SNGPoint2D()
-            point.x = punto[0]
-            point.z = punto[1]
-            polyline2.append(point)
-        polylines.append(polyline2)
-        
+
+        print("Polilinea 1", p1.polyline)
+        print("Polilinea 2", p2.polyline)
+
+        sumpoly = p1.polyline + p2.polyline
+        plt.plot(sumpoly[:, 0], sumpoly[:, 1], '*')
+
         plt.xlabel('X')
         plt.ylabel('Y')
 
         plt.xlim(-6, 6)
         plt.ylim(-6, 6)
-
-        # Z = z1 + z2
 
         plt.axis('equal')
         plt.show()
