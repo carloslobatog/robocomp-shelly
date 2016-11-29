@@ -18,11 +18,11 @@
  */
 
 
-/** \mainpage RoboComp::socialnavigationAgent
+/** \mainpage RoboComp::fakeHumanAgentNew
  *
  * \section intro_sec Introduction
  *
- * The socialnavigationAgent component...
+ * The fakeHumanAgentNew component...
  *
  * \section interface_sec Interface
  *
@@ -34,7 +34,7 @@
  * ...
  *
  * \subsection install2_ssec Compile and install
- * cd socialnavigationAgent
+ * cd fakeHumanAgentNew
  * <br>
  * cmake . && make
  * <br>
@@ -52,7 +52,7 @@
  *
  * \subsection execution_ssec Execution
  *
- * Just: "${PATH_TO_BINARY}/socialnavigationAgent --Ice.Config=${PATH_TO_CONFIG_FILE}"
+ * Just: "${PATH_TO_BINARY}/fakeHumanAgentNew --Ice.Config=${PATH_TO_CONFIG_FILE}"
  *
  * \subsection running_ssec Once running
  *
@@ -83,11 +83,7 @@
 #include <agmcommonbehaviorI.h>
 #include <agmexecutivetopicI.h>
 
-#include <TrajectoryRobot2D.h>
-#include <Logger.h>
-#include <OmniRobot.h>
-#include <GenericBase.h>
-#include <SocialNavigationGaussian.h>
+#include <InnerModelManager.h>
 
 
 // User includes here
@@ -96,10 +92,10 @@
 using namespace std;
 using namespace RoboCompCommonBehavior;
 
-class socialnavigationAgent : public RoboComp::Application
+class fakeHumanAgentNew : public RoboComp::Application
 {
 public:
-	socialnavigationAgent (QString prfx) { prefix = prfx.toStdString(); }
+	fakeHumanAgentNew (QString prfx) { prefix = prfx.toStdString(); }
 private:
 	void initialize();
 	std::string prefix;
@@ -109,14 +105,14 @@ public:
 	virtual int run(int, char*[]);
 };
 
-void ::socialnavigationAgent::initialize()
+void ::fakeHumanAgentNew::initialize()
 {
 	// Config file properties read example
 	// configGetString( PROPERTY_NAME_1, property1_holder, PROPERTY_1_DEFAULT_VALUE );
 	// configGetInt( PROPERTY_NAME_2, property1_holder, PROPERTY_2_DEFAULT_VALUE );
 }
 
-int ::socialnavigationAgent::run(int argc, char* argv[])
+int ::fakeHumanAgentNew::run(int argc, char* argv[])
 {
 #ifdef USE_QTGUI
 	QApplication a(argc, argv);  // GUI application
@@ -136,10 +132,7 @@ int ::socialnavigationAgent::run(int argc, char* argv[])
 
 	int status=EXIT_SUCCESS;
 
-	LoggerPrx logger_proxy;
-	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
-	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;
-	OmniRobotPrx omnirobot_proxy;
+	InnerModelManagerPrx innermodelmanager_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 
 	string proxy, tmp;
@@ -148,53 +141,19 @@ int ::socialnavigationAgent::run(int argc, char* argv[])
 
 	try
 	{
-		if (not GenericMonitor::configGetString(communicator(), prefix, "SocialNavigationGaussianProxy", proxy, ""))
+		if (not GenericMonitor::configGetString(communicator(), prefix, "InnerModelManagerProxy", proxy, ""))
 		{
-			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy SocialNavigationGaussianProxy\n";
+			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy InnerModelManagerProxy\n";
 		}
-		socialnavigationgaussian_proxy = SocialNavigationGaussianPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
+		innermodelmanager_proxy = InnerModelManagerPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
 	}
 	catch(const Ice::Exception& ex)
 	{
 		cout << "[" << PROGRAM_NAME << "]: Exception: " << ex;
 		return EXIT_FAILURE;
 	}
-	rInfo("SocialNavigationGaussianProxy initialized Ok!");
-	mprx["SocialNavigationGaussianProxy"] = (::IceProxy::Ice::Object*)(&socialnavigationgaussian_proxy);//Remote server proxy creation example
-
-
-	try
-	{
-		if (not GenericMonitor::configGetString(communicator(), prefix, "TrajectoryRobot2DProxy", proxy, ""))
-		{
-			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy TrajectoryRobot2DProxy\n";
-		}
-		trajectoryrobot2d_proxy = TrajectoryRobot2DPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
-	}
-	catch(const Ice::Exception& ex)
-	{
-		cout << "[" << PROGRAM_NAME << "]: Exception: " << ex;
-		return EXIT_FAILURE;
-	}
-	rInfo("TrajectoryRobot2DProxy initialized Ok!");
-	mprx["TrajectoryRobot2DProxy"] = (::IceProxy::Ice::Object*)(&trajectoryrobot2d_proxy);//Remote server proxy creation example
-
-
-	try
-	{
-		if (not GenericMonitor::configGetString(communicator(), prefix, "OmniRobotProxy", proxy, ""))
-		{
-			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy OmniRobotProxy\n";
-		}
-		omnirobot_proxy = OmniRobotPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
-	}
-	catch(const Ice::Exception& ex)
-	{
-		cout << "[" << PROGRAM_NAME << "]: Exception: " << ex;
-		return EXIT_FAILURE;
-	}
-	rInfo("OmniRobotProxy initialized Ok!");
-	mprx["OmniRobotProxy"] = (::IceProxy::Ice::Object*)(&omnirobot_proxy);//Remote server proxy creation example
+	rInfo("InnerModelManagerProxy initialized Ok!");
+	mprx["InnerModelManagerProxy"] = (::IceProxy::Ice::Object*)(&innermodelmanager_proxy);//Remote server proxy creation example
 
 
 	try
@@ -214,29 +173,6 @@ int ::socialnavigationAgent::run(int argc, char* argv[])
 	mprx["AGMExecutiveProxy"] = (::IceProxy::Ice::Object*)(&agmexecutive_proxy);//Remote server proxy creation example
 
 	IceStorm::TopicManagerPrx topicManager = IceStorm::TopicManagerPrx::checkedCast(communicator()->propertyToProxy("TopicManager.Proxy"));
-
-	IceStorm::TopicPrx logger_topic;
-	while (!logger_topic)
-	{
-		try
-		{
-			logger_topic = topicManager->retrieve("Logger");
-		}
-		catch (const IceStorm::NoSuchTopic&)
-		{
-			try
-			{
-				logger_topic = topicManager->create("Logger");
-			}
-			catch (const IceStorm::TopicExists&){
-				// Another client created the topic.
-			}
-		}
-	}
-	Ice::ObjectPrx logger_pub = logger_topic->getPublisher()->ice_oneway();
-	LoggerPrx logger = LoggerPrx::uncheckedCast(logger_pub);
-	mprx["LoggerPub"] = (::IceProxy::Ice::Object*)(&logger);
-
 
 
 	SpecificWorker *worker = new SpecificWorker(mprx);
@@ -375,7 +311,7 @@ int main(int argc, char* argv[])
 			printf("Configuration prefix: <%s>\n", prefix.toStdString().c_str());
 		}
 	}
-	::socialnavigationAgent app(prefix);
+	::fakeHumanAgentNew app(prefix);
 
 	return app.main(argc, argv, configFile.c_str());
 }

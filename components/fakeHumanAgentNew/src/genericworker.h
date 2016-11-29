@@ -28,11 +28,7 @@
 
 #include <CommonBehavior.h>
 
-#include <TrajectoryRobot2D.h>
-#include <Logger.h>
-#include <OmniRobot.h>
-#include <GenericBase.h>
-#include <SocialNavigationGaussian.h>
+#include <InnerModelManager.h>
 #include <agm.h>
 
 #define CHECK_PERIOD 5000
@@ -42,15 +38,11 @@ typedef map <string,::IceProxy::Ice::Object*> MapPrx;
 
 using namespace std;
 
-using namespace RoboCompTrajectoryRobot2D;
-using namespace RoboCompAGMWorldModel;
-using namespace RoboCompOmniRobot;
-using namespace RoboCompSocialNavigationGaussian;
-using namespace RoboCompGenericBase;
-using namespace RoboCompAGMExecutive;
+using namespace RoboCompInnerModelManager;
 using namespace RoboCompPlanning;
-using namespace RoboCompLogger;
+using namespace RoboCompAGMExecutive;
 using namespace RoboCompAGMCommonBehavior;
+using namespace RoboCompAGMWorldModel;
 
 
 struct BehaviorParameters 
@@ -82,10 +74,7 @@ public:
 	bool isActive() { return active; }
 	
 
-	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;
-	LoggerPrx logger_proxy;
-	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
-	OmniRobotPrx omnirobot_proxy;
+	InnerModelManagerPrx innermodelmanager_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 
 	virtual bool reloadConfigAgent() = 0;

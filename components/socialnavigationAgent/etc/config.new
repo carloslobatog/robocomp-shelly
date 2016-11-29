@@ -1,17 +1,19 @@
-CommonBehavior.Endpoints=tcp -p 1212
+CommonBehavior.Endpoints=tcp -p 1
 
 
 # Endpoints for implemented interfaces
-AGMCommonBehavior.Endpoints=tcp -p 10210
+AGMCommonBehavior.Endpoints=tcp -p 0
 
 
 # Endpoints for subscriptions
-AGMExecutiveTopicTopic.Endpoints=tcp -p 3120
+AGMExecutiveTopicTopic.Endpoints=tcp -p 0
 
 
 # Proxies for required interfaces
-InnerModelManagerProxy = innermodelmanager:tcp -h localhost -p 11175
-AGMExecutiveProxy = agmexecutive:tcp -h localhost -p 10198
+OmniRobotProxy = omnirobot:tcp -h localhost -p 0
+TrajectoryRobot2DProxy = trajectoryrobot2d:tcp -h localhost -p 0
+SocialNavigationGaussianProxy = socialnavigationgaussian:tcp -h localhost -p 0
+AGMExecutiveProxy = agmexecutive:tcp -h localhost -p 0
 
 
 # This property is used by the clients to connect to IceStorm.

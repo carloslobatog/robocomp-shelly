@@ -18,6 +18,10 @@
  */
 
  #include "specificworker.h"
+ #include <math.h> 
+
+
+ #define PI 3.14159265
 
 /**
 * \brief Default constructor
@@ -77,7 +81,10 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 
 	//Timed slot to read TrajectoryRobot2D state
 	connect(&trajReader, SIGNAL(timeout()), this, SLOT(readTrajState()));
+	connect(gaussiana,SIGNAL(clicked()),this,SLOT(gauss()));
 	//trajReader.start(1000);
+
+	
 }
 
 /**
@@ -87,6 +94,15 @@ SpecificWorker::~SpecificWorker()
 {
 }
 
+void SpecificWorker::gauss()
+{
+	SNGPersonSeq persons;
+	//push back es para incluir a la persona en el vector de personas
+	persons.push_back(person1);
+	persons.push_back(person2);
+	SNGPolylineSeq secuencia = socialnavigationgaussian_proxy->getPolylines(persons, 0, false);
+}
+
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 {
 	Period = 200;
@@ -94,9 +110,11 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	return true;
 }
 
+
 void SpecificWorker::compute( )
 {
-			
+	
+	
 	static bool first=true;
 	
 	
@@ -104,7 +122,7 @@ void SpecificWorker::compute( )
 	{
 		qLog::getInstance()->setProxy("both", logger_proxy);
 		rDebug2(("navigationAgent started"));
-	//	first = false;
+		//first = false;
 	}
 
 	if (worldModel->getIdentifierByType("robot") < 0)
@@ -125,34 +143,108 @@ void SpecificWorker::compute( )
  	//Obtenemos el modelo de fake human
  	 int idx=0;
 			
-			while ((personSymbolId = worldModel->getIdentifierByType("person", idx++)) != -1)
+			while ((personSymbolIdp1 = worldModel->getIdentifierByType("person", idx++)) != -1)
 			{
-			//qDebug()<<"idx"<<idx<<"SymbolId"<<personSymbolId;
+			
+			 if (idx > 4) exit(0);
+			      if (worldModel->getSymbolByIdentifier(personSymbolIdp1)->getAttribute("imName") == "fakeperson"){
+				break;
+			      }
+			}	
+			AGMModelSymbol::SPtr personParentp1 = worldModel->getParentByLink(personSymbolIdp1, "RT");
+			AGMModelEdge &edgeRTp1  = worldModel->getEdgeByIdentifiers(personParentp1->identifier, personSymbolIdp1, "RT");
+			
+			
+			idx=0;
+			while ((personSymbolIdp2 = worldModel->getIdentifierByType("person1", idx++)) != -1)
+			{
 	
 			 if (idx > 4) exit(0);
-			      if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == "fakeperson"){
+			      if (worldModel->getSymbolByIdentifier(personSymbolIdp2)->getAttribute("imName") == "fakeperson1"){
 				break;
 			      }
 			}
-			AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(personSymbolId, "RT");
 			
-			AGMModelEdge &edgeRT  = worldModel->getEdgeByIdentifiers(personParent->identifier, personSymbolId, "RT");
-			
+			AGMModelSymbol::SPtr personParentP2 = worldModel->getParentByLink(personSymbolIdp2, "RT");
+			AGMModelEdge &edgeRTp2  = worldModel->getEdgeByIdentifiers(personParentP2->identifier, personSymbolIdp2, "RT");
+			 
 	if (first||cambiopos==true){
 	  
-			x=str2float(edgeRT.attributes["tx"]);
-			z=str2float(edgeRT.attributes["tz"]);
-			rot=str2float(edgeRT.attributes["ry"]);
-	
-			qDebug() << "Coordenada x"<< x << "Coordenada z"<< z << "Rotacion "<< rot;
-			qDebug() << "---------------------------------------------------";	
+	  //En la clase person almaceno los valores de la posicion en metros
+			
+			person1.x=str2float(edgeRTp1.attributes["tx"])/1000;
+			person1.z=str2float(edgeRTp1.attributes["tz"])/1000;
+			person1.angle=str2float(edgeRTp1.attributes["ry"]);
+			
+			qDebug() << "------------------------------------------------------------";
+			qDebug() <<"PERSONA 1\n" <<"Coordenada x"<< person1.x << "Coordenada z"<< person1.z << "Rotacion "<< person1.angle;
+			
+			person2.x=str2float(edgeRTp2.attributes["tx"])/1000;
+			person2.z=str2float(edgeRTp2.attributes["tz"])/1000;
+			person2.angle=str2float(edgeRTp2.attributes["ry"]);
+			
+			qDebug() << "------------------------------------------------------------";
+			qDebug() <<"PERSONA 2\n" <<"Coordenada x"<< person2.x << "Coordenada z"<< person2.z << "Rotacion "<< person2.angle;
+				
+			
+ 			cambiopos=false;
+ 			first=false;
 		
-			cambiopos=false;
-			first=false;
-		 }	  
+			
+// 			agaussian(person,3.5,1.5);
+			
+ 			
+
+		 }	
+		 
 	
 	//actionExecution();
+	
 }
+
+// double SpecificWorker::agaussian(Person person, float x, float y){
+// 
+//   
+//   double sigma_h=2.0;
+//   double sigma_r=1.0;
+//   double sigma_s=4/3;
+//   
+//   double alpha;
+//   double nalpha;
+//   double sigma;
+//   
+//   //falta comprobar que tetha esta bien y representarlo
+//   
+//   float tetha= PI/2 - person.angle;
+//      
+//  
+//   
+//       alpha= atan2(y-person.z,x-person.x)- tetha + PI/2;
+//       qDebug()<<"alpha"<<alpha;
+//      
+//      nalpha= atan2(sin(alpha),cos(alpha));
+//      qDebug()<<"alpha normalizado"<<nalpha;
+//     
+//      if (nalpha<=0)
+// 	sigma=sigma_r;
+//      else
+// 	sigma=sigma_h;
+//    
+//     
+// 	double    a = pow(cos(tetha),2)/(2*pow(sigma,2)) + pow(sin(tetha),2)/(2*pow(sigma_s,2));
+// 	double    b =  (sin(2*tetha))/(4*pow(sigma,2)) - (sin(2*tetha))/(4*pow(sigma_s,2));
+// 	double    c = pow(sin(tetha),2)/(2*pow(sigma,2))+ pow(cos(tetha),2)/(2*pow(sigma_s,2));
+//      
+// 	qDebug()<<"a"<<a<<"b"<<b<<"c"<<c;
+// 
+// 	double  g = exp(-(a*pow((x - person.x),2) + 2*b*(x - person.x)*(y - person.z) + c*pow((y - person.z),2))) ;    
+//      
+//      
+//         qDebug()<<"El valor de la gaussiana g es "<<g;
+//  return g;
+//  
+// } 
+
 
 /**
  * \brief ESTE ES EL VERDADERO COMPUTE
@@ -1232,8 +1324,8 @@ void SpecificWorker::symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence &m
 
 
 void SpecificWorker::edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &modifications)
-{	qDebug()<<"edgesUpdated";
-  cambiopos=true;
+{	//qDebug()<<"edgesUpdated";
+	cambiopos=true;
 	QMutexLocker lockIM(mutex);
 	
 	

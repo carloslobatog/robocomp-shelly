@@ -28,11 +28,8 @@ QObject()
 #endif
 
 {
-	trajectoryrobot2d_proxy = (*(TrajectoryRobot2DPrx*)mprx["TrajectoryRobot2DProxy"]);
-	omnirobot_proxy = (*(OmniRobotPrx*)mprx["OmniRobotProxy"]);
-	socialnavigationgaussian_proxy = (*(SocialNavigationGaussianPrx*)mprx["SocialNavigationGaussianProxy"]);
+	innermodelmanager_proxy = (*(InnerModelManagerPrx*)mprx["InnerModelManagerProxy"]);
 	agmexecutive_proxy = (*(AGMExecutivePrx*)mprx["AGMExecutiveProxy"]);
-	logger_proxy = (*(LoggerPrx*)mprx["LoggerPub"]);
 
 	mutex = new QMutex(QMutex::Recursive);
 

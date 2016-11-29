@@ -20,6 +20,14 @@
 #define SPECIFICWORKER_H
 
 #include <genericworker.h>
+#include <python2.7/Python.h>
+#include <iostream>
+#include <stdio.h>
+
+
+
+
+//PROBLEMA: con python 3.5 da error al compilar
 
 #include <innermodel/innermodel.h>
 
@@ -41,12 +49,17 @@ public:
 	SpecificWorker(MapPrx& mprx);
 	~SpecificWorker();
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
+	
 //bool para indicar si se ha movido la persona, lo utilizare para imprimir la coordenada de la persona cada vez que se mueva
 	bool cambiopos=false;
-	float x;
-	float z;
-	float rot;
 	
+
+
+	SNGPerson person1;
+	SNGPerson person2;
+	
+	int32_t personSymbolIdp1;
+	int32_t personSymbolIdp2;
 	
 	//////////////
 	/// SERVANTS
@@ -66,10 +79,12 @@ public:
 	void  edgeUpdated(const RoboCompAGMWorldModel::Edge& modification);
 	void edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &modifications);
 
+	//double agaussian(SNGPerson person, float x, float y);
 
 public slots:
  	void compute();
 	void readTrajState();
+	void gauss();
 
 private:
 	bool setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated);
@@ -95,7 +110,7 @@ private:
 	bool haveTarget;
 	QTimer trajReader;
 	
-	int32_t personSymbolId;	
+		
 
 	RoboCompTrajectoryRobot2D::NavState planningState;
 
