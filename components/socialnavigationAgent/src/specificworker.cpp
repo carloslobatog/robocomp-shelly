@@ -149,12 +149,10 @@ void SpecificWorker::compute( )
 			
 			 if (idx > 4) exit(0);
 			      if (worldModel->getSymbolByIdentifier(personSymbolIdp1)->getAttribute("imName") == "fakeperson"){
+				p1=true;
 				break;
 			      }
-			}	
-			AGMModelSymbol::SPtr personParentp1 = worldModel->getParentByLink(personSymbolIdp1, "RT");
-			AGMModelEdge &edgeRTp1  = worldModel->getEdgeByIdentifiers(personParentp1->identifier, personSymbolIdp1, "RT");
-			
+			}
 			
 			idx=0;
 			while ((personSymbolIdp2 = worldModel->getIdentifierByType("person1", idx++)) != -1)
@@ -162,16 +160,20 @@ void SpecificWorker::compute( )
 	
 			 if (idx > 4) exit(0);
 			      if (worldModel->getSymbolByIdentifier(personSymbolIdp2)->getAttribute("imName") == "fakeperson1"){
+				 p2=true;
 				break;
 			      }
 			}
 			
-			AGMModelSymbol::SPtr personParentP2 = worldModel->getParentByLink(personSymbolIdp2, "RT");
-			AGMModelEdge &edgeRTp2  = worldModel->getEdgeByIdentifiers(personParentP2->identifier, personSymbolIdp2, "RT");
-			 
+			
 	if (first||cambiopos==true){
 	  
 	  //En la clase person almaceno los valores de la posicion en metros
+		
+		if (p1){
+				
+			AGMModelSymbol::SPtr personParentp1 = worldModel->getParentByLink(personSymbolIdp1, "RT");
+			AGMModelEdge &edgeRTp1  = worldModel->getEdgeByIdentifiers(personParentp1->identifier, personSymbolIdp1, "RT");
 			
 			person1.x=str2float(edgeRTp1.attributes["tx"])/1000;
 			person1.z=str2float(edgeRTp1.attributes["tz"])/1000;
@@ -179,6 +181,11 @@ void SpecificWorker::compute( )
 			
 			qDebug() << "------------------------------------------------------------";
 			qDebug() <<"PERSONA 1\n" <<"Coordenada x"<< person1.x << "Coordenada z"<< person1.z << "Rotacion "<< person1.angle;
+			}
+		
+		if (p2){
+			AGMModelSymbol::SPtr personParentP2 = worldModel->getParentByLink(personSymbolIdp2, "RT");
+			AGMModelEdge &edgeRTp2  = worldModel->getEdgeByIdentifiers(personParentP2->identifier, personSymbolIdp2, "RT");
 			
 			person2.x=str2float(edgeRTp2.attributes["tx"])/1000;
 			person2.z=str2float(edgeRTp2.attributes["tz"])/1000;
@@ -187,7 +194,7 @@ void SpecificWorker::compute( )
 			qDebug() << "------------------------------------------------------------";
 			qDebug() <<"PERSONA 2\n" <<"Coordenada x"<< person2.x << "Coordenada z"<< person2.z << "Rotacion "<< person2.angle;
 				
-			
+			}	
  			cambiopos=false;
  			first=false;
 		

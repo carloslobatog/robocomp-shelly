@@ -55,12 +55,24 @@
 
  <node alias="socialnavigA" endpoint="agmcommonbehavior:tcp -h localhost -p 10330">
   <dependence alias="executive" />
+  <dependence alias="socialnavigG" />
   <workingDir path="/home/robocomp/" />
   <upCommand command="rcremote localhost socialnavAgnt /home/araceli/mirobocomp/robocomp-shelly/components/socialnavigationAgent ./bin/socialnavigationAgent /home/araceli/mirobocomp/robocomp-shelly/etcSim/socialnavigationAgent.conf" />
   <downCommand command="killall -9 socialnavigationAgent" />
-  <configFile path="/home/robocomp/robocomp/components/robocomp-shelly/etcSim/socialnavigationAgent.conf" />
+  <configFile path="/home/araceli/mirobocomp/robocomp-shelly/etcSim/socialnavigationAgent.conf" />
   <xpos value="-77.9789855056" />
   <ypos value="-53.5106363282" />
+  <radius value="10.0" />
+  <color value="#33FF33" />
+ </node>
+
+ <node alias="socialnavigG" endpoint="socialnavigationgaussian:tcp -h localhost -p 20020">
+  <workingDir path="/home/robocomp/" />
+  <upCommand command="rcremote localhost socialnavGauss /home/araceli/mirobocomp/robocomp-shelly/components/socialnavigationGaussian python src/socialnavigationGaussian.py etc/config" />
+  <downCommand command="pkill -9 -f socialnavigationGaussian.py"/>
+<configFile path="/home/araceli/mirobocomp/robocomp-shelly/etcSim/socialnavigationGaussian.conf" />
+  <xpos value="-171.097569307" />
+  <ypos value="-23.5106363282" />
   <radius value="10.0" />
   <color value="#33FF33" />
  </node>
@@ -70,9 +82,21 @@
   <workingDir path="/home/robocomp/" />
   <upCommand command="rcremote localhost humanFakeA /home/araceli/mirobocomp/robocomp-shelly/components/fakeHumanAgent ./bin/fakeHumanAgent /home/araceli/mirobocomp/robocomp-shelly/etcSim/humanFake.conf" />
   <downCommand command="killall -9 fakeHumanAgent" />
-  <configFile path="/home/robocomp/robocomp/components/robocomp-shelly/etcSim/humanFake.conf" />
+  <configFile path="/home/araceli/mirobocomp/robocomp-shelly/etcSim/humanFake.conf" />
   <xpos value="-157.9789855056" />
   <ypos value="-73.5106363282" />
+  <radius value="10.0" />
+  <color value="#33FF33" />
+ </node>
+
+ <node alias="humanFakeANew" endpoint="agmcommonbehavior:tcp -h localhost -p 10211">
+  <dependence alias="executive" />
+  <workingDir path="/home/robocomp/" />
+  <upCommand command="rcremote localhost humanFakeANew /home/araceli/mirobocomp/robocomp-shelly/components/fakeHumanAgentNew ./bin/fakeHumanAgent /home/araceli/mirobocomp/robocomp-shelly/etcSim/humanFakeNew.conf" />
+  <downCommand command="killall -9 fakeHumanAgent" />
+  <configFile path="/home/araceli/mirobocomp/robocomp-shelly/etcSim/humanFakeNew.conf" />
+  <xpos value="-200.9789855056" />
+  <ypos value="-93.5106363282" />
   <radius value="10.0" />
   <color value="#33FF33" />
  </node>

@@ -61,6 +61,9 @@ public:
 	int32_t personSymbolIdp1;
 	int32_t personSymbolIdp2;
 	
+	bool p1=false;
+	bool p2=false;
+	
 	//////////////
 	/// SERVANTS
 	//////////////
