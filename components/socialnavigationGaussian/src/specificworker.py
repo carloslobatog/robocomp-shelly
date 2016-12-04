@@ -151,27 +151,26 @@ class SpecificWorker(GenericWorker):
         fig, ax = plt.subplots()
         ax.grid(True)
 
+
         # x = y = np.arange(-3.0, 3.0, 0.05)
         # X, Y = np.meshgrid(x, y)
         # zs = np.array([fun(x,y) for x,y in zip(np.ravel(X), np.ravel(Y))])
         # Z = zs.reshape(X.shape)
 
-        p1 = Person(persons[0].x, persons[0].z, persons[0].angle)
-        print('Pose x', p1.x, 'Pose z', p1.y, 'Rotacion', p1.th)
 
-        p2 = Person(persons[1].x, persons[1].z, persons[1].angle)
-        print('Pose x', p2.x, 'Pose z', p2.y, 'Rotacion', p2.th)
-
-        p1.draw(drawPersonalSpace=True)
-        p2.draw(drawPersonalSpace=True)
+        for p in persons:
+            pn = Person(p.x, p.z, p.angle)
+            print('Pose x', pn.x, 'Pose z', pn.y, 'Rotacion', pn.th)
+            pn.draw(drawPersonalSpace=True)
 
 
 
-        print("Polilinea 1", p1.polyline)
-        print("Polilinea 2", p2.polyline)
 
-        sumpoly = p1.polyline + p2.polyline
-        plt.plot(sumpoly[:, 0], sumpoly[:, 1], '*')
+
+
+     #   print("Polilinea 1", p1.polyline)
+     #  print("Polilinea 2", p2.polyline)
+
 
         plt.xlabel('X')
         plt.ylabel('Y')

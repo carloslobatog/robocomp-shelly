@@ -99,7 +99,9 @@ void SpecificWorker::gauss()
 {
 	SNGPersonSeq persons;
 	//push back es para incluir a la persona en el vector de personas
+	if (p1)
 	persons.push_back(person1);
+	if (p2)
 	persons.push_back(person2);
 	SNGPolylineSeq secuencia = socialnavigationgaussian_proxy->getPolylines(persons, 0, false);
 }
