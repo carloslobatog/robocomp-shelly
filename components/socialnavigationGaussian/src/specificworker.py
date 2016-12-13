@@ -26,6 +26,8 @@ import numpy as np
 from matplotlib import cm
 from math import *
 from mpl_toolkits.mplot3d import axes3d
+from scipy.spatial import ConvexHull
+
 
 
 class Person(object):
@@ -33,7 +35,7 @@ class Person(object):
     y = 0
     th = 0
     polyline = []
-    #polyline = RoboCompSocialNavigationGaussian.SNGPolyline()
+    # polyline = RoboCompSocialNavigationGaussian.SNGPolyline()
     xdot = 0
     ydot = 0
 
@@ -45,7 +47,6 @@ class Person(object):
         self.x = x
         self.y = y
         self.th = th
-
 
     def draw(self, drawPersonalSpace=False):
 
@@ -63,31 +64,34 @@ class Person(object):
             # print(Z)
             # http://www.python-course.eu/matplotlib_contour_plot.php
             # https://es.mathworks.com/matlabcentral/answers/230934-how-to-extract-x-and-y-position-of-contour-line
+
+
+            #surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
             CS = plt.contour(X, Y, Z, 10)
+
             dat0 = CS.allsegs[3][0]
             self.polyline = dat0
 
-            print(dat0)
+            #print(dat0)
 
-            plt.plot(dat0[:, 0], dat0[:, 1],'*')
+            plt.plot(dat0[:, 0], dat0[:, 1], '*')
             return dat0
 
+            # CS = plt.contour(X, Y, Z, 10)
+            #surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
 
 
 
-            #CS = plt.contour(X, Y, Z, 10)
-            # surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
+            # Corpo
+            #   body = plt.Circle((self.x, self.y), radius=self._radius, fill=False)
+            # plt.gca().add_patch(body)
+            #  x_aux = self.x + self._radius * cos(self.th)
+            #  y_aux = self.y + self._radius * sin(self.th)
+            #  heading = plt.Line2D((self.x, x_aux), (self.y, y_aux), lw=3, color='k')
+            # plt.gca().add_line(heading)
 
-        # Corpo
-       #   body = plt.Circle((self.x, self.y), radius=self._radius, fill=False)
-        # plt.gca().add_patch(body)
-      #  x_aux = self.x + self._radius * cos(self.th)
-      #  y_aux = self.y + self._radius * sin(self.th)
-      #  heading = plt.Line2D((self.x, x_aux), (self.y, y_aux), lw=3, color='k')
-        # plt.gca().add_line(heading)
-
-        # plt.axis('equal')
-        # plt.show()
+            # plt.axis('equal')
+            # plt.show()
 
     """ Private Methods """
 
@@ -96,9 +100,9 @@ class Person(object):
         sigma_h = 2.0
         sigma_r = 1.0
         sigma_s = 4 / 3
-        rot = pi/2 - self.th
+        rot = pi / 2 - self.th
 
-        alpha = np.arctan2(y - self.y, x - self.x) - rot - pi/2
+        alpha = np.arctan2(y - self.y, x - self.x) - rot - pi / 2
         nalpha = np.arctan2(np.sin(alpha), np.cos(alpha))  # Normalizando no intervalo [-pi, pi)
 
         sigma = np.copy(nalpha)
@@ -130,6 +134,7 @@ class SpecificWorker(GenericWorker):
         # except:
         #	traceback.print_exc()
         #	print "Error reading config params"
+
         return True
 
     @QtCore.Slot()
@@ -146,16 +151,15 @@ class SpecificWorker(GenericWorker):
     #
     # getPolyline
     #
-    def getPolylines (self, persons, v, d):
+    def getPolylines(self, persons, v, d):
         polylines = []
-
         plt.close('all')
 
-        #fig = plt.figure()
-       # ax = fig.add_subplot(111, projection='3d')
+        fig = plt.figure()
+        #ax = fig.add_subplot(111, projection='3d')
 
-        fig, ax = plt.subplots()
-        ax.grid(True)
+        #fig, ax = plt.subplots()
+        #ax.grid(True)
 
 
         # x = y = np.arange(-3.0, 3.0, 0.05)
@@ -174,20 +178,29 @@ class SpecificWorker(GenericWorker):
                 punto.x = puntoPersona[0]
                 punto.z = puntoPersona[1]
                 polyline.append(punto)
+
             polylines.append(polyline)
 
+        ############## ESTO SE DEBERIA HACER SOLO EN ALGUNAS CIRCUNSTANCIAS ######################
+        #Creo points para almacenar todos los puntos de todas las polilineas para poder hacer el convex hull
+        totalpuntos = []
+
+        for a in np.arange(len(polylines)):
+            for b in polylines[a]:
+                totalpuntos.append([b.x, b.z])
 
 
+       #Convierto la lista en un array
+        points = np.asarray(totalpuntos)
+        print('Total de puntos', points)
+        hull = ConvexHull(points)
+
+        #Se dibuja la curva hull
+        for simplex in hull.simplices:
+            plt.plot(points[simplex, 0], points[simplex, 1], 'r-')
 
 
-
-      #  print("Polilinea 1", polylines[0])
-      #  print("Polilinea 2", polylines[1])
-
-     #   print("Polilinea 1", p1.polyline)
-     #  print("Polilinea 2", p2.polyline)
-
-
+        ####################################
 
         plt.xlabel('X')
         plt.ylabel('Y')
