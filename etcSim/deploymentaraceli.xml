@@ -131,7 +131,7 @@
  <node alias="mission - no deps" endpoint="commonbehavior:tcp -h localhost -p 11247">
   <dependence alias="executive" />
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost mission /home/robocomp/AGM/tools/agmmission ./bin/agmmission /home/robocomp/robocomp/components/robocomp-shelly/etcSim/mission.conf" />
+  <upCommand command="rcremote localhost mission /home/robocomp/AGM/tools/agmmission agmmission /home/robocomp/robocomp/components/robocomp-shelly/etcSim/mission.conf" />
   <downCommand command="killall -9 agmmission" />
   <configFile path="/home/robocomp/robocomp/components/robocomp-shelly/etcSim/mission.conf" />
   <xpos value="-11.0935151594" />

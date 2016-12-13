@@ -111,65 +111,63 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	Period = 200;
 	timer.start(Period);
 	return true;
+	
 }
 
 
 void SpecificWorker::compute( )
 {
-	
-	
 	static bool first=true;
-	
-	
 	if (first)
 	{
 		qLog::getInstance()->setProxy("both", logger_proxy);
 		rDebug2(("navigationAgent started"));
-		//first = false;
+		first = false;
 	}
 
 	if (worldModel->getIdentifierByType("robot") < 0)
 	{ 
-
 		try {
 		
-			RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
-			structuralChange(w);
+			qDebug()<<"Leo el mundo";
+			agmexecutive_proxy->broadcastModel();
+			return;
 		}
 		catch(...)
 		{
-		  
 			printf("The executive is probably not running, waiting for first AGM model publication...");
 		}	
 	}
  	
  	//Obtenemos el modelo de fake human
- 	 int idx=0;
+ 	int idx=0;
+
+	while ((personSymbolIdp1 = worldModel->getIdentifierByType("person", idx++)) != -1)
+	{
+		if (idx > 4) exit(0);
+		if (worldModel->getSymbolByIdentifier(personSymbolIdp1)->getAttribute("imName") == "fakeperson")
+		{
+			p1=true;
+			break;
+		}
+	}
+		
+	idx=0;
+	while ((personSymbolIdp2 = worldModel->getIdentifierByType("person1", idx++)) != -1)
+	{
+
+		if (idx > 4) exit(0);
+		if (worldModel->getSymbolByIdentifier(personSymbolIdp2)->getAttribute("imName") == "fakeperson1")
+		{
+			p2=true;
+			break;
+		}
+	}
+		
 			
-			while ((personSymbolIdp1 = worldModel->getIdentifierByType("person", idx++)) != -1)
-			{
-			
-			 if (idx > 4) exit(0);
-			      if (worldModel->getSymbolByIdentifier(personSymbolIdp1)->getAttribute("imName") == "fakeperson"){
-				p1=true;
-				break;
-			      }
-			}
-			
-			idx=0;
-			while ((personSymbolIdp2 = worldModel->getIdentifierByType("person1", idx++)) != -1)
-			{
-	
-			 if (idx > 4) exit(0);
-			      if (worldModel->getSymbolByIdentifier(personSymbolIdp2)->getAttribute("imName") == "fakeperson1"){
-				 p2=true;
-				break;
-			      }
-			}
-			
-			
-	if (first||cambiopos==true){
-	  
+	if (cambiopos==true)
+	{
+	  printf("personas: p1:%d p2:%d\n", personSymbolIdp1, personSymbolIdp2);
 	  //En la clase person almaceno los valores de la posicion en metros
 		
 		if (p1){
@@ -177,13 +175,13 @@ void SpecificWorker::compute( )
 			AGMModelSymbol::SPtr personParentp1 = worldModel->getParentByLink(personSymbolIdp1, "RT");
 			AGMModelEdge &edgeRTp1  = worldModel->getEdgeByIdentifiers(personParentp1->identifier, personSymbolIdp1, "RT");
 			
-			person1.x=str2float(edgeRTp1.attributes["tx"])/1000;
-			person1.z=str2float(edgeRTp1.attributes["tz"])/1000;
-			person1.angle=str2float(edgeRTp1.attributes["ry"]);
+			person1.x = str2float(edgeRTp1.attributes["tx"])/1000;
+			person1.z = str2float(edgeRTp1.attributes["tz"])/1000;
+			person1.angle = str2float(edgeRTp1.attributes["ry"]);
 			
 			qDebug() << "------------------------------------------------------------";
 			qDebug() <<"PERSONA 1\n" <<"Coordenada x"<< person1.x << "Coordenada z"<< person1.z << "Rotacion "<< person1.angle;
-			}
+		}
 		
 		if (p2){
 			AGMModelSymbol::SPtr personParentP2 = worldModel->getParentByLink(personSymbolIdp2, "RT");
@@ -197,17 +195,12 @@ void SpecificWorker::compute( )
 			qDebug() <<"PERSONA 2\n" <<"Coordenada x"<< person2.x << "Coordenada z"<< person2.z << "Rotacion "<< person2.angle;
 				
 			}	
- 			cambiopos=false;
- 			first=false;
-		
 			
-// 			agaussian(person,3.5,1.5);
-			
+ 		cambiopos=false;
  			
-
-		 }	
-		 
-	
+// 		agaussian(person,3.5,1.5);
+	 }	
+		 	
 	//actionExecution();
 	
 }
@@ -1311,6 +1304,9 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 
 	if (innerModel) delete innerModel;
 	innerModel = AGMInner::extractInnerModel(worldModel, "world", true);
+	
+	cambiopos=true;
+	
 	printf("structuralChange>>\n");
 }
 
@@ -1355,6 +1351,8 @@ void SpecificWorker::edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &mod
  */ 
 void SpecificWorker::edgeUpdated(const RoboCompAGMWorldModel::Edge& modification)
 {	
+	cambiopos=true;
+	
 	qDebug()<<"edgeUpdated";
 	QMutexLocker lockIM(mutex);
 	AGMModelConverter::includeIceModificationInInternalModel(modification, worldModel);

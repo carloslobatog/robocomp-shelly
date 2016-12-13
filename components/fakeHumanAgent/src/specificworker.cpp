@@ -47,6 +47,9 @@ SpecificWorker::~SpecificWorker()
 
 void SpecificWorker::includeInRCIS()
 {
+	static bool first = true;
+	if (not first) return;
+	first = false;
 	printf("includeInRCIS begins\n");
 
 	try
@@ -78,6 +81,10 @@ void SpecificWorker::includeInRCIS()
 
 void SpecificWorker::includeInAGM()
 {
+	static bool first = true;
+	if (not first) return;
+	first = false;
+
 	printf("includeInAGM begins\n");
 
 	int idx=0;

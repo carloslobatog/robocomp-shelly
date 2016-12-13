@@ -368,7 +368,7 @@ void SpecificWorker::move (){
 		edgeRT.attributes["ry"] = float2str(humanRot);
 		edgeRT.attributes["rz"] = "0";
 	
-		
+			
 		AGMMisc::publishEdgeUpdate(edgeRT, agmexecutive_proxy);
 	 	
 }

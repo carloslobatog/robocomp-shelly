@@ -63,6 +63,7 @@ public:
 	
 	bool p1=false;
 	bool p2=false;
+
 	
 	//////////////
 	/// SERVANTS

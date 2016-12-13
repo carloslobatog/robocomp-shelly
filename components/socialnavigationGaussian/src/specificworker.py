@@ -33,6 +33,7 @@ class Person(object):
     y = 0
     th = 0
     polyline = []
+    #polyline = RoboCompSocialNavigationGaussian.SNGPolyline()
     xdot = 0
     ydot = 0
 
@@ -58,14 +59,19 @@ class Person(object):
             # plt.plot(X, Y, '*')
 
             Z = self._calculatePersonalSpace(X, Y)
+
             # print(Z)
             # http://www.python-course.eu/matplotlib_contour_plot.php
             # https://es.mathworks.com/matlabcentral/answers/230934-how-to-extract-x-and-y-position-of-contour-line
             CS = plt.contour(X, Y, Z, 10)
             dat0 = CS.allsegs[3][0]
             self.polyline = dat0
-           # print(dat0)
+
+            print(dat0)
+
             plt.plot(dat0[:, 0], dat0[:, 1],'*')
+            return dat0
+
 
 
 
@@ -73,11 +79,11 @@ class Person(object):
             # surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
 
         # Corpo
-        body = plt.Circle((self.x, self.y), radius=self._radius, fill=False)
+       #   body = plt.Circle((self.x, self.y), radius=self._radius, fill=False)
         # plt.gca().add_patch(body)
-        x_aux = self.x + self._radius * cos(self.th)
-        y_aux = self.y + self._radius * sin(self.th)
-        heading = plt.Line2D((self.x, x_aux), (self.y, y_aux), lw=3, color='k')
+      #  x_aux = self.x + self._radius * cos(self.th)
+      #  y_aux = self.y + self._radius * sin(self.th)
+      #  heading = plt.Line2D((self.x, x_aux), (self.y, y_aux), lw=3, color='k')
         # plt.gca().add_line(heading)
 
         # plt.axis('equal')
@@ -162,14 +168,25 @@ class SpecificWorker(GenericWorker):
             pn = Person(p.x, p.z, p.angle)
             print('Pose x', pn.x, 'Pose z', pn.y, 'Rotacion', pn.th)
             pn.draw(drawPersonalSpace=True)
+            polyline = []
+            for puntoPersona in pn.polyline:
+                punto = SNGPoint2D()
+                punto.x = puntoPersona[0]
+                punto.z = puntoPersona[1]
+                polyline.append(punto)
+            polylines.append(polyline)
 
 
 
 
 
+
+      #  print("Polilinea 1", polylines[0])
+      #  print("Polilinea 2", polylines[1])
 
      #   print("Polilinea 1", p1.polyline)
      #  print("Polilinea 2", p2.polyline)
+
 
 
         plt.xlabel('X')
