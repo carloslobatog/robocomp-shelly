@@ -182,6 +182,7 @@ class SpecificWorker(GenericWorker):
             polylines.append(polyline)
 
         ############## ESTO SE DEBERIA HACER SOLO EN ALGUNAS CIRCUNSTANCIAS ######################
+
         #Creo points para almacenar todos los puntos de todas las polilineas para poder hacer el convex hull
         totalpuntos = []
 
@@ -192,13 +193,30 @@ class SpecificWorker(GenericWorker):
 
        #Convierto la lista en un array
         points = np.asarray(totalpuntos)
-        print('Total de puntos', points)
+        #print('Total de puntos', points)
         hull = ConvexHull(points)
+
+
 
         #Se dibuja la curva hull
         for simplex in hull.simplices:
             plt.plot(points[simplex, 0], points[simplex, 1], 'r-')
 
+
+
+
+        #Convierto la curva hull en un array, despues en polilinea y finalmente lo almaceno en el vector de polilineas
+        gaussianmix = np.asarray(hull.points)
+        print(gaussianmix)
+
+        polylinemix = []
+        for puntogausmix in gaussianmix:
+            punto = SNGPoint2D()
+            punto.x = puntogausmix[0]
+            punto.z = puntogausmix[1]
+            polylinemix.append(punto)
+
+        polylines.append(polylinemix)
 
         ####################################
 
