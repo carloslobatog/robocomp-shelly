@@ -48,9 +48,26 @@ class Person(object):
         self.y = y
         self.th = th
 
-    def draw(self, drawPersonalSpace=False):
+    def draw(self, v, drawPersonalSpace=False):
+        #numero de curvas de contorno
+        nc = 10
+        print("v = ", v)
+
+        if v <= 20:
+            aprox = 0
+
+        else:
+            if v == 100:
+                aprox = nc - 2
+            else:
+                aprox = int(v/10) - 1
+
+        print ("aprox = ", aprox)
+
 
         if (drawPersonalSpace):
+            #numero de curvas de contorno que se van a dibujar
+
             # define grid.
             npts = 50
             x = np.linspace(self.x - 4, self.x + 4, npts)
@@ -67,9 +84,12 @@ class Person(object):
 
 
             #surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
-            CS = plt.contour(X, Y, Z, 10)
 
-            dat0 = CS.allsegs[3][0]
+
+            ##PROBLEMICA -> a partir de nc> 4 dibuja una linea de menos. Por eso en el caso de que v==100 he puesto que aprox=nc-2
+            CS = plt.contour(X, Y, Z, nc)
+
+            dat0 = CS.allsegs[aprox][0]
             self.polyline = dat0
 
             #print(dat0)
@@ -152,6 +172,7 @@ class SpecificWorker(GenericWorker):
     # getPolyline
     #
     def getPolylines(self, persons, v, d):
+        print ("v", v)
         polylines = []
         plt.close('all')
 
@@ -171,7 +192,7 @@ class SpecificWorker(GenericWorker):
         for p in persons:
             pn = Person(p.x, p.z, p.angle)
             print('Pose x', pn.x, 'Pose z', pn.y, 'Rotacion', pn.th)
-            pn.draw(drawPersonalSpace=True)
+            pn.draw(v, drawPersonalSpace=True)
             polyline = []
             for puntoPersona in pn.polyline:
                 punto = SNGPoint2D()
@@ -207,7 +228,7 @@ class SpecificWorker(GenericWorker):
 
         #Convierto la curva hull en un array, despues en polilinea y finalmente lo almaceno en el vector de polilineas
         gaussianmix = np.asarray(hull.points)
-        print(gaussianmix)
+       # print(gaussianmix)
 
         polylinemix = []
         for puntogausmix in gaussianmix:

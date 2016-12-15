@@ -63,6 +63,8 @@ public:
 	
 	bool p1=false;
 	bool p2=false;
+	
+	int valorprox = 0;
 
 	
 	//////////////
@@ -89,6 +91,7 @@ public slots:
  	void compute();
 	void readTrajState();
 	void gauss();
+	void cambiarvalor(int valor);
 
 private:
 	bool setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated);

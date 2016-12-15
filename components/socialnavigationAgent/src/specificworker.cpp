@@ -84,7 +84,15 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	connect(&trajReader, SIGNAL(timeout()), this, SLOT(readTrajState()));
 	connect(gaussiana,SIGNAL(clicked()),this,SLOT(gauss()));
 	//trajReader.start(1000);
-
+	
+	//SLIDER
+	connect (proximidad,SIGNAL(valueChanged(int)),this,SLOT(cambiarvalor(int)));
+	//connect (proximidad,SIGNAL(sliderMoved()),this,SLOT(sliderM()));
+	
+	
+	proximidad->QSlider::setMinimum (0);
+	proximidad->QSlider::setMaximum (100);	
+	proximidad->QSlider::setTracking (false);	
 	
 }
 
@@ -95,6 +103,14 @@ SpecificWorker::~SpecificWorker()
 {
 }
 
+void SpecificWorker::cambiarvalor(int value){
+	valorprox=value;
+	qDebug()<<"Proximidad"<<valorprox;
+	
+}
+
+
+
 void SpecificWorker::gauss()
 {
 	SNGPersonSeq persons;
@@ -103,7 +119,7 @@ void SpecificWorker::gauss()
 	persons.push_back(person1);
 	if (p2)
 	persons.push_back(person2);
-	SNGPolylineSeq secuencia = socialnavigationgaussian_proxy->getPolylines(persons, 0, false);
+	SNGPolylineSeq secuencia = socialnavigationgaussian_proxy->getPolylines(persons, valorprox, false);
 }
 
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
