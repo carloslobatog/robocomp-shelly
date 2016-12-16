@@ -154,8 +154,8 @@ bool SpecificWorker::checkconversation(){
 	
 		
 	if (((angleinf<person1.angle && person1.angle < anglesup)&&
-		(6.3-angleinf > person2.angle && person2.angle > 6.3 - anglesup))||
-		((6.3-angleinf > person1.angle && person1.angle > 6.3 - anglesup)&&
+		(2*PI-angleinf > person2.angle && person2.angle > 2*PI - anglesup))||
+		((2*PI-angleinf > person1.angle && person1.angle > 2*PI - anglesup)&&
 		(angleinf<person2.angle && person2.angle < anglesup)))
 		
 		
