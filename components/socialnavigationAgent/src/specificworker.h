@@ -54,18 +54,29 @@ public:
 	bool cambiopos=false;
 	
 
-
+	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
 	SNGPerson person1;
 	SNGPerson person2;
 	
+	//PARA ALMACENAR EL SIMBOLO DE LA PERSONA AL LEERLA DEL MUNDO
 	int32_t personSymbolIdp1;
 	int32_t personSymbolIdp2;
 	
+	//BOOL PARA COMPROBAR SI LA PERSONA ESTA EN EL MUNDO
 	bool p1=false;
 	bool p2=false;
 	
+	//PARA LEER EL VALOR DEL SLIDER
 	int valorprox = 0;
 
+	
+	
+	//PARA COMPROBAR SI DOS PERSONAS ESTAN HABLANDO
+	bool conversation = false;
+	
+	bool checkconversation();
+
+	
 	
 	//////////////
 	/// SERVANTS

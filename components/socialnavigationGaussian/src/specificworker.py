@@ -171,7 +171,7 @@ class SpecificWorker(GenericWorker):
     #
     # getPolyline
     #
-    def getPolylines(self, persons, v, d):
+    def getPolylines(self, persons, v, talk):
         print ("v", v)
         polylines = []
         plt.close('all')
@@ -202,42 +202,44 @@ class SpecificWorker(GenericWorker):
 
             polylines.append(polyline)
 
+
+
         ############## ESTO SE DEBERIA HACER SOLO EN ALGUNAS CIRCUNSTANCIAS ######################
-
-        #Creo points para almacenar todos los puntos de todas las polilineas para poder hacer el convex hull
-        totalpuntos = []
-
-        for a in np.arange(len(polylines)):
-            for b in polylines[a]:
-                totalpuntos.append([b.x, b.z])
+        if talk:
 
 
-       #Convierto la lista en un array
-        points = np.asarray(totalpuntos)
-        #print('Total de puntos', points)
-        hull = ConvexHull(points)
+            #Creo points para almacenar todos los puntos de todas las polilineas para poder hacer el convex hull
+            totalpuntos = []
+
+            for a in np.arange(len(polylines)):
+                for b in polylines[a]:
+                    totalpuntos.append([b.x, b.z])
 
 
-
-        #Se dibuja la curva hull
-        for simplex in hull.simplices:
-            plt.plot(points[simplex, 0], points[simplex, 1], 'r-')
+           #Convierto la lista en un array
+            points = np.asarray(totalpuntos)
+            #print('Total de puntos', points)
+            hull = ConvexHull(points)
 
 
 
+            #Se dibuja la curva hull
+            for simplex in hull.simplices:
+                plt.plot(points[simplex, 0], points[simplex, 1], 'r-')
 
-        #Convierto la curva hull en un array, despues en polilinea y finalmente lo almaceno en el vector de polilineas
-        gaussianmix = np.asarray(hull.points)
-       # print(gaussianmix)
 
-        polylinemix = []
-        for puntogausmix in gaussianmix:
-            punto = SNGPoint2D()
-            punto.x = puntogausmix[0]
-            punto.z = puntogausmix[1]
-            polylinemix.append(punto)
+            #Convierto la curva hull en un array, despues en polilinea y finalmente lo almaceno en el vector de polilineas
+            gaussianmix = np.asarray(hull.points)
+           # print(gaussianmix)
 
-        polylines.append(polylinemix)
+            polylinemix = []
+            for puntogausmix in gaussianmix:
+                punto = SNGPoint2D()
+                punto.x = puntogausmix[0]
+                punto.z = puntogausmix[1]
+                polylinemix.append(punto)
+
+            polylines.append(polylinemix)
 
         ####################################
 
