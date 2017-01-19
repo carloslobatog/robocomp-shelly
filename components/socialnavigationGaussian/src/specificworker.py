@@ -27,6 +27,8 @@ from matplotlib import cm
 from math import *
 from mpl_toolkits.mplot3d import axes3d
 from scipy.spatial import ConvexHull
+from normal import Normal
+import GaussianMix as GM
 
 
 
@@ -35,7 +37,6 @@ class Person(object):
     y = 0
     th = 0
     polyline = []
-    # polyline = RoboCompSocialNavigationGaussian.SNGPolyline()
     xdot = 0
     ydot = 0
 
@@ -48,22 +49,17 @@ class Person(object):
         self.y = y
         self.th = th
 
+
     def draw(self, v, drawPersonalSpace=False):
         #numero de curvas de contorno
         nc = 10
-        print("v = ", v)
-
         if v <= 20:
             aprox = 0
-
         else:
             if v == 100:
                 aprox = nc - 2
             else:
                 aprox = int(v/10) - 1
-
-        print ("aprox = ", aprox)
-
 
         if (drawPersonalSpace):
             #numero de curvas de contorno que se van a dibujar
@@ -81,8 +77,6 @@ class Person(object):
             # print(Z)
             # http://www.python-course.eu/matplotlib_contour_plot.php
             # https://es.mathworks.com/matlabcentral/answers/230934-how-to-extract-x-and-y-position-of-contour-line
-
-
             #surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
 
 
@@ -95,23 +89,29 @@ class Person(object):
             #print(dat0)
 
             plt.plot(dat0[:, 0], dat0[:, 1], '*')
-            return dat0
 
-            # CS = plt.contour(X, Y, Z, 10)
+          # CS = plt.contour(X, Y, Z, 10)
             #surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
 
-
-
             # Corpo
-            #   body = plt.Circle((self.x, self.y), radius=self._radius, fill=False)
-            # plt.gca().add_patch(body)
-            #  x_aux = self.x + self._radius * cos(self.th)
-            #  y_aux = self.y + self._radius * sin(self.th)
-            #  heading = plt.Line2D((self.x, x_aux), (self.y, y_aux), lw=3, color='k')
-            # plt.gca().add_line(heading)
+            body = plt.Circle((self.x, self.y), radius=self._radius, fill=False)
+            plt.gca().add_patch(body)
 
-            # plt.axis('equal')
-            # plt.show()
+            # Orientacion
+            print("alpha:")
+            x_aux = self.x + self._radius * cos(pi/2 - self.th);
+            print(self.x)
+            print(x_aux);
+            y_aux = self.y + self._radius * sin(pi/2 - self.th);
+            print(self.y)
+
+            print(y_aux)
+            heading = plt.Line2D((self.x, x_aux), (self.y, y_aux), lw=1, color='k')
+            plt.gca().add_line(heading)
+
+            plt.axis('equal')
+            return Z
+
 
     """ Private Methods """
 
@@ -119,8 +119,8 @@ class Person(object):
 
         sigma_h = 2.0
         sigma_r = 1.0
-        sigma_s = 4 / 3
-        rot = pi / 2 - self.th
+        sigma_s = 4/3
+        rot = pi/2 - self.th
 
         alpha = np.arctan2(y - self.y, x - self.x) - rot - pi / 2
         nalpha = np.arctan2(np.sin(alpha), np.cos(alpha))  # Normalizando no intervalo [-pi, pi)
@@ -137,6 +137,7 @@ class Person(object):
         z = np.exp(-(a * (x - self.x) ** 2 + 2 * b * (x - self.x) * (y - self.y) + c * (y - self.y) ** 2))
 
         return z
+
 
 
 class SpecificWorker(GenericWorker):
@@ -172,23 +173,52 @@ class SpecificWorker(GenericWorker):
     # getPolyline
     #
     def getPolylines(self, persons, v, talk):
-        print ("v", v)
         polylines = []
-        plt.close('all')
 
-        fig = plt.figure()
+        plt.close('all')
+        #fig = plt.figure()
         #ax = fig.add_subplot(111, projection='3d')
 
-        #fig, ax = plt.subplots()
+        fig, ax = plt.subplots()
         #ax.grid(True)
 
 
-        # x = y = np.arange(-3.0, 3.0, 0.05)
-        # X, Y = np.meshgrid(x, y)
+        x = y = np.arange(-3.0, 3.0, 0.05)
+        X, Y = np.meshgrid(x, y)
         # zs = np.array([fun(x,y) for x,y in zip(np.ravel(X), np.ravel(Y))])
         # Z = zs.reshape(X.shape)
 
+        normals = []
+        #####################CLUSTERING#######################################
 
+        for p in persons:
+            pn = Person(p.x, p.z, p.angle)
+            #print('Pose x', pn.x, 'Pose z', pn.y, 'Rotacion', pn.th)
+            #normals.append(pn.draw(v, drawPersonalSpace=True))
+            pn.draw(v, drawPersonalSpace=True)
+            #  polylines.append(polyline)
+
+            normals.append(Normal(mu=[[pn.x],[pn.y]], sigma=[pn.th, 2.0, 1.0, 4/3], elliptical=True))
+
+
+        h = 0.5
+        resolution = 0.1
+        limits = [[-7.0, 7.0], [-7.0, 7.0]]
+        _, z = Normal.makeGrid(normals, h, 2, limits=limits, resolution=resolution)
+        grid = GM.filterEdges(z, h)
+
+        plt.figure()
+        plt.imshow(z, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+
+        plt.figure()
+        plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+
+        ###################################################################################################3
+
+
+
+        """""
+        ########################PARA SACAR LAS POLILINEAS Y HACER CONVEXHULL ##############################3
         for p in persons:
             pn = Person(p.x, p.z, p.angle)
             print('Pose x', pn.x, 'Pose z', pn.y, 'Rotacion', pn.th)
@@ -201,7 +231,6 @@ class SpecificWorker(GenericWorker):
                 polyline.append(punto)
 
             polylines.append(polyline)
-
 
 
         ############## ESTO SE DEBERIA HACER SOLO EN ALGUNAS CIRCUNSTANCIAS ######################
@@ -241,7 +270,8 @@ class SpecificWorker(GenericWorker):
 
             polylines.append(polylinemix)
 
-        ####################################
+        #################################### """
+
 
         plt.xlabel('X')
         plt.ylabel('Y')

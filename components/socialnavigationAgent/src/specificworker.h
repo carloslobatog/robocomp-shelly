@@ -57,15 +57,17 @@ public:
 	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
 	SNGPerson person1;
 	SNGPerson person2;
-	
+	SNGPerson person3;
 	//PARA ALMACENAR EL SIMBOLO DE LA PERSONA AL LEERLA DEL MUNDO
 	int32_t personSymbolIdp1;
 	int32_t personSymbolIdp2;
+	int32_t personSymbolIdp3;
 	
 	//BOOL PARA COMPROBAR SI LA PERSONA ESTA EN EL MUNDO
 	bool p1=false;
 	bool p2=false;
-	
+	bool p3=false;
+
 	//PARA LEER EL VALOR DEL SLIDER
 	int valorprox = 0;
 

@@ -32,7 +32,7 @@ class TimedList
 	class TimedDatum
 	{
 	public:
-		TimedDatum(float d)
+		 TimedDatum(float d)
 		{
 			datum = d;
 			datum_time = QTime::currentTime();
@@ -94,7 +94,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	proximidad->QSlider::setMaximum (100);	
 	proximidad->QSlider::setTracking (false);	
 	proximidad->QSlider::setValue (50);
-}
+}		
 
 /**
 * \brief Default destructor
@@ -119,15 +119,19 @@ void SpecificWorker::gauss()
 	persons.push_back(person1);
 	if (p2)
 	persons.push_back(person2);
-	
+	if (p3)
+	persons.push_back(person3);
+/*	
 	//Si estan las dos personas en el modelo comprobamos si estan hablando con checkconversation()
 	if (p1 && p2)
 	conversation = checkconversation();
 	else
-		 conversation = false;
+	conversation = false;
+	*/
 	
 	
-	SNGPolylineSeq secuencia = socialnavigationgaussian_proxy->getPolylines(persons, valorprox, conversation);
+	SNGPolylineSeq secuencia = socialnavigationgaussian_proxy->getPolylines(persons, valorprox, true);
+
 }
 
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
@@ -137,51 +141,51 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	return true;
 	
 }
-//////////////////////////////// COMPROBAMOS SI LAS DOS PERSONAS SE ESTAN COMUNICANDO //////////////////////////
-bool SpecificWorker::checkconversation(){
-	
-	//UMBRALES DE DISTANCIA Y ANGULO
-	float anglethr = 30*0.0175;  //30 grados
-	float distancethr = 2.5;
-	
-	bool checkangle = false;
-	bool checkdistance = false;	
-	
- 	//COMPROBAMOS ANGULO
-	float angleinf = PI/2 - anglethr;
-	float anglesup = PI/2 + anglethr;
-	
-	
-		
-	if (((angleinf<person1.angle && person1.angle < anglesup)&&
-		(2*PI-angleinf > person2.angle && person2.angle > 2*PI - anglesup))||
-		((2*PI-angleinf > person1.angle && person1.angle > 2*PI - anglesup)&&
-		(angleinf<person2.angle && person2.angle < anglesup)))
-		
-		
-		checkangle = true;
-	
-	else
-		checkangle= false;
-	
-		
-	//COMPROBAMOS DISTANCIA
-	float distance = sqrt(((person2.x-person1.x)*(person2.x-person1.x))+((person2.z-person1.z)*(person2.z-person1.z)));
-	qDebug()<<"Las dos personas se encuentran a "<<distance<<" metros de distancia";
-	
-	if (distance <= distancethr)
-		checkdistance= true;
-	else 
-		checkdistance= false;
-	
-	
-	//SI SE DAN LAS DOS CONDICIONES LAS PERSONAS ESTAN HABLANDO
-	if (checkangle && checkdistance)
-		return true;
-	else
-		return false;
-	
-}
+// //////////////////////////////// COMPROBAMOS SI LAS DOS PERSONAS SE ESTAN COMUNICANDO //////////////////////////
+// bool SpecificWorker::checkconversation(){
+// 	
+// 	//UMBRALES DE DISTANCIA Y ANGULO
+// 	float anglethr = 30*0.0175;  //30 grados x 0,0175 para pasar a radianes
+// 	float distancethr = 2.5;
+// 	
+// 	bool checkangle = false;
+// 	bool checkdistance = false;	
+// 	
+//  	//COMPROBAMOS ANGULO
+// 	float angleinf = PI/2 - anglethr;
+// 	float anglesup = PI/2 + anglethr;
+// 	
+// 	
+// 		
+// 	if (((angleinf<person1.angle && person1.angle < anglesup)&&
+// 		(2*PI-angleinf > person2.angle && person2.angle > 2*PI - anglesup))||
+// 		((2*PI-angleinf > person1.angle && person1.angle > 2*PI - anglesup)&&
+// 		(angleinf<person2.angle && person2.angle < anglesup)))
+// 		
+// 		
+// 		checkangle = true;
+// 	
+// 	else
+// 		checkangle= false;
+// 	
+// 		
+// 	//COMPROBAMOS DISTANCIA
+// 	float distance = sqrt(((person2.x-person1.x)*(person2.x-person1.x))+((person2.z-person1.z)*(person2.z-person1.z)));
+// 	qDebug()<<"Las dos personas se encuentran a "<<distance<<" metros de distancia";
+// 	
+// 	if (distance <= distancethr)
+// 		checkdistance= true;
+// 	else 
+// 		checkdistance= false;
+// 	
+// 	
+// 	//SI SE DAN LAS DOS CONDICIONES LAS PERSONAS ESTAN HABLANDO
+// 	if (checkangle && checkdistance)
+// 		return true;
+// 	else
+// 		return false;
+// 	
+// }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -234,11 +238,21 @@ void SpecificWorker::compute( )
 			break;
 		}
 	}
-		
+	
+	idx=0;		
+	while ((personSymbolIdp3 = worldModel->getIdentifierByType("person2", idx++)) != -1)
+	{
+
+		if (idx > 4) exit(0);
+		if (worldModel->getSymbolByIdentifier(personSymbolIdp3)->getAttribute("imName") == "fakeperson2")
+		{
+			p3=true;
+			break;
+		}
+	}
 			
 	if (cambiopos==true)
 	{
-	  printf("personas: p1:%d p2:%d\n", personSymbolIdp1, personSymbolIdp2);
 	  
 	  //EN LA ESTRUCTURA PERSONA, LAS DISTANCIAS ESTAN ALMACENADAS EN METROS
 		
@@ -267,7 +281,19 @@ void SpecificWorker::compute( )
 			qDebug() <<"PERSONA 2\n" <<"Coordenada x"<< person2.x << "Coordenada z"<< person2.z << "Rotacion "<< person2.angle;
 				
 			}	
+		
+		if (p3){
+			AGMModelSymbol::SPtr personParentP3 = worldModel->getParentByLink(personSymbolIdp3, "RT");
+			AGMModelEdge &edgeRTp3  = worldModel->getEdgeByIdentifiers(personParentP3->identifier, personSymbolIdp3, "RT");
 			
+			person3.x=str2float(edgeRTp3.attributes["tx"])/1000;
+			person3.z=str2float(edgeRTp3.attributes["tz"])/1000;
+			person3.angle=str2float(edgeRTp3.attributes["ry"]);
+			
+			qDebug() << "------------------------------------------------------------";
+			qDebug() <<"PERSONA 3\n" <<"Coordenada x"<< person3.x << "Coordenada z"<< person3.z << "Rotacion "<< person3.angle;
+				
+			}	
  		cambiopos=false;
  			
 // 		agaussian(person,3.5,1.5);
