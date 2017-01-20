@@ -88,7 +88,7 @@ class Person(object):
 
             #print(dat0)
 
-            plt.plot(dat0[:, 0], dat0[:, 1], '*')
+            plt.plot(dat0[:, 0], dat0[:, 1], '*b-')
 
           # CS = plt.contour(X, Y, Z, 10)
             #surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
@@ -121,6 +121,7 @@ class Person(object):
         sigma_r = 1.0
         sigma_s = 4/3
         rot = pi/2 - self.th
+
 
         alpha = np.arctan2(y - self.y, x - self.x) - rot - pi / 2
         nalpha = np.arctan2(np.sin(alpha), np.cos(alpha))  # Normalizando no intervalo [-pi, pi)
@@ -194,16 +195,13 @@ class SpecificWorker(GenericWorker):
         for p in persons:
             pn = Person(p.x, p.z, p.angle)
             #print('Pose x', pn.x, 'Pose z', pn.y, 'Rotacion', pn.th)
-            #normals.append(pn.draw(v, drawPersonalSpace=True))
             pn.draw(v, drawPersonalSpace=True)
             #  polylines.append(polyline)
-
-            normals.append(Normal(mu=[[pn.x],[pn.y]], sigma=[pn.th, 2.0, 1.0, 4/3], elliptical=True))
-
+            normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 2.0, 1.0, 4/3], elliptical=True))
 
         h = 0.5
         resolution = 0.1
-        limits = [[-7.0, 7.0], [-7.0, 7.0]]
+        limits = [[-10.0, 10.0], [-10.0, 10.0]]
         _, z = Normal.makeGrid(normals, h, 2, limits=limits, resolution=resolution)
         grid = GM.filterEdges(z, h)
 
@@ -213,8 +211,7 @@ class SpecificWorker(GenericWorker):
         plt.figure()
         plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
-        ###################################################################################################3
-
+        ###################################################################################################
 
 
         """""
@@ -232,8 +229,6 @@ class SpecificWorker(GenericWorker):
 
             polylines.append(polyline)
 
-
-        ############## ESTO SE DEBERIA HACER SOLO EN ALGUNAS CIRCUNSTANCIAS ######################
         if talk:
 
 
@@ -249,7 +244,6 @@ class SpecificWorker(GenericWorker):
             points = np.asarray(totalpuntos)
             #print('Total de puntos', points)
             hull = ConvexHull(points)
-
 
 
             #Se dibuja la curva hull
