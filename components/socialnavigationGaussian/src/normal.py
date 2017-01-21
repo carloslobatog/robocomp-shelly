@@ -45,7 +45,7 @@ class Normal(object):
                 Normal.calcExp(grids[:,i], mu, const, sigmaI, result[i])
 
     @staticmethod
-    def makeGrid (normals, h, dimensions = None, limits = None, resolution = 0.1, grids = None):
+    def makeGrid(normals, h, dimensions=None, limits=None, resolution=0.1, grids=None):
         if len(normals) > 0:
             axes = []
             if grids is None:
@@ -75,7 +75,7 @@ class Normal(object):
             self._sigma[0] = np.arctan2(np.sin(self._sigma[0]), np.cos(self._sigma[0]))
             self._sigma[1] = 2.0
             self._sigma[2] = 1.0
-            self._sigma[3] = 1.3333333333333333
+            self._sigma[3] = 4/3
 
     def getBounds (self,h):
 

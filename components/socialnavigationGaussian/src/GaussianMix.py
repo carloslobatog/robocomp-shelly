@@ -34,8 +34,8 @@ def filterEdges (z, h):
 		for x in range(z.shape[1]):
 			if isEdge(z, x, y, h):
 				result[y, x] = 1
-				print("result:")
-				print(result, y, x)
+				#print("result:")
+				#print(result, y, x)
 
 	return result
 

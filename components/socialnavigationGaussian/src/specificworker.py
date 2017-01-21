@@ -30,8 +30,6 @@ from scipy.spatial import ConvexHull
 from normal import Normal
 import GaussianMix as GM
 
-
-
 class Person(object):
     x = 0
     y = 0
@@ -81,6 +79,7 @@ class Person(object):
 
 
             ##PROBLEMICA -> a partir de nc> 4 dibuja una linea de menos. Por eso en el caso de que v==100 he puesto que aprox=nc-2
+
             CS = plt.contour(X, Y, Z, nc)
 
             dat0 = CS.allsegs[aprox][0]
@@ -88,9 +87,11 @@ class Person(object):
 
             #print(dat0)
 
-            plt.plot(dat0[:, 0], dat0[:, 1], '*b-')
+            ##Dibujar la polilinea
+           # plt.plot(dat0[:, 0], dat0[:, 1], '*b-')
 
-          # CS = plt.contour(X, Y, Z, 10)
+
+            # CS = plt.contour(X, Y, Z, 10)
             #surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
 
             # Corpo
@@ -98,14 +99,14 @@ class Person(object):
             plt.gca().add_patch(body)
 
             # Orientacion
-            print("alpha:")
+           # print("alpha:")
             x_aux = self.x + self._radius * cos(pi/2 - self.th);
-            print(self.x)
-            print(x_aux);
+            #print(self.x)
+            #print(x_aux);
             y_aux = self.y + self._radius * sin(pi/2 - self.th);
-            print(self.y)
+            #print(self.y)
 
-            print(y_aux)
+            #print(y_aux)
             heading = plt.Line2D((self.x, x_aux), (self.y, y_aux), lw=1, color='k')
             plt.gca().add_line(heading)
 
@@ -139,8 +140,6 @@ class Person(object):
 
         return z
 
-
-
 class SpecificWorker(GenericWorker):
     def __init__(self, proxy_map):
         super(SpecificWorker, self).__init__(proxy_map)
@@ -156,6 +155,7 @@ class SpecificWorker(GenericWorker):
         # except:
         #	traceback.print_exc()
         #	print "Error reading config params"
+
 
         return True
 
@@ -174,48 +174,65 @@ class SpecificWorker(GenericWorker):
     # getPolyline
     #
     def getPolylines(self, persons, v, talk):
+
         polylines = []
 
         plt.close('all')
-        #fig = plt.figure()
+        plt.figure()
         #ax = fig.add_subplot(111, projection='3d')
 
-        fig, ax = plt.subplots()
+        #fig, ax = plt.subplots()
         #ax.grid(True)
+      #  x = y = np.arange(-3.0, 3.0, 0.05)
+      #  X, Y = np.meshgrid(x, y)
 
+        ##Limites de la representacion
+        lx_inf = -5
+        lx_sup = 10
+        ly_inf = -8
+        ly_sup = 8
 
-        x = y = np.arange(-3.0, 3.0, 0.05)
-        X, Y = np.meshgrid(x, y)
         # zs = np.array([fun(x,y) for x,y in zip(np.ravel(X), np.ravel(Y))])
         # Z = zs.reshape(X.shape)
 
+
+
+        ##########################################CLUSTERING##################################################
+
         normals = []
-        #####################CLUSTERING#######################################
 
         for p in persons:
             pn = Person(p.x, p.z, p.angle)
             #print('Pose x', pn.x, 'Pose z', pn.y, 'Rotacion', pn.th)
             pn.draw(v, drawPersonalSpace=True)
-            #  polylines.append(polyline)
             normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 2.0, 1.0, 4/3], elliptical=True))
 
-        h = 0.5
+        h = 0.1
         resolution = 0.1
-        limits = [[-10.0, 10.0], [-10.0, 10.0]]
+        limits = [[lx_inf, lx_sup], [ly_inf, ly_sup]]
         _, z = Normal.makeGrid(normals, h, 2, limits=limits, resolution=resolution)
         grid = GM.filterEdges(z, h)
 
-        plt.figure()
-        plt.imshow(z, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+       # plt.figure()
+        #plt.imshow(z, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+
+        #plt.figure()
+        #plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+
 
         plt.figure()
-        plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+        plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal',
+                   origin='lower', cmap='Greys', vmin=0, vmax=2)
 
-        ###################################################################################################
+        np.savetxt('log.txt', grid, fmt='%i')
+
+
+        #####################################################################################################
+
 
 
         """""
-        ########################PARA SACAR LAS POLILINEAS Y HACER CONVEXHULL ##############################3
+        ########################PARA SACAR LAS POLILINEAS Y HACER CONVEXHULL ##############################
         for p in persons:
             pn = Person(p.x, p.z, p.angle)
             print('Pose x', pn.x, 'Pose z', pn.y, 'Rotacion', pn.th)
@@ -230,7 +247,6 @@ class SpecificWorker(GenericWorker):
             polylines.append(polyline)
 
         if talk:
-
 
             #Creo points para almacenar todos los puntos de todas las polilineas para poder hacer el convex hull
             totalpuntos = []
@@ -264,16 +280,18 @@ class SpecificWorker(GenericWorker):
 
             polylines.append(polylinemix)
 
-        #################################### """
+        ####################################
+        """
 
 
         plt.xlabel('X')
         plt.ylabel('Y')
 
-        plt.xlim(-6, 6)
-        plt.ylim(-6, 6)
+        #plt.xlim(-10,10)
+        #plt.ylim(-10, 10)
 
         plt.axis('equal')
+       # plt.grid(True)
         plt.show()
 
         return polylines
