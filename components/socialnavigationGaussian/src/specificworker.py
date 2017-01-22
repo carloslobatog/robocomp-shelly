@@ -29,6 +29,7 @@ from mpl_toolkits.mplot3d import axes3d
 from scipy.spatial import ConvexHull
 from normal import Normal
 import GaussianMix as GM
+import checkbounds as ck
 
 class Person(object):
     x = 0
@@ -114,6 +115,7 @@ class Person(object):
             return Z
 
 
+
     """ Private Methods """
 
     def _calculatePersonalSpace(self, x, y):
@@ -140,6 +142,9 @@ class Person(object):
 
         return z
 
+
+
+
 class SpecificWorker(GenericWorker):
     def __init__(self, proxy_map):
         super(SpecificWorker, self).__init__(proxy_map)
@@ -161,7 +166,7 @@ class SpecificWorker(GenericWorker):
 
     @QtCore.Slot()
     def compute(self):
-        print('SpecificWorker.compute...')
+       # print('SpecificWorker.compute...')
         # computeCODE
         # try:
         #	self.differentialrobot_proxy.setSpeedBase(100, 0)
@@ -187,9 +192,9 @@ class SpecificWorker(GenericWorker):
       #  X, Y = np.meshgrid(x, y)
 
         ##Limites de la representacion
-        lx_inf = -5
-        lx_sup = 10
-        ly_inf = -8
+        lx_inf = -6
+        lx_sup = 8
+        ly_inf = -6
         ly_sup = 8
 
         # zs = np.array([fun(x,y) for x,y in zip(np.ravel(X), np.ravel(Y))])
@@ -207,7 +212,8 @@ class SpecificWorker(GenericWorker):
             pn.draw(v, drawPersonalSpace=True)
             normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 2.0, 1.0, 4/3], elliptical=True))
 
-        h = 0.1
+
+        h = 0.5
         resolution = 0.1
         limits = [[lx_inf, lx_sup], [ly_inf, ly_sup]]
         _, z = Normal.makeGrid(normals, h, 2, limits=limits, resolution=resolution)
@@ -220,7 +226,7 @@ class SpecificWorker(GenericWorker):
         #plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
 
-        plt.figure()
+        #plt.figure()
         plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal',
                    origin='lower', cmap='Greys', vmin=0, vmax=2)
 
@@ -229,8 +235,38 @@ class SpecificWorker(GenericWorker):
 
         #####################################################################################################
 
+        ######################SACAR LAS POLILINEAS DE GRID###################################################
+
+        ## mas adelante se puede convertir totalpuntos en polylines y almacenar directamente las polilineas
+        totalpuntos = []
+
+        plt.figure()
 
 
+        for j in range(grid.shape[0] - 1):
+             for i in range(grid.shape[1] -1):
+
+                if grid[i,j]>0:
+                    print ("PUNTO NEGRO", [i,j])
+                    plt.plot (i,j,'*b-')
+                    mismocluster, pos = ck.checkbounds(grid, i, j, totalpuntos)
+
+                    if (mismocluster==True):
+                        totalpuntos[pos].append([i,j])
+                        print("tamano totalpuntos mismo cluster", len(totalpuntos))
+
+                    else:
+                        puntos=[]
+                        puntos.append ([i,j])
+                        totalpuntos.append(puntos)
+                        print ("tamano totalpuntos cluster diferente",len(totalpuntos))
+
+                    print("---------------------")
+
+
+
+
+        #####################################################################################################
         """""
         ########################PARA SACAR LAS POLILINEAS Y HACER CONVEXHULL ##############################
         for p in persons:
