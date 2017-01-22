@@ -264,6 +264,10 @@ class SpecificWorker(GenericWorker):
                     print("---------------------")
 
 
+        for lista in totalpuntos:
+            plt.figure()
+            for puntos in lista:
+                plt.plot(puntos[0],puntos[1],"*r-")
 
 
         #####################################################################################################

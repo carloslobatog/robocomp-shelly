@@ -27,6 +27,7 @@ def checkbounds(grid, i, j, totalpuntos):
                     print("El entorno coincide en dos listas")
                     totalpuntos[indice].extend(totalpuntos[aux])
                     totalpuntos.pop(aux)
+                    break
     ### SI UN PUNTO TIENE ENTORNOS QUE PERTENECEN A DOS LISTAS
     ### CONCATENAMOS LAS DOS LISTAS Y ELIMINAMOS UNA DE ELLAS PORQUE PERTENECEN AL MISMO CLUSTER
 
