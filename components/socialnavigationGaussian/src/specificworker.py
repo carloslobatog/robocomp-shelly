@@ -180,8 +180,6 @@ class SpecificWorker(GenericWorker):
     #
     def getPolylines(self, persons, v, talk):
 
-        polylines = []
-
         plt.close('all')
         plt.figure()
         #ax = fig.add_subplot(111, projection='3d')
@@ -192,10 +190,10 @@ class SpecificWorker(GenericWorker):
       #  X, Y = np.meshgrid(x, y)
 
         ##Limites de la representacion
-        lx_inf = -6
-        lx_sup = 8
-        ly_inf = -6
-        ly_sup = 8
+        lx_inf = -10
+        lx_sup = 10
+        ly_inf = -10
+        ly_sup = 10
 
         # zs = np.array([fun(x,y) for x,y in zip(np.ravel(X), np.ravel(Y))])
         # Z = zs.reshape(X.shape)
@@ -219,16 +217,17 @@ class SpecificWorker(GenericWorker):
         _, z = Normal.makeGrid(normals, h, 2, limits=limits, resolution=resolution)
         grid = GM.filterEdges(z, h)
 
-       # plt.figure()
+
+        #plt.figure()
         #plt.imshow(z, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+
 
         #plt.figure()
         #plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
 
-        #plt.figure()
-        plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal',
-                   origin='lower', cmap='Greys', vmin=0, vmax=2)
+       # plt.figure()
+       # plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
         np.savetxt('log.txt', grid, fmt='%i')
 
@@ -236,19 +235,13 @@ class SpecificWorker(GenericWorker):
         #####################################################################################################
 
         ######################SACAR LAS POLILINEAS DE GRID###################################################
-
-        ## mas adelante se puede convertir totalpuntos en polylines y almacenar directamente las polilineas
         totalpuntos = []
 
-        plt.figure()
-        plt.axis('equal')
-
-        for j in range(grid.shape[0] ):
-             for i in range(grid.shape[1] ):
-
-                if grid[i,j]>0:
+        for j in range(grid.shape[1] ):
+            for i in range(grid.shape[0]):
+                if grid[j,i]>0:
                     print ("PUNTO NEGRO", [i,j])
-                    plt.plot (i,j,'*b-')
+                   # plt.plot (i*resolution+ lx_inf, j*resolution+ly_inf,'*r-')
                     mismocluster, pos = ck.checkboundaries(grid, i, j, totalpuntos)
 
                     if (mismocluster==True):
@@ -264,12 +257,39 @@ class SpecificWorker(GenericWorker):
                     print("---------------------")
 
 
-      #  for lista in totalpuntos:
-      #      plt.figure()
-       #     for puntos in lista:
-       #         plt.axis ('equal')
-        #        plt.plot(puntos[0],puntos[1],"*r-")
+        for lista in totalpuntos:
+            for puntos in lista:
+                puntos[0] = puntos[0]*resolution + lx_inf
+                puntos[1] = puntos[1]*resolution + ly_inf
 
+                plt.axis ('equal')
+                plt.plot(puntos[0],puntos[1],"*r-")
+
+
+
+        #####PASO A POLILINEAS######
+
+        polylines= []
+        for lista in totalpuntos:
+            polyline = []
+            for puntos in lista:
+                punto = SNGPoint2D()
+                punto.x = puntos[0]
+                punto.z = puntos[1]
+                polyline.append(punto)
+            polylines.append(polyline)
+
+        print("tamano polilinea debe ser igual",len(polylines))
+
+
+        for ps in polylines:
+            plt.figure()
+            plt.xlim(lx_inf, ly_inf)
+            plt.ylim(ly_inf, ly_sup)
+
+            plt.axis('equal')
+            for p in ps:
+                plt.plot(p.x,p.z,"*g-")
 
         #####################################################################################################
         """""
