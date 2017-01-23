@@ -1,6 +1,6 @@
 import numpy as np
 
-def checkbounds(grid, i, j, totalpuntos):
+def checkboundaries(grid, i, j, totalpuntos):
     indice = 0
     mismocluster = False
     entorno = []

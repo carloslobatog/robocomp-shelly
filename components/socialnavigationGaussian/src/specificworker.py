@@ -29,7 +29,7 @@ from mpl_toolkits.mplot3d import axes3d
 from scipy.spatial import ConvexHull
 from normal import Normal
 import GaussianMix as GM
-import checkbounds as ck
+import checkboundaries as ck
 
 class Person(object):
     x = 0
@@ -243,8 +243,8 @@ class SpecificWorker(GenericWorker):
         plt.figure()
         plt.axis('equal')
 
-        for j in range(grid.shape[0] - 1):
-             for i in range(grid.shape[1] -1):
+        for j in range(grid.shape[0] ):
+             for i in range(grid.shape[1] ):
 
                 if grid[i,j]>0:
                     print ("PUNTO NEGRO", [i,j])
