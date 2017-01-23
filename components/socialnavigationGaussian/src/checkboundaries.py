@@ -9,8 +9,8 @@ def checkbounds(grid, i, j, totalpuntos):
 ##### EN EL ENTORNO TENGO EN CUENTA LOS PIXELES QUE RODEAN AL PUNTO Y ADEMAS LOS QUE RODEAN A ESTOS #####
     #### SINO DA PROBLEMAS PORQUE LOS CONSIDERA DE CLUSTERS DIFERENTES####
 
-    for indicey in range (-3,4):
-        for indicex in range (-3,4):
+    for indicey in range(-2,3):
+        for indicex in range(-2,3):
             entorno.append([i+indicex,j+indicey])
 
 

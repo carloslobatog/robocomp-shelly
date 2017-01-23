@@ -241,7 +241,7 @@ class SpecificWorker(GenericWorker):
         totalpuntos = []
 
         plt.figure()
-
+        plt.axis('equal')
 
         for j in range(grid.shape[0] - 1):
              for i in range(grid.shape[1] -1):
@@ -249,7 +249,7 @@ class SpecificWorker(GenericWorker):
                 if grid[i,j]>0:
                     print ("PUNTO NEGRO", [i,j])
                     plt.plot (i,j,'*b-')
-                    mismocluster, pos = ck.checkbounds(grid, i, j, totalpuntos)
+                    mismocluster, pos = ck.checkboundaries(grid, i, j, totalpuntos)
 
                     if (mismocluster==True):
                         totalpuntos[pos].append([i,j])
@@ -264,10 +264,11 @@ class SpecificWorker(GenericWorker):
                     print("---------------------")
 
 
-        for lista in totalpuntos:
-            plt.figure()
-            for puntos in lista:
-                plt.plot(puntos[0],puntos[1],"*r-")
+      #  for lista in totalpuntos:
+      #      plt.figure()
+       #     for puntos in lista:
+       #         plt.axis ('equal')
+        #        plt.plot(puntos[0],puntos[1],"*r-")
 
 
         #####################################################################################################
