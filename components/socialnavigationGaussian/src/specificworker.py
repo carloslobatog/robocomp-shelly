@@ -190,10 +190,10 @@ class SpecificWorker(GenericWorker):
       #  X, Y = np.meshgrid(x, y)
 
         ##Limites de la representacion
-        lx_inf = -10
-        lx_sup = 10
-        ly_inf = -10
-        ly_sup = 10
+        lx_inf = -6
+        lx_sup = 8
+        ly_inf = -6
+        ly_sup = 8
 
         # zs = np.array([fun(x,y) for x,y in zip(np.ravel(X), np.ravel(Y))])
         # Z = zs.reshape(X.shape)
@@ -227,7 +227,10 @@ class SpecificWorker(GenericWorker):
 
 
        # plt.figure()
-       # plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+        plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+        plt.xlabel('X')
+        plt.ylabel('Y')
+        plt.axis('equal')
 
         np.savetxt('log.txt', grid, fmt='%i')
 
@@ -262,9 +265,6 @@ class SpecificWorker(GenericWorker):
                 puntos[0] = puntos[0]*resolution + lx_inf
                 puntos[1] = puntos[1]*resolution + ly_inf
 
-                plt.axis ('equal')
-                plt.plot(puntos[0],puntos[1],"*r-")
-
 
 
         #####PASO A POLILINEAS######
@@ -284,12 +284,14 @@ class SpecificWorker(GenericWorker):
 
         for ps in polylines:
             plt.figure()
-            plt.xlim(lx_inf, ly_inf)
-            plt.ylim(ly_inf, ly_sup)
 
-            plt.axis('equal')
             for p in ps:
-                plt.plot(p.x,p.z,"*g-")
+                plt.plot(p.x,p.z,"*r-")
+                plt.axis('equal')
+                plt.xlabel('X')
+                plt.ylabel('Y')
+        plt.show()
+
 
         #####################################################################################################
         """""
@@ -344,15 +346,12 @@ class SpecificWorker(GenericWorker):
         ####################################
         """
 
-
-        plt.xlabel('X')
-        plt.ylabel('Y')
-
-        #plt.xlim(-10,10)
-        #plt.ylim(-10, 10)
-
-        plt.axis('equal')
-       # plt.grid(True)
-        plt.show()
+       #
+       #  plt.xlabel('X')
+       #  plt.ylabel('Y')
+       #
+       #  plt.axis('equal')
+       # # plt.grid(True)
+        #  plt.show()
 
         return polylines
