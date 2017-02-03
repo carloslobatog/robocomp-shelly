@@ -256,9 +256,9 @@
 
  <node alias="faulhaber" endpoint="jointmotor:tcp -p 10067">
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost rgbd /home/araceli/mirobocomp/robocomp-shelly/etcSim rcis simulation.xml -f 200" />
+  <upCommand command="rcremote localhost rgbd /home/robocomp/mirobocomp/robocomp-shelly/etcSim rcis simulation.xml -f 200" />
   <downCommand command="killall -9 rcis" />
-  <configFile path="rcremote localhost configs /home/araceli/mirobocomp/robocomp-shelly/etcSim kate simulation.xml" />
+  <configFile path="rcremote localhost configs /home/robocomp/mirobocomp/robocomp-shelly/etcSim kate simulation.xml" />
   <xpos value="63.4167829126" />
   <ypos value="166.413095626" />
   <radius value="10.0" />
@@ -267,9 +267,9 @@
 
  <node alias="dynamixel" endpoint="jointmotor:tcp -p 10068">
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost rgbd /home/araceli/mirobocomp/robocomp-shelly/etcSim rcis simulation.xml -f 200" />
+  <upCommand command="rcremote localhost rgbd /home/robocomp/mirobocomp/robocomp-shelly/etcSim rcis simulation.xml -f 200" />
   <downCommand command="killall -9 rcis" />
-  <configFile path="rcremote localhost configs /home/araceli/mirobocomp/robocomp-shelly/etcSim kate simulation.xml" />
+  <configFile path="rcremote localhost configs /home/robocomp/mirobocomp/robocomp-shelly/etcSim kate simulation.xml" />
   <xpos value="108.31002484" />
   <ypos value="163.908963394" />
   <radius value="10.0" />
@@ -290,9 +290,9 @@
  <node alias="rgbd" endpoint="rgbd:tcp -p 10096">
   <dependence alias="comJoint" />
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost rgbd /home/araceli/mirobocomp/robocomp-shelly/etcSim rcis simulation.xml -f 200" />
+  <upCommand command="rcremote localhost rgbd /home/robocomp/mirobocomp/robocomp-shelly/etcSim rcis simulation.xml -f 200" />
   <downCommand command="killall -9 rcis" />
-  <configFile path="rcremote localhost configs /home/araceli/mirobocomp/robocomp-shelly/etcSim kate simulation.xml" />
+  <configFile path="rcremote localhost configs /home/robocomp/mirobocomp/robocomp-shelly/etcSim kate simulation.xml" />
   <xpos value="0.962021992792" />
   <ypos value="165.532650985" />
   <radius value="10.0" />
