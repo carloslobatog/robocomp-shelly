@@ -23,6 +23,7 @@
 #include <python2.7/Python.h>
 #include <iostream>
 #include <stdio.h>
+#include <vector>
 
 
 
@@ -58,16 +59,23 @@ public:
 	SNGPerson person1;
 	SNGPerson person2;
 	SNGPerson person3;
+	SNGPerson robot;
+	
 	//PARA ALMACENAR EL SIMBOLO DE LA PERSONA AL LEERLA DEL MUNDO
 	int32_t personSymbolIdp1;
 	int32_t personSymbolIdp2;
 	int32_t personSymbolIdp3;
+	int32_t robotSymbolId;
 	
 	//BOOL PARA COMPROBAR SI LA PERSONA ESTA EN EL MUNDO
 	bool p1=false;
 	bool p2=false;
 	bool p3=false;
 
+	//PARA GUARDAR LOS DATOS EN UN ARCHIVO
+
+	//https://blogdelingeniero1.wordpress.com/2014/07/22/la-clase-vector-y-sus-metodos-mas-importantes-en-cpp-c/
+	
 	//PARA LEER EL VALOR DEL SLIDER
 	int valorprox = 0;
 

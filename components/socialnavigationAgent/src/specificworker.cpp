@@ -141,6 +141,8 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	return true;
 	
 }
+
+
 // //////////////////////////////// COMPROBAMOS SI LAS DOS PERSONAS SE ESTAN COMUNICANDO //////////////////////////
 // bool SpecificWorker::checkconversation(){
 // 	
@@ -206,6 +208,7 @@ void SpecificWorker::compute( )
 		
 			qDebug()<<"Leo el mundo";
 			agmexecutive_proxy->broadcastModel();
+		
 			return;
 		}
 		catch(...)
@@ -294,14 +297,50 @@ void SpecificWorker::compute( )
 			qDebug() <<"PERSONA 3\n" <<"Coordenada x"<< person3.x << "Coordenada z"<< person3.z << "Rotacion "<< person3.angle;
 				
 			}	
- 		cambiopos=false;
+ 		
  			
 // 		agaussian(person,3.5,1.5);
-	 }	
-		 	
+		
+		
+	///////////////////////////OBTENER LA POSE DEL ROBOT /////////////////////////////////////77
+	 
+// 	idx=0;		
+// 	while ((robotSymbolId = worldModel->getIdentifierByType("robot", idx++)) != -1)
+// 	{
+// 
+// 		if (idx > 4) exit(0);
+// 		if (worldModel->getSymbolByIdentifier(robotSymbolId)->getAttribute("imName") == "robot")
+// 		{
+// 			break;
+// 		}
+// 	}
+			
+		robotSymbolId = worldModel->getIdentifierByType("robot");
+		AGMModelSymbol::SPtr robotparent = worldModel->getParentByLink(robotSymbolId, "RT");
+		AGMModelEdge &edgeRTrobot  = worldModel->getEdgeByIdentifiers(robotparent->identifier, robotSymbolId, "RT");
+			
+		robot.x=str2float(edgeRTrobot.attributes["tx"])/1000;
+		robot.z=str2float(edgeRTrobot.attributes["tz"])/1000;
+		robot.angle=str2float(edgeRTrobot.attributes["ry"]);
+		
+		qDebug() << "------------------------------------------------------------";	
+		qDebug() <<"ROBOT\n" <<"Coordenada x"<< robot.x << "Coordenada z"<< robot.z << "Rotacion "<< robot.angle;
+		
+		
+// 		punto[0]=robot.x;
+// 		punto[1]=robot.z;
+// 		listapuntos.push_back(punto);
+		
+		
+		
+		cambiopos=false;		
+	}		
+		
+		
+}	 	
 	//actionExecution();
 	
-}
+
 
 // double SpecificWorker::agaussian(Person person, float x, float y){
 // 
@@ -1419,6 +1458,7 @@ void SpecificWorker::symbolUpdated(const RoboCompAGMWorldModel::Node& modificati
 
 void SpecificWorker::symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence &modifications)
 {
+  
   qDebug()<<"symbolsUpdated";
 	QMutexLocker l(mutex);
 
