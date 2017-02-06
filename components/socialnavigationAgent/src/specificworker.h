@@ -59,19 +59,27 @@ public:
 	SNGPerson person1;
 	SNGPerson person2;
 	SNGPerson person3;
+	SNGPerson person4;
+	SNGPerson person5;
+	SNGPerson person6;
 	SNGPerson robot;
 	
 	//PARA ALMACENAR EL SIMBOLO DE LA PERSONA AL LEERLA DEL MUNDO
 	int32_t personSymbolIdp1;
 	int32_t personSymbolIdp2;
 	int32_t personSymbolIdp3;
+	int32_t personSymbolIdp4;
+	int32_t personSymbolIdp5;
+	int32_t personSymbolIdp6;
 	int32_t robotSymbolId;
 	
 	//BOOL PARA COMPROBAR SI LA PERSONA ESTA EN EL MUNDO
 	bool p1=false;
 	bool p2=false;
 	bool p3=false;
-
+	bool p4=false;
+	bool p5=false;
+	bool p6=false;
 	//PARA GUARDAR LOS DATOS EN UN ARCHIVO
 
 	//https://blogdelingeniero1.wordpress.com/2014/07/22/la-clase-vector-y-sus-metodos-mas-importantes-en-cpp-c/
