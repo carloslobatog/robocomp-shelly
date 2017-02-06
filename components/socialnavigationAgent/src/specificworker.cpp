@@ -121,7 +121,15 @@ void SpecificWorker::gauss()
 	persons.push_back(person2);
 	if (p3)
 	persons.push_back(person3);
+	if (p4)
+	persons.push_back(person4);
+	if (p5)
+	persons.push_back(person5);
+	if (p6)
+	persons.push_back(person6);
+	
 /*	
+
 	//Si estan las dos personas en el modelo comprobamos si estan hablando con checkconversation()
 	if (p1 && p2)
 	conversation = checkconversation();
@@ -231,11 +239,11 @@ void SpecificWorker::compute( )
 	}
 		
 	idx=0;
-	while ((personSymbolIdp2 = worldModel->getIdentifierByType("person1", idx++)) != -1)
+	while ((personSymbolIdp2 = worldModel->getIdentifierByType("person2", idx++)) != -1)
 	{
 
 		if (idx > 4) exit(0);
-		if (worldModel->getSymbolByIdentifier(personSymbolIdp2)->getAttribute("imName") == "fakeperson1")
+		if (worldModel->getSymbolByIdentifier(personSymbolIdp2)->getAttribute("imName") == "fakeperson2")
 		{
 			p2=true;
 			break;
@@ -243,13 +251,50 @@ void SpecificWorker::compute( )
 	}
 	
 	idx=0;		
-	while ((personSymbolIdp3 = worldModel->getIdentifierByType("person2", idx++)) != -1)
+	while ((personSymbolIdp3 = worldModel->getIdentifierByType("person3", idx++)) != -1)
 	{
 
 		if (idx > 4) exit(0);
-		if (worldModel->getSymbolByIdentifier(personSymbolIdp3)->getAttribute("imName") == "fakeperson2")
+		if (worldModel->getSymbolByIdentifier(personSymbolIdp3)->getAttribute("imName") == "fakeperson3")
 		{
 			p3=true;
+			break;
+		}
+	}
+	
+	
+	idx=0;		
+	while ((personSymbolIdp4 = worldModel->getIdentifierByType("person4", idx++)) != -1)
+	{
+
+		if (idx > 4) exit(0);
+		if (worldModel->getSymbolByIdentifier(personSymbolIdp4)->getAttribute("imName") == "fakeperson4")
+		{
+			p4=true;
+			break;
+		}
+	}
+	
+	idx=0;		
+	while ((personSymbolIdp5 = worldModel->getIdentifierByType("person5", idx++)) != -1)
+	{
+
+		if (idx > 4) exit(0);
+		if (worldModel->getSymbolByIdentifier(personSymbolIdp5)->getAttribute("imName") == "fakeperson5")
+		{
+			p5=true;
+			break;
+		}
+	}
+	
+	idx=0;		
+	while ((personSymbolIdp6 = worldModel->getIdentifierByType("person6", idx++)) != -1)
+	{
+
+		if (idx > 4) exit(0);
+		if (worldModel->getSymbolByIdentifier(personSymbolIdp6)->getAttribute("imName") == "fakeperson6")
+		{
+			p6=true;
 			break;
 		}
 	}
@@ -296,9 +341,45 @@ void SpecificWorker::compute( )
 			qDebug() << "------------------------------------------------------------";
 			qDebug() <<"PERSONA 3\n" <<"Coordenada x"<< person3.x << "Coordenada z"<< person3.z << "Rotacion "<< person3.angle;
 				
-			}	
- 		
+			}
+			
+ 		if (p4){
+			AGMModelSymbol::SPtr personParentP4 = worldModel->getParentByLink(personSymbolIdp4, "RT");
+			AGMModelEdge &edgeRTp4  = worldModel->getEdgeByIdentifiers(personParentP4->identifier, personSymbolIdp4, "RT");
+			
+			person4.x=str2float(edgeRTp4.attributes["tx"])/1000;
+			person4.z=str2float(edgeRTp4.attributes["tz"])/1000;
+			person4.angle=str2float(edgeRTp4.attributes["ry"]);
+			
+			qDebug() << "------------------------------------------------------------";
+			qDebug() <<"PERSONA 4\n" <<"Coordenada x"<< person4.x << "Coordenada z"<< person4.z << "Rotacion "<< person4.angle;
+				
+			}
  			
+ 		if (p5){
+			AGMModelSymbol::SPtr personParentP5 = worldModel->getParentByLink(personSymbolIdp5, "RT");
+			AGMModelEdge &edgeRTp5  = worldModel->getEdgeByIdentifiers(personParentP5->identifier, personSymbolIdp5, "RT");
+			
+			person5.x=str2float(edgeRTp5.attributes["tx"])/1000;
+			person5.z=str2float(edgeRTp5.attributes["tz"])/1000;
+			person5.angle=str2float(edgeRTp5.attributes["ry"]);
+			
+			qDebug() << "------------------------------------------------------------";
+			qDebug() <<"PERSONA 5\n" <<"Coordenada x"<< person5.x << "Coordenada z"<< person5.z << "Rotacion "<< person5.angle;
+			}	
+			
+		if (p6){
+			AGMModelSymbol::SPtr personParentP6 = worldModel->getParentByLink(personSymbolIdp6, "RT");
+			AGMModelEdge &edgeRTp6  = worldModel->getEdgeByIdentifiers(personParentP6->identifier, personSymbolIdp6, "RT");
+			
+			person6.x=str2float(edgeRTp6.attributes["tx"])/1000;
+			person6.z=str2float(edgeRTp6.attributes["tz"])/1000;
+			person6.angle=str2float(edgeRTp6.attributes["ry"]);
+			
+			qDebug() << "------------------------------------------------------------";
+			qDebug() <<"PERSONA 6\n" <<"Coordenada x"<< person6.x << "Coordenada z"<< person6.z << "Rotacion "<< person6.angle;
+				
+			}	
 // 		agaussian(person,3.5,1.5);
 		
 		
