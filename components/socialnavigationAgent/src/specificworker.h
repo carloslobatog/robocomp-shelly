@@ -91,7 +91,6 @@ public:
 	
 	//PARA COMPROBAR SI DOS PERSONAS ESTAN HABLANDO
 	bool conversation = false;
-	
 	bool checkconversation();
 
 	

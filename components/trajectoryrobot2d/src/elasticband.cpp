@@ -101,9 +101,9 @@ bool ElasticBand::update(InnerModel *innermodel, WayPoints &road, const RoboComp
 	cleanPoints(road);
 
 	
-	/////////////////////////777
+	///////////////////////////////////////////////////////////////////// AQUIII////////////////
 	// Union de poligonos
-	TLaserData myLaser = unionPoligonos(laserData, safePolyList); 
+	RoboCompLaser::TLaserData myLaser = unionpoligonos(laserData, safePolyList); 
 	
 	/////////////////////////////////////////////
 	//Compute the scalar magnitudes
@@ -166,6 +166,12 @@ bool ElasticBand::shortCut(InnerModel *innermodel, WayPoints &road, const RoboCo
  * @param road ...
  * @return void
  */
+RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData laserData,SafePolyList safePolyList){
+
+  
+} 
+
+
 bool ElasticBand::addPoints(WayPoints &road, const CurrentTarget &currentTarget)
 {
 	if( road.size() < 2) 

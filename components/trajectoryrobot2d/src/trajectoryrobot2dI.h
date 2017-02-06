@@ -37,10 +37,10 @@ public:
 	NavState getState(const Ice::Current&);
 	float goBackwards(const TargetPose  &target, const Ice::Current&);
 	void stop(const Ice::Current&);
-	void setHumanSpace(const PolyLineList  &polyList, const Ice::Current&);
 	float goReferenced(const TargetPose  &target, const float  xRef, const float  zRef, const float  threshold, const Ice::Current&);
 	float changeTarget(const TargetPose  &target, const Ice::Current&);
 	float go(const TargetPose  &target, const Ice::Current&);
+	float goMulti(const TargetSeq  &targetSeq, const float  xRef, const float  zRef, const float  threshold, const Ice::Current&);
 	void mapBasedTarget(const NavigationParameterMap  &parameters, const Ice::Current&);
 
 private:

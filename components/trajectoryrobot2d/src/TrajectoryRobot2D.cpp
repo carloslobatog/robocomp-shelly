@@ -42,8 +42,6 @@ namespace
 
 const ::std::string __RoboCompTrajectoryRobot2D__TrajectoryRobot2D__go_name = "go";
 
-const ::std::string __RoboCompTrajectoryRobot2D__TrajectoryRobot2D__setHumanSpace_name = "setHumanSpace";
-
 const ::std::string __RoboCompTrajectoryRobot2D__TrajectoryRobot2D__goReferenced_name = "goReferenced";
 
 const ::std::string __RoboCompTrajectoryRobot2D__TrajectoryRobot2D__goBackwards_name = "goBackwards";
@@ -235,57 +233,6 @@ IceProxy::RoboCompTrajectoryRobot2D::TrajectoryRobot2D::end_go(const ::Ice::Asyn
         __result->__getObserver().failed(ex.ice_name());
         throw;
     }
-}
-
-void
-IceProxy::RoboCompTrajectoryRobot2D::TrajectoryRobot2D::setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList& polyList, const ::Ice::Context* __ctx)
-{
-    ::IceInternal::InvocationObserver __observer(this, __RoboCompTrajectoryRobot2D__TrajectoryRobot2D__setHumanSpace_name, __ctx);
-    int __cnt = 0;
-    while(true)
-    {
-        ::IceInternal::Handle< ::IceDelegate::Ice::Object> __delBase;
-        try
-        {
-            __delBase = __getDelegate(false);
-            ::IceDelegate::RoboCompTrajectoryRobot2D::TrajectoryRobot2D* __del = dynamic_cast< ::IceDelegate::RoboCompTrajectoryRobot2D::TrajectoryRobot2D*>(__delBase.get());
-            __del->setHumanSpace(polyList, __ctx, __observer);
-            return;
-        }
-        catch(const ::IceInternal::LocalExceptionWrapper& __ex)
-        {
-            __handleExceptionWrapper(__delBase, __ex, __observer);
-        }
-        catch(const ::Ice::LocalException& __ex)
-        {
-            __handleException(__delBase, __ex, true, __cnt, __observer);
-        }
-    }
-}
-
-::Ice::AsyncResultPtr
-IceProxy::RoboCompTrajectoryRobot2D::TrajectoryRobot2D::begin_setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList& polyList, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
-{
-    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __RoboCompTrajectoryRobot2D__TrajectoryRobot2D__setHumanSpace_name, __del, __cookie);
-    try
-    {
-        __result->__prepare(__RoboCompTrajectoryRobot2D__TrajectoryRobot2D__setHumanSpace_name, ::Ice::Normal, __ctx);
-        ::IceInternal::BasicStream* __os = __result->__startWriteParams(::Ice::DefaultFormat);
-        __os->write(polyList);
-        __result->__endWriteParams();
-        __result->__send(true);
-    }
-    catch(const ::Ice::LocalException& __ex)
-    {
-        __result->__exceptionAsync(__ex);
-    }
-    return __result;
-}
-
-void
-IceProxy::RoboCompTrajectoryRobot2D::TrajectoryRobot2D::end_setHumanSpace(const ::Ice::AsyncResultPtr& __result)
-{
-    __end(__result, __RoboCompTrajectoryRobot2D__TrajectoryRobot2D__setHumanSpace_name);
 }
 
 ::Ice::Float
@@ -778,46 +725,6 @@ IceDelegateM::RoboCompTrajectoryRobot2D::TrajectoryRobot2D::go(const ::RoboCompT
     }
 }
 
-void
-IceDelegateM::RoboCompTrajectoryRobot2D::TrajectoryRobot2D::setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList& polyList, const ::Ice::Context* __context, ::IceInternal::InvocationObserver& __observer)
-{
-    ::IceInternal::Outgoing __og(__handler.get(), __RoboCompTrajectoryRobot2D__TrajectoryRobot2D__setHumanSpace_name, ::Ice::Normal, __context, __observer);
-    try
-    {
-        ::IceInternal::BasicStream* __os = __og.startWriteParams(::Ice::DefaultFormat);
-        __os->write(polyList);
-        __og.endWriteParams();
-    }
-    catch(const ::Ice::LocalException& __ex)
-    {
-        __og.abort(__ex);
-    }
-    bool __ok = __og.invoke();
-    if(__og.hasResponse())
-    {
-        try
-        {
-            if(!__ok)
-            {
-                try
-                {
-                    __og.throwUserException();
-                }
-                catch(const ::Ice::UserException& __ex)
-                {
-                    ::Ice::UnknownUserException __uue(__FILE__, __LINE__, __ex.ice_name());
-                    throw __uue;
-                }
-            }
-            __og.readEmptyParams();
-        }
-        catch(const ::Ice::LocalException& __ex)
-        {
-            throw ::IceInternal::LocalExceptionWrapper(__ex, false);
-        }
-    }
-}
-
 ::Ice::Float
 IceDelegateM::RoboCompTrajectoryRobot2D::TrajectoryRobot2D::goReferenced(const ::RoboCompTrajectoryRobot2D::TargetPose& target, ::Ice::Float xRef, ::Ice::Float zRef, ::Ice::Float threshold, const ::Ice::Context* __context, ::IceInternal::InvocationObserver& __observer)
 {
@@ -1137,70 +1044,6 @@ IceDelegateD::RoboCompTrajectoryRobot2D::TrajectoryRobot2D::go(const ::RoboCompT
         throw ::IceInternal::LocalExceptionWrapper(::Ice::UnknownException(__FILE__, __LINE__, "unknown c++ exception"), false);
     }
     return __result;
-}
-
-void
-IceDelegateD::RoboCompTrajectoryRobot2D::TrajectoryRobot2D::setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList& polyList, const ::Ice::Context* __context, ::IceInternal::InvocationObserver&)
-{
-    class _DirectI : public ::IceInternal::Direct
-    {
-    public:
-
-        _DirectI(const ::RoboCompTrajectoryRobot2D::PolyLineList& __p_polyList, const ::Ice::Current& __current) : 
-            ::IceInternal::Direct(__current),
-            _m_polyList(__p_polyList)
-        {
-        }
-        
-        virtual ::Ice::DispatchStatus
-        run(::Ice::Object* object)
-        {
-            ::RoboCompTrajectoryRobot2D::TrajectoryRobot2D* servant = dynamic_cast< ::RoboCompTrajectoryRobot2D::TrajectoryRobot2D*>(object);
-            if(!servant)
-            {
-                throw ::Ice::OperationNotExistException(__FILE__, __LINE__, _current.id, _current.facet, _current.operation);
-            }
-            servant->setHumanSpace(_m_polyList, _current);
-            return ::Ice::DispatchOK;
-        }
-        
-    private:
-        
-        const ::RoboCompTrajectoryRobot2D::PolyLineList& _m_polyList;
-    };
-    
-    ::Ice::Current __current;
-    __initCurrent(__current, __RoboCompTrajectoryRobot2D__TrajectoryRobot2D__setHumanSpace_name, ::Ice::Normal, __context);
-    try
-    {
-        _DirectI __direct(polyList, __current);
-        try
-        {
-            __direct.getServant()->__collocDispatch(__direct);
-        }
-        catch(...)
-        {
-            __direct.destroy();
-            throw;
-        }
-        __direct.destroy();
-    }
-    catch(const ::Ice::SystemException&)
-    {
-        throw;
-    }
-    catch(const ::IceInternal::LocalExceptionWrapper&)
-    {
-        throw;
-    }
-    catch(const ::std::exception& __ex)
-    {
-        ::IceInternal::LocalExceptionWrapper::throwWrapper(__ex);
-    }
-    catch(...)
-    {
-        throw ::IceInternal::LocalExceptionWrapper(::Ice::UnknownException(__FILE__, __LINE__, "unknown c++ exception"), false);
-    }
 }
 
 ::Ice::Float
@@ -1701,19 +1544,6 @@ RoboCompTrajectoryRobot2D::TrajectoryRobot2D::___go(::IceInternal::Incoming& __i
 }
 
 ::Ice::DispatchStatus
-RoboCompTrajectoryRobot2D::TrajectoryRobot2D::___setHumanSpace(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
-{
-    __checkMode(::Ice::Normal, __current.mode);
-    ::IceInternal::BasicStream* __is = __inS.startReadParams();
-    ::RoboCompTrajectoryRobot2D::PolyLineList polyList;
-    __is->read(polyList);
-    __inS.endReadParams();
-    setHumanSpace(polyList, __current);
-    __inS.__writeEmptyParams();
-    return ::Ice::DispatchOK;
-}
-
-::Ice::DispatchStatus
 RoboCompTrajectoryRobot2D::TrajectoryRobot2D::___goReferenced(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
 {
     __checkMode(::Ice::Normal, __current.mode);
@@ -1837,7 +1667,6 @@ const ::std::string __RoboCompTrajectoryRobot2D__TrajectoryRobot2D_all[] =
     "ice_isA",
     "ice_ping",
     "mapBasedTarget",
-    "setHumanSpace",
     "stop"
 };
 
@@ -1846,7 +1675,7 @@ const ::std::string __RoboCompTrajectoryRobot2D__TrajectoryRobot2D_all[] =
 ::Ice::DispatchStatus
 RoboCompTrajectoryRobot2D::TrajectoryRobot2D::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& current)
 {
-    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__RoboCompTrajectoryRobot2D__TrajectoryRobot2D_all, __RoboCompTrajectoryRobot2D__TrajectoryRobot2D_all + 12, current.operation);
+    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__RoboCompTrajectoryRobot2D__TrajectoryRobot2D_all, __RoboCompTrajectoryRobot2D__TrajectoryRobot2D_all + 11, current.operation);
     if(r.first == r.second)
     {
         throw ::Ice::OperationNotExistException(__FILE__, __LINE__, current.id, current.facet, current.operation);
@@ -1895,10 +1724,6 @@ RoboCompTrajectoryRobot2D::TrajectoryRobot2D::__dispatch(::IceInternal::Incoming
             return ___mapBasedTarget(in, current);
         }
         case 10:
-        {
-            return ___setHumanSpace(in, current);
-        }
-        case 11:
         {
             return ___stop(in, current);
         }

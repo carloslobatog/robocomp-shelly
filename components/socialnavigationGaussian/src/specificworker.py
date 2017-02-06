@@ -60,19 +60,20 @@ class Person(object):
             else:
                 aprox = int(v/10) - 1
 
-        if (drawPersonalSpace):
+
             #numero de curvas de contorno que se van a dibujar
 
             # define grid.
-            npts = 50
-            x = np.linspace(self.x - 4, self.x + 4, npts)
-            y = np.linspace(self.y - 4, self.y + 4, npts)
+        npts = 50
+        x = np.linspace(self.x - 4, self.x + 4, npts)
+        y = np.linspace(self.y - 4, self.y + 4, npts)
 
-            X, Y = np.meshgrid(x, y)
-            # plt.plot(X, Y, '*')
+        X, Y = np.meshgrid(x, y)
+        # plt.plot(X, Y, '*')
 
-            Z = self._calculatePersonalSpace(X, Y)
+        Z = self._calculatePersonalSpace(X, Y)
 
+        if (drawPersonalSpace):
             # print(Z)
             # http://www.python-course.eu/matplotlib_contour_plot.php
             # https://es.mathworks.com/matlabcentral/answers/230934-how-to-extract-x-and-y-position-of-contour-line
@@ -84,7 +85,6 @@ class Person(object):
             CS = plt.contour(X, Y, Z, nc)
 
             dat0 = CS.allsegs[aprox][0]
-            self.polyline = dat0
 
             #print(dat0)
 
@@ -112,7 +112,9 @@ class Person(object):
             plt.gca().add_line(heading)
 
             plt.axis('equal')
-            return Z
+
+
+        return Z
 
 
 
@@ -178,7 +180,7 @@ class SpecificWorker(GenericWorker):
     #
     # getPolyline
     #
-    def getPolylines(self, persons, v, talk):
+    def getPolylines(self, persons, v, dibujar):
 
         plt.close('all')
         plt.figure()
@@ -207,7 +209,7 @@ class SpecificWorker(GenericWorker):
         for p in persons:
             pn = Person(p.x, p.z, p.angle)
             #print('Pose x', pn.x, 'Pose z', pn.y, 'Rotacion', pn.th)
-            pn.draw(v, drawPersonalSpace=True)
+            pn.draw(v, drawPersonalSpace=dibujar)
             normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 2.0, 1.0, 4/3], elliptical=True))
 
 
@@ -243,21 +245,21 @@ class SpecificWorker(GenericWorker):
         for j in range(grid.shape[1] ):
             for i in range(grid.shape[0]):
                 if grid[j,i]>0:
-                    print ("PUNTO NEGRO", [i,j])
+                    # print ("PUNTO NEGRO", [i,j])
                    # plt.plot (i*resolution+ lx_inf, j*resolution+ly_inf,'*r-')
                     mismocluster, pos = ck.checkboundaries(grid, i, j, totalpuntos)
 
                     if (mismocluster==True):
                         totalpuntos[pos].append([i,j])
-                        print("tamano totalpuntos mismo cluster", len(totalpuntos))
+                     #   print("tamano totalpuntos mismo cluster", len(totalpuntos))
 
                     else:
                         puntos=[]
                         puntos.append ([i,j])
                         totalpuntos.append(puntos)
-                        print ("tamano totalpuntos cluster diferente",len(totalpuntos))
+                      #  print ("tamano totalpuntos cluster diferente",len(totalpuntos))
 
-                    print("---------------------")
+                   # print("---------------------")
 
 
         for lista in totalpuntos:
@@ -279,18 +281,19 @@ class SpecificWorker(GenericWorker):
                 polyline.append(punto)
             polylines.append(polyline)
 
-        print("tamano polilinea debe ser igual",len(polylines))
+#        print("tamano polilinea debe ser igual",len(polylines))
 
 
-        for ps in polylines:
-            plt.figure()
+        if (dibujar):
+            for ps in polylines:
+                plt.figure()
 
-            for p in ps:
-                plt.plot(p.x,p.z,"*r-")
-                plt.axis('equal')
-                plt.xlabel('X')
-                plt.ylabel('Y')
-        plt.show()
+                for p in ps:
+                    plt.plot(p.x,p.z,"*r-")
+                    plt.axis('equal')
+                    plt.xlabel('X')
+                    plt.ylabel('Y')
+            plt.show()
 
 
         #####################################################################################################

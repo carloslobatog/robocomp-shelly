@@ -52,6 +52,9 @@ class ElasticBand
 		bool update(InnerModel* innermodel, WayPoints& road, const RoboCompLaser::TLaserData& laserData, const CurrentTarget& currentTarget, 
 			    const SafePolyList &safePolyList, uint iter = 1);
 		bool addPoints(WayPoints &road, const CurrentTarget &currentTarget);
+		
+		RoboCompLaser::TLaserData unionpoligonos (RoboCompLaser::TLaserData laserData,SafePolyList safePolyList);
+		
 
 	private:		
 		

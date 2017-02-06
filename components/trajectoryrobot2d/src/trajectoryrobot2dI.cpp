@@ -43,11 +43,6 @@ void TrajectoryRobot2DI::stop(const Ice::Current&)
 	worker->stop();
 }
 
-void TrajectoryRobot2DI::setHumanSpace(const PolyLineList  &polyList, const Ice::Current&)
-{
-	worker->setHumanSpace(polyList);
-}
-
 float TrajectoryRobot2DI::goReferenced(const TargetPose  &target, const float  xRef, const float  zRef, const float  threshold, const Ice::Current&)
 {
 	return worker->goReferenced(target, xRef, zRef, threshold);
@@ -61,6 +56,11 @@ float TrajectoryRobot2DI::changeTarget(const TargetPose  &target, const Ice::Cur
 float TrajectoryRobot2DI::go(const TargetPose  &target, const Ice::Current&)
 {
 	return worker->go(target);
+}
+
+float TrajectoryRobot2DI::goMulti(const TargetSeq  &targetSeq, const float  xRef, const float  zRef, const float  threshold, const Ice::Current&)
+{
+	return worker->goMulti(targetSeq, xRef, zRef, threshold);
 }
 
 void TrajectoryRobot2DI::mapBasedTarget(const NavigationParameterMap  &parameters, const Ice::Current&)

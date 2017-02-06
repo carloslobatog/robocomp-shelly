@@ -35,10 +35,10 @@ TrajectoryRobot2D.ExcludedObjectsInCollisionCheck = floor_plane, gualzru_mesh, p
 #TrajectoryRobot2D.OuterRegionBottom = -4250
 #TrajectoryRobot2D.OuterRegionTop = 4250
 
-TrajectoryRobot2D.OuterRegionLeft = 0
-TrajectoryRobot2D.OuterRegionRight = 6500
-TrajectoryRobot2D.OuterRegionBottom = -4150
-TrajectoryRobot2D.OuterRegionTop = 4000
+TrajectoryRobot2D.OuterRegionLeft = -10000
+TrajectoryRobot2D.OuterRegionRight = 10000
+TrajectoryRobot2D.OuterRegionBottom = -10000
+TrajectoryRobot2D.OuterRegionTop = 10000
 
 Ice.Warn.Connections=0
 Ice.Trace.Network=0
