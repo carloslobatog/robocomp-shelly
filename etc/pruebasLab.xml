@@ -1,0 +1,34 @@
+<innerModel>
+	<transform id="world">
+		
+		<!-- FLOOR -->
+		<transform id="floor" tx="0" ty="0">
+			<plane id="floor_plane" ny="1" size="20000,20000,10" texture="#eebb77" />
+		</transform>
+	
+		
+		<transform id="room_3">
+
+			<!-- ROOM A -->
+			<transform id="pared0" tx="-10000" tz="0" ty="950" >
+				<plane id="muro0" nx="-10000" nz="0" size="20000,1900,9"  texture="#880000" />
+			</transform>
+
+			<transform id="pared1" tx="0" tz="10000" ty="950" >
+				<plane id="muro1" nx="0" nz="10000" size="20000,1900,9"  texture="#880000" />
+			</transform> 
+
+			<transform id="pared2" tx="10000" tz="0" ty="950" >
+				<plane id="muro2" nx="10000" nz="0" size="20000,1900,9"  texture="#880000" />
+			</transform>
+		
+			<transform id="pared3" tx="0" tz="-10000" ty="950" >
+				<plane id="muro3" nx="0" nz="-10000" size="20000,1900,9"  texture="#880000" />
+			</transform>
+
+			
+		</transform>
+		
+		
+	</transform>
+</innerModel>
