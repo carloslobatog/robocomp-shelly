@@ -326,11 +326,7 @@ void SpecificWorker::compute( )
 		qDebug() << "------------------------------------------------------------";	
 		qDebug() <<"ROBOT\n" <<"Coordenada x"<< robot.x << "Coordenada z"<< robot.z << "Rotacion "<< robot.angle;
 		
-		
-// 		punto[0]=robot.x;
-// 		punto[1]=robot.z;
-// 		listapuntos.push_back(punto);
-		
+
 		
 		
 		cambiopos=false;		

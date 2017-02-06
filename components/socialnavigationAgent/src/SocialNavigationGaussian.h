@@ -79,6 +79,13 @@ void __patch(SocialNavigationGaussianPtr&, const ::Ice::ObjectPtr&);
 namespace RoboCompSocialNavigationGaussian
 {
 
+struct Pose2D
+{
+    ::Ice::Float x;
+    ::Ice::Float z;
+    ::Ice::Float angle;
+};
+
 struct SNGPoint2D
 {
     ::Ice::Float x;
@@ -102,6 +109,36 @@ typedef ::std::vector< ::RoboCompSocialNavigationGaussian::SNGPolyline> SNGPolyl
 
 namespace Ice
 {
+template<>
+struct StreamableTraits< ::RoboCompSocialNavigationGaussian::Pose2D>
+{
+    static const StreamHelperCategory helper = StreamHelperCategoryStruct;
+    static const int minWireSize = 12;
+    static const bool fixedLength = true;
+};
+
+template<class S>
+struct StreamWriter< ::RoboCompSocialNavigationGaussian::Pose2D, S>
+{
+    static void write(S* __os, const ::RoboCompSocialNavigationGaussian::Pose2D& v)
+    {
+        __os->write(v.x);
+        __os->write(v.z);
+        __os->write(v.angle);
+    }
+};
+
+template<class S>
+struct StreamReader< ::RoboCompSocialNavigationGaussian::Pose2D, S>
+{
+    static void read(S* __is, ::RoboCompSocialNavigationGaussian::Pose2D& v)
+    {
+        __is->read(v.x);
+        __is->read(v.z);
+        __is->read(v.angle);
+    }
+};
+
 template<>
 struct StreamableTraits< ::RoboCompSocialNavigationGaussian::SNGPoint2D>
 {
