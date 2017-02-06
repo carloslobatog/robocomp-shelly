@@ -33,7 +33,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 
 	humanAdvVel = 25;
 	humanRot = 0;
-	
+	setWindowTitle("Humanfake 4");
 //	lastJoystickEvent = QTime::currentTime();
 }
 

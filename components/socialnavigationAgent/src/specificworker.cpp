@@ -27,47 +27,7 @@
 * \brief Default constructor
 */
 
-class TimedList
-{
-	class TimedDatum
-	{
-	public:
-		 TimedDatum(float d)
-		{
-			datum = d;
-			datum_time = QTime::currentTime();
-		}
-		float datum;
-		QTime datum_time;
-	};
 
-public:
-	TimedList(float msecs)
-	{
-		maxMSec = msecs;
-	}
-	void add(float datum)
-	{
-		data.push_back(TimedDatum(datum));
-	}
-	float getSum()
-	{
-		while (data.size()>0)
-		{
-			if (data[0].datum_time.elapsed() > maxMSec)
-				data.pop_front();
-			else
-				break;
-		}
-		float acc = 0.;
-		for (int i=0; i<data.size(); i++)
-			acc += data[i].datum;
-		return acc;
-	}
-private:
-	float maxMSec;
-	QList<TimedDatum> data;
-};
 
 SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 {
@@ -82,7 +42,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 
 	//Timed slot to read TrajectoryRobot2D state
 	connect(&trajReader, SIGNAL(timeout()), this, SLOT(readTrajState()));
-	connect(gaussiana,SIGNAL(clicked()),this,SLOT(gauss()));
+	connect(gaussiana,SIGNAL(clicked()),this,SLOT(gauss(true)));
 	//trajReader.start(1000);
 	
 	//SLIDER
@@ -109,9 +69,7 @@ void SpecificWorker::cambiarvalor(int value){
 	
 }
 
-
-
-void SpecificWorker::gauss()
+SNGPolylineSeq SpecificWorker::gauss(bool dibujar)
 {
 	SNGPersonSeq persons;
 	//push back es para incluir a la persona en el vector de personas
@@ -128,6 +86,7 @@ void SpecificWorker::gauss()
 	if (p6)
 	persons.push_back(person6);
 	
+	SNGPolylineSeq secuencia = socialnavigationgaussian_proxy->getPolylines(persons, valorprox, dibujar);
 /*	
 
 	//Si estan las dos personas en el modelo comprobamos si estan hablando con checkconversation()
@@ -138,7 +97,7 @@ void SpecificWorker::gauss()
 	*/
 	
 	
-	SNGPolylineSeq secuencia = socialnavigationgaussian_proxy->getPolylines(persons, valorprox, true);
+	return secuencia;
 
 }
 
@@ -407,8 +366,34 @@ void SpecificWorker::compute( )
 		qDebug() << "------------------------------------------------------------";	
 		qDebug() <<"ROBOT\n" <<"Coordenada x"<< robot.x << "Coordenada z"<< robot.z << "Rotacion "<< robot.angle;
 		
-
 		
+
+	//////LLAMAR AL TRAJECTORY//////////
+		try
+		{
+		  //SNGPolylineSeq secuencia = socialnavigationgaussian_proxy->getPolylines(persons, valorprox, true);
+		 
+		  qDebug()<<"llamamos al trajectory";
+		 SNGPolylineSeq secuencia=gauss(false);
+		  
+		  RoboCompTrajectoryRobot2D::PolyLineList lista;
+		  
+		  for(auto s: secuencia)
+		  {
+		    RoboCompTrajectoryRobot2D::PolyLine poly;
+		    for(auto p: s)
+		    {
+		      RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
+		      poly.push_back(punto);
+		    }
+		    lista.push_back(poly);
+		  }
+		    
+		  trajectoryrobot2d_proxy->setHumanSpace(lista);
+		}
+		catch( const Ice::Exception &e)
+		{ std::cout << e << std::endl;}
+	
 		
 		cambiopos=false;		
 	}		
@@ -1526,7 +1511,7 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 
 void SpecificWorker::symbolUpdated(const RoboCompAGMWorldModel::Node& modification)
 {
-  qDebug()<<"symbolUpdated";
+  //qDebug()<<"symbolUpdated";
   
 	QMutexLocker l(mutex);
 
@@ -1536,7 +1521,7 @@ void SpecificWorker::symbolUpdated(const RoboCompAGMWorldModel::Node& modificati
 void SpecificWorker::symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence &modifications)
 {
   
-  qDebug()<<"symbolsUpdated";
+  //qDebug()<<"symbolsUpdated";
 	QMutexLocker l(mutex);
 
 	for (auto modification : modifications)
@@ -1545,7 +1530,7 @@ void SpecificWorker::symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence &m
 
 
 void SpecificWorker::edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &modifications)
-{	//qDebug()<<"edgesUpdated";
+{	qDebug()<<"edgesUpdated";
 	cambiopos=true;
 	QMutexLocker lockIM(mutex);
 	

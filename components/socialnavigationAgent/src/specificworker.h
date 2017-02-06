@@ -53,7 +53,7 @@ public:
 	
 //bool para indicar si se ha movido la persona, lo utilizare para imprimir la coordenada de la persona cada vez que se mueva
 	bool cambiopos=false;
-	
+
 
 	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
 	SNGPerson person1;
@@ -119,7 +119,7 @@ public:
 public slots:
  	void compute();
 	void readTrajState();
-	void gauss();
+	SNGPolylineSeq gauss(bool dibujar);
 	void cambiarvalor(int valor);
 
 private:
@@ -175,6 +175,49 @@ private:
 //	std::map<int32_t, QPolygonF> extractPolygonsFromModel(AGMModel::SPtr &worldModel);	
 //	RoboCompOmniRobot::TBaseState bState;
 	
+};
+
+
+class TimedList
+{
+	class TimedDatum
+	{
+	public:
+		 TimedDatum(float d)
+		{
+			datum = d;
+			datum_time = QTime::currentTime();
+		}
+		float datum;
+		QTime datum_time;
+	};
+
+public:
+	TimedList(float msecs)
+	{
+		maxMSec = msecs;
+	}
+	void add(float datum)
+	{
+		data.push_back(TimedDatum(datum));
+	}
+	float getSum()
+	{
+		while (data.size()>0)
+		{
+			if (data[0].datum_time.elapsed() > maxMSec)
+				data.pop_front();
+			else
+				break;
+		}
+		float acc = 0.;
+		for (int i=0; i<data.size(); i++)
+			acc += data[i].datum;
+		return acc;
+	}
+private:
+	float maxMSec;
+	QList<TimedDatum> data;
 };
 
 #endif

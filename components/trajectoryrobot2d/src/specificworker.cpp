@@ -114,6 +114,7 @@ void SpecificWorker::compute()
 		controller->stopTheRobot(omnirobot_proxy);
 		stopCommand(currentTarget, road, tState);
 		tState.setState("DISCONNECTED");
+		tState.setDescription("Disconnected");
 		currentTarget.state = CurrentTarget::State::DISCONNECTED;
 	}
 		
@@ -135,7 +136,7 @@ void SpecificWorker::compute()
 			break;		
 		case CurrentTarget::State::BLOCKED:
 				road.update();
-				elasticband.update(innerModel, road, laserData, currentTarget);
+				elasticband.update(innerModel, road, laserData, currentTarget, safePolyList);
 				if( road.isBlocked() == false)
 					currentTarget.setState(CurrentTarget::State::GOTO);
 				else
@@ -174,6 +175,7 @@ void SpecificWorker::compute()
 			break;
 		case CurrentTarget::State::IDLE:
 			timer.setInterval(700);
+			tState.setDescription("Waiting new target");
 			qDebug() << __FUNCTION__ << "Computed period" << reloj.elapsed()  << "ms. State. Robot at:" << innerModel->transform6D("world", "robot");
 			//currentTarget.setState(CurrentTarget::State::LEARNING);
 			break;
@@ -315,7 +317,7 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 	///////////////////////////////////
 	// Update the band
 	/////////////////////////////////
-	elasticband.update(innerModel, myRoad, laserData, target);
+	elasticband.update(innerModel, myRoad, laserData, target, safePolyList);
 
 	///////////////////////////////////
 	// compute all measures relating the robot to the road
@@ -592,7 +594,7 @@ float SpecificWorker::goReferenced(const TargetPose &target_, const float xRef, 
 	currentTarget.reset(targetT, targetRot, target_.doRotation);
 	currentTarget.setState(CurrentTarget::State::GOTO);
 	tState.setState("EXECUTING");	
-	
+	tState.setDescription("Executing plan");
 	taskReloj.restart();
 	return (robotT - targetT).norm2();
 }
@@ -655,6 +657,21 @@ float SpecificWorker::goBackwards(const TargetPose &target)
 	}
 	return 0;
 }
+
+void SpecificWorker::setHumanSpace(const PolyLineList& polyList)
+{
+
+  qDebug() << "------------------------------------------------------------";  
+  for(auto l: polyList)
+  {
+    qDebug() << "Polilinea:";
+    for(auto p: l)
+      qDebug() << "	punto" << p.x << p.z;
+  }
+  safePolyList.write(polyList);
+}
+
+
 
 /////////////////////
 // In development
@@ -789,6 +806,7 @@ float SpecificWorker::angmMPI(float angle)
 	
 	return angle;
 	}
+	
 
 /////////////////////////////////////////////////////////////////////////////
 //// DRAWING METHODS

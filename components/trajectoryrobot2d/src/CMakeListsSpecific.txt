@@ -25,6 +25,7 @@ SET ( HEADERS
   plannerprm.h
   plannerompl.h
   innerviewer.h
+  safepolylist.h
 )
 
 #find_package(OMPL)

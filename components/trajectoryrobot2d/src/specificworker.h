@@ -31,6 +31,7 @@
 #include "sampler.h"
 #include "graphdraw.h"
 #include "waypointsdraw.h"
+#include "safepolylist.h"
 
 #ifdef USE_QTGUI
 	#include "innerviewer.h"
@@ -88,6 +89,7 @@ class TrajectoryState
 };
 
 
+
 class SpecificWorker : public GenericWorker
 /**
  * @brief Main class of the component
@@ -109,6 +111,7 @@ class SpecificWorker : public GenericWorker
 		void setHeadingTo(const TargetPose& target);
 		float goReferenced(const TargetPose &target, const float xRef, const float zRef, const float threshold);
 		float changeTarget(const TargetPose &target);
+		void setHumanSpace(const PolyLineList &polyList);
 		/**
 	   * @brief Sends the robot to a new target position. 
 		 * There can be only one active target
@@ -233,6 +236,10 @@ class SpecificWorker : public GenericWorker
 		//Values read from config
 		float MINIMUN_DETECTABLE_ROTATION;
 		float MINIMUN_DETECTABLE_TRANSLATION;
+		
+		//local copy of human PolyLineList
+	
+		SafePolyList safePolyList;
 };
 
 

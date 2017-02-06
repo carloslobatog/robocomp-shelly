@@ -19,6 +19,8 @@
 #define ELASTICBAND_H
 
 #include <CommonBehavior.h>
+#include <TrajectoryRobot2D.h>
+
 #include <QtCore>
 #include <qmat/QMatAll>
 #include <innermodel/innermodel.h>
@@ -29,6 +31,8 @@
 #include <assert.h>
 #include "currenttarget.h"
 #include "linesimplifier/simplifyPath.h"
+#include "safepolylist.h"
+
 
 #define FORCE_DISTANCE_LIMIT (ROBOT_WIDTH*1.5)  //mm
 #define ROBOT_STEP (ROBOT_WIDTH * 0.1)
@@ -45,7 +49,8 @@ class ElasticBand
 		ElasticBand();
 		~ElasticBand();
 		void initialize(const RoboCompCommonBehavior::ParameterList& params);
-		bool update(InnerModel* innermodel, WayPoints& road, const RoboCompLaser::TLaserData& laserData, const CurrentTarget& currentTarget, uint iter = 1);
+		bool update(InnerModel* innermodel, WayPoints& road, const RoboCompLaser::TLaserData& laserData, const CurrentTarget& currentTarget, 
+			    const SafePolyList &safePolyList, uint iter = 1);
 		bool addPoints(WayPoints &road, const CurrentTarget &currentTarget);
 
 	private:		
