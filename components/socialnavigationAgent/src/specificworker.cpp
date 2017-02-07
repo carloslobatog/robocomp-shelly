@@ -342,18 +342,8 @@ void SpecificWorker::compute( )
 // 		agaussian(person,3.5,1.5);
 		
 		
-	///////////////////////////OBTENER LA POSE DEL ROBOT /////////////////////////////////////77
-	 
-// 	idx=0;		
-// 	while ((robotSymbolId = worldModel->getIdentifierByType("robot", idx++)) != -1)
-// 	{
-// 
-// 		if (idx > 4) exit(0);
-// 		if (worldModel->getSymbolByIdentifier(robotSymbolId)->getAttribute("imName") == "robot")
-// 		{
-// 			break;
-// 		}
-// 	}
+	///////////////////////////OBTENER LA POSE DEL ROBOT /////////////////////////////////////
+	///PARA QUE SE ACTUALICE TIENE QUE ESTAR ARRANCADO EL LOCALIZATIONA en el manager///
 			
 		robotSymbolId = worldModel->getIdentifierByType("robot");
 		AGMModelSymbol::SPtr robotparent = worldModel->getParentByLink(robotSymbolId, "RT");
@@ -365,6 +355,7 @@ void SpecificWorker::compute( )
 		
 		qDebug() << "------------------------------------------------------------";	
 		qDebug() <<"ROBOT\n" <<"Coordenada x"<< robot.x << "Coordenada z"<< robot.z << "Rotacion "<< robot.angle;
+		 
 		
 		
 

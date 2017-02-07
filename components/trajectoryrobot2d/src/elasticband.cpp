@@ -108,7 +108,7 @@ bool ElasticBand::update(InnerModel *innermodel, WayPoints &road, const RoboComp
 	/////////////////////////////////////////////
 	//Compute the scalar magnitudes
 	/////////////////////////////////////////////
-	computeForces(innermodel, road, laserData);
+	computeForces(innermodel, road, myLaser);
 
 	/////////////////////////////////////////////
 	//Delete half the tail behind, if greater than 6, to release resources
@@ -167,7 +167,19 @@ bool ElasticBand::shortCut(InnerModel *innermodel, WayPoints &road, const RoboCo
  * @return void
  */
 RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData laserData,SafePolyList safePolyList){
-
+///Pasar posicion de la persona al mundo del robot recorriendo todos los puntos de la polilinea
+  //Pasar posiciones a coordenadas polares
+   //Recorrer todos los puntos del laser. 
+    // Si el angulo de la polilinea esta comprendido entre dos angulos del laser,
+    //se sobreeescribe el laser tomando la distancia de la polilinea
+for (auto s:safePolyList){
+  for (auto p:s){
+    /////////////////////MAL//////////////////
+    innermodelmanager_proxy->transform("robot",QVec(p.x*1000,0,p.z*1000),"world");
+    
+    
+  }
+}
   
 } 
 
