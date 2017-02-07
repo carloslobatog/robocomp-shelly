@@ -71,6 +71,7 @@
 #include <Ice/Application.h>
 
 #include <rapplication/rapplication.h>
+#include <sigwatch/sigwatch.h>
 #include <qlog/qlog.h>
 
 #include "config.h"
@@ -131,7 +132,10 @@ int ::trajectoryrobot2d::run(int argc, char* argv[])
 	sigaddset(&sigs, SIGTERM);
 	sigprocmask(SIG_UNBLOCK, &sigs, 0);
 
-
+	UnixSignalWatcher sigwatch;
+	sigwatch.watchForSignal(SIGINT);
+	sigwatch.watchForSignal(SIGTERM);
+	QObject::connect(&sigwatch, SIGNAL(unixSignal(int)), &a, SLOT(quit()));
 
 	int status=EXIT_SUCCESS;
 
@@ -233,6 +237,8 @@ int ::trajectoryrobot2d::run(int argc, char* argv[])
 #endif
 		// Run QT Application Event Loop
 		a.exec();
+		
+		
 		status = EXIT_SUCCESS;
 	}
 	catch(const Ice::Exception& ex)

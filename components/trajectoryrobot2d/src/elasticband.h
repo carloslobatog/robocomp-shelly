@@ -49,11 +49,10 @@ class ElasticBand
 		ElasticBand();
 		~ElasticBand();
 		void initialize(const RoboCompCommonBehavior::ParameterList& params);
-		bool update(InnerModel* innermodel, WayPoints& road, const RoboCompLaser::TLaserData& laserData, const CurrentTarget& currentTarget, 
-			    const SafePolyList &safePolyList, uint iter = 1);
+		bool update(InnerModel* innermodel, WayPoints& road, const RoboCompLaser::TLaserData& laserData, const CurrentTarget& currentTarget, SafePolyList &safePolyList, uint iter = 1);
 		bool addPoints(WayPoints &road, const CurrentTarget &currentTarget);
 		
-		RoboCompLaser::TLaserData unionpoligonos (RoboCompLaser::TLaserData laserData,SafePolyList safePolyList);
+		RoboCompLaser::TLaserData unionpoligonos (RoboCompLaser::TLaserData laserData, SafePolyList &safePolyList, InnerModel *innermodel);
 		
 
 	private:		

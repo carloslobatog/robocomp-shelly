@@ -107,23 +107,19 @@ static RoboCompException __RoboCompException_init;
 
 struct TargetPose
 {
-    bool doRotation;
     ::Ice::Float x;
     ::Ice::Float y;
     ::Ice::Float z;
     ::Ice::Float rx;
     ::Ice::Float ry;
     ::Ice::Float rz;
+    bool doRotation;
 
     bool operator==(const TargetPose& __rhs) const
     {
         if(this == &__rhs)
         {
             return true;
-        }
-        if(doRotation != __rhs.doRotation)
-        {
-            return false;
         }
         if(x != __rhs.x)
         {
@@ -149,20 +145,16 @@ struct TargetPose
         {
             return false;
         }
+        if(doRotation != __rhs.doRotation)
+        {
+            return false;
+        }
         return true;
     }
 
     bool operator<(const TargetPose& __rhs) const
     {
         if(this == &__rhs)
-        {
-            return false;
-        }
-        if(doRotation < __rhs.doRotation)
-        {
-            return true;
-        }
-        else if(__rhs.doRotation < doRotation)
         {
             return false;
         }
@@ -214,6 +206,14 @@ struct TargetPose
         {
             return false;
         }
+        if(doRotation < __rhs.doRotation)
+        {
+            return true;
+        }
+        else if(__rhs.doRotation < doRotation)
+        {
+            return false;
+        }
         return false;
     }
 
@@ -237,16 +237,16 @@ struct TargetPose
 
 struct NavState
 {
+    ::Ice::Long elapsedTime;
+    ::std::string state;
+    ::Ice::Long estimatedTime;
+    ::Ice::Long planningTime;
     ::Ice::Float x;
     ::Ice::Float z;
     ::Ice::Float ang;
     ::Ice::Float advV;
     ::Ice::Float rotV;
     ::Ice::Float distanceToTarget;
-    ::Ice::Long elapsedTime;
-    ::Ice::Long estimatedTime;
-    ::Ice::Long planningTime;
-    ::std::string state;
     ::std::string description;
 
     bool operator==(const NavState& __rhs) const
@@ -254,6 +254,22 @@ struct NavState
         if(this == &__rhs)
         {
             return true;
+        }
+        if(elapsedTime != __rhs.elapsedTime)
+        {
+            return false;
+        }
+        if(state != __rhs.state)
+        {
+            return false;
+        }
+        if(estimatedTime != __rhs.estimatedTime)
+        {
+            return false;
+        }
+        if(planningTime != __rhs.planningTime)
+        {
+            return false;
         }
         if(x != __rhs.x)
         {
@@ -279,22 +295,6 @@ struct NavState
         {
             return false;
         }
-        if(elapsedTime != __rhs.elapsedTime)
-        {
-            return false;
-        }
-        if(estimatedTime != __rhs.estimatedTime)
-        {
-            return false;
-        }
-        if(planningTime != __rhs.planningTime)
-        {
-            return false;
-        }
-        if(state != __rhs.state)
-        {
-            return false;
-        }
         if(description != __rhs.description)
         {
             return false;
@@ -305,6 +305,38 @@ struct NavState
     bool operator<(const NavState& __rhs) const
     {
         if(this == &__rhs)
+        {
+            return false;
+        }
+        if(elapsedTime < __rhs.elapsedTime)
+        {
+            return true;
+        }
+        else if(__rhs.elapsedTime < elapsedTime)
+        {
+            return false;
+        }
+        if(state < __rhs.state)
+        {
+            return true;
+        }
+        else if(__rhs.state < state)
+        {
+            return false;
+        }
+        if(estimatedTime < __rhs.estimatedTime)
+        {
+            return true;
+        }
+        else if(__rhs.estimatedTime < estimatedTime)
+        {
+            return false;
+        }
+        if(planningTime < __rhs.planningTime)
+        {
+            return true;
+        }
+        else if(__rhs.planningTime < planningTime)
         {
             return false;
         }
@@ -356,38 +388,6 @@ struct NavState
         {
             return false;
         }
-        if(elapsedTime < __rhs.elapsedTime)
-        {
-            return true;
-        }
-        else if(__rhs.elapsedTime < elapsedTime)
-        {
-            return false;
-        }
-        if(estimatedTime < __rhs.estimatedTime)
-        {
-            return true;
-        }
-        else if(__rhs.estimatedTime < estimatedTime)
-        {
-            return false;
-        }
-        if(planningTime < __rhs.planningTime)
-        {
-            return true;
-        }
-        else if(__rhs.planningTime < planningTime)
-        {
-            return false;
-        }
-        if(state < __rhs.state)
-        {
-            return true;
-        }
-        else if(__rhs.state < state)
-        {
-            return false;
-        }
         if(description < __rhs.description)
         {
             return true;
@@ -419,6 +419,75 @@ struct NavState
 
 typedef ::std::map< ::std::string, ::std::string> NavigationParameterMap;
 
+struct PointL
+{
+    ::Ice::Float x;
+    ::Ice::Float z;
+
+    bool operator==(const PointL& __rhs) const
+    {
+        if(this == &__rhs)
+        {
+            return true;
+        }
+        if(x != __rhs.x)
+        {
+            return false;
+        }
+        if(z != __rhs.z)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    bool operator<(const PointL& __rhs) const
+    {
+        if(this == &__rhs)
+        {
+            return false;
+        }
+        if(x < __rhs.x)
+        {
+            return true;
+        }
+        else if(__rhs.x < x)
+        {
+            return false;
+        }
+        if(z < __rhs.z)
+        {
+            return true;
+        }
+        else if(__rhs.z < z)
+        {
+            return false;
+        }
+        return false;
+    }
+
+    bool operator!=(const PointL& __rhs) const
+    {
+        return !operator==(__rhs);
+    }
+    bool operator<=(const PointL& __rhs) const
+    {
+        return operator<(__rhs) || operator==(__rhs);
+    }
+    bool operator>(const PointL& __rhs) const
+    {
+        return !operator<(__rhs) && !operator==(__rhs);
+    }
+    bool operator>=(const PointL& __rhs) const
+    {
+        return !operator<(__rhs);
+    }
+};
+
+typedef ::std::vector< ::RoboCompTrajectoryRobot2D::PointL> PolyLine;
+
+typedef ::std::vector< ::RoboCompTrajectoryRobot2D::PolyLine> PolyLineList;
+
 }
 
 namespace Ice
@@ -442,13 +511,13 @@ struct StreamWriter< ::RoboCompTrajectoryRobot2D::TargetPose, S>
 {
     static void write(S* __os, const ::RoboCompTrajectoryRobot2D::TargetPose& v)
     {
-        __os->write(v.doRotation);
         __os->write(v.x);
         __os->write(v.y);
         __os->write(v.z);
         __os->write(v.rx);
         __os->write(v.ry);
         __os->write(v.rz);
+        __os->write(v.doRotation);
     }
 };
 
@@ -457,13 +526,13 @@ struct StreamReader< ::RoboCompTrajectoryRobot2D::TargetPose, S>
 {
     static void read(S* __is, ::RoboCompTrajectoryRobot2D::TargetPose& v)
     {
-        __is->read(v.doRotation);
         __is->read(v.x);
         __is->read(v.y);
         __is->read(v.z);
         __is->read(v.rx);
         __is->read(v.ry);
         __is->read(v.rz);
+        __is->read(v.doRotation);
     }
 };
 
@@ -480,16 +549,16 @@ struct StreamWriter< ::RoboCompTrajectoryRobot2D::NavState, S>
 {
     static void write(S* __os, const ::RoboCompTrajectoryRobot2D::NavState& v)
     {
+        __os->write(v.elapsedTime);
+        __os->write(v.state);
+        __os->write(v.estimatedTime);
+        __os->write(v.planningTime);
         __os->write(v.x);
         __os->write(v.z);
         __os->write(v.ang);
         __os->write(v.advV);
         __os->write(v.rotV);
         __os->write(v.distanceToTarget);
-        __os->write(v.elapsedTime);
-        __os->write(v.estimatedTime);
-        __os->write(v.planningTime);
-        __os->write(v.state);
         __os->write(v.description);
     }
 };
@@ -499,17 +568,45 @@ struct StreamReader< ::RoboCompTrajectoryRobot2D::NavState, S>
 {
     static void read(S* __is, ::RoboCompTrajectoryRobot2D::NavState& v)
     {
+        __is->read(v.elapsedTime);
+        __is->read(v.state);
+        __is->read(v.estimatedTime);
+        __is->read(v.planningTime);
         __is->read(v.x);
         __is->read(v.z);
         __is->read(v.ang);
         __is->read(v.advV);
         __is->read(v.rotV);
         __is->read(v.distanceToTarget);
-        __is->read(v.elapsedTime);
-        __is->read(v.estimatedTime);
-        __is->read(v.planningTime);
-        __is->read(v.state);
         __is->read(v.description);
+    }
+};
+
+template<>
+struct StreamableTraits< ::RoboCompTrajectoryRobot2D::PointL>
+{
+    static const StreamHelperCategory helper = StreamHelperCategoryStruct;
+    static const int minWireSize = 8;
+    static const bool fixedLength = true;
+};
+
+template<class S>
+struct StreamWriter< ::RoboCompTrajectoryRobot2D::PointL, S>
+{
+    static void write(S* __os, const ::RoboCompTrajectoryRobot2D::PointL& v)
+    {
+        __os->write(v.x);
+        __os->write(v.z);
+    }
+};
+
+template<class S>
+struct StreamReader< ::RoboCompTrajectoryRobot2D::PointL, S>
+{
+    static void read(S* __is, ::RoboCompTrajectoryRobot2D::PointL& v)
+    {
+        __is->read(v.x);
+        __is->read(v.z);
     }
 };
 
@@ -520,6 +617,9 @@ namespace RoboCompTrajectoryRobot2D
 
 class Callback_TrajectoryRobot2D_go_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_TrajectoryRobot2D_go_Base> Callback_TrajectoryRobot2D_goPtr;
+
+class Callback_TrajectoryRobot2D_setHumanSpace_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_TrajectoryRobot2D_setHumanSpace_Base> Callback_TrajectoryRobot2D_setHumanSpacePtr;
 
 class Callback_TrajectoryRobot2D_goReferenced_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_TrajectoryRobot2D_goReferenced_Base> Callback_TrajectoryRobot2D_goReferencedPtr;
@@ -661,6 +761,76 @@ private:
 
     ::Ice::Float go(const ::RoboCompTrajectoryRobot2D::TargetPose&, const ::Ice::Context*);
     ::Ice::AsyncResultPtr begin_go(const ::RoboCompTrajectoryRobot2D::TargetPose&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    void setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList& polyList)
+    {
+        setHumanSpace(polyList, 0);
+    }
+    void setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList& polyList, const ::Ice::Context& __ctx)
+    {
+        setHumanSpace(polyList, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList& polyList, const ::IceInternal::Function<void ()>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return begin_setHumanSpace(polyList, 0, new ::IceInternal::Cpp11FnOnewayCallbackNC(__response, __exception, __sent));
+    }
+    ::Ice::AsyncResultPtr
+    begin_setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList& polyList, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setHumanSpace(polyList, 0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList& polyList, const ::Ice::Context& __ctx, const ::IceInternal::Function<void ()>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return begin_setHumanSpace(polyList, &__ctx, new ::IceInternal::Cpp11FnOnewayCallbackNC(__response, __exception, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList& polyList, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setHumanSpace(polyList, &__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+#endif
+
+    ::Ice::AsyncResultPtr begin_setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList& polyList)
+    {
+        return begin_setHumanSpace(polyList, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList& polyList, const ::Ice::Context& __ctx)
+    {
+        return begin_setHumanSpace(polyList, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList& polyList, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setHumanSpace(polyList, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList& polyList, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setHumanSpace(polyList, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList& polyList, const ::RoboCompTrajectoryRobot2D::Callback_TrajectoryRobot2D_setHumanSpacePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setHumanSpace(polyList, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList& polyList, const ::Ice::Context& __ctx, const ::RoboCompTrajectoryRobot2D::Callback_TrajectoryRobot2D_setHumanSpacePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setHumanSpace(polyList, &__ctx, __del, __cookie);
+    }
+
+    void end_setHumanSpace(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    void setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
 
@@ -1381,6 +1551,8 @@ public:
 
     virtual ::Ice::Float go(const ::RoboCompTrajectoryRobot2D::TargetPose&, const ::Ice::Context*, ::IceInternal::InvocationObserver&) = 0;
 
+    virtual void setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList&, const ::Ice::Context*, ::IceInternal::InvocationObserver&) = 0;
+
     virtual ::Ice::Float goReferenced(const ::RoboCompTrajectoryRobot2D::TargetPose&, ::Ice::Float, ::Ice::Float, ::Ice::Float, const ::Ice::Context*, ::IceInternal::InvocationObserver&) = 0;
 
     virtual ::Ice::Float goBackwards(const ::RoboCompTrajectoryRobot2D::TargetPose&, const ::Ice::Context*, ::IceInternal::InvocationObserver&) = 0;
@@ -1411,6 +1583,8 @@ public:
 
     virtual ::Ice::Float go(const ::RoboCompTrajectoryRobot2D::TargetPose&, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
 
+    virtual void setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList&, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
+
     virtual ::Ice::Float goReferenced(const ::RoboCompTrajectoryRobot2D::TargetPose&, ::Ice::Float, ::Ice::Float, ::Ice::Float, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
 
     virtual ::Ice::Float goBackwards(const ::RoboCompTrajectoryRobot2D::TargetPose&, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
@@ -1440,6 +1614,8 @@ class TrajectoryRobot2D : virtual public ::IceDelegate::RoboCompTrajectoryRobot2
 public:
 
     virtual ::Ice::Float go(const ::RoboCompTrajectoryRobot2D::TargetPose&, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
+
+    virtual void setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList&, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
 
     virtual ::Ice::Float goReferenced(const ::RoboCompTrajectoryRobot2D::TargetPose&, ::Ice::Float, ::Ice::Float, ::Ice::Float, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
 
@@ -1475,6 +1651,9 @@ public:
 
     virtual ::Ice::Float go(const ::RoboCompTrajectoryRobot2D::TargetPose&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___go(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual void setHumanSpace(const ::RoboCompTrajectoryRobot2D::PolyLineList&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___setHumanSpace(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Ice::Float goReferenced(const ::RoboCompTrajectoryRobot2D::TargetPose&, ::Ice::Float, ::Ice::Float, ::Ice::Float, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___goReferenced(::IceInternal::Incoming&, const ::Ice::Current&);
@@ -1618,6 +1797,88 @@ template<class T, typename CT> Callback_TrajectoryRobot2D_goPtr
 newCallback_TrajectoryRobot2D_go(T* instance, void (T::*cb)(::Ice::Float, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
     return new Callback_TrajectoryRobot2D_go<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_TrajectoryRobot2D_setHumanSpace : public Callback_TrajectoryRobot2D_setHumanSpace_Base, public ::IceInternal::OnewayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)();
+
+    CallbackNC_TrajectoryRobot2D_setHumanSpace(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::OnewayCallbackNC<T>(obj, cb, excb, sentcb)
+    {
+    }
+};
+
+template<class T> Callback_TrajectoryRobot2D_setHumanSpacePtr
+newCallback_TrajectoryRobot2D_setHumanSpace(const IceUtil::Handle<T>& instance, void (T::*cb)(), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_TrajectoryRobot2D_setHumanSpace<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_TrajectoryRobot2D_setHumanSpacePtr
+newCallback_TrajectoryRobot2D_setHumanSpace(const IceUtil::Handle<T>& instance, void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_TrajectoryRobot2D_setHumanSpace<T>(instance, 0, excb, sentcb);
+}
+
+template<class T> Callback_TrajectoryRobot2D_setHumanSpacePtr
+newCallback_TrajectoryRobot2D_setHumanSpace(T* instance, void (T::*cb)(), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_TrajectoryRobot2D_setHumanSpace<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_TrajectoryRobot2D_setHumanSpacePtr
+newCallback_TrajectoryRobot2D_setHumanSpace(T* instance, void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_TrajectoryRobot2D_setHumanSpace<T>(instance, 0, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_TrajectoryRobot2D_setHumanSpace : public Callback_TrajectoryRobot2D_setHumanSpace_Base, public ::IceInternal::OnewayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(const CT&);
+
+    Callback_TrajectoryRobot2D_setHumanSpace(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::OnewayCallback<T, CT>(obj, cb, excb, sentcb)
+    {
+    }
+};
+
+template<class T, typename CT> Callback_TrajectoryRobot2D_setHumanSpacePtr
+newCallback_TrajectoryRobot2D_setHumanSpace(const IceUtil::Handle<T>& instance, void (T::*cb)(const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_TrajectoryRobot2D_setHumanSpace<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_TrajectoryRobot2D_setHumanSpacePtr
+newCallback_TrajectoryRobot2D_setHumanSpace(const IceUtil::Handle<T>& instance, void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_TrajectoryRobot2D_setHumanSpace<T, CT>(instance, 0, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_TrajectoryRobot2D_setHumanSpacePtr
+newCallback_TrajectoryRobot2D_setHumanSpace(T* instance, void (T::*cb)(const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_TrajectoryRobot2D_setHumanSpace<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_TrajectoryRobot2D_setHumanSpacePtr
+newCallback_TrajectoryRobot2D_setHumanSpace(T* instance, void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_TrajectoryRobot2D_setHumanSpace<T, CT>(instance, 0, excb, sentcb);
 }
 
 template<class T>

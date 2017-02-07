@@ -14,6 +14,7 @@
  * limitations under the License.
  * 
  */
+#include <cmath>
 
 #include "elasticband.h"
 
@@ -74,7 +75,7 @@ ElasticBand::~ElasticBand()
 }
 
 bool ElasticBand::update(InnerModel *innermodel, WayPoints &road, const RoboCompLaser::TLaserData &laserData,
-                         const CurrentTarget &currentTarget, const SafePolyList &safePolyList, uint iter)
+                         const CurrentTarget &currentTarget, SafePolyList &safePolyList, uint iter)
 {
 	//qDebug() << __FILE__ << __FUNCTION__ << "road size"<<  road.size();
 	if (road.isFinished() == true)
@@ -103,7 +104,7 @@ bool ElasticBand::update(InnerModel *innermodel, WayPoints &road, const RoboComp
 	
 	///////////////////////////////////////////////////////////////////// AQUIII////////////////
 	// Union de poligonos
-	RoboCompLaser::TLaserData myLaser = unionpoligonos(laserData, safePolyList); 
+	RoboCompLaser::TLaserData myLaser = unionpoligonos(laserData, safePolyList,innermodel); 
 	
 	/////////////////////////////////////////////
 	//Compute the scalar magnitudes
@@ -166,21 +167,40 @@ bool ElasticBand::shortCut(InnerModel *innermodel, WayPoints &road, const RoboCo
  * @param road ...
  * @return void
  */
-RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData laserData,SafePolyList safePolyList){
-///Pasar posicion de la persona al mundo del robot recorriendo todos los puntos de la polilinea
-  //Pasar posiciones a coordenadas polares
-   //Recorrer todos los puntos del laser. 
-    // Si el angulo de la polilinea esta comprendido entre dos angulos del laser,
-    //se sobreeescribe el laser tomando la distancia de la polilinea
-for (auto s:safePolyList){
-  for (auto p:s){
-    /////////////////////MAL//////////////////
-    innermodelmanager_proxy->transform("robot",QVec(p.x*1000,0,p.z*1000),"world");
-    
-    
-  }
-}
-  
+RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData laserData, SafePolyList &safePolyList, InnerModel *innermodel)
+{
+	QVec p_laser; 
+	QVec p_laser_polar;
+	
+	RoboCompLaser::TLaserData laserCombined; 
+	
+	laserCombined = laserData;
+	// For each polyline
+	LocalPolyLineList l = safePolyList.read(); 
+	for (auto polyline : l)
+	{
+		auto previousPoint = polyline[polyline.size()-1];
+		QVec previousPointInLaser = innermodel->transform("laser", (QVec::vec3(previousPoint.x, 0, previousPoint.z).operator*(1000)), "world");
+		float pDist  = std::sqrt(previousPointInLaser.x()*previousPointInLaser.x() + previousPointInLaser.z()*previousPointInLaser.z());
+		float pAngle = atan2(previousPointInLaser.x(), previousPointInLaser.z());
+		// For each polyline's point
+		for (auto polylinePoint: polyline)
+		{
+			QVec currentPointInLaser = innermodel->transform("laser", (QVec::vec3(polylinePoint.x, 0, polylinePoint.z).operator*(1000)), "world");
+			float cDist  = sqrt(currentPointInLaser.x()*currentPointInLaser.x() + currentPointInLaser.z()*currentPointInLaser.z());
+			float cAngle = atan2(currentPointInLaser.x(), currentPointInLaser.z());
+			for (auto laserSample: laserCombined)
+			{
+				if ((laserSample.angle>cAngle) != (laserSample.angle>pAngle)) // The laser's sample angle is between the angles of the samples if only one of them is greater
+				{
+					float mean = (cDist + pDist) / 2.;
+					float currentValue = laserSample.dist;
+					laserSample.dist = mean<currentValue?mean:laserSample.dist;
+				}
+			}
+		}
+	}
+	return laserCombined;
 } 
 
 
