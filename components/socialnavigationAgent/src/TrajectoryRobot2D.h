@@ -107,19 +107,23 @@ static RoboCompException __RoboCompException_init;
 
 struct TargetPose
 {
+    bool doRotation;
     ::Ice::Float x;
     ::Ice::Float y;
     ::Ice::Float z;
     ::Ice::Float rx;
     ::Ice::Float ry;
     ::Ice::Float rz;
-    bool doRotation;
 
     bool operator==(const TargetPose& __rhs) const
     {
         if(this == &__rhs)
         {
             return true;
+        }
+        if(doRotation != __rhs.doRotation)
+        {
+            return false;
         }
         if(x != __rhs.x)
         {
@@ -145,16 +149,20 @@ struct TargetPose
         {
             return false;
         }
-        if(doRotation != __rhs.doRotation)
-        {
-            return false;
-        }
         return true;
     }
 
     bool operator<(const TargetPose& __rhs) const
     {
         if(this == &__rhs)
+        {
+            return false;
+        }
+        if(doRotation < __rhs.doRotation)
+        {
+            return true;
+        }
+        else if(__rhs.doRotation < doRotation)
         {
             return false;
         }
@@ -206,14 +214,6 @@ struct TargetPose
         {
             return false;
         }
-        if(doRotation < __rhs.doRotation)
-        {
-            return true;
-        }
-        else if(__rhs.doRotation < doRotation)
-        {
-            return false;
-        }
         return false;
     }
 
@@ -237,16 +237,16 @@ struct TargetPose
 
 struct NavState
 {
-    ::Ice::Long elapsedTime;
-    ::std::string state;
-    ::Ice::Long estimatedTime;
-    ::Ice::Long planningTime;
     ::Ice::Float x;
     ::Ice::Float z;
     ::Ice::Float ang;
     ::Ice::Float advV;
     ::Ice::Float rotV;
     ::Ice::Float distanceToTarget;
+    ::Ice::Long elapsedTime;
+    ::Ice::Long estimatedTime;
+    ::Ice::Long planningTime;
+    ::std::string state;
     ::std::string description;
 
     bool operator==(const NavState& __rhs) const
@@ -254,22 +254,6 @@ struct NavState
         if(this == &__rhs)
         {
             return true;
-        }
-        if(elapsedTime != __rhs.elapsedTime)
-        {
-            return false;
-        }
-        if(state != __rhs.state)
-        {
-            return false;
-        }
-        if(estimatedTime != __rhs.estimatedTime)
-        {
-            return false;
-        }
-        if(planningTime != __rhs.planningTime)
-        {
-            return false;
         }
         if(x != __rhs.x)
         {
@@ -295,6 +279,22 @@ struct NavState
         {
             return false;
         }
+        if(elapsedTime != __rhs.elapsedTime)
+        {
+            return false;
+        }
+        if(estimatedTime != __rhs.estimatedTime)
+        {
+            return false;
+        }
+        if(planningTime != __rhs.planningTime)
+        {
+            return false;
+        }
+        if(state != __rhs.state)
+        {
+            return false;
+        }
         if(description != __rhs.description)
         {
             return false;
@@ -305,38 +305,6 @@ struct NavState
     bool operator<(const NavState& __rhs) const
     {
         if(this == &__rhs)
-        {
-            return false;
-        }
-        if(elapsedTime < __rhs.elapsedTime)
-        {
-            return true;
-        }
-        else if(__rhs.elapsedTime < elapsedTime)
-        {
-            return false;
-        }
-        if(state < __rhs.state)
-        {
-            return true;
-        }
-        else if(__rhs.state < state)
-        {
-            return false;
-        }
-        if(estimatedTime < __rhs.estimatedTime)
-        {
-            return true;
-        }
-        else if(__rhs.estimatedTime < estimatedTime)
-        {
-            return false;
-        }
-        if(planningTime < __rhs.planningTime)
-        {
-            return true;
-        }
-        else if(__rhs.planningTime < planningTime)
         {
             return false;
         }
@@ -388,6 +356,38 @@ struct NavState
         {
             return false;
         }
+        if(elapsedTime < __rhs.elapsedTime)
+        {
+            return true;
+        }
+        else if(__rhs.elapsedTime < elapsedTime)
+        {
+            return false;
+        }
+        if(estimatedTime < __rhs.estimatedTime)
+        {
+            return true;
+        }
+        else if(__rhs.estimatedTime < estimatedTime)
+        {
+            return false;
+        }
+        if(planningTime < __rhs.planningTime)
+        {
+            return true;
+        }
+        else if(__rhs.planningTime < planningTime)
+        {
+            return false;
+        }
+        if(state < __rhs.state)
+        {
+            return true;
+        }
+        else if(__rhs.state < state)
+        {
+            return false;
+        }
         if(description < __rhs.description)
         {
             return true;
@@ -423,65 +423,6 @@ struct PointL
 {
     ::Ice::Float x;
     ::Ice::Float z;
-
-    bool operator==(const PointL& __rhs) const
-    {
-        if(this == &__rhs)
-        {
-            return true;
-        }
-        if(x != __rhs.x)
-        {
-            return false;
-        }
-        if(z != __rhs.z)
-        {
-            return false;
-        }
-        return true;
-    }
-
-    bool operator<(const PointL& __rhs) const
-    {
-        if(this == &__rhs)
-        {
-            return false;
-        }
-        if(x < __rhs.x)
-        {
-            return true;
-        }
-        else if(__rhs.x < x)
-        {
-            return false;
-        }
-        if(z < __rhs.z)
-        {
-            return true;
-        }
-        else if(__rhs.z < z)
-        {
-            return false;
-        }
-        return false;
-    }
-
-    bool operator!=(const PointL& __rhs) const
-    {
-        return !operator==(__rhs);
-    }
-    bool operator<=(const PointL& __rhs) const
-    {
-        return operator<(__rhs) || operator==(__rhs);
-    }
-    bool operator>(const PointL& __rhs) const
-    {
-        return !operator<(__rhs) && !operator==(__rhs);
-    }
-    bool operator>=(const PointL& __rhs) const
-    {
-        return !operator<(__rhs);
-    }
 };
 
 typedef ::std::vector< ::RoboCompTrajectoryRobot2D::PointL> PolyLine;
@@ -511,13 +452,13 @@ struct StreamWriter< ::RoboCompTrajectoryRobot2D::TargetPose, S>
 {
     static void write(S* __os, const ::RoboCompTrajectoryRobot2D::TargetPose& v)
     {
+        __os->write(v.doRotation);
         __os->write(v.x);
         __os->write(v.y);
         __os->write(v.z);
         __os->write(v.rx);
         __os->write(v.ry);
         __os->write(v.rz);
-        __os->write(v.doRotation);
     }
 };
 
@@ -526,13 +467,13 @@ struct StreamReader< ::RoboCompTrajectoryRobot2D::TargetPose, S>
 {
     static void read(S* __is, ::RoboCompTrajectoryRobot2D::TargetPose& v)
     {
+        __is->read(v.doRotation);
         __is->read(v.x);
         __is->read(v.y);
         __is->read(v.z);
         __is->read(v.rx);
         __is->read(v.ry);
         __is->read(v.rz);
-        __is->read(v.doRotation);
     }
 };
 
@@ -549,16 +490,16 @@ struct StreamWriter< ::RoboCompTrajectoryRobot2D::NavState, S>
 {
     static void write(S* __os, const ::RoboCompTrajectoryRobot2D::NavState& v)
     {
-        __os->write(v.elapsedTime);
-        __os->write(v.state);
-        __os->write(v.estimatedTime);
-        __os->write(v.planningTime);
         __os->write(v.x);
         __os->write(v.z);
         __os->write(v.ang);
         __os->write(v.advV);
         __os->write(v.rotV);
         __os->write(v.distanceToTarget);
+        __os->write(v.elapsedTime);
+        __os->write(v.estimatedTime);
+        __os->write(v.planningTime);
+        __os->write(v.state);
         __os->write(v.description);
     }
 };
@@ -568,16 +509,16 @@ struct StreamReader< ::RoboCompTrajectoryRobot2D::NavState, S>
 {
     static void read(S* __is, ::RoboCompTrajectoryRobot2D::NavState& v)
     {
-        __is->read(v.elapsedTime);
-        __is->read(v.state);
-        __is->read(v.estimatedTime);
-        __is->read(v.planningTime);
         __is->read(v.x);
         __is->read(v.z);
         __is->read(v.ang);
         __is->read(v.advV);
         __is->read(v.rotV);
         __is->read(v.distanceToTarget);
+        __is->read(v.elapsedTime);
+        __is->read(v.estimatedTime);
+        __is->read(v.planningTime);
+        __is->read(v.state);
         __is->read(v.description);
     }
 };

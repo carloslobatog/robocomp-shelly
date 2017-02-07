@@ -42,7 +42,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 
 	//Timed slot to read TrajectoryRobot2D state
 	connect(&trajReader, SIGNAL(timeout()), this, SLOT(readTrajState()));
-	connect(gaussiana,SIGNAL(clicked()),this, SLOT(gauss(true)));
+	connect(gaussiana,SIGNAL(clicked()),this, SLOT(gauss()));
 	//trajReader.start(1000);
 	
 	//SLIDER
@@ -71,7 +71,7 @@ void SpecificWorker::cambiarvalor(int value){
 
 SNGPolylineSeq SpecificWorker::gauss(bool dibujar)
 {
-	qDebug()<<"SE HA PULSADO EL BOTON";
+	qDebug()<<"MODULO GAUSS";
 	
 	qDebug()<<"DIBUJAR"<<dibujar;
 	SNGPersonSeq persons;
@@ -368,7 +368,7 @@ void SpecificWorker::compute( )
 		  //SNGPolylineSeq secuencia = socialnavigationgaussian_proxy->getPolylines(persons, valorprox, true);
 		 
 		  qDebug()<<"llamamos al trajectory";
-		 SNGPolylineSeq secuencia=gauss(true);
+		 SNGPolylineSeq secuencia=gauss(false);
 		  
 		  RoboCompTrajectoryRobot2D::PolyLineList lista;
 		  
@@ -392,7 +392,7 @@ void SpecificWorker::compute( )
 		
 		cambiopos=false;		
 	}		
-				  qDebug("Todo bien");
+
 		
 }	 	
 	//actionExecution();

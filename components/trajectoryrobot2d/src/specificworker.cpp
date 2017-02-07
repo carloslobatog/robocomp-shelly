@@ -176,7 +176,7 @@ void SpecificWorker::compute()
 		case CurrentTarget::State::IDLE:
 			timer.setInterval(700);
 			tState.setDescription("Waiting new target");
-			qDebug() << __FUNCTION__ << "Computed period" << reloj.elapsed()  << "ms. State. Robot at:" << innerModel->transform6D("world", "robot");
+			//qDebug() << __FUNCTION__ << "Computed period" << reloj.elapsed()  << "ms. State. Robot at:" << innerModel->transform6D("world", "robot");
 			//currentTarget.setState(CurrentTarget::State::LEARNING);
 			break;
 	}

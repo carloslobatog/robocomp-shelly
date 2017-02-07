@@ -54,8 +54,7 @@ public:
 	
 //bool para indicar si se ha movido la persona, lo utilizare para imprimir la coordenada de la persona cada vez que se mueva
 	bool cambiopos=false;
-
-
+	
 	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
 	SNGPerson person1;
 	SNGPerson person2;
@@ -119,7 +118,7 @@ public:
 public slots:
  	void compute();
 	void readTrajState();
-	SNGPolylineSeq gauss(bool dibujar);
+	SNGPolylineSeq gauss(bool dibujar=true);
 	void cambiarvalor(int valor);
 
 private:

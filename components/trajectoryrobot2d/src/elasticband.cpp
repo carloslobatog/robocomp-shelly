@@ -167,7 +167,11 @@ bool ElasticBand::shortCut(InnerModel *innermodel, WayPoints &road, const RoboCo
  * @return void
  */
 RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData laserData, SafePolyList &safePolyList, InnerModel *innermodel)
-{
+{	
+	for (auto l:laserData)
+	{
+	  qDebug()<<"angulo"<<l.angle<<"distancia"<<l.dist;
+	}
 	
 	RoboCompLaser::TLaserData laserCombined; 
 	
@@ -176,10 +180,12 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 	LocalPolyLineList l = safePolyList.read(); 
 	for (auto polyline : l)
 	{
+	  
 		auto previousPoint = polyline[polyline.size()-1];
 		QVec previousPointInLaser = innermodel->transform("laser", (QVec::vec3(previousPoint.x, 0, previousPoint.z).operator*(1000)), "world");
 		float pDist  = std::sqrt(previousPointInLaser.x()*previousPointInLaser.x() + previousPointInLaser.z()*previousPointInLaser.z());
 		float pAngle = atan2(previousPointInLaser.x(), previousPointInLaser.z());
+		
 		// For each polyline's point
 		for (auto polylinePoint: polyline)
 		{
