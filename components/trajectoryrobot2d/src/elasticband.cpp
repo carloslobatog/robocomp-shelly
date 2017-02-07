@@ -81,10 +81,14 @@ bool ElasticBand::update(InnerModel *innermodel, WayPoints &road, const RoboComp
 	if (road.isFinished() == true)
 		return false;
 
+	///////////////////////////////////////////////////////////////////// AQUIII////////////////
+	// Union de poligonos
+	RoboCompLaser::TLaserData myLaser = unionpoligonos(laserData, safePolyList,innermodel); 
+	
 	/////////////////////////////////////////////
 	//Tags all points in the road ar visible or blocked, depending on laser visibility. Only visible points are processed in this iteration
 	/////////////////////////////////////////////
-	checkVisiblePoints(innermodel, road, laserData);
+	checkVisiblePoints(innermodel, road, myLaser);
 
 	/////////////////////////////////////////////
 	//Check if there is a sudden shortcut to take
@@ -101,11 +105,6 @@ bool ElasticBand::update(InnerModel *innermodel, WayPoints &road, const RoboComp
 	/////////////////////////////////////////////
 	cleanPoints(road);
 
-	
-	///////////////////////////////////////////////////////////////////// AQUIII////////////////
-	// Union de poligonos
-	RoboCompLaser::TLaserData myLaser = unionpoligonos(laserData, safePolyList,innermodel); 
-	
 	/////////////////////////////////////////////
 	//Compute the scalar magnitudes
 	/////////////////////////////////////////////
@@ -169,8 +168,6 @@ bool ElasticBand::shortCut(InnerModel *innermodel, WayPoints &road, const RoboCo
  */
 RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData laserData, SafePolyList &safePolyList, InnerModel *innermodel)
 {
-	QVec p_laser; 
-	QVec p_laser_polar;
 	
 	RoboCompLaser::TLaserData laserCombined; 
 	

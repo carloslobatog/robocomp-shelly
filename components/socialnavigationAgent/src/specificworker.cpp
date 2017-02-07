@@ -42,7 +42,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 
 	//Timed slot to read TrajectoryRobot2D state
 	connect(&trajReader, SIGNAL(timeout()), this, SLOT(readTrajState()));
-	connect(gaussiana,SIGNAL(clicked()),this,SLOT(gauss(true)));
+	connect(gaussiana,SIGNAL(clicked()),this, SLOT(gauss(true)));
 	//trajReader.start(1000);
 	
 	//SLIDER
@@ -71,6 +71,9 @@ void SpecificWorker::cambiarvalor(int value){
 
 SNGPolylineSeq SpecificWorker::gauss(bool dibujar)
 {
+	qDebug()<<"SE HA PULSADO EL BOTON";
+	
+	qDebug()<<"DIBUJAR"<<dibujar;
 	SNGPersonSeq persons;
 	//push back es para incluir a la persona en el vector de personas
 	if (p1)
@@ -365,7 +368,7 @@ void SpecificWorker::compute( )
 		  //SNGPolylineSeq secuencia = socialnavigationgaussian_proxy->getPolylines(persons, valorprox, true);
 		 
 		  qDebug()<<"llamamos al trajectory";
-		 SNGPolylineSeq secuencia=gauss(false);
+		 SNGPolylineSeq secuencia=gauss(true);
 		  
 		  RoboCompTrajectoryRobot2D::PolyLineList lista;
 		  
@@ -379,7 +382,8 @@ void SpecificWorker::compute( )
 		    }
 		    lista.push_back(poly);
 		  }
-		    
+		  qDebug()<<"llamamos al SetHumanSpace";
+
 		  trajectoryrobot2d_proxy->setHumanSpace(lista);
 		}
 		catch( const Ice::Exception &e)
@@ -388,7 +392,7 @@ void SpecificWorker::compute( )
 		
 		cambiopos=false;		
 	}		
-		
+				  qDebug("Todo bien");
 		
 }	 	
 	//actionExecution();

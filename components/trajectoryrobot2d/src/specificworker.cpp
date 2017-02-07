@@ -669,6 +669,7 @@ void SpecificWorker::setHumanSpace(const PolyLineList& polyList)
       qDebug() << "	punto" << p.x << p.z;
   }
   safePolyList.write(polyList);
+  qDebug("todo correcto");
 }
 
 
