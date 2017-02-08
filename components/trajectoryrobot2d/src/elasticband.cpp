@@ -77,6 +77,7 @@ ElasticBand::~ElasticBand()
 bool ElasticBand::update(InnerModel *innermodel, WayPoints &road, const RoboCompLaser::TLaserData &laserData,
                          const CurrentTarget &currentTarget, SafePolyList &safePolyList, uint iter)
 {
+	qDebug()<<"ELASTIC BAND UPDATE";
 	//qDebug() << __FILE__ << __FUNCTION__ << "road size"<<  road.size();
 	if (road.isFinished() == true)
 		return false;

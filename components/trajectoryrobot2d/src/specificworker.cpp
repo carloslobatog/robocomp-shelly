@@ -136,6 +136,7 @@ void SpecificWorker::compute()
 			break;		
 		case CurrentTarget::State::BLOCKED:
 				road.update();
+				qDebug()<<"Se debe actualizar elasticband";
 				elasticband.update(innerModel, road, laserData, currentTarget, safePolyList);
 				if( road.isBlocked() == false)
 					currentTarget.setState(CurrentTarget::State::GOTO);
@@ -176,6 +177,8 @@ void SpecificWorker::compute()
 		case CurrentTarget::State::IDLE:
 			timer.setInterval(700);
 			tState.setDescription("Waiting new target");
+			
+			//////////////DESCOMENTAR///////////////////
 			//qDebug() << __FUNCTION__ << "Computed period" << reloj.elapsed()  << "ms. State. Robot at:" << innerModel->transform6D("world", "robot");
 			//currentTarget.setState(CurrentTarget::State::LEARNING);
 			break;
@@ -317,7 +320,9 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 	///////////////////////////////////
 	// Update the band
 	/////////////////////////////////
+	qDebug()<<"Se debe actualizar elasticband";
 	elasticband.update(innerModel, myRoad, laserData, target, safePolyList);
+	qDebug()<<"Se ha debido actualizar elasticband";
 
 	///////////////////////////////////
 	// compute all measures relating the robot to the road
@@ -669,7 +674,15 @@ void SpecificWorker::setHumanSpace(const PolyLineList& polyList)
       qDebug() << "	punto" << p.x << p.z;
   }
   safePolyList.write(polyList);
-  qDebug("todo correcto");
+  
+  
+///////////////ESTO ESTA BIEN//////////////
+//   for(auto poli:safePolyList.read()){
+//       qDebug() << "PolilineaSAFE:";
+//       for(auto punto:poli){
+//       qDebug() << "	punto" << punto.x << punto.z;
+//    }
+//   }
 }
 
 
