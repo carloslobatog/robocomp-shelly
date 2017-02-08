@@ -79,6 +79,7 @@
 
  <node alias="humanFakeA" endpoint="agmcommonbehavior:tcp -h localhost -p 10210">
   <dependence alias="executive" />
+  <dependence alias="base" />
   <workingDir path="/home/robocomp/" />
   <upCommand command="rcremote localhost humanFakeA /home/robocomp/mirobocomp/robocomp-shelly/components/fakeHumanAgent ./bin/fakeHumanAgent /home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake.conf" />
   <downCommand command="killall -9 fakeHumanAgent" />
@@ -91,6 +92,7 @@
 
  <node alias="humanFake2" endpoint="agmcommonbehavior:tcp -h localhost -p 10211">
   <dependence alias="executive" />
+  <dependence alias="base" />
   <workingDir path="/home/robocomp/" />
   <upCommand command="rcremote localhost humanFakeANew /home/robocomp/mirobocomp/robocomp-shelly/components/fakeHumanAgentNew ./bin/fakeHumanAgentNew /home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFakeNew.conf" />
   <downCommand command="killall -9 fakeHumanAgentNew" />
@@ -103,6 +105,8 @@
 
  <node alias="humanFake3" endpoint="agmcommonbehavior:tcp -h localhost -p 10212">
   <dependence alias="executive" />
+<dependence alias="base" />
+  <dependence alias="base" />
   <workingDir path="/home/robocomp/" />
   <upCommand command="rcremote localhost humanFakeA3 /home/robocomp/mirobocomp/robocomp-shelly/components/fakeHumanAgent3 ./bin/fakeHumanAgent3 /home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake3.conf" />
   <downCommand command="killall -9 fakeHumanAgent3" />
@@ -115,6 +119,7 @@
 
  <node alias="humanFake4" endpoint="agmcommonbehavior:tcp -h localhost -p 10213">
   <dependence alias="executive" />
+<dependence alias="base" />
   <workingDir path="/home/robocomp/" />
   <upCommand command="rcremote localhost humanFakeA4 /home/robocomp/mirobocomp/robocomp-shelly/components/fakeHumanAgent4 ./bin/fakeHumanAgent4 /home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake4.conf" />
   <downCommand command="killall -9 fakeHumanAgent4" />
@@ -127,6 +132,7 @@
 
  <node alias="humanFake5" endpoint="agmcommonbehavior:tcp -h localhost -p 10214">
   <dependence alias="executive" />
+<dependence alias="base" />
   <workingDir path="/home/robocomp/" />
   <upCommand command="rcremote localhost humanFakeA5 /home/robocomp/mirobocomp/robocomp-shelly/components/fakeHumanAgent5 ./bin/fakeHumanAgent5 /home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake5.conf" />
   <downCommand command="killall -9 fakeHumanAgent5" />
@@ -139,6 +145,7 @@
 
  <node alias="humanFake6" endpoint="agmcommonbehavior:tcp -h localhost -p 10215">
   <dependence alias="executive" />
+<dependence alias="base" />
   <workingDir path="/home/robocomp/" />
   <upCommand command="rcremote localhost humanFakeA6 /home/robocomp/mirobocomp/robocomp-shelly/components/fakeHumanAgent6 ./bin/fakeHumanAgent6 /home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake6.conf" />
   <downCommand command="killall -9 fakeHumanAgent6" />
