@@ -773,7 +773,9 @@ bool SpecificWorker::updateInnerModel(InnerModel *inner, TrajectoryState &state)
 		return false;
 	}	
 	try
-	{	laserData = laser_proxy->getLaserData();	}
+	{	laserData = laser_proxy->getLaserData();
+		//ESTO DA ERROR //RoboCompLaser::TLaserData mylaser=ElasticBand::unionpoligonos(laserData, safePolyList, inner);
+	}
 	catch (const Ice::Exception &ex)
 	{
 		qDebug() << __FUNCTION__ << "Can't connect to Laser proxy. Retrying...";
