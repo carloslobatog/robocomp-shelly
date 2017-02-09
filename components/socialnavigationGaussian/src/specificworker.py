@@ -316,10 +316,10 @@ class SpecificWorker(GenericWorker):
                             #print ("punto",cp,"entorno",entorno)
 
                             boolentorno =[]
-                            ###CAMBIAR BOOLENTORNO PARA QUE NO CUENTE EL PUNTO e
+                            ###Comprobar que asi el punto no esta en el entorno!!!!!!!!!!!!!!
                             for e in entorno:
-                                for ix in range(-1, 2):
-                                    for iy in range(-1, 2):
+                                for ix in range(-1, 2,2):
+                                    for iy in range(-1, 2,2):
                                         boolentorno.append(matrizbool[[e[0] + ix, e[1] + iy]])
 
                                 if np.mean(boolentorno != 0):
