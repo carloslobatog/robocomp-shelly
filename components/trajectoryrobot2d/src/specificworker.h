@@ -37,6 +37,7 @@
 	#include "innerviewer.h"
 #endif
 
+using namespace std;
 /**
        \brief Component that plans and executes a trajectory for an omnidirectional robot. The trajectory es planned using a combination of PRM and RRT and 
        projected onto the outside world through the laser field. The projection allows for real-time dynamic corrections. A controller drives the robot
@@ -238,8 +239,11 @@ class SpecificWorker : public GenericWorker
 		float MINIMUN_DETECTABLE_TRANSLATION;
 		
 		//local copy of human PolyLineList
-	
 		SafePolyList safePolyList;
+		
+		void fichero(TLaserData laser, string path);
+		void ficheroP(LocalPolyLineList p, string path);
+
 };
 
 

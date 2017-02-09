@@ -238,9 +238,11 @@ class SpecificWorker(GenericWorker):
 
 
         #####################################################################################################
+        """""
+        ######################SACAR LAS POLILINEAS DE GRID ###################################################
 
-        ######################SACAR LAS POLILINEAS DE GRID###################################################
         totalpuntos = []
+
 
         for j in range(grid.shape[1] ):
             for i in range(grid.shape[0]):
@@ -259,19 +261,68 @@ class SpecificWorker(GenericWorker):
                         totalpuntos.append(puntos)
                       #  print ("tamano totalpuntos cluster diferente",len(totalpuntos))
 
-                   # print("---------------------")
-
 
         for lista in totalpuntos:
             for puntos in lista:
-                puntos[0] = puntos[0]*resolution + lx_inf
-                puntos[1] = puntos[1]*resolution + ly_inf
+                puntos[0] = puntos[0] * resolution + lx_inf
+                puntos[1] = puntos[1] * resolution + ly_inf
+
+                   # print("---------------------")
 
 
 
-        #####PASO A POLILINEAS######
 
-        polylines= []
+        """""
+        ###################################SACAR LAS POLILINEAS DEL GRID ############################
+        totalpuntos = []
+
+        ###MATRIZ PARA IR RECORRIENDO LOS PUNTOS Y SABER SI HEMOS PASADO POR ESE PUNTO
+        matrizbool = np.ones((grid.shape[0], grid.shape[1]), dtype=bool)
+
+
+        for j in range(grid.shape[1] ):
+            for i in range(grid.shape[0]):
+
+                if (matrizbool[i,j]):
+                   # print ("Primera vez que se recorre punto",[i,j])
+                    if (grid[j,i] > 0):
+                        print ("El punto es negro", [i,j])
+                        #current point
+                        cp = [i,j]
+
+                        puntos = []
+                        finpoly = False
+
+                        while (finpoly == False):
+
+                            puntos.append(cp)
+
+                            entornopunto = [[cp[0]+1,cp[1]],[cp[0]+1,cp[1]-1],[cp[0],cp[1]-1], [cp[0]-1,cp[1]-1],[cp[0]-1,cp[1]]]
+                         #   print ("Entorno del punto: ", [i, j], entornopunto)
+
+                            for e in entornopunto:
+                                if (grid[e[1],e[0]]>0 and (matrizbool[e[0],e[1]])==True):
+                                    print ("En el entorno hay punto negro")
+                                    matrizbool[cp] = False
+                                    cp = e
+
+                                    break
+
+                                else:
+                                    finpoly = True
+                                    matrizbool[cp] = False
+
+                        totalpuntos.append(puntos)
+
+
+                matrizbool[i,j] = False
+
+                   # print("---------------------")
+
+
+                #####PASO A POLILINEAS######
+
+        polylines = []
         for lista in totalpuntos:
             polyline = []
             for puntos in lista:
@@ -279,21 +330,21 @@ class SpecificWorker(GenericWorker):
                 punto.x = puntos[0]
                 punto.z = puntos[1]
                 polyline.append(punto)
-            polylines.append(polyline)
+                polylines.append(polyline)
 
-#        print("tamano polilinea debe ser igual",len(polylines))
-
+                    #        print("tamano polilinea debe ser igual",len(polylines))
 
         if (dibujar):
             for ps in polylines:
                 plt.figure()
-
                 for p in ps:
-                    plt.plot(p.x,p.z,"*r-")
+                    plt.plot(p.x, p.z, "*r-")
                     plt.axis('equal')
                     plt.xlabel('X')
                     plt.ylabel('Y')
-            plt.show()
+                plt.show()
+
+
 
 
         #####################################################################################################

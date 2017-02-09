@@ -323,7 +323,7 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 	qDebug()<<"Se debe actualizar elasticband";
 	elasticband.update(innerModel, myRoad, laserData, target, safePolyList);
 	qDebug()<<"Se ha debido actualizar elasticband";
-	
+	//qFatal("aqui");
 	///////////////////////////////////
 	// compute all measures relating the robot to the road
 	/////////////////////////////////
@@ -756,6 +756,24 @@ void SpecificWorker::mapBasedTarget(const NavigationParameterMap &parameters)
  * @param inner InnerModel that is to be updated
  * @return bool
  */
+void SpecificWorker::fichero(TLaserData laser, string path){
+	ofstream fichero(path, ofstream::out);
+	for (auto l:laser){
+		fichero<< l.angle << " " <<l.dist<< endl;
+	}
+	fichero.close();
+}
+void SpecificWorker::ficheroP(LocalPolyLineList polylines, string path){
+	ofstream fichero(path, ofstream::out);
+	for (auto p:polylines){
+		for (auto l:p){
+			fichero<< l.x << " " <<l.z<< endl;
+		}
+	}
+	fichero.close();
+}
+
+
 bool SpecificWorker::updateInnerModel(InnerModel *inner, TrajectoryState &state)
 {
 	try
@@ -772,8 +790,18 @@ bool SpecificWorker::updateInnerModel(InnerModel *inner, TrajectoryState &state)
 		return false;
 	}	
 	try
-	{	laserData = laser_proxy->getLaserData();
+	{
+		printf("Escribiendo a laserantes\n");
+		laserData = laser_proxy->getLaserData();
+// 		for (auto &v: laserData)
+// 		{
+// 			v.dist = 10000.;
+// 		}
+		fichero(laserData,"laserantes.txt");
 		laserData = elasticband.unionpoligonos(laserData, safePolyList, inner);
+		fichero(laserData,"laserdespues.txt");
+		ficheroP(safePolyList.read(),"poly.txt");
+		printf("Escribiendo a laserdespues\n");
 	}
 	catch (const Ice::Exception &ex)
 	{
