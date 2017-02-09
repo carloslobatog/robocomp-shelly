@@ -170,20 +170,27 @@ bool ElasticBand::shortCut(InnerModel *innermodel, WayPoints &road, const RoboCo
  */
 RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData laserData, SafePolyList &safePolyList, InnerModel *innermodel)
 {	
-	for (auto l:laserData)
-	{
-	  qDebug()<<"angulo"<<l.angle<<"distancia"<<l.dist;
-	}
 	
 	RoboCompLaser::TLaserData laserCombined; 
 	
 	laserCombined = laserData;
 	// For each polyline
 	LocalPolyLineList l = safePolyList.read(); 
+	
+	 
+	qDebug() << " PMNT: Polyline List size: " << l.size();
+	
+	if (l.size()!=0)
+		qDebug() << " PMNT: Polyline List different to zero " << l.size();
+
+	
 	for (auto polyline : l)
 	{
 	  
 		auto previousPoint = polyline[polyline.size()-1];
+		
+
+		
 		QVec previousPointInLaser = innermodel->transform("laser", (QVec::vec3(previousPoint.x, 0, previousPoint.z).operator*(1000)), "world");
 		float pDist  = std::sqrt(previousPointInLaser.x()*previousPointInLaser.x() + previousPointInLaser.z()*previousPointInLaser.z());
 		float pAngle = atan2(previousPointInLaser.x(), previousPointInLaser.z());
@@ -192,19 +199,43 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 		for (auto polylinePoint: polyline)
 		{
 			QVec currentPointInLaser = innermodel->transform("laser", (QVec::vec3(polylinePoint.x, 0, polylinePoint.z).operator*(1000)), "world");
+			
 			float cDist  = sqrt(currentPointInLaser.x()*currentPointInLaser.x() + currentPointInLaser.z()*currentPointInLaser.z());
 			float cAngle = atan2(currentPointInLaser.x(), currentPointInLaser.z());
-			for (auto laserSample: laserCombined)
+			
+			for (auto &laserSample: laserCombined)
 			{
+				qDebug() << "		PMNT: laser angle" << laserSample.angle*180/3.1415;
+				qDebug() << "		PMNT: laser distance before" << laserSample.dist;
+
 				if ((laserSample.angle>cAngle) != (laserSample.angle>pAngle)) // The laser's sample angle is between the angles of the samples if only one of them is greater
 				{
 					float mean = (cDist + pDist) / 2.;
 					float currentValue = laserSample.dist;
+					
+					qDebug() << "			PMNT: laser angle" << laserSample.angle;
+					qDebug() << "			PMNT: point polyline cangle" << cAngle << "PMNT: point polyline cangle"<< pAngle;
+					
+				
+			
 					laserSample.dist = mean<currentValue?mean:laserSample.dist;
+					
 				}
+				qDebug() << "		PMNT: laser distance after" << laserSample.dist;
+
 			}
 		}
 	}
+	
+	qDebug()<<"inside polyline";
+	//if (l.size()!=0)
+	//	qFatal("byebye");
+	/* 
+	for (auto l:laserCombined)
+	{
+	  qDebug()<<"angulo"<<l.angle<<"distancia"<<l.dist;
+	}
+	*/
 	return laserCombined;
 } 
 

@@ -128,7 +128,7 @@ void SpecificWorker::compute()
 			break;
 		case CurrentTarget::State::GOTO:
 			timer.setInterval(Period);
-			//qDebug() << __FUNCTION__ << "GOTO:" << "Robot at:" << innerModel->transform6D("world", "robot") << "Target:" << currentTarget.getFullPose();
+			qDebug() << __FUNCTION__ << "GOTO:" << "Robot at:" << innerModel->transform6D("world", "robot") << "Target:" << currentTarget.getFullPose();
 			gotoCommand(innerModel, currentTarget, tState, road, laserData);
 			break;
 		case CurrentTarget::State::SETHEADING:
@@ -278,7 +278,7 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 		state.setState("EXECUTING");
 	}
 		
-
+	qDebug() << __FUNCTION__ << "GOTO:" << "Robot at:" << innerModel->transform6D("world", "robot") << "Target:" << currentTarget.getFullPose();
 	// Get here when robot is stuck
 // 	if(myRoad.requiresReplanning == true)
 // 	{
@@ -323,7 +323,7 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 	qDebug()<<"Se debe actualizar elasticband";
 	elasticband.update(innerModel, myRoad, laserData, target, safePolyList);
 	qDebug()<<"Se ha debido actualizar elasticband";
-
+	
 	///////////////////////////////////
 	// compute all measures relating the robot to the road
 	/////////////////////////////////
@@ -675,7 +675,6 @@ void SpecificWorker::setHumanSpace(const PolyLineList& polyList)
   }
   safePolyList.write(polyList);
   
-  
 ///////////////ESTO ESTA BIEN//////////////
 //   for(auto poli:safePolyList.read()){
 //       qDebug() << "PolilineaSAFE:";
@@ -774,7 +773,7 @@ bool SpecificWorker::updateInnerModel(InnerModel *inner, TrajectoryState &state)
 	}	
 	try
 	{	laserData = laser_proxy->getLaserData();
-		//ESTO DA ERROR //RoboCompLaser::TLaserData mylaser=ElasticBand::unionpoligonos(laserData, safePolyList, inner);
+		laserData = elasticband.unionpoligonos(laserData, safePolyList, inner);
 	}
 	catch (const Ice::Exception &ex)
 	{
