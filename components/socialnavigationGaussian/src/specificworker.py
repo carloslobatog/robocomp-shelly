@@ -294,7 +294,7 @@ class SpecificWorker(GenericWorker):
         for j in range(grid.shape[1]):
             for i in range(grid.shape[0]):
                 if (matrizbool[i,j] == True):
-                    if grid[j, i] > 0:
+                    if (grid[j, i] > 0 ):
                         print("Punto negro", [i, j])
                         cp = [i, j]
                         print("Creamos nueva lista de puntos")
@@ -306,6 +306,7 @@ class SpecificWorker(GenericWorker):
 
                             puntos.append(cp)
                             entorno = []
+                            ##########CAMBIAR EL ENTORNO PARA QUE VAYA EN ORDEN
                             for ix in range(-1, 2):
                                 for iy in range(-1, 2):
                                     entorno.append([cp[0] + ix, cp[1] + iy])
@@ -314,19 +315,29 @@ class SpecificWorker(GenericWorker):
 
                             #print ("punto",cp,"entorno",entorno)
 
-
+                            boolentorno =[]
+                            ###CAMBIAR BOOLENTORNO PARA QUE NO CUENTE EL PUNTO e
                             for e in entorno:
-                                if (grid[e[1], e[0]] > 0 and matrizbool[e[0], e[1]]==True):
-                                    print("Hay un punto negro en el entorno")
-                                    matrizbool[e[0], e[1]] = False
-                                    cp = e
-                                    break
+                                for ix in range(-1, 2):
+                                    for iy in range(-1, 2):
+                                        boolentorno.append(matrizbool[[e[0] + ix, e[1] + iy]])
+
+                                if np.mean(boolentorno != 0):
+                                    #  QUIERE DECIR QUE ALGUN PUNTO DEL ENTORNO NO SE HA COMPROBADO AUN
+                                    if (matrizbool[e[0], e[1]]==True):
+                                        if (grid[e[1], e[0]] > 0):
+                                            print("Hay un punto negro en el entorno", e)
+                                            matrizbool[e[0], e[1]] = False
+                                            cp = e
+                                            break
+                                        else:
+                                            matrizbool[[e[0], e[1]]]=False
+
+
                                 else:
-                                    if (grid[e[1], e[0]] < 0 and matrizbool[e[0], e[1]] == True):
-                                        matrizbool[e[0], e[1]] == False
-                                    else:
-                                        if (e in totalpuntos and matrizbool[e[0], e[1]]):
-                                            finpoly = True
+                                    finpoly = True
+
+                        totalpuntos.append(puntos)
 
 
                     matrizbool[i,j]= False
