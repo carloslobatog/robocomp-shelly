@@ -30,7 +30,7 @@ from scipy.spatial import ConvexHull
 from normal import Normal
 import GaussianMix as GM
 import checkboundaries as ck
-
+import math
 
 
 def getPolyline(grid, resolution, lx_inf, ly_inf):
@@ -53,7 +53,25 @@ def getPolyline(grid, resolution, lx_inf, ly_inf):
             puntos[1] = puntos[1] * resolution + ly_inf
         points = np.asarray(lista)
         hull = ConvexHull(points)
-        ret.append(points[hull.vertices])
+
+        # split
+        """""
+        v = []
+        prev = points[hull.vertices][-1]
+        for curr in points[hull.vertices]:
+            dx = curr[0]-prev[0]
+            dy = curr[1]-prev[1]
+            dist = math.sqrt(dx*dx+dy*dy)
+            if dist > 0.1:
+                iters = dist / 0.1
+                for iter in xrange(int(iters)):
+                    wx = prev[0]+0.1*iter*dx
+                    wy = prev[1]+0.1*iter*dy
+                    v.append([wx, wy])
+            v.append(curr)
+            prev = curr
+        ret.append(v)
+        """
     return ret
 
 class Person(object):
@@ -249,141 +267,19 @@ class SpecificWorker(GenericWorker):
         #plt.imshow(z, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
 
-        plt.figure()
-        plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+       # plt.figure()
+       # plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
 
        # plt.figure()
-       # plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+        plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
         plt.xlabel('X')
         plt.ylabel('Y')
         plt.axis('equal')
 
         np.savetxt('log.txt', grid, fmt='%i')
 
-
-        #####################################################################################################
-        """""
-        ######################SACAR LAS POLILINEAS DE GRID ###################################################
-
-        totalpuntos = []
-
-
-        for j in range(grid.shape[1] ):
-            for i in range(grid.shape[0]):
-                if grid[j,i]>0:
-                    # print ("PUNTO NEGRO", [i,j])
-                   # plt.plot (i*resolution+ lx_inf, j*resolution+ly_inf,'*r-')
-                    mismocluster, pos = ck.checkboundaries(grid, i, j, totalpuntos)
-
-                    if (mismocluster==True):
-                        totalpuntos[pos].append([i,j])
-                     #   print("tamano totalpuntos mismo cluster", len(totalpuntos))
-
-                    else:
-                        puntos=[]
-                        puntos.append ([i,j])
-                        totalpuntos.append(puntos)
-                      #  print ("tamano totalpuntos cluster diferente",len(totalpuntos))
-
-
-        for lista in totalpuntos:
-            for puntos in lista:
-                puntos[0] = puntos[0] * resolution + lx_inf
-                puntos[1] = puntos[1] * resolution + ly_inf
-
-                   # print("---------------------")
-
-
-
-
-
-        ###################################SACAR LAS POLILINEAS DEL GRID ############################
-        totalpuntos = []
-
-        ###MATRIZ PARA IR RECORRIENDO LOS PUNTOS Y SABER SI HEMOS PASADO POR ESE PUNTO
-        matrizbool = np.ones((grid.shape[0], grid.shape[1]), dtype=bool)
-
-        for j in range(grid.shape[1] ):
-            for i in range(grid.shape[0]):
-
-                if (matrizbool[i,j]):
-
-
-                   # print ("Primera vez que se recorre punto",[i,j])
-                    if (grid[j,i] > 0):
-
-                        print ("El punto es negro", [i,j])
-                        #current point
-                        cp = [i,j]
-
-                        print ("CREO LISTA DE PUNTOS")
-                        puntos = []
-                        finpoly = False
-
-                        while (finpoly == False):
-
-                            puntos.append(cp)
-
-                            #Faltan pixeles
-                            entornopunto = [[cp[0]+1,cp[1]],[cp[0]+1,cp[1]-1],[cp[0],cp[1]-1], [cp[0]-1,cp[1]-1],[cp[0]-1,cp[1]],[cp[0]-1,cp[1]+1],[cp[0],cp[1]+1],[cp[0]+1,cp[1]+1]]
-
-                            for e in entornopunto:
-
-                                if (grid[e[1],e[0]]>0 and (matrizbool[e[0],e[1]])==True):
-                                    print ("En el entorno hay punto negro, lo anadimos a la lista", e)
-                                    matrizbool[e[0],e[1]] = False
-                                    cp = e
-                                    break
-
-                                else:
-                                    if ([cp[0+1],cp[1]+1]):
-
-
-
-
-
-
-
-                        totalpuntos.append(puntos)
-
-
-
-        """
-
-
-
-
-
-                   # print("---------------------")
-
-
-                #####PASO A POLILINEAS######
-
         polylines = []
-        for lista in totalpuntos:
-            polyline = []
-            for puntos in lista:
-                punto = SNGPoint2D()
-                punto.x = puntos[0]
-                punto.z = puntos[1]
-                polyline.append(punto)
-                polylines.append(polyline)
-
-                    #        print("tamano polilinea debe ser igual",len(polylines))
-
-        if (dibujar):
-            for ps in polylines:
-                plt.figure()
-                for p in ps:
-                    plt.plot(p.x, p.z, "*r-")
-                    plt.axis('equal')
-                    plt.xlabel('X')
-                    plt.ylabel('Y')
-                plt.show()
-
-
-
         r = getPolyline(grid, resolution, lx_inf, ly_inf)
         for polilinea in r:
             kkpolyline = []
@@ -393,5 +289,18 @@ class SpecificWorker(GenericWorker):
                 punto.z = p[1]
                 kkpolyline.append(punto)
             polylines.append(kkpolyline)
+
+
+        if (dibujar):
+            for ps in polylines:
+                #plt.figure()
+                for p in ps:
+                    plt.plot(p.x, p.z, "*r-")
+                    plt.axis('equal')
+                    plt.xlabel('X')
+                    plt.ylabel('Y')
+                plt.show()
+
+
 
         return polylines

@@ -190,15 +190,18 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 				float cDist  = sqrt(currentPointInLaser.x()*currentPointInLaser.x() + currentPointInLaser.z()*currentPointInLaser.z());
 				float cAngle = atan2(currentPointInLaser.x(), currentPointInLaser.z());
 
-				if ((laserSample.angle>cAngle) != (laserSample.angle>pAngle)) // The laser's sample angle is between the angles of the samples if only one of them is greater
+				const float m = std::min<float>(cAngle, pAngle);
+				const float M = std::max<float>(cAngle, pAngle);
+				printf("angulo: %f   p:%f  c:%f\n", laserSample.angle, cAngle, pAngle);
+				if (laserSample.angle >= m and laserSample.angle <= M)
 				{
+					printf("dentro\n");
 					float mean = (cDist + pDist) / 2.;
-					float currentValue = laserSample.dist;
-					if (mean<currentValue) laserSample.dist = mean;
+					if (mean<laserSample.dist) laserSample.dist = mean;
 				}
+				pDist = cDist;
+				pAngle = cAngle;
 			}
-			pDist = cDist;
-			pAngle = cAngle;
 		}
 	}
 	return laserCombined;
