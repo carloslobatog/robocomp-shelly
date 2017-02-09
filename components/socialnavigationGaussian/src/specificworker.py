@@ -55,13 +55,13 @@ def getPolyline(grid, resolution, lx_inf, ly_inf):
             puntos[0] = puntos[0] * resolution + lx_inf
             puntos[1] = puntos[1] * resolution + ly_inf
 
-        p = np.asarray(lista)
-        hull = ConvexHull(p)
-        ret.append(hull.points)
+        points = np.asarray(lista)
+        hull = ConvexHull(points)
+        #ret.append(hull.vertices)
 
 
         # split
-        """""
+
         v = []
         prev = points[hull.vertices][-1]
         for curr in points[hull.vertices]:
@@ -77,7 +77,7 @@ def getPolyline(grid, resolution, lx_inf, ly_inf):
             v.append(curr)
             prev = curr
         ret.append(v)
-        """
+
     return ret
 
 class Person(object):
@@ -285,10 +285,58 @@ class SpecificWorker(GenericWorker):
 
         np.savetxt('log.txt', grid, fmt='%i')
 
-        polylines = []
-        p = getPolyline(grid, resolution, lx_inf, ly_inf)
+        #######################################################################################################
 
-        for polilinea in p:
+        totalpuntos = []
+        matrizbool = np.ones([grid.shape[0], grid.shape[1]], dtype=bool)
+
+
+        for j in range(grid.shape[1]):
+            for i in range(grid.shape[0]):
+                if (matrizbool[i,j] == True):
+                    if grid[j, i] > 0:
+                        print("Punto negro", [i, j])
+                        cp = [i, j]
+                        print("Creamos nueva lista de puntos")
+                        puntos = []
+                        finpoly = False
+
+                        while (finpoly == False):
+                            #print("Anadimos el punto a la lista")
+
+                            puntos.append(cp)
+                            entorno = []
+                            for ix in range(-1, 2):
+                                for iy in range(-1, 2):
+                                    entorno.append([cp[0] + ix, cp[1] + iy])
+                            index = entorno.index(cp)
+                            entorno.pop(index)
+
+                            #print ("punto",cp,"entorno",entorno)
+
+
+                            for e in entorno:
+                                if (grid[e[1], e[0]] > 0 and matrizbool[e[0], e[1]]==True):
+                                    print("Hay un punto negro en el entorno")
+                                    matrizbool[e[0], e[1]] = False
+                                    cp = e
+                                    break
+                                else:
+                                    if (grid[e[1], e[0]] < 0 and matrizbool[e[0], e[1]] == True):
+                                        matrizbool[e[0], e[1]] == False
+                                    else:
+                                        if (e in totalpuntos and matrizbool[e[0], e[1]]):
+                                            finpoly = True
+
+
+                    matrizbool[i,j]= False
+
+        polylines = []
+        """""
+
+        r= getPolyline(grid, resolution, lx_inf, ly_inf)
+
+        for polilinea in r:
             polyline = []
             for p in polilinea:
                 punto = SNGPoint2D()
@@ -296,7 +344,7 @@ class SpecificWorker(GenericWorker):
                 punto.z = p[1]
                 polyline.append(punto)
             polylines.append(polyline)
-
+        """
 
         if (dibujar):
             for ps in polylines:
