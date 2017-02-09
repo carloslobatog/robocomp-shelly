@@ -18,7 +18,7 @@
 #
 
 import sys, os, traceback, time
-
+import pickle
 from PySide import *
 from genericworker import *
 import matplotlib.pyplot as plt
@@ -30,6 +30,31 @@ from scipy.spatial import ConvexHull
 from normal import Normal
 import GaussianMix as GM
 import checkboundaries as ck
+
+
+
+def getPolyline(grid, resolution, lx_inf, ly_inf):
+    ret = []
+    # Esta parte no se lo que hace pero funciona
+    totalpuntos = []
+    for j in range(grid.shape[1]):
+        for i in range(grid.shape[0]):
+            if grid[j, i] > 0:
+                mismocluster, pos = ck.checkboundaries(grid, i, j, totalpuntos)
+                if (mismocluster == True):
+                    totalpuntos[pos].append([i, j])
+                else:
+                    puntos = []
+                    puntos.append([i, j])
+                    totalpuntos.append(puntos)
+    for lista in totalpuntos:
+        for puntos in lista:
+            puntos[0] = puntos[0] * resolution + lx_inf
+            puntos[1] = puntos[1] * resolution + ly_inf
+        points = np.asarray(lista)
+        hull = ConvexHull(points)
+        ret.append(points[hull.vertices])
+    return ret
 
 class Person(object):
     x = 0
@@ -224,12 +249,12 @@ class SpecificWorker(GenericWorker):
         #plt.imshow(z, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
 
-        #plt.figure()
-        #plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+        plt.figure()
+        plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
 
        # plt.figure()
-        plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+       # plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
         plt.xlabel('X')
         plt.ylabel('Y')
         plt.axis('equal')
@@ -272,53 +297,63 @@ class SpecificWorker(GenericWorker):
 
 
 
-        """""
+
         ###################################SACAR LAS POLILINEAS DEL GRID ############################
         totalpuntos = []
 
         ###MATRIZ PARA IR RECORRIENDO LOS PUNTOS Y SABER SI HEMOS PASADO POR ESE PUNTO
         matrizbool = np.ones((grid.shape[0], grid.shape[1]), dtype=bool)
 
-
         for j in range(grid.shape[1] ):
             for i in range(grid.shape[0]):
 
                 if (matrizbool[i,j]):
+
+
                    # print ("Primera vez que se recorre punto",[i,j])
                     if (grid[j,i] > 0):
+
                         print ("El punto es negro", [i,j])
                         #current point
                         cp = [i,j]
 
+                        print ("CREO LISTA DE PUNTOS")
                         puntos = []
                         finpoly = False
 
                         while (finpoly == False):
-                            print ("estamos en el while")
+
                             puntos.append(cp)
 
-                            entornopunto = [[cp[0]+1,cp[1]],[cp[0]+1,cp[1]-1],[cp[0],cp[1]-1], [cp[0]-1,cp[1]-1],[cp[0]-1,cp[1]]]
-                         #   print ("Entorno del punto: ", [i, j], entornopunto)
+                            #Faltan pixeles
+                            entornopunto = [[cp[0]+1,cp[1]],[cp[0]+1,cp[1]-1],[cp[0],cp[1]-1], [cp[0]-1,cp[1]-1],[cp[0]-1,cp[1]],[cp[0]-1,cp[1]+1],[cp[0],cp[1]+1],[cp[0]+1,cp[1]+1]]
 
                             for e in entornopunto:
-                                if (grid[e[1],e[0]]>0 and (matrizbool[e[0],e[1]])==True):
-                                    print ("En el entorno hay punto negro")
-                                    matrizbool[cp] = False
-                                    cp = e
 
+                                if (grid[e[1],e[0]]>0 and (matrizbool[e[0],e[1]])==True):
+                                    print ("En el entorno hay punto negro, lo anadimos a la lista", e)
+                                    matrizbool[e[0],e[1]] = False
+                                    cp = e
                                     break
 
                                 else:
-                                    if (grid[e[1],e[0]]>0 and matrizbool[e[0],e[1]] == False):
-                                        finpoly = True
-                                    matrizbool[cp] = False
-
-                        if (finpoly):
-
-                            totalpuntos.append(puntos)
+                                    if ([cp[0+1],cp[1]+1]):
 
 
-                matrizbool[i,j] = False
+
+
+
+
+
+                        totalpuntos.append(puntos)
+
+
+
+        """
+
+
+
+
 
                    # print("---------------------")
 
@@ -349,66 +384,14 @@ class SpecificWorker(GenericWorker):
 
 
 
-
-        #####################################################################################################
-        """""
-        ########################PARA SACAR LAS POLILINEAS Y HACER CONVEXHULL ##############################
-        for p in persons:
-            pn = Person(p.x, p.z, p.angle)
-            print('Pose x', pn.x, 'Pose z', pn.y, 'Rotacion', pn.th)
-            pn.draw(v, drawPersonalSpace=True)
-            polyline = []
-            for puntoPersona in pn.polyline:
+        r = getPolyline(grid, resolution, lx_inf, ly_inf)
+        for polilinea in r:
+            kkpolyline = []
+            for p in polilinea:
                 punto = SNGPoint2D()
-                punto.x = puntoPersona[0]
-                punto.z = puntoPersona[1]
-                polyline.append(punto)
-
-            polylines.append(polyline)
-
-        if talk:
-
-            #Creo points para almacenar todos los puntos de todas las polilineas para poder hacer el convex hull
-            totalpuntos = []
-
-            for a in np.arange(len(polylines)):
-                for b in polylines[a]:
-                    totalpuntos.append([b.x, b.z])
-
-
-           #Convierto la lista en un array
-            points = np.asarray(totalpuntos)
-            #print('Total de puntos', points)
-            hull = ConvexHull(points)
-
-
-            #Se dibuja la curva hull
-            for simplex in hull.simplices:
-                plt.plot(points[simplex, 0], points[simplex, 1], 'r-')
-
-
-            #Convierto la curva hull en un array, despues en polilinea y finalmente lo almaceno en el vector de polilineas
-            gaussianmix = np.asarray(hull.points)
-           # print(gaussianmix)
-
-            polylinemix = []
-            for puntogausmix in gaussianmix:
-                punto = SNGPoint2D()
-                punto.x = puntogausmix[0]
-                punto.z = puntogausmix[1]
-                polylinemix.append(punto)
-
-            polylines.append(polylinemix)
-
-        ####################################
-        """
-
-       #
-       #  plt.xlabel('X')
-       #  plt.ylabel('Y')
-       #
-       #  plt.axis('equal')
-       # # plt.grid(True)
-        #  plt.show()
+                punto.x = p[0]
+                punto.z = p[1]
+                kkpolyline.append(punto)
+            polylines.append(kkpolyline)
 
         return polylines
