@@ -35,7 +35,7 @@ import math
 
 def getPolyline(grid, resolution, lx_inf, ly_inf):
     ret = []
-    # Esta parte no se lo que hace pero funciona
+    
     totalpuntos = []
     for j in range(grid.shape[1]):
         for i in range(grid.shape[0]):
@@ -47,12 +47,18 @@ def getPolyline(grid, resolution, lx_inf, ly_inf):
                     puntos = []
                     puntos.append([i, j])
                     totalpuntos.append(puntos)
+
+
     for lista in totalpuntos:
+
         for puntos in lista:
             puntos[0] = puntos[0] * resolution + lx_inf
             puntos[1] = puntos[1] * resolution + ly_inf
-        points = np.asarray(lista)
-        hull = ConvexHull(points)
+
+        p = np.asarray(lista)
+        hull = ConvexHull(p)
+        ret.append(hull.points)
+
 
         # split
         """""
@@ -280,20 +286,21 @@ class SpecificWorker(GenericWorker):
         np.savetxt('log.txt', grid, fmt='%i')
 
         polylines = []
-        r = getPolyline(grid, resolution, lx_inf, ly_inf)
-        for polilinea in r:
-            kkpolyline = []
+        p = getPolyline(grid, resolution, lx_inf, ly_inf)
+
+        for polilinea in p:
+            polyline = []
             for p in polilinea:
                 punto = SNGPoint2D()
                 punto.x = p[0]
                 punto.z = p[1]
-                kkpolyline.append(punto)
-            polylines.append(kkpolyline)
+                polyline.append(punto)
+            polylines.append(polyline)
 
 
         if (dibujar):
             for ps in polylines:
-                #plt.figure()
+                plt.figure()
                 for p in ps:
                     plt.plot(p.x, p.z, "*r-")
                     plt.axis('equal')
