@@ -294,7 +294,7 @@ class SpecificWorker(GenericWorker):
                         finpoly = False
 
                         while (finpoly == False):
-
+                            print ("estamos en el while")
                             puntos.append(cp)
 
                             entornopunto = [[cp[0]+1,cp[1]],[cp[0]+1,cp[1]-1],[cp[0],cp[1]-1], [cp[0]-1,cp[1]-1],[cp[0]-1,cp[1]]]
@@ -309,10 +309,13 @@ class SpecificWorker(GenericWorker):
                                     break
 
                                 else:
-                                    finpoly = True
+                                    if (grid[e[1],e[0]]>0 and matrizbool[e[0],e[1]] == False):
+                                        finpoly = True
                                     matrizbool[cp] = False
 
-                        totalpuntos.append(puntos)
+                        if (finpoly):
+
+                            totalpuntos.append(puntos)
 
 
                 matrizbool[i,j] = False

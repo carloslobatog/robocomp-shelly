@@ -55,6 +55,7 @@
 
  <node alias="socialnavigA" endpoint="agmcommonbehavior:tcp -h localhost -p 10330">
   <dependence alias="executive" />
+ <dependence alias="base" />
   <dependence alias="socialnavigG" />
   <workingDir path="/home/robocomp/" />
   <upCommand command="rcremote localhost socialnavAgnt /home/robocomp/mirobocomp/robocomp-shelly/components/socialnavigationAgent ./bin/socialnavigationAgent /home/robocomp/mirobocomp/robocomp-shelly/etcSim/socialnavigationAgent.conf" />
@@ -79,72 +80,78 @@
 
  <node alias="humanFakeA" endpoint="agmcommonbehavior:tcp -h localhost -p 10210">
   <dependence alias="executive" />
+ <dependence alias="base" />
   <workingDir path="/home/robocomp/" />
   <upCommand command="rcremote localhost humanFakeA /home/robocomp/mirobocomp/robocomp-shelly/components/fakeHumanAgent ./bin/fakeHumanAgent /home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake.conf" />
   <downCommand command="killall -9 fakeHumanAgent" />
   <configFile path="/home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake.conf" />
-  <xpos value="-157.9789855056" />
-  <ypos value="-73.5106363282" />
+  <xpos value="-250.9789855056" />
+  <ypos value="-240.5106363282" />
   <radius value="10.0" />
   <color value="#33FF33" />
  </node>
 
  <node alias="humanFake2" endpoint="agmcommonbehavior:tcp -h localhost -p 10211">
   <dependence alias="executive" />
+ <dependence alias="base" />
   <workingDir path="/home/robocomp/" />
   <upCommand command="rcremote localhost humanFakeANew /home/robocomp/mirobocomp/robocomp-shelly/components/fakeHumanAgentNew ./bin/fakeHumanAgentNew /home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFakeNew.conf" />
   <downCommand command="killall -9 fakeHumanAgentNew" />
   <configFile path="/home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFakeNew.conf" />
-  <xpos value="-200.9789855056" />
-  <ypos value="-93.5106363282" />
+  <xpos value="-250.9789855056" />
+  <ypos value="-210.5106363282" />
   <radius value="10.0" />
   <color value="#33FF33" />
  </node>
 
  <node alias="humanFake3" endpoint="agmcommonbehavior:tcp -h localhost -p 10212">
   <dependence alias="executive" />
+ <dependence alias="base" />
   <workingDir path="/home/robocomp/" />
   <upCommand command="rcremote localhost humanFakeA3 /home/robocomp/mirobocomp/robocomp-shelly/components/fakeHumanAgent3 ./bin/fakeHumanAgent3 /home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake3.conf" />
   <downCommand command="killall -9 fakeHumanAgent3" />
   <configFile path="/home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake3.conf" />
-  <xpos value="-200.9789855056" />
-  <ypos value="-133.5106363282" />
+  <xpos value="-250.9789855056" />
+  <ypos value="-180.5106363282" />
   <radius value="10.0" />
   <color value="#33FF33" />
  </node>
 
  <node alias="humanFake4" endpoint="agmcommonbehavior:tcp -h localhost -p 10213">
   <dependence alias="executive" />
+ <dependence alias="base" />
   <workingDir path="/home/robocomp/" />
   <upCommand command="rcremote localhost humanFakeA4 /home/robocomp/mirobocomp/robocomp-shelly/components/fakeHumanAgent4 ./bin/fakeHumanAgent4 /home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake4.conf" />
   <downCommand command="killall -9 fakeHumanAgent4" />
   <configFile path="/home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake4.conf" />
-  <xpos value="-190.9789855056" />
-  <ypos value="-210.5106363282" />
+  <xpos value="-250.9789855056" />
+  <ypos value="-150.5106363282" />
   <radius value="10.0" />
   <color value="#33FF33" />
  </node>
 
  <node alias="humanFake5" endpoint="agmcommonbehavior:tcp -h localhost -p 10214">
   <dependence alias="executive" />
+ <dependence alias="base" />
   <workingDir path="/home/robocomp/" />
   <upCommand command="rcremote localhost humanFakeA5 /home/robocomp/mirobocomp/robocomp-shelly/components/fakeHumanAgent5 ./bin/fakeHumanAgent5 /home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake5.conf" />
   <downCommand command="killall -9 fakeHumanAgent5" />
   <configFile path="/home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake5.conf" />
-  <xpos value="-240.9789855056" />
-  <ypos value="-150.5106363282" />
+  <xpos value="-250.9789855056" />
+  <ypos value="-120.5106363282" />
   <radius value="10.0" />
   <color value="#33FF33" />
  </node>
 
  <node alias="humanFake6" endpoint="agmcommonbehavior:tcp -h localhost -p 10215">
   <dependence alias="executive" />
+ <dependence alias="base" />
   <workingDir path="/home/robocomp/" />
   <upCommand command="rcremote localhost humanFakeA6 /home/robocomp/mirobocomp/robocomp-shelly/components/fakeHumanAgent6 ./bin/fakeHumanAgent6 /home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake6.conf" />
   <downCommand command="killall -9 fakeHumanAgent6" />
   <configFile path="/home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake6.conf" />
-  <xpos value="-240.9789855056" />
-  <ypos value="-100.5106363282" />
+  <xpos value="-250.9789855056" />
+  <ypos value="-90.5106363282" />
   <radius value="10.0" />
   <color value="#33FF33" />
  </node>
