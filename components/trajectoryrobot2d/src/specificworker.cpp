@@ -665,14 +665,15 @@ float SpecificWorker::goBackwards(const TargetPose &target)
 
 void SpecificWorker::setHumanSpace(const PolyLineList& polyList)
 {
-
-  qDebug() << "------------------------------------------------------------";  
-  for(auto l: polyList)
-  {
-    qDebug() << "Polilinea:";
-    for(auto p: l)
-      qDebug() << "	punto" << p.x << p.z;
-  }
+  
+qDebug()<<"La polilinea ha llegado";
+//   qDebug() << "------------------------------------------------------------";  
+//   for(auto l: polyList)
+//   {
+//     qDebug() << "Polilinea:";
+//     for(auto p: l)
+//       qDebug() << "	punto" << p.x << p.z;
+//   }
   safePolyList.write(polyList);
   
   
