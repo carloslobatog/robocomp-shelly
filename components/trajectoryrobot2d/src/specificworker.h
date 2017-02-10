@@ -242,7 +242,7 @@ class SpecificWorker : public GenericWorker
 		SafePolyList safePolyList;
 		
 		void fichero(TLaserData laser, string path);
-		void ficheroP(LocalPolyLineList p, string path);
+		void ficheroP(LocalPolyLineList p, string path, InnerModel *innermodel);
 
 };
 

@@ -74,3 +74,60 @@ if (dibujar):
         plt.show()
 
 
+        ####INTENTO DE LEER POLILINEA EN ORDEN
+
+
+        totalpuntos = []
+        matrizbool = np.ones([grid.shape[0], grid.shape[1]], dtype=bool)
+
+
+        for j in range(grid.shape[1]):
+            for i in range(grid.shape[0]):
+                if (matrizbool[i,j] == True):
+                    if (grid[j, i] > 0 ):
+                        print("Punto negro", [i, j])
+                        cp = [i, j]
+                        print("Creamos nueva lista de puntos")
+                        puntos = []
+                        finpoly = False
+
+                        while (finpoly == False):
+                            #print("Anadimos el punto a la lista")
+
+                            puntos.append(cp)
+                            entorno = []
+                            ##########CAMBIAR EL ENTORNO PARA QUE VAYA EN ORDEN
+                            for ix in range(-1, 2):
+                                for iy in range(-1, 2):
+                                    entorno.append([cp[0] + ix, cp[1] + iy])
+                            index = entorno.index(cp)
+                            entorno.pop(index)
+
+                            #print ("punto",cp,"entorno",entorno)
+
+                            boolentorno =[]
+                            ###Comprobar que asi el punto no esta en el entorno!!!!!!!!!!!!!!
+                            for e in entorno:
+                                for ix in range(-1, 2,2):
+                                    for iy in range(-1, 2,2):
+                                        boolentorno.append(matrizbool[[e[0] + ix, e[1] + iy]])
+
+                                if np.mean(boolentorno != 0):
+                                    #  QUIERE DECIR QUE ALGUN PUNTO DEL ENTORNO NO SE HA COMPROBADO AUN
+                                    if (matrizbool[e[0], e[1]]==True):
+                                        if (grid[e[1], e[0]] > 0):
+                                            print("Hay un punto negro en el entorno", e)
+                                            matrizbool[e[0], e[1]] = False
+                                            cp = e
+                                            break
+                                        else:
+                                            matrizbool[[e[0], e[1]]]=False
+
+
+                                else:
+                                    finpoly = True
+
+                        totalpuntos.append(puntos)
+
+
+                    matrizbool[i,j]= False

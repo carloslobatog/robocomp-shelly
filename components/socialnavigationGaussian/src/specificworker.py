@@ -35,7 +35,7 @@ import math
 
 def getPolyline(grid, resolution, lx_inf, ly_inf):
     ret = []
-    
+
     totalpuntos = []
     for j in range(grid.shape[1]):
         for i in range(grid.shape[0]):
@@ -55,30 +55,55 @@ def getPolyline(grid, resolution, lx_inf, ly_inf):
             puntos[0] = puntos[0] * resolution + lx_inf
             puntos[1] = puntos[1] * resolution + ly_inf
 
+
         points = np.asarray(lista)
         hull = ConvexHull(points)
-        #ret.append(hull.vertices)
-
+        # ret.append(hull.vertices)
 
         # split
 
         v = []
         prev = points[hull.vertices][-1]
         for curr in points[hull.vertices]:
-            dx = curr[0]-prev[0]
-            dy = curr[1]-prev[1]
-            dist = math.sqrt(dx*dx+dy*dy)
+            dx = curr[0] - prev[0]
+            dy = curr[1] - prev[1]
+            dist = math.sqrt(dx * dx + dy * dy)
             if dist > 0.1:
                 iters = dist / 0.1
                 for iter in xrange(int(iters)):
-                    wx = prev[0]+0.1*iter*dx
-                    wy = prev[1]+0.1*iter*dy
+                    wx = prev[0] + 0.1 * iter * dx
+                    wy = prev[1] + 0.1 * iter * dy
                     v.append([wx, wy])
             v.append(curr)
             prev = curr
         ret.append(v)
 
+
+
+
+
+    """""
+
+    totalpuntosorden =[]
+
+    for lista in totalpuntos:
+        listaorden = []
+        listaorden.append (lista [0])
+
+        for l in listaorden:
+            entorno = [ [l[0]+1,l[1]] , [l[0]+1,l[1]-1] , [l[0],l[1]-1] , [l[0]-1,l[1]-1] , [l[0]-1,l[1]] , [l[0]-1, l[1]+1] ,[l[0],l[1]+1], [l[0]+1,l[1]+1]]
+
+            for e in entorno:
+                if (e in lista) and (e in listaorden == False):
+                    listaorden.append(e)
+                    break
+
+
+        totalpuntosorden.append (listaorden)
+        """""
+
     return ret
+
 
 class Person(object):
     x = 0
@@ -287,67 +312,13 @@ class SpecificWorker(GenericWorker):
 
         #######################################################################################################
 
-        totalpuntos = []
-        matrizbool = np.ones([grid.shape[0], grid.shape[1]], dtype=bool)
-
-
-        for j in range(grid.shape[1]):
-            for i in range(grid.shape[0]):
-                if (matrizbool[i,j] == True):
-                    if (grid[j, i] > 0 ):
-                        print("Punto negro", [i, j])
-                        cp = [i, j]
-                        print("Creamos nueva lista de puntos")
-                        puntos = []
-                        finpoly = False
-
-                        while (finpoly == False):
-                            #print("Anadimos el punto a la lista")
-
-                            puntos.append(cp)
-                            entorno = []
-                            ##########CAMBIAR EL ENTORNO PARA QUE VAYA EN ORDEN
-                            for ix in range(-1, 2):
-                                for iy in range(-1, 2):
-                                    entorno.append([cp[0] + ix, cp[1] + iy])
-                            index = entorno.index(cp)
-                            entorno.pop(index)
-
-                            #print ("punto",cp,"entorno",entorno)
-
-                            boolentorno =[]
-                            ###Comprobar que asi el punto no esta en el entorno!!!!!!!!!!!!!!
-                            for e in entorno:
-                                for ix in range(-1, 2,2):
-                                    for iy in range(-1, 2,2):
-                                        boolentorno.append(matrizbool[[e[0] + ix, e[1] + iy]])
-
-                                if np.mean(boolentorno != 0):
-                                    #  QUIERE DECIR QUE ALGUN PUNTO DEL ENTORNO NO SE HA COMPROBADO AUN
-                                    if (matrizbool[e[0], e[1]]==True):
-                                        if (grid[e[1], e[0]] > 0):
-                                            print("Hay un punto negro en el entorno", e)
-                                            matrizbool[e[0], e[1]] = False
-                                            cp = e
-                                            break
-                                        else:
-                                            matrizbool[[e[0], e[1]]]=False
-
-
-                                else:
-                                    finpoly = True
-
-                        totalpuntos.append(puntos)
-
-
-                    matrizbool[i,j]= False
 
         polylines = []
-        """""
 
-        r= getPolyline(grid, resolution, lx_inf, ly_inf)
 
-        for polilinea in r:
+        totalpuntosorden= getPolyline(grid, resolution, lx_inf, ly_inf)
+
+        for polilinea in totalpuntosorden:
             polyline = []
             for p in polilinea:
                 punto = SNGPoint2D()
@@ -355,7 +326,9 @@ class SpecificWorker(GenericWorker):
                 punto.z = p[1]
                 polyline.append(punto)
             polylines.append(polyline)
-        """
+
+
+
 
         if (dibujar):
             for ps in polylines:

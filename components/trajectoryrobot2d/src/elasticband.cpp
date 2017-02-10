@@ -90,7 +90,7 @@ bool ElasticBand::update(InnerModel *innermodel, WayPoints &road, const RoboComp
 	/////////////////////////////////////////////
 	//Tags all points in the road ar visible or blocked, depending on laser visibility. Only visible points are processed in this iteration
 	/////////////////////////////////////////////
-	checkVisiblePoints(innermodel, road, laserData);
+	checkVisiblePoints(innermodel, road, myLaser);
 
 	/////////////////////////////////////////////
 	//Check if there is a sudden shortcut to take
@@ -110,7 +110,7 @@ bool ElasticBand::update(InnerModel *innermodel, WayPoints &road, const RoboComp
 	/////////////////////////////////////////////
 	//Compute the scalar magnitudes
 	/////////////////////////////////////////////
-	computeForces(innermodel, road, laserData);
+	computeForces(innermodel, road, myLaser);
 
 	/////////////////////////////////////////////
 	//Delete half the tail behind, if greater than 6, to release resources
@@ -192,10 +192,10 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 
 				const float m = std::min<float>(cAngle, pAngle);
 				const float M = std::max<float>(cAngle, pAngle);
-				printf("angulo: %f   p:%f  c:%f\n", laserSample.angle, cAngle, pAngle);
+				//printf("angulo: %f   p:%f  c:%f\n", laserSample.angle, cAngle, pAngle);
 				if (laserSample.angle >= m and laserSample.angle <= M)
 				{
-					printf("dentro\n");
+				//	printf("dentro\n");
 					float mean = (cDist + pDist) / 2.;
 					if (mean<laserSample.dist) laserSample.dist = mean;
 				}

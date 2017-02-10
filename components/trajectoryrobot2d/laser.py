@@ -39,8 +39,8 @@ with open(sys.argv[3], 'r') as f:
 		parts = l.split()
 		x = float(parts[0])
 		y = float(parts[1])
-		px.append(x*1000)
-		py.append(y*1000)
+		px.append(x)
+		py.append(y)
 plt.plot(px, py, 'k-')
 
 plt.show()
