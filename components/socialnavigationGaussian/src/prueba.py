@@ -50,7 +50,7 @@ for lista in totalpuntos:
     p = np.asarray(lista)
     hull = ConvexHull(p)
 
-    chlist.append(np.asarray(hull.points))
+    chlist.append(np.asarray(hull.vertices))
 
 polylines = []
 

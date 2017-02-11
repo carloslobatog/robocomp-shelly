@@ -34,7 +34,6 @@ import math
 
 
 def getPolyline(grid, resolution, lx_inf, ly_inf):
-    ret = []
 
     totalpuntos = []
     for j in range(grid.shape[1]):
@@ -48,7 +47,7 @@ def getPolyline(grid, resolution, lx_inf, ly_inf):
                     puntos.append([i, j])
                     totalpuntos.append(puntos)
 
-
+    ret = []
     for lista in totalpuntos:
 
         for puntos in lista:
@@ -58,9 +57,9 @@ def getPolyline(grid, resolution, lx_inf, ly_inf):
 
         points = np.asarray(lista)
         hull = ConvexHull(points)
-        # ret.append(hull.vertices)
+       # ret.append(points[hull.vertices])
 
-        # split
+            # split
 
         v = []
         prev = points[hull.vertices][-1]
@@ -79,28 +78,6 @@ def getPolyline(grid, resolution, lx_inf, ly_inf):
         ret.append(v)
 
 
-
-
-
-    """""
-
-    totalpuntosorden =[]
-
-    for lista in totalpuntos:
-        listaorden = []
-        listaorden.append (lista [0])
-
-        for l in listaorden:
-            entorno = [ [l[0]+1,l[1]] , [l[0]+1,l[1]-1] , [l[0],l[1]-1] , [l[0]-1,l[1]-1] , [l[0]-1,l[1]] , [l[0]-1, l[1]+1] ,[l[0],l[1]+1], [l[0]+1,l[1]+1]]
-
-            for e in entorno:
-                if (e in lista) and (e in listaorden == False):
-                    listaorden.append(e)
-                    break
-
-
-        totalpuntosorden.append (listaorden)
-        """""
 
     return ret
 
@@ -195,10 +172,16 @@ class Person(object):
     """ Private Methods """
 
     def _calculatePersonalSpace(self, x, y):
-
+        """""
         sigma_h = 2.0
         sigma_r = 1.0
         sigma_s = 4/3
+        """
+        ##he cambiado el valor de las sigmas porque la gaussiana que dibujaba con las anteriores era muy grande
+        sigma_h = 4
+        sigma_r = 2
+        sigma_s = 2*4/3
+
         rot = pi/2 - self.th
 
 
@@ -256,7 +239,7 @@ class SpecificWorker(GenericWorker):
     #
     def getPolylines(self, persons, v, dibujar):
 
-        plt.close('all')
+        plt.close("all")
         plt.figure()
         #ax = fig.add_subplot(111, projection='3d')
 
@@ -266,10 +249,10 @@ class SpecificWorker(GenericWorker):
       #  X, Y = np.meshgrid(x, y)
 
         ##Limites de la representacion
-        lx_inf = -6
+        lx_inf = -0
         lx_sup = 8
-        ly_inf = -6
-        ly_sup = 8
+        ly_inf = -4
+        ly_sup = 4
 
         # zs = np.array([fun(x,y) for x,y in zip(np.ravel(X), np.ravel(Y))])
         # Z = zs.reshape(X.shape)
@@ -284,7 +267,8 @@ class SpecificWorker(GenericWorker):
             pn = Person(p.x, p.z, p.angle)
             #print('Pose x', pn.x, 'Pose z', pn.y, 'Rotacion', pn.th)
             pn.draw(v, drawPersonalSpace=dibujar)
-            normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 2.0, 1.0, 4/3], elliptical=True))
+            #normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 2.0, 1.0, 4/3], elliptical=True))
+            normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 4, 2, 2*4/3], elliptical=True))
 
 
         h = 0.5
@@ -294,8 +278,8 @@ class SpecificWorker(GenericWorker):
         grid = GM.filterEdges(z, h)
 
 
-        #plt.figure()
-        #plt.imshow(z, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+      #  plt.figure()
+      #  plt.imshow(z, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
 
        # plt.figure()
@@ -312,22 +296,60 @@ class SpecificWorker(GenericWorker):
 
         #######################################################################################################
 
+        """""
 
+        totalpuntos = []
+        for j in range(grid.shape[1]):
+            for i in range(grid.shape[0]):
+                if grid[j, i] > 0:
+                    mismocluster, pos = ck.checkboundaries(grid, i, j, totalpuntos)
+                    if (mismocluster == True):
+                        totalpuntos[pos].append([i, j])
+                    else:
+                        puntos = []
+                        puntos.append([i, j])
+                        totalpuntos.append(puntos)
+
+        for lista in totalpuntos:
+            for puntos in lista:
+                puntos[0] = round(puntos[0] * resolution + lx_inf,4)
+
+
+        totalpuntosorden = []
+
+        for lista in totalpuntos:
+            listaorden = []
+            listaorden.append(lista[0])
+            print("Puntos de la polilinea",lista)
+            print ("Primer punto de la lista", lista[0])
+
+            for l in listaorden:
+                print ("Estamos en el punto", l)
+                entorno = [[l[0] + 0.1, l[1]], [l[0] + 0.1, l[1] - 0.1], [l[0], l[1] - 0.1], [l[0] - 0.1, l[1] - 0.1],
+                           [l[0] - 0.1, l[1]], [l[0] - 0.1, l[1] + 0.1], [l[0], l[1] + 0.1], [l[0] + 0.1, l[1] + 0.1]]
+
+                print ("Su entorno es ",entorno)
+                for e in entorno:
+                    if ((e in lista) and (e in listaorden == False)):
+                        print ("El punto se anade")
+                        listaorden.append(e)
+                        print ("la lista ordenada por ahora es ", listaorden)
+                        break
+
+            totalpuntosorden.append(listaorden)
+
+        """""
         polylines = []
+        totalpuntosorden = getPolyline(grid, resolution, lx_inf, ly_inf)
 
-
-        totalpuntosorden= getPolyline(grid, resolution, lx_inf, ly_inf)
-
-        for polilinea in totalpuntosorden:
+        for pol in totalpuntosorden:
             polyline = []
-            for p in polilinea:
+            for pnt in pol:
                 punto = SNGPoint2D()
-                punto.x = p[0]
-                punto.z = p[1]
+                punto.x = pnt[0]
+                punto.z = pnt[1]
                 polyline.append(punto)
             polylines.append(polyline)
-
-
 
 
         if (dibujar):
@@ -338,7 +360,7 @@ class SpecificWorker(GenericWorker):
                     plt.axis('equal')
                     plt.xlabel('X')
                     plt.ylabel('Y')
-                plt.show()
+            plt.show()
 
 
 

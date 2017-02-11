@@ -206,42 +206,7 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 	}
 	return laserCombined;
 } 
-/*
-RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData laserData, SafePolyList &safePolyList, InnerModel *innermodel)
-{
-	RoboCompLaser::TLaserData laserCombined; 
-	laserCombined = laserData;
-	// For each polyline
-	LocalPolyLineList l = safePolyList.read(); 
-	
-	for (auto polyline : l)
-	{
-		auto previousPoint = polyline[polyline.size()-1];
-		QVec previousPointInLaser = innermodel->transform("laser", (QVec::vec3(previousPoint.x, 0, previousPoint.z)).operator*(1000), "world");
-		float pDist  = std::sqrt(previousPointInLaser.x()*previousPointInLaser.x() + previousPointInLaser.z()*previousPointInLaser.z());
-		float pAngle = atan2(previousPointInLaser.x(), previousPointInLaser.z());
-		// For each polyline's point
-		for (auto polylinePoint: polyline)
-		{
-			QVec currentPointInLaser = innermodel->transform("laser", (QVec::vec3(polylinePoint.x, 0, polylinePoint.z)).operator*(1000), "world");
-			float cDist  = sqrt(currentPointInLaser.x()*currentPointInLaser.x() + currentPointInLaser.z()*currentPointInLaser.z());
-			float cAngle = atan2(currentPointInLaser.x(), currentPointInLaser.z());
-			for (auto &laserSample: laserCombined)
-			{
-				if ((laserSample.angle>cAngle) != (laserSample.angle>pAngle)) // The laser's sample angle is between the angles of the samples if only one of them is greater
-				{
-					float mean = (cDist + pDist) / 2.;
-					float currentValue = laserSample.dist;
-					laserSample.dist = mean<currentValue?mean:laserSample.dist;
-				}
-			}
-			pDist = cDist;
-			pAngle = cAngle;
-		}
-	}
-	return laserCombined;
-} 
-*/
+
 
 bool ElasticBand::addPoints(WayPoints &road, const CurrentTarget &currentTarget)
 {

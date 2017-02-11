@@ -52,10 +52,12 @@ void SpecificWorker::includeInRCIS()
 
 	try
 	{	
-		pose.x = -1500;
+		pose.x = 4200;
 		pose.y = 0;
-		pose.z = -1500;
-		pose.rx = pose.ry = pose.rz = 0;
+		pose.z = 1800;
+		pose.rx =0;
+		pose.ry =1.715;
+		pose.rz = 0;
 		innermodelmanager_proxy->addTransform("fakeperson5", "static", "root", pose);
 
 		RoboCompInnerModelManager::meshType mesh;
@@ -118,11 +120,11 @@ void SpecificWorker::includeInAGM()
 
 	// Geometric part
 	std::map<std::string, std::string> edgeRTAtrs;
-	edgeRTAtrs["tx"] = "-1500";
+	edgeRTAtrs["tx"] = "4200";
 	edgeRTAtrs["ty"] = "0";
-	edgeRTAtrs["tz"] = "-1500";
+	edgeRTAtrs["tz"] = "1800";
 	edgeRTAtrs["rx"] = "0";
-	edgeRTAtrs["ry"] = "0";
+	edgeRTAtrs["ry"] = "1.715";
 	edgeRTAtrs["rz"] = "0";
 	newModel->addEdgeByIdentifiers(100, person5->identifier, "RT", edgeRTAtrs);
 

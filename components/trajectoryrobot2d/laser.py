@@ -41,6 +41,6 @@ with open(sys.argv[3], 'r') as f:
 		y = float(parts[1])
 		px.append(x)
 		py.append(y)
-plt.plot(px, py, 'k-')
+plt.plot(px, py, 'k')
 
 plt.show()

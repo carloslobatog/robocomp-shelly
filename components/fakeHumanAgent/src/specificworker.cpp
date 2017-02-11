@@ -55,10 +55,12 @@ void SpecificWorker::includeInRCIS()
 
 	try
 	{	
-		pose.x = 2000;
+		pose.x = 1950;
 		pose.y = 0;
-		pose.z = 1500;
-		pose.rx = pose.ry = pose.rz = 0;
+		pose.z = -1800;
+		pose.rx = 0;
+		pose.ry = 3.08;
+		pose.rz = 0;
 		innermodelmanager_proxy->addTransform("fakeperson", "static", "root", pose);
 
 		RoboCompInnerModelManager::meshType mesh;
@@ -125,11 +127,11 @@ void SpecificWorker::includeInAGM()
 
 	// Geometric part
 	std::map<std::string, std::string> edgeRTAtrs;
-	edgeRTAtrs["tx"] = "2000";
+	edgeRTAtrs["tx"] = "1950";
 	edgeRTAtrs["ty"] = "0";
-	edgeRTAtrs["tz"] = "1500";
+	edgeRTAtrs["tz"] = "-1800";
 	edgeRTAtrs["rx"] = "0";
-	edgeRTAtrs["ry"] = "0";
+	edgeRTAtrs["ry"] = "3.08";
 	edgeRTAtrs["rz"] = "0";
 	newModel->addEdgeByIdentifiers(100, person->identifier, "RT", edgeRTAtrs);
 
@@ -346,7 +348,7 @@ void SpecificWorker::move (){
 	 
 	else if (tbutton.rotacion==true){
 	   
-		humanRot =valorgiro*0.0175;
+		humanRot = valorgiro*0.0175;
 		coordInItem.x=0;
 		coordInItem.y=0;
 		coordInItem.z=0;
