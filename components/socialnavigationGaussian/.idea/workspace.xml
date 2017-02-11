@@ -43,8 +43,8 @@
       <file leaf-file-name="specificworker.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/specificworker.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="454">
-              <caret line="331" column="24" selection-start-line="331" selection-start-column="24" selection-end-line="331" selection-end-column="24" />
+            <state relative-caret-position="544">
+              <caret line="276" column="13" selection-start-line="276" selection-start-column="13" selection-end-line="276" selection-end-column="13" />
               <folding>
                 <element signature="e#735#766#0" expanded="true" />
               </folding>
@@ -55,7 +55,7 @@
       <file leaf-file-name="prueba.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/prueba.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="109">
+            <state relative-caret-position="2025">
               <caret line="135" column="71" selection-start-line="135" selection-start-column="71" selection-end-line="135" selection-end-column="71" />
               <folding />
             </state>
@@ -132,7 +132,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -167,6 +166,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -729,7 +729,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/prueba.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="109">
+        <state relative-caret-position="2025">
           <caret line="135" column="71" selection-start-line="135" selection-start-column="71" selection-end-line="135" selection-end-column="71" />
           <folding />
         </state>
@@ -737,8 +737,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/specificworker.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="454">
-          <caret line="331" column="24" selection-start-line="331" selection-start-column="24" selection-end-line="331" selection-end-column="24" />
+        <state relative-caret-position="544">
+          <caret line="276" column="13" selection-start-line="276" selection-start-column="13" selection-end-line="276" selection-end-column="13" />
           <folding>
             <element signature="e#735#766#0" expanded="true" />
           </folding>

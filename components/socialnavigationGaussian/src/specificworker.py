@@ -49,7 +49,7 @@ def getPolyline(grid, resolution, lx_inf, ly_inf):
 
     ret = []
     for lista in totalpuntos:
-
+        #los puntos en el grid sufren una traslacion, con esto los devolvemos a su posicion original
         for puntos in lista:
             puntos[0] = puntos[0] * resolution + lx_inf
             puntos[1] = puntos[1] * resolution + ly_inf
@@ -59,7 +59,7 @@ def getPolyline(grid, resolution, lx_inf, ly_inf):
         hull = ConvexHull(points)
        # ret.append(points[hull.vertices])
 
-            # split
+        # interpolar los puntos
 
         v = []
         prev = points[hull.vertices][-1]
