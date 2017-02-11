@@ -131,3 +131,47 @@ if (dibujar):
 
 
                     matrizbool[i,j]= False
+
+"""""
+############T############INTENTO DE ORDENAR LOS PUNTOS#################
+      totalpuntos = []
+      for j in range(grid.shape[1]):
+          for i in range(grid.shape[0]):
+              if grid[j, i] > 0:
+                  mismocluster, pos = ck.checkboundaries(grid, i, j, totalpuntos)
+                  if (mismocluster == True):
+                      totalpuntos[pos].append([i, j])
+                  else:
+                      puntos = []
+                      puntos.append([i, j])
+                      totalpuntos.append(puntos)
+
+      for lista in totalpuntos:
+          for puntos in lista:
+              puntos[0] = round(puntos[0] * resolution + lx_inf,4)
+
+
+      totalpuntosorden = []
+
+      for lista in totalpuntos:
+          listaorden = []
+          listaorden.append(lista[0])
+          print("Puntos de la polilinea",lista)
+          print ("Primer punto de la lista", lista[0])
+
+          for l in listaorden:
+              print ("Estamos en el punto", l)
+              entorno = [[l[0] + 0.1, l[1]], [l[0] + 0.1, l[1] - 0.1], [l[0], l[1] - 0.1], [l[0] - 0.1, l[1] - 0.1],
+                         [l[0] - 0.1, l[1]], [l[0] - 0.1, l[1] + 0.1], [l[0], l[1] + 0.1], [l[0] + 0.1, l[1] + 0.1]]
+
+              print ("Su entorno es ",entorno)
+              for e in entorno:
+                  if ((e in lista) and (e in listaorden == False)):
+                      print ("El punto se anade")
+                      listaorden.append(e)
+                      print ("la lista ordenada por ahora es ", listaorden)
+                      break
+
+          totalpuntosorden.append(listaorden)
+
+      """""
