@@ -62,10 +62,10 @@ void SpecificWorker::includeInRCIS()
 		mesh.pose.rx = 1.57079632679;
 		mesh.pose.ry = 0;
 		mesh.pose.rz = 3.1415926535;
-		mesh.scaleX = mesh.scaleY = mesh.scaleZ = 1.12;
+		mesh.scaleX = mesh.scaleY = mesh.scaleZ = 23;
 		mesh.render = 0;
 		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
-		mesh.meshPath = "/home/araceli/tfg/models/human02.3ds";
+		mesh.meshPath = "/home/araceli/tfg/models/human06.3ds";
 		innermodelmanager_proxy->addMesh("fakeperson_mesh6", "fakeperson6", mesh);
 	}
 	catch (...)
@@ -131,11 +131,11 @@ void SpecificWorker::includeInAGM()
 	personMesh->setAttribute("collidable", "false");
 	personMesh->setAttribute("imName", "fakepersonMesh6");
 	personMesh->setAttribute("imType", "mesh");
-	personMesh->setAttribute("path", "/home/araceli/tfg/models/human02.3ds");
+	personMesh->setAttribute("path", "/home/araceli/tfg/models/human06.3ds");
 	personMesh->setAttribute("render", "NormalRendering");
-	personMesh->setAttribute("scalex", "1.12");
-	personMesh->setAttribute("scaley", "1.12");
-	personMesh->setAttribute("scalez", "1.12");
+	personMesh->setAttribute("scalex", "23");
+	personMesh->setAttribute("scaley", "23");
+	personMesh->setAttribute("scalez", "23");
 
 	edgeRTAtrs["tx"] = "0";
 	edgeRTAtrs["ty"] = "0";

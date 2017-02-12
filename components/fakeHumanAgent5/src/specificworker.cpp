@@ -61,14 +61,16 @@ void SpecificWorker::includeInRCIS()
 		innermodelmanager_proxy->addTransform("fakeperson5", "static", "root", pose);
 
 		RoboCompInnerModelManager::meshType mesh;
-		mesh.pose.x  = mesh.pose.y  = mesh.pose.z  = 0;
+		mesh.pose.x  = 0;
+		mesh.pose.y  =0;
+		mesh.pose.z  =0;
 		mesh.pose.rx = 1.57079632679;
 		mesh.pose.ry = 0;
-		mesh.pose.rz = 3.1415926535;
-		mesh.scaleX = mesh.scaleY = mesh.scaleZ = 12;
+		mesh.pose.rz = 0;
+		mesh.scaleX = mesh.scaleY = mesh.scaleZ = 800;
 		mesh.render = 0;
 		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
-		mesh.meshPath = "/home/araceli/tfg/models/human01.3ds";
+		mesh.meshPath = "/home/araceli/tfg/models/human05.3ds";
 		innermodelmanager_proxy->addMesh("fakeperson_mesh5", "fakeperson5", mesh);
 	}
 	catch (...)
@@ -134,18 +136,18 @@ void SpecificWorker::includeInAGM()
 	personMesh->setAttribute("collidable", "false");
 	personMesh->setAttribute("imName", "fakepersonMesh5");
 	personMesh->setAttribute("imType", "mesh");
-	personMesh->setAttribute("path", "/home/araceli/tfg/models/human01.3ds");
+	personMesh->setAttribute("path", "/home/araceli/tfg/models/human05.3ds");
 	personMesh->setAttribute("render", "NormalRendering");
-	personMesh->setAttribute("scalex", "12");
-	personMesh->setAttribute("scaley", "12");
-	personMesh->setAttribute("scalez", "12");
+	personMesh->setAttribute("scalex", "800");
+	personMesh->setAttribute("scaley", "800");
+	personMesh->setAttribute("scalez", "800");
 
 	edgeRTAtrs["tx"] = "0";
 	edgeRTAtrs["ty"] = "0";
 	edgeRTAtrs["tz"] = "0";
 	edgeRTAtrs["rx"] = "1.570796326794";
 	edgeRTAtrs["ry"] = "0";
-	edgeRTAtrs["rz"] = "3.1415926535";
+	edgeRTAtrs["rz"] = "0";
 	newModel->addEdge(person5, personMesh, "RT", edgeRTAtrs);
 
 

@@ -63,8 +63,8 @@ void SpecificWorker::includeInRCIS()
 		mesh.pose.x  = mesh.pose.y  = mesh.pose.z  = 0;
 		mesh.pose.rx = 1.57079632679;
 		mesh.pose.ry = 0;
-		mesh.pose.rz = 3.1415926535;
-		mesh.scaleX = mesh.scaleY = mesh.scaleZ = 40;
+		mesh.pose.rz = 0;
+		mesh.scaleX = mesh.scaleY = mesh.scaleZ = 900;
 		mesh.render = 0;
 		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
 		mesh.meshPath = "/home/araceli/tfg/models/human04.3ds";
@@ -135,16 +135,16 @@ void SpecificWorker::includeInAGM()
 	personMesh->setAttribute("imType", "mesh");
 	personMesh->setAttribute("path", "/home/araceli/tfg/models/human04.3ds");
 	personMesh->setAttribute("render", "NormalRendering");
-	personMesh->setAttribute("scalex", "40");
-	personMesh->setAttribute("scaley", "40");
-	personMesh->setAttribute("scalez", "40");
+	personMesh->setAttribute("scalex", "900");
+	personMesh->setAttribute("scaley", "900");
+	personMesh->setAttribute("scalez", "900");
 
 	edgeRTAtrs["tx"] = "0";
 	edgeRTAtrs["ty"] = "0";
 	edgeRTAtrs["tz"] = "0";
 	edgeRTAtrs["rx"] = "1.570796326794";
 	edgeRTAtrs["ry"] = "0";
-	edgeRTAtrs["rz"] = "3.1415926535";
+	edgeRTAtrs["rz"] = "0";
 	newModel->addEdge(person4, personMesh, "RT", edgeRTAtrs);
 
 
