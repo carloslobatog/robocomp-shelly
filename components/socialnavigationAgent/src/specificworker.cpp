@@ -203,6 +203,7 @@ void SpecificWorker::compute( )
 	}
  	
  	//Obtenemos el modelo de fake human
+ 	if (p1==false){
  	int idx=0;
 
 	while ((personSymbolIdp1 = worldModel->getIdentifierByType("person", idx++)) != -1)
@@ -214,8 +215,9 @@ void SpecificWorker::compute( )
 			break;
 		}
 	}
-		
-	idx=0;
+	}
+	if (p2==false){
+	int idx=0;
 	while ((personSymbolIdp2 = worldModel->getIdentifierByType("person2", idx++)) != -1)
 	{
 
@@ -226,8 +228,9 @@ void SpecificWorker::compute( )
 			break;
 		}
 	}
-	
-	idx=0;		
+	}
+	if (p3==false){
+	int idx=0;		
 	while ((personSymbolIdp3 = worldModel->getIdentifierByType("person3", idx++)) != -1)
 	{
 
@@ -238,9 +241,10 @@ void SpecificWorker::compute( )
 			break;
 		}
 	}
+	}
 	
-	
-	idx=0;		
+	if (p4==false){
+	int idx=0;		
 	while ((personSymbolIdp4 = worldModel->getIdentifierByType("person4", idx++)) != -1)
 	{
 
@@ -251,8 +255,9 @@ void SpecificWorker::compute( )
 			break;
 		}
 	}
-	
-	idx=0;		
+	}
+	if (p5==false){
+	int idx=0;		
 	while ((personSymbolIdp5 = worldModel->getIdentifierByType("person5", idx++)) != -1)
 	{
 
@@ -263,8 +268,9 @@ void SpecificWorker::compute( )
 			break;
 		}
 	}
-	
-	idx=0;		
+	}
+	if (p6==false){
+	int idx=0;		
 	while ((personSymbolIdp6 = worldModel->getIdentifierByType("person6", idx++)) != -1)
 	{
 
@@ -275,7 +281,7 @@ void SpecificWorker::compute( )
 			break;
 		}
 	}
-			
+	}		
 	if (cambiopos==true)
 	{
 	  
@@ -375,6 +381,7 @@ void SpecificWorker::compute( )
 		qDebug() <<"ROBOT\n" <<"Coordenada x"<< robot.x << "Coordenada z"<< robot.z << "Rotacion "<< robot.angle;
 		
 		qDebug("Guardamos la pose del robot en el vector");
+		
 		punto.x=robot.x;
 		punto.z=robot.z;
 		//Si el ultimo punto es igual que el actual no lo guardo DA ERROR
@@ -383,7 +390,6 @@ void SpecificWorker::compute( )
 		else
 		  if ((poserobot[poserobot.size()-1].x!=punto.x)&&(poserobot[poserobot.size()-1].z!=punto.z))
 		    poserobot.push_back(punto);
-		
 
 	//////LLAMAR AL TRAJECTORY//////////
 		try

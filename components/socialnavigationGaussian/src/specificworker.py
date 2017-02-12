@@ -294,7 +294,7 @@ class SpecificWorker(GenericWorker):
 
 
        # plt.figure()
-        plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+       # plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
         plt.xlabel('X')
         plt.ylabel('Y')
         plt.axis('equal')
@@ -319,7 +319,7 @@ class SpecificWorker(GenericWorker):
 
         if (dibujar):
             for ps in polylines:
-                plt.figure()
+              #  plt.figure()
                 for p in ps:
                     plt.plot(p.x, p.z, "*r-")
                     plt.axis('equal')
