@@ -1,0 +1,19 @@
+<innerModel>
+	<plane id="floor" ny="1" size="5000,5000,10" repeat="1" texture="#662222" />
+
+	<transform id="human01" tx="-1500">
+		<mesh id="human_mesh1" file="human01.3ds" rx="1.57079632679" rz="3.1415926535" scale="12" />
+	</transform>
+	<transform id="human02" tx="-500">
+		<mesh id="human_mesh2" file="human02.3ds" rx="1.57079632679" rz="3.1415926535" scale="1.12" />
+	</transform>
+	<transform id="human03" tx="+500">
+		<mesh id="human_mesh3" file="human03.3ds" rx="1.57079632679" rz="3.1415926535" scale="0.04" />
+	</transform>
+	<transform id="human04" tx="+1500">
+		<mesh id="human_mesh4" file="human04.3ds" rx="1.57079632679" rz="3.1415926535" scale="40" />
+	</transform>
+</innerModel>
+
+
+ 
