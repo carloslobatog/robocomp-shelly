@@ -26,9 +26,9 @@
 			<include path="/home/robocomp/robocomp/components/robocomp-shelly/etc/shelly_head.xml"/>
 		</transform>
 
-	<!--	<transform id="arm_pose" ty="750" tz="110" >
+		<transform id="arm_pose" ty="750" tz="0" >
 			<include path="/home/robocomp/robocomp/components/robocomp-shelly/etc/shelly_arm.xml"/>
-		</transform> -->
+		</transform> 
 
 	</omnirobot>
 </innerModel>

@@ -42,7 +42,10 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 
 	//Timed slot to read TrajectoryRobot2D state
 	connect(&trajReader, SIGNAL(timeout()), this, SLOT(readTrajState()));
+	//Dibujar gaussiana
 	connect(gaussiana,SIGNAL(clicked()),this, SLOT(gauss()));
+	//Sacar la pose del robot
+	connect(datos,SIGNAL(clicked()),this, SLOT(grabarfichero()));
 	//trajReader.start(1000);
 	
 	//SLIDER
@@ -68,6 +71,18 @@ void SpecificWorker::cambiarvalor(int value){
 	qDebug()<<"Proximidad"<<valorprox;
 	
 }
+
+void SpecificWorker::grabarfichero(){
+  qDebug("escribimos en el fichero robotpose.txt la pose del robot");
+  	ofstream fichero("robotpose.txt", ofstream::out);
+	for (auto p:poserobot){
+		fichero<< p.x << " " <<p.z<< endl;
+	}
+	fichero.close();
+//defino otra vez el vector para ponerlo a cero	
+  vector <Punto> poserobot;	
+}
+
 
 SNGPolylineSeq SpecificWorker::gauss(bool dibujar)
 {
@@ -346,7 +361,7 @@ void SpecificWorker::compute( )
 		
 		
 	///////////////////////////OBTENER LA POSE DEL ROBOT /////////////////////////////////////
-	///PARA QUE SE ACTUALICE TIENE QUE ESTAR ARRANCADO EL LOCALIZATIONA en el manager///
+	///PARA QUE SE ACTUALICE TIENE QUE ESTAR ARRANCADO EL LOCALIZATION en el manager///
 			
 		robotSymbolId = worldModel->getIdentifierByType("robot");
 		AGMModelSymbol::SPtr robotparent = worldModel->getParentByLink(robotSymbolId, "RT");
@@ -358,8 +373,16 @@ void SpecificWorker::compute( )
 		
 		qDebug() << "------------------------------------------------------------";	
 		qDebug() <<"ROBOT\n" <<"Coordenada x"<< robot.x << "Coordenada z"<< robot.z << "Rotacion "<< robot.angle;
-		 
 		
+		qDebug("Guardamos la pose del robot en el vector");
+		punto.x=robot.x;
+		punto.z=robot.z;
+		//Si el ultimo punto es igual que el actual no lo guardo DA ERROR
+		if (poserobot.size()==0)
+		  poserobot.push_back(punto);
+		else
+		  if ((poserobot[poserobot.size()-1].x!=punto.x)&&(poserobot[poserobot.size()-1].z!=punto.z))
+		    poserobot.push_back(punto);
 		
 
 	//////LLAMAR AL TRAJECTORY//////////
@@ -1510,7 +1533,7 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 void SpecificWorker::symbolUpdated(const RoboCompAGMWorldModel::Node& modification)
 {
   //qDebug()<<"symbolUpdated";
-  
+	
 	QMutexLocker l(mutex);
 
 	AGMModelConverter::includeIceModificationInInternalModel(modification, worldModel);
@@ -1518,7 +1541,7 @@ void SpecificWorker::symbolUpdated(const RoboCompAGMWorldModel::Node& modificati
 
 void SpecificWorker::symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence &modifications)
 {
-  
+  	
   //qDebug()<<"symbolsUpdated";
 	QMutexLocker l(mutex);
 
@@ -1528,7 +1551,7 @@ void SpecificWorker::symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence &m
 
 
 void SpecificWorker::edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &modifications)
-{	qDebug()<<"edgesUpdated";
+{	//qDebug()<<"edgesUpdated";
 	cambiopos=true;
 	QMutexLocker lockIM(mutex);
 	
@@ -1551,7 +1574,7 @@ void SpecificWorker::edgeUpdated(const RoboCompAGMWorldModel::Edge& modification
 {	
 	cambiopos=true;
 	
-	qDebug()<<"edgeUpdated";
+	//qDebug()<<"edgeUpdated";
 	QMutexLocker lockIM(mutex);
 	AGMModelConverter::includeIceModificationInInternalModel(modification, worldModel);
 	AGMModelEdge dst;

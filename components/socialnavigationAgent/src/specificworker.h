@@ -82,7 +82,12 @@ public:
 	bool p6=false;
 	//PARA GUARDAR LOS DATOS EN UN ARCHIVO
 
-	//https://blogdelingeniero1.wordpress.com/2014/07/22/la-clase-vector-y-sus-metodos-mas-importantes-en-cpp-c/
+	struct Punto {
+	  float x;
+	  float z;
+	};
+	Punto punto;
+	vector <Punto> poserobot;
 	
 	//PARA LEER EL VALOR DEL SLIDER
 	int valorprox = 0;
@@ -120,6 +125,7 @@ public slots:
 	void readTrajState();
 	SNGPolylineSeq gauss(bool dibujar=true);
 	void cambiarvalor(int valor);
+	void grabarfichero();
 
 private:
 	bool setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated);

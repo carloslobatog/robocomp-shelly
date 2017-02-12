@@ -447,7 +447,7 @@
  <node alias="localizationA" endpoint="commonbehavior:tcp -p 14351">
   <dependence alias="executive" />
   <dependence alias="base" />
-  <dependence alias="slam" />
+ <!--dependence alias="slam" /-->
   <workingDir path="/home/robocomp/" />
   <upCommand command="rcremote localhost localizationAgnt /home/robocomp/robocomp/components/robocomp-shelly/components/localizationAgent ./bin/localizationAgent --Ice.Config=/home/robocomp/robocomp/components/robocomp-shelly/etcSim/localizationAgent.conf" />
   <downCommand command="killall -9 localizationAgent" />
