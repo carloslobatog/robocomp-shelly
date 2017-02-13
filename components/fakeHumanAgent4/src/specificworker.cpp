@@ -67,7 +67,7 @@ void SpecificWorker::includeInRCIS()
 		mesh.scaleX = mesh.scaleY = mesh.scaleZ = 900;
 		mesh.render = 0;
 		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
-		mesh.meshPath = "/home/araceli/tfg/models/human04.3ds";
+		mesh.meshPath = "/home/robocomp/mirobocomp/robocomp-shelly/models/human04.3ds";
 		innermodelmanager_proxy->addMesh("fakeperson_mesh4", "fakeperson4", mesh);
 	}
 	catch (...)
