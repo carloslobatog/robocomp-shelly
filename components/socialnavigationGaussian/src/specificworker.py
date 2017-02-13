@@ -68,17 +68,17 @@ def getPolyline(grid, resolution, lx_inf, ly_inf):
             dy = curr[1] - prev[1]
             dist = math.sqrt(dx * dx + dy * dy)
 
-            if dist > 0.05:
-                iters = dist / 0.05
+            if dist > 0.35:
+                iters = dist / 0.35
                 for iter in range(int(iters)):
-                    wx = prev[0] + 0.05 * iter * dx
-                    wy = prev[1] + 0.05 * iter * dy
+                    wx = prev[0] + 0.35 * iter * dx
+                    wy = prev[1] + 0.35 * iter * dy
 
                     dx2 = wx - curr[0]
                     dy2 = wy - curr[1]
                     dist2 = math.sqrt(dx2 * dx2 + dy2 * dy2)
 
-                    if dist2 > 0.05:
+                    if dist2 > 0.35:
                         v.append([wx, wy])
                     else:
                         break

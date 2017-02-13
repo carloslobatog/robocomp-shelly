@@ -795,13 +795,13 @@ bool SpecificWorker::updateInnerModel(InnerModel *inner, TrajectoryState &state)
 	}	
 	try
 	{
-		printf("Escribiendo a laserantes\n");
+	//	printf("Escribiendo a laserantes\n");
 		laserData = laser_proxy->getLaserData();
  		fichero(laserData,"laserantes.txt");
  		laserData = elasticband.unionpoligonos(laserData, safePolyList, inner);
  		fichero(laserData,"laserdespues.txt");
 		ficheroP(safePolyList.read(),"poly.txt", inner); 
-		printf("Escribiendo a laserdespues\n");
+	//	printf("Escribiendo a laserdespues\n");
 	}
 	catch (const Ice::Exception &ex)
 	{
