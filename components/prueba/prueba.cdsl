@@ -1,0 +1,10 @@
+
+Component prueba
+{
+	Communications
+	{
+	};
+	language Cpp;
+	gui Qt(QWidget);
+};
+

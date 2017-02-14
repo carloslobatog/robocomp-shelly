@@ -175,6 +175,7 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 	// For each polyline
 	LocalPolyLineList l = safePolyList.read(); 
 	
+	printf("--\n");
 	for (auto &laserSample: laserCombined)
 	{
 		for (auto polyline : l)
@@ -193,7 +194,7 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 				const float m = std::min<float>(cAngle, pAngle);
 				const float M = std::max<float>(cAngle, pAngle);
 				//printf("angulo: %f   p:%f  c:%f\n", laserSample.angle, cAngle, pAngle);
-				if (laserSample.angle >= m and laserSample.angle <= M)
+				if (laserSample.angle >= m and laserSample.angle <= M and fabs(M-m)<3.14)
 				{
 				//	printf("dentro\n");
 					float mean = (cDist + pDist) / 2.;
