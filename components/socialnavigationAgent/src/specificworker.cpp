@@ -79,17 +79,23 @@ void SpecificWorker::grabarfichero(){
 		fichero<< p.x << " " <<p.z<< endl;
 	}
 	fichero.close();
-//defino otra vez el vector para ponerlo a cero	
-  vector <Punto> poserobot;	
+	
+qDebug("escribimos en el fichero personpose.txt la pose de las personas");
+  	ofstream fichero2("personpose.txt", ofstream::out);
+	for (auto person:persons){
+		fichero2<< person.x << " " <<person.z<<" "<<person.angle<< endl;
+	}
+	fichero2.close();	
+	
+  poserobot.clear();
 }
 
 
 SNGPolylineSeq SpecificWorker::gauss(bool dibujar)
 {
-	qDebug()<<"MODULO GAUSS";
 	
-	qDebug()<<"DIBUJAR"<<dibujar;
-	SNGPersonSeq persons;
+	persons.clear();
+	qDebug("La lista se ha intentado vaciar");
 	//push back es para incluir a la persona en el vector de personas
 	if (p1)
 	persons.push_back(person1);
@@ -106,6 +112,7 @@ SNGPolylineSeq SpecificWorker::gauss(bool dibujar)
 	
 	SNGPolylineSeq secuencia = socialnavigationgaussian_proxy->getPolylines(persons, valorprox, dibujar);
 /*	
+ * 	
 
 	//Si estan las dos personas en el modelo comprobamos si estan hablando con checkconversation()
 	if (p1 && p2)

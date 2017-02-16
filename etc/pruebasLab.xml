@@ -3,36 +3,44 @@
 		
 		<!-- FLOOR -->
 		<transform id="floor" tx="0" ty="0">
-			<plane id="floor_plane" ny="1" size="20000,20000,10" texture="#eebb77" />
+			<plane id="floor_plane" ny="1" size="10000,10000,10" texture="#eebb77" />
 		</transform>
 	
 		
 		<transform id="room_3">
 
 			<!-- ROOM A -->
-			<transform id="pared0" tx="-10000" tz="0" ty="950" >
-				<plane id="muro0" nx="-10000" nz="0" size="20000,1900,9"  texture="#880000" />
+			<transform id="pared0" tx="-5000" tz="0" ty="950" >
+				<plane id="muro0" nx="-5000" nz="0" size="10000,1900,9"  texture="#880000" />
 			</transform>
 
-			<transform id="pared1" tx="0" tz="10000" ty="950" >
-				<plane id="muro1" nx="0" nz="10000" size="20000,1900,9"  texture="#880000" />
+			<transform id="pared1" tx="0" tz="5000" ty="950" >
+				<plane id="muro1" nx="0" nz="5000" size="10000,1900,9"  texture="#880000" />
 			</transform> 
 
-			<transform id="pared2" tx="10000" tz="0" ty="950" >
-				<plane id="muro2" nx="10000" nz="0" size="20000,1900,9"  texture="#880000" />
+			<transform id="pared2" tx="5000" tz="0" ty="950" >
+				<plane id="muro2" nx="5000" nz="0" size="10000,1900,9"  texture="#880000" />
 			</transform>
 		
-			<transform id="pared3" tx="0" tz="-10000" ty="950" >
-				<plane id="muro3" nx="0" nz="-10000" size="20000,1900,9"  texture="#880000" />
+			<transform id="pared3" tx="0" tz="-5000" ty="950" >
+				<plane id="muro3" nx="0" nz="-5000" size="10000,1900,9"  texture="#880000" />
 			</transform>
 
 
-			<transform id="caja1" tx="0" tz="2000" ty="950" >
+			<!--transform id="caja1" tx="0" tz="2000" ty="950" >
 				<plane id="cajaMesh1" nx="1" nz="-1000" size="1100,1100,1100"  texture="#880000" />
+			</transform-->
+
+			<!-- TABLE D MESA REDONDA DEL COMEDOR-->
+			<transform id="tableD" tx="-1500" tz="-1767" ty="730" >
+				
+				<mesh id="tableD_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="600,600,20" 						rx="1.570799947" collide="1"/>
+				<transform id="rwreewreet" ty="-365" >
+					<mesh id="tableD_mesh2" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="600,600,360" 						rx="1.570799947" collide="1"/>
+				</transform>
 			</transform>
 
 		</transform>
-		
 		
 	</transform>
 </innerModel>
