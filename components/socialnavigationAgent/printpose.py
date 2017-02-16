@@ -45,7 +45,7 @@ with open(sys.argv[2], 'r') as f:
 #plt.plot(ax, ay, 'go')
 
 
-
-
+plt.xlim([0,10])
+plt.ylim([0,10])
 plt.axis('equal')
 plt.show()

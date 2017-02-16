@@ -172,4 +172,4 @@ class Normal(object):
         return self._sigma
 
     def getDimensions (self):
-        return self._dimensions
+     return self._dimensions

@@ -56,7 +56,7 @@ public:
 	bool cambiopos=false;
 	
 	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
-	SNGPersonSeq persons;
+	SNGPersonSeq totalpersons;
 	SNGPerson person1;
 	SNGPerson person2;
 	SNGPerson person3;

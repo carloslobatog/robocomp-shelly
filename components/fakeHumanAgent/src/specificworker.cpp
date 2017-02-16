@@ -56,9 +56,9 @@ void SpecificWorker::includeInRCIS()
 
 	try
 	{	
-		pose.x = 2030;
+		pose.x = 5500;
 		pose.y = 0;
-		pose.z = -1400;
+		pose.z = 2500;
 		pose.rx = 0;
 		pose.ry = 3.325;
 		pose.rz = 0;
@@ -128,9 +128,9 @@ void SpecificWorker::includeInAGM()
 
 	// Geometric part
 	std::map<std::string, std::string> edgeRTAtrs;
-	edgeRTAtrs["tx"] = "2030";
+	edgeRTAtrs["tx"] = "5500";
 	edgeRTAtrs["ty"] = "0";
-	edgeRTAtrs["tz"] = "-1400";
+	edgeRTAtrs["tz"] = "2500";
 	edgeRTAtrs["rx"] = "0";
 	edgeRTAtrs["ry"] = "3.325";
 	edgeRTAtrs["rz"] = "0";

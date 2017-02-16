@@ -102,7 +102,7 @@ class Person(object):
     xdot = 0
     ydot = 0
 
-    _radius = 0.30
+    _radius = 0.45
 
     """ Public Methods """
 
@@ -270,9 +270,9 @@ class SpecificWorker(GenericWorker):
         """""
         ##cambio los limites para los otros valores de sigma
         lx_inf = 0
-        lx_sup = 8
-        ly_inf = -4
-        ly_sup = 4
+        lx_sup = 10
+        ly_inf = 0
+        ly_sup = 10
         # zs = np.array([fun(x,y) for x,y in zip(np.ravel(X), np.ravel(Y))])
         # Z = zs.reshape(X.shape)
 
@@ -287,8 +287,8 @@ class SpecificWorker(GenericWorker):
             #print('Pose x', pn.x, 'Pose z', pn.y, 'Rotacion', pn.th)
             pn.draw(v, drawPersonalSpace=dibujar)
             #normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 2.0, 1.0, 4/3], elliptical=True))
-            normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 4, 2, 2*4/3], elliptical=True))
-
+            normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 4.0, 2.0, 2*4/3], elliptical=True))
+        print ("numero de gaussianas",len(normals))
 
         h = 0.3
         resolution = 0.1
@@ -306,7 +306,7 @@ class SpecificWorker(GenericWorker):
 
 
        # plt.figure()
-       # plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+        plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
         plt.xlabel('X')
         plt.ylabel('Y')
         plt.axis('equal')
