@@ -72,7 +72,7 @@ def getPolyline(grid, resolution, lx_inf, ly_inf):
                 iters = dist / 0.2
                 for iter in range(int(iters)):
                     wx = prev[0] + 0.2 * iter * dx
-                    wy = prev[1] + 0.4 * iter * dy
+                    wy = prev[1] + 0.2 * iter * dy
 
                     dx2 = wx - curr[0]
                     dy2 = wy - curr[1]
@@ -290,7 +290,7 @@ class SpecificWorker(GenericWorker):
             normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 4, 2, 2*4/3], elliptical=True))
 
 
-        h = 0.5
+        h = 0.6
         resolution = 0.1
         limits = [[lx_inf, lx_sup], [ly_inf, ly_sup]]
         _, z = Normal.makeGrid(normals, h, 2, limits=limits, resolution=resolution)

@@ -136,8 +136,9 @@ void SpecificWorker::compute()
 			break;		
 		case CurrentTarget::State::BLOCKED:
 				road.update();
-				qDebug()<<"Se debe actualizar elasticband";
+				
 				elasticband.update(innerModel, road, laserData, currentTarget, safePolyList);
+				
 				if( road.isBlocked() == false)
 					currentTarget.setState(CurrentTarget::State::GOTO);
 				else
@@ -798,11 +799,11 @@ bool SpecificWorker::updateInnerModel(InnerModel *inner, TrajectoryState &state)
 	//	printf("Escribiendo a laserantes\n");
 		laserData = laser_proxy->getLaserData();
  		fichero(laserData,"laserantes.txt");
- 		laserData = elasticband.unionpoligonos(laserData, safePolyList, inner);
+		laserData = elasticband.unionpoligonos(laserData, safePolyList, inner);
  		fichero(laserData,"laserdespues.txt");
 		ficheroP(safePolyList.read(),"poly.txt", inner); 
 	//	printf("Escribiendo a laserdespues\n");
-	}
+ 	}
 	catch (const Ice::Exception &ex)
 	{
 		qDebug() << __FUNCTION__ << "Can't connect to Laser proxy. Retrying...";

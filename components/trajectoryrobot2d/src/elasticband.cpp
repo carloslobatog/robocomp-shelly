@@ -85,12 +85,13 @@ bool ElasticBand::update(InnerModel *innermodel, WayPoints &road, const RoboComp
 	/////////////////////////////////////////////
 	////////////// Union de poligonos////////////
        //////////////////////////////////////////////
-	RoboCompLaser::TLaserData myLaser = unionpoligonos(laserData, safePolyList,innermodel); 
+	//RoboCompLaser::TLaserData myLaser = unionpoligonos(laserData, safePolyList,innermodel); 
+
 	
 	/////////////////////////////////////////////
 	//Tags all points in the road ar visible or blocked, depending on laser visibility. Only visible points are processed in this iteration
 	/////////////////////////////////////////////
-	checkVisiblePoints(innermodel, road, myLaser);
+	checkVisiblePoints(innermodel, road, laserData);
 
 	/////////////////////////////////////////////
 	//Check if there is a sudden shortcut to take
@@ -110,7 +111,7 @@ bool ElasticBand::update(InnerModel *innermodel, WayPoints &road, const RoboComp
 	/////////////////////////////////////////////
 	//Compute the scalar magnitudes
 	/////////////////////////////////////////////
-	computeForces(innermodel, road, myLaser);
+	computeForces(innermodel, road, laserData);
 
 	/////////////////////////////////////////////
 	//Delete half the tail behind, if greater than 6, to release resources
