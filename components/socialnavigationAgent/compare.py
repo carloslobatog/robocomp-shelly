@@ -18,6 +18,31 @@ plt.plot(ax, ay, 'r-')
 with open(sys.argv[2], 'r') as f:
     ax = []
     ay = []
+    lines = f.readlines()
+    for l in lines:
+        parts = l.split()
+        x = parts[0]
+        y = parts [1]
+        ax.append(x)
+        ay.append(y)
+plt.plot(ax, ay, 'r-')
+
+with open(sys.argv[3], 'r') as f:
+    ax = []
+    ay = []
+    lines = f.readlines()
+    for l in lines:
+        parts = l.split()
+        x = parts[0]
+        y = parts [1]
+        ax.append(x)
+        ay.append(y)
+plt.plot(ax, ay, 'r-')
+#plt.plot(ax, ay, 'go')
+
+with open(sys.argv[4], 'r') as f:
+    ax = []
+    ay = []
     ath = []
     lines = f.readlines()
     for l in lines:
@@ -41,9 +66,6 @@ with open(sys.argv[2], 'r') as f:
 
         heading = plt.Line2D((ax[i], x_aux), (ay[i], y_aux), lw=1, color='k')
         plt.gca().add_line(heading)
-
-#plt.plot(ax, ay, 'go')
-
 
 plt.xlim([0,10])
 plt.ylim([0,10])
