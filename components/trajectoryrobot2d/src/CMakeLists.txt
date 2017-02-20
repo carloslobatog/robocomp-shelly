@@ -27,6 +27,7 @@ SET ( SOURCES
   genericworker.cpp
   specificworker.cpp
   trajectoryrobot2dI.cpp
+  laserI.cpp
 )
 
 

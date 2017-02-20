@@ -82,6 +82,7 @@
 #include "commonbehaviorI.h"
 
 #include <trajectoryrobot2dI.h>
+#include <laserI.h>
 
 #include <OmniRobot.h>
 #include <GenericBase.h>
@@ -139,28 +140,11 @@ int ::trajectoryrobot2d::run(int argc, char* argv[])
 
 	int status=EXIT_SUCCESS;
 
-	OmniRobotPrx omnirobot_proxy;
 	LaserPrx laser_proxy;
+	OmniRobotPrx omnirobot_proxy;
 
 	string proxy, tmp;
 	initialize();
-
-
-	try
-	{
-		if (not GenericMonitor::configGetString(communicator(), prefix, "OmniRobotProxy", proxy, ""))
-		{
-			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy OmniRobotProxy\n";
-		}
-		omnirobot_proxy = OmniRobotPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
-	}
-	catch(const Ice::Exception& ex)
-	{
-		cout << "[" << PROGRAM_NAME << "]: Exception: " << ex;
-		return EXIT_FAILURE;
-	}
-	rInfo("OmniRobotProxy initialized Ok!");
-	mprx["OmniRobotProxy"] = (::IceProxy::Ice::Object*)(&omnirobot_proxy);//Remote server proxy creation example
 
 
 	try
@@ -178,6 +162,23 @@ int ::trajectoryrobot2d::run(int argc, char* argv[])
 	}
 	rInfo("LaserProxy initialized Ok!");
 	mprx["LaserProxy"] = (::IceProxy::Ice::Object*)(&laser_proxy);//Remote server proxy creation example
+
+
+	try
+	{
+		if (not GenericMonitor::configGetString(communicator(), prefix, "OmniRobotProxy", proxy, ""))
+		{
+			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy OmniRobotProxy\n";
+		}
+		omnirobot_proxy = OmniRobotPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
+	}
+	catch(const Ice::Exception& ex)
+	{
+		cout << "[" << PROGRAM_NAME << "]: Exception: " << ex;
+		return EXIT_FAILURE;
+	}
+	rInfo("OmniRobotProxy initialized Ok!");
+	mprx["OmniRobotProxy"] = (::IceProxy::Ice::Object*)(&omnirobot_proxy);//Remote server proxy creation example
 
 
 
@@ -221,6 +222,18 @@ int ::trajectoryrobot2d::run(int argc, char* argv[])
 		adapterTrajectoryRobot2D->add(trajectoryrobot2d, communicator()->stringToIdentity("trajectoryrobot2d"));
 		adapterTrajectoryRobot2D->activate();
 		cout << "[" << PROGRAM_NAME << "]: TrajectoryRobot2D adapter created in port " << tmp << endl;
+
+
+		// Server adapter creation and publication
+		if (not GenericMonitor::configGetString(communicator(), prefix, "Laser.Endpoints", tmp, ""))
+		{
+			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy Laser";
+		}
+		Ice::ObjectAdapterPtr adapterLaser = communicator()->createObjectAdapterWithEndpoints("Laser", tmp);
+		LaserI *laser = new LaserI(worker);
+		adapterLaser->add(laser, communicator()->stringToIdentity("laser"));
+		adapterLaser->activate();
+		cout << "[" << PROGRAM_NAME << "]: Laser adapter created in port " << tmp << endl;
 
 
 

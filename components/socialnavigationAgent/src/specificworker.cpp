@@ -192,7 +192,7 @@ void SpecificWorker::compute( )
 	{
 		qLog::getInstance()->setProxy("both", logger_proxy);
 		rDebug2(("navigationAgent started"));
-		first = false;
+		
 	}
 
 	if (worldModel->getIdentifierByType("robot") < 0)
@@ -211,6 +211,7 @@ void SpecificWorker::compute( )
 	}
  	
  	//Obtenemos el modelo de fake human
+ 	
  	if (p1==false){
  	int idx=0;
 
@@ -304,6 +305,22 @@ void SpecificWorker::compute( )
 			person1.z = str2float(edgeRTp1.attributes["tz"])/1000;
 			person1.angle = str2float(edgeRTp1.attributes["ry"]);
 			
+			//comprobamos si la persona se ha movido
+			if (first){
+				personaux1=person1;
+				movperson=true;
+			}
+				else
+			{
+				if  (movperson==false){
+					if ((personaux1.x!=person1.x)||(personaux1.z!=person1.z)||(personaux1.angle!=person1.angle))
+						movperson = true;
+				}
+				
+				personaux1=person1;
+			}		
+			
+			
 			qDebug() << "------------------------------------------------------------";
 			qDebug() <<"PERSONA 1\n" <<"Coordenada x"<< person1.x << "Coordenada z"<< person1.z << "Rotacion "<< person1.angle;
 		}
@@ -316,6 +333,20 @@ void SpecificWorker::compute( )
 			person2.z=str2float(edgeRTp2.attributes["tz"])/1000;
 			person2.angle=str2float(edgeRTp2.attributes["ry"]);
 			
+			//comprobamos si la persona se ha movido
+				if (first){
+				personaux2=person2;
+				movperson=true;
+			}
+			else
+			{
+				if  (movperson==false){
+					if ((personaux2.x!=person2.x)||(personaux2.z!=person2.z)||(personaux2.angle!=person2.angle))
+						movperson = true;
+				}
+				
+				personaux2=person2;
+			}	
 			qDebug() << "------------------------------------------------------------";
 			qDebug() <<"PERSONA 2\n" <<"Coordenada x"<< person2.x << "Coordenada z"<< person2.z << "Rotacion "<< person2.angle;
 				
@@ -329,6 +360,22 @@ void SpecificWorker::compute( )
 			person3.z=str2float(edgeRTp3.attributes["tz"])/1000;
 			person3.angle=str2float(edgeRTp3.attributes["ry"]);
 			
+			//comprobamos si la persona se ha movido
+				if (first){
+				personaux3=person3;
+				movperson=true;
+			}
+			else
+			{
+				if  (movperson==false){
+					if ((personaux3.x!=person3.x)||(personaux3.z!=person3.z)||(personaux3.angle!=person3.angle))
+						movperson = true;
+				}
+				
+				personaux3=person3;
+			}
+			
+		
 			qDebug() << "------------------------------------------------------------";
 			qDebug() <<"PERSONA 3\n" <<"Coordenada x"<< person3.x << "Coordenada z"<< person3.z << "Rotacion "<< person3.angle;
 				
@@ -342,6 +389,20 @@ void SpecificWorker::compute( )
 			person4.z=str2float(edgeRTp4.attributes["tz"])/1000;
 			person4.angle=str2float(edgeRTp4.attributes["ry"]);
 			
+			//comprobamos si la persona se ha movido
+				if (first){
+				personaux4=person4;
+				movperson=true;
+			}
+			else
+			{
+				if  (movperson==false){
+					if ((personaux4.x!=person4.x)||(personaux4.z!=person4.z)||(personaux4.angle!=person4.angle))
+						movperson = true;
+				}
+				
+				personaux4=person4;
+			}
 			qDebug() << "------------------------------------------------------------";
 			qDebug() <<"PERSONA 4\n" <<"Coordenada x"<< person4.x << "Coordenada z"<< person4.z << "Rotacion "<< person4.angle;
 				
@@ -355,6 +416,20 @@ void SpecificWorker::compute( )
 			person5.z=str2float(edgeRTp5.attributes["tz"])/1000;
 			person5.angle=str2float(edgeRTp5.attributes["ry"]);
 			
+			//comprobamos si la persona se ha movido
+				if (first){
+				personaux5=person5;
+				movperson=true;
+			}
+			else
+			{
+				if  (movperson==false){
+					if ((personaux5.x!=person5.x)||(personaux5.z!=person5.z)||(personaux5.angle!=person5.angle))
+						movperson = true;
+				}
+				
+				personaux5=person5;
+			}
 			qDebug() << "------------------------------------------------------------";
 			qDebug() <<"PERSONA 5\n" <<"Coordenada x"<< person5.x << "Coordenada z"<< person5.z << "Rotacion "<< person5.angle;
 			}	
@@ -366,6 +441,20 @@ void SpecificWorker::compute( )
 			person6.x=str2float(edgeRTp6.attributes["tx"])/1000;
 			person6.z=str2float(edgeRTp6.attributes["tz"])/1000;
 			person6.angle=str2float(edgeRTp6.attributes["ry"]);
+			//comprobamos si la persona se ha movido
+				if (first){
+				personaux6=person6;
+				movperson=true;
+			}
+			else
+			{
+				if  (movperson==false){
+					if ((personaux6.x!=person6.x)||(personaux6.z!=person6.z)||(personaux6.angle!=person6.angle))
+						movperson = true;
+				}
+				
+				personaux6=person6;
+			}
 			
 			qDebug() << "------------------------------------------------------------";
 			qDebug() <<"PERSONA 6\n" <<"Coordenada x"<< person6.x << "Coordenada z"<< person6.z << "Rotacion "<< person6.angle;
@@ -392,17 +481,28 @@ void SpecificWorker::compute( )
 		
 		punto.x=robot.x;
 		punto.z=robot.z;
-		//Si el ultimo punto es igual que el actual no lo guardo DA ERROR
+		
+		//Si el ultimo punto es igual que el actual no lo guardo 
 		if (poserobot.size()==0)
 		  poserobot.push_back(punto);
 		else
 		  if ((poserobot[poserobot.size()-1].x!=punto.x)&&(poserobot[poserobot.size()-1].z!=punto.z))
 		    poserobot.push_back(punto);
 
-	//////LLAMAR AL TRAJECTORY//////////
+	
+		first = false;
+		cambiopos=false;
+	}
+	
+		  
+		  
+		  
+	//////LLAMAR AL TRAJECTORY////////// Solo se llama si la poscion de una perosna cambia
+	
+	if (movperson){
+	qDebug ("se ha movido alguna pesona, se envia la polilinea");
 		try
 		{
-		  //SNGPolylineSeq secuencia = socialnavigationgaussian_proxy->getPolylines(persons, valorprox, true);
 		 
 		  qDebug()<<"llamamos al trajectory";
 		 SNGPolylineSeq secuencia=gauss(false);
@@ -428,10 +528,11 @@ void SpecificWorker::compute( )
 		}
 		catch( const Ice::Exception &e)
 		{ std::cout << e << std::endl;}
-	
 		
-		cambiopos=false;		
-	}		
+	movperson = false;
+	}	
+				
+			
 
 		
 }	 	

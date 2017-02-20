@@ -64,6 +64,13 @@ public:
 	SNGPerson person5;
 	SNGPerson person6;
 	SNGPerson robot;
+	//estas guardaran la poscion anterior de cada persona
+	SNGPerson personaux1;
+	SNGPerson personaux2;
+	SNGPerson personaux3;
+	SNGPerson personaux4;
+	SNGPerson personaux5;
+	SNGPerson personaux6;
 	
 	//PARA ALMACENAR EL SIMBOLO DE LA PERSONA AL LEERLA DEL MUNDO
 	int32_t personSymbolIdp1;
@@ -81,6 +88,8 @@ public:
 	bool p4=false;
 	bool p5=false;
 	bool p6=false;
+	//bool para saber si se ha movido alguna persona
+	bool movperson = false;
 	//PARA GUARDAR LOS DATOS EN UN ARCHIVO
 
 	struct Punto {

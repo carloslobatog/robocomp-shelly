@@ -14,6 +14,8 @@ class SafePolyList
     void write(const RoboCompTrajectoryRobot2D::PolyLineList &secuencia)
     {
       QMutexLocker ml(&mutex);
+      polyLineList.clear();
+      
 	for(auto s: secuencia)
 	{
 	  std::vector<LocalPoint> puntos;
@@ -25,6 +27,7 @@ class SafePolyList
 	  polyLineList.push_back(puntos);
 	}
     }
+    
     LocalPolyLineList read()
     {
       QMutexLocker ml(&mutex);

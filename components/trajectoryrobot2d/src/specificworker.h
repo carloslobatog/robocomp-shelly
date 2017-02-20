@@ -113,6 +113,10 @@ class SpecificWorker : public GenericWorker
 		float goReferenced(const TargetPose &target, const float xRef, const float zRef, const float threshold);
 		float changeTarget(const TargetPose &target);
 		void setHumanSpace(const PolyLineList &polyList);
+		TLaserData getLaserData();
+		LaserConfData getLaserConfData();
+		TLaserData getLaserAndBStateData(RoboCompGenericBase::TBaseState &bState);
+
 		/**
 	   * @brief Sends the robot to a new target position. 
 		 * There can be only one active target

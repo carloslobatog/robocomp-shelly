@@ -78,6 +78,9 @@ public:
 	virtual float changeTarget(const TargetPose &target) = 0;
 	virtual float go(const TargetPose &target) = 0;
 	virtual void mapBasedTarget(const NavigationParameterMap &parameters) = 0;
+	virtual TLaserData getLaserData() = 0;
+	virtual LaserConfData getLaserConfData() = 0;
+	virtual TLaserData getLaserAndBStateData(RoboCompGenericBase::TBaseState &bState) = 0;
 
 protected:
 	QTimer timer;

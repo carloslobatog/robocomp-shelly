@@ -687,7 +687,44 @@ qDebug()<<"La polilinea ha llegado";
 //   }
 }
 
+TLaserData SpecificWorker::getLaserData()
+{
+	qDebug()<<"Me piden el laser";
+	TLaserData ld;
+	for(int i=0; i<100; i++)
+	{
+		TData tdata = {45, 1.5};
+		ld.push_back(tdata);
+	}
+	return ld;
+}
+TLaserData SpecificWorker::getLaserAndBStateData(TBaseState& bState)
+{
+	qDebug() << " hola desde getlaserdata";
+	bState = this->bState;
+	return laserData;
+}
 
+
+LaserConfData SpecificWorker::getLaserConfData()
+{
+	
+	LaserConfData lc;
+	lc.maxMeasures = 100;
+    lc.maxDegrees = 240;
+    lc.maxRange = 30000;
+    lc.minRange = 100;
+    lc.iniRange = -120;
+    lc.endRange = 120;
+    lc.cluster = 0;
+    lc.sampleRate = 30;
+    lc.angleRes = 2.40000009537;
+    lc.angleIni = -120.0;
+    lc.driver = "RCIS";
+    lc.device = "laser";
+
+	return lc;
+}
 
 /////////////////////
 // In development
@@ -799,7 +836,7 @@ bool SpecificWorker::updateInnerModel(InnerModel *inner, TrajectoryState &state)
 	//	printf("Escribiendo a laserantes\n");
 		laserData = laser_proxy->getLaserData();
  		//fichero(laserData,"laserantes.txt");
-		//laserData = elasticband.unionpoligonos(laserData, safePolyList, inner);
+		laserData = elasticband.unionpoligonos(laserData, safePolyList, inner);
  		//fichero(laserData,"laserdespues.txt");
 		//ficheroP(safePolyList.read(),"poly.txt", inner); 
 	//	printf("Escribiendo a laserdespues\n");

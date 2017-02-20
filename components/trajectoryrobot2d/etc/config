@@ -3,7 +3,7 @@ CommonBehavior.Endpoints=tcp -p 19000
 
 # Endpoints for implemented interfaces
 TrajectoryRobot2D.Endpoints=tcp -p 19204
-
+Laser.Endpoints=tcp -p 19205
 
 # Proxies for required interfaces
 LaserProxy = laser:tcp -h robonuc1.local -p 10003
