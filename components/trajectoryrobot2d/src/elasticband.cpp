@@ -173,10 +173,12 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 {
 	RoboCompLaser::TLaserData laserCombined; 
 	laserCombined = laserData;
+	
 	// For each polyline
 	LocalPolyLineList l = safePolyList.read(); 
 	
 	printf("--\n");
+	
 	for (auto &laserSample: laserCombined)
 	{
 		for (auto polyline : l)
