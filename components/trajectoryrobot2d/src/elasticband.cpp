@@ -15,7 +15,7 @@
  * 
  */
 #include <cmath>
-
+#include <vector>
 #include "elasticband.h"
 
 ElasticBand::ElasticBand()
@@ -169,6 +169,59 @@ bool ElasticBand::shortCut(InnerModel *innermodel, WayPoints &road, const RoboCo
  * @param road ...
  * @return void
  */
+// RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData laserData, SafePolyList &safePolyList, InnerModel *innermodel)
+// {
+// 	RoboCompLaser::TLaserData laserCombined; 
+// 	laserCombined = laserData;
+// 	
+// 	// For each polyline
+// 	LocalPolyLineListPol lista = safePolyList.read(innermodel); 
+// 	LocalPolyLineListPol listaFinal; 
+// 	
+// 	//static float minLaser = std::min<float>(laserData.begin()->angle, laserData.end()->angle);
+// 	//static float maxLaser = std::max<float>(laserData.begin()->angle, laserData.end()->angle);
+// 	
+// // 	for( auto &l : lista)
+// // 	{
+// // 		if( l.min > minLaser ||  l.max < maxLaser )
+// // 			listaFinal.push_back(l);
+// // 	}
+// // 	
+// 	
+// 	for (auto &laserSample: laserCombined)
+// 	{
+// 		for (auto localPolyLine : lista)
+// 		{
+// 			auto previousPoint = localPolyLine.p.end();
+// 			
+// 			float pDist= previousPoint->dist;
+// 			float pAngle= previousPoint->angle;
+// 			
+// 			// For each polyline's point
+// 			for (auto polylinePoint: localPolyLine.p)
+// 			{
+// 				
+// 				float cDist  = polylinePoint.dist;
+// 				float cAngle = polylinePoint.angle;
+// 
+// 				const float m = std::min<float>(cAngle, pAngle);
+// 				const float M = std::max<float>(cAngle, pAngle);
+// 				
+// 				//printf("angulo: %f   p:%f  c:%f\n", laserSample.angle, cAngle, pAngle);
+// 				if (laserSample.angle >= m and laserSample.angle <= M and fabs(M-m)<3.14)
+// 				{
+// 				//	printf("dentro\n");
+// 					float mean = (cDist + pDist) / 2.;
+// 					if (mean<laserSample.dist) laserSample.dist = mean;
+// 				}
+// 				pDist = cDist;
+// 				pAngle = cAngle;
+// 			}
+// 		}
+// 	}
+// 	return laserCombined;
+// } 
+
 RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData laserData, SafePolyList &safePolyList, InnerModel *innermodel)
 {
 	RoboCompLaser::TLaserData laserCombined; 
@@ -177,8 +230,7 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 	// For each polyline
 	LocalPolyLineList l = safePolyList.read(); 
 	
-	printf("--\n");
-	
+
 	for (auto &laserSample: laserCombined)
 	{
 		for (auto polyline : l)
@@ -210,7 +262,6 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 	}
 	return laserCombined;
 } 
-
 
 bool ElasticBand::addPoints(WayPoints &road, const CurrentTarget &currentTarget)
 {

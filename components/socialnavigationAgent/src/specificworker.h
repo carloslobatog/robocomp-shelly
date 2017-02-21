@@ -55,8 +55,10 @@ public:
 //bool para indicar si se ha movido la persona, lo utilizare para imprimir la coordenada de la persona cada vez que se mueva
 	bool cambiopos=false;
 	
+	SNGPolylineSeq secuencia;
+	
 	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
-	SNGPersonSeq totalpersons;
+	SNGPersonSeq totalpersons; //este es para leer el fichero
 	SNGPerson person1;
 	SNGPerson person2;
 	SNGPerson person3;
@@ -64,13 +66,15 @@ public:
 	SNGPerson person5;
 	SNGPerson person6;
 	SNGPerson robot;
-	//estas guardaran la poscion anterior de cada persona
+	//estas guardaran la posicion anterior de cada persona, para comprobar si se ha movido
 	SNGPerson personaux1;
 	SNGPerson personaux2;
 	SNGPerson personaux3;
 	SNGPerson personaux4;
 	SNGPerson personaux5;
 	SNGPerson personaux6;
+	//bool para saber si se ha movido alguna persona
+	bool movperson = false;
 	
 	//PARA ALMACENAR EL SIMBOLO DE LA PERSONA AL LEERLA DEL MUNDO
 	int32_t personSymbolIdp1;
@@ -88,8 +92,7 @@ public:
 	bool p4=false;
 	bool p5=false;
 	bool p6=false;
-	//bool para saber si se ha movido alguna persona
-	bool movperson = false;
+
 	//PARA GUARDAR LOS DATOS EN UN ARCHIVO
 
 	struct Punto {

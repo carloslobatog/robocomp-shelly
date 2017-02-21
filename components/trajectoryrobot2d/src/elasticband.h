@@ -126,6 +126,12 @@ class ElasticBand
 		float ROBOT_RADIUS;
 		float ATRACTION_FORCE_COEFFICIENT;
 		float REPULSION_FORCE_COEFFICIENT;
+		
+		
+		
+	
+		
+		
 
 };
 

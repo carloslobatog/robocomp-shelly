@@ -86,8 +86,17 @@ qDebug("escribimos en el fichero personpose.txt la pose de las personas");
 		fichero2<< person.x << " " <<person.z<<" "<<person.angle<< endl;
 	}
 	fichero2.close();	
+	poserobot.clear();
 	
-  poserobot.clear();
+	qDebug("escribimos en el fichero poly.txt la polilinea");
+  	ofstream fichero3("poly.txt", ofstream::out);
+	for (auto s:secuencia){
+		for (auto p: s){
+			fichero3<< p.x << " " <<p.z<<" "<< endl;
+		}
+	}
+	
+	fichero3.close();	
 }
 
 
@@ -111,7 +120,9 @@ SNGPolylineSeq SpecificWorker::gauss(bool dibujar)
 	persons.push_back(person6);
 	
 	totalpersons=persons;
-	SNGPolylineSeq secuencia = socialnavigationgaussian_proxy->getPolylines(persons, valorprox, dibujar);
+	
+	secuencia.clear();
+	secuencia = socialnavigationgaussian_proxy->getPolylines(persons, valorprox, dibujar);
 /*	
  * 	
 

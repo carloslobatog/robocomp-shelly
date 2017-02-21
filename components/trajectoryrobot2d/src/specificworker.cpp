@@ -108,6 +108,8 @@ void SpecificWorker::compute()
 {
 	static QTime reloj = QTime::currentTime();
 
+	flagLaser = false;
+	
 	// Check for connection failure
 	if (updateInnerModel(innerModel, tState) == false)
 	{
@@ -689,18 +691,14 @@ qDebug()<<"La polilinea ha llegado";
 
 TLaserData SpecificWorker::getLaserData()
 {
-	qDebug()<<"Me piden el laser";
-	TLaserData ld;
-	for(int i=0; i<100; i++)
-	{
-		TData tdata = {45, 1.5};
-		ld.push_back(tdata);
-	}
-	return ld;
+//	qDebug()<<"Me piden el laser";
+
+	return laserData;
 }
 TLaserData SpecificWorker::getLaserAndBStateData(TBaseState& bState)
 {
-	qDebug() << " hola desde getlaserdata";
+	//qDebug() << " hola desde getlaserdata";
+	while( flagLaser == false)
 	bState = this->bState;
 	return laserData;
 }
@@ -835,10 +833,10 @@ bool SpecificWorker::updateInnerModel(InnerModel *inner, TrajectoryState &state)
 	{
 	//	printf("Escribiendo a laserantes\n");
 		laserData = laser_proxy->getLaserData();
- 		//fichero(laserData,"laserantes.txt");
+ 	//	fichero(laserData,"laserantes.txt");
 		laserData = elasticband.unionpoligonos(laserData, safePolyList, inner);
- 		//fichero(laserData,"laserdespues.txt");
-		//ficheroP(safePolyList.read(),"poly.txt", inner); 
+ 	//	fichero(laserData,"laserdespues.txt");
+	//	ficheroP(safePolyList.read(),"poly.txt", inner); 
 	//	printf("Escribiendo a laserdespues\n");
  	}
 	catch (const Ice::Exception &ex)
@@ -855,6 +853,8 @@ bool SpecificWorker::updateInnerModel(InnerModel *inner, TrajectoryState &state)
 		currentTarget.state = CurrentTarget::State::IDLE;
 		timer.setInterval(Period);
 	}
+	
+	flagLaser =true;
 	return true;
 }
 

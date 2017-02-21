@@ -1,4 +1,4 @@
-CommonBehavior.Endpoints=tcp -p 19000
+CommonBehavior.Endpoints=tcp -p 15299
 
 
 # Endpoints for implemented interfaces
@@ -6,21 +6,19 @@ TrajectoryRobot2D.Endpoints=tcp -p 19204
 Laser.Endpoints=tcp -p 19205
 
 # Proxies for required interfaces
-LaserProxy = laser:tcp -h robonuc1.local -p 10003
-OmniRobotProxy = omnirobot:tcp -h robonuc1.local -p 12238
-#LaserProxy = laser:tcp -h localhost -p 10003
-#OmniRobotProxy = omnirobot:tcp -h localhost -p 12238
+LaserProxy = laser:tcp -h localhost -p 10003
+OmniRobotProxy = omnirobot:tcp -h localhost -p 12238
 
 TrajectoryRobot2D.InnerModel = /home/robocomp/mirobocomp/robocomp-shelly/etcSim/simulation.xml
 TrajectoryRobot2D.ArrivalTolerance = 20
 
-TrajectoryRobot2D.MaxZSpeed = 300
-TrajectoryRobot2D.MaxXSpeed = 300
-TrajectoryRobot2D.MaxRotationSpeed = 0.4
+TrajectoryRobot2D.MaxZSpeed = 350.5
+TrajectoryRobot2D.MaxXSpeed = 150
+TrajectoryRobot2D.MaxRotationSpeed = 0.3
 
 TrajectoryRobot2D.RobotXWidth = 500
 TrajectoryRobot2D.RobotZLong = 500
-TrajectoryRobot2D.RoborRadius = 300
+TrajectoryRobot2D.RobotRadius = 300
 
 TrajectoryRobot2D.MinControllerPeriod = 100
 
@@ -30,18 +28,25 @@ TrajectoryRobot2D.PlannerGraphMaxDistanceToSearch = 2500 #mm
 
 TrajectoryRobot2D.ExcludedObjectsInCollisionCheck = floor_plane, gualzru_mesh, personbot_mesh
 
+
+TrajectoryRobot2D.OuterRegionLeft = -500
+TrajectoryRobot2D.OuterRegionRight = 9500
+TrajectoryRobot2D.OuterRegionBottom = -500
+TrajectoryRobot2D.OuterRegionTop = 9500
+
 #TrajectoryRobot2D.OuterRegionLeft = 0
 #TrajectoryRobot2D.OuterRegionRight = 6000
 #TrajectoryRobot2D.OuterRegionBottom = -4250
 #TrajectoryRobot2D.OuterRegionTop = 4250
 
-TrajectoryRobot2D.OuterRegionLeft = -10000
-TrajectoryRobot2D.OuterRegionRight = 10000
-TrajectoryRobot2D.OuterRegionBottom = -10000
-TrajectoryRobot2D.OuterRegionTop = 10000
+TrajectoryRobot2D.MinimunDetectableRotation = 0.03			# to accept a new target
+TrajectoryRobot2D.MinimunDetectableTranslation = 7 			# to accept a new target
+
 
 Ice.Warn.Connections=0
 Ice.Trace.Network=0
 Ice.Trace.Protocol=0
 Ice.ACM.Client=10
 Ice.ACM.Server=10
+
+

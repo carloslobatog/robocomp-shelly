@@ -247,6 +247,7 @@ class SpecificWorker : public GenericWorker
 		
 		void fichero(TLaserData laser, string path);
 		void ficheroP(LocalPolyLineList p, string path, InnerModel *innermodel);
+		bool flagLaser = false;
 
 };
 

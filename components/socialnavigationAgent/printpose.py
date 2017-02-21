@@ -31,18 +31,29 @@ with open(sys.argv[2], 'r') as f:
         ath.append(th)
 
     for i in range(len(ax)):
-        body = plt.Circle((ax[i], ay[i]), radius=0.40, fill=False)
+        body = plt.Circle((ax[i], ay[i]), radius=0.35, fill=False)
         plt.gca().add_patch(body)
 
 
-        x_aux = ax[i] + 0.40* cos(pi/2 - ath[i]);
+        x_aux = ax[i] + 0.35* cos(pi/2 - ath[i]);
 
-        y_aux = ay[i] + 0.40 * sin(pi/2 - ath[i]);
+        y_aux = ay[i] + 0.35 * sin(pi/2 - ath[i]);
 
         heading = plt.Line2D((ax[i], x_aux), (ay[i], y_aux), lw=1, color='k')
         plt.gca().add_line(heading)
 
-#plt.plot(ax, ay, 'go')
+
+with open(sys.argv[3], 'r') as f:
+    ax = []
+    ay = []
+    lines = f.readlines()
+    for l in lines:
+        parts = l.split()
+        x = parts[0]
+        y = parts [1]
+        ax.append(x)
+        ay.append(y)
+plt.plot(ax, ay, 'go')
 
 
 plt.xlim([0,10])
