@@ -56,7 +56,7 @@ void SpecificWorker::includeInRCIS()
 		pose.y = 0;
 		pose.z = 4500;
 		pose.rx =0;
-		pose.ry =1.6275;
+		pose.ry =1.57;
 		pose.rz = 0;
 		innermodelmanager_proxy->addTransform("fakeperson5", "static", "root", pose);
 
@@ -126,7 +126,7 @@ void SpecificWorker::includeInAGM()
 	edgeRTAtrs["ty"] = "0";
 	edgeRTAtrs["tz"] = "4500";
 	edgeRTAtrs["rx"] = "0";
-	edgeRTAtrs["ry"] = "1.6275";
+	edgeRTAtrs["ry"] = "1.57";
 	edgeRTAtrs["rz"] = "0";
 	newModel->addEdgeByIdentifiers(100, person5->identifier, "RT", edgeRTAtrs);
 
