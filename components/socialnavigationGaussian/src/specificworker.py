@@ -57,38 +57,41 @@ def getPolyline(grid, resolution, lx_inf, ly_inf):
 
         points = np.asarray(lista)
         hull = ConvexHull(points)
-       # ret.append(points[hull.vertices])
+        #ret.append(points[hull.vertices])
 
         # interpolar los puntos
-
+        threshold = 0.1
+        #print '-----------------', threshold
         v = []
         prev = points[hull.vertices][-1]
         for curr in points[hull.vertices]:
             dx = curr[0] - prev[0]
             dy = curr[1] - prev[1]
             dist = math.sqrt(dx * dx + dy * dy)
+         #   print prev, curr, dist
 
-            if dist > 0.2:
-                iters = dist / 0.2
-                for iter in range(int(iters)):
-                    wx = prev[0] + 0.2 * iter * dx
-                    wy = prev[1] + 0.2 * iter * dy
+            if dist > threshold:
+                iters = dist / threshold
+          #      print 'dentro', iters, 'dx', dx, 'dy', dy
+                for iter in xrange(int(iters)):
+                    wx = prev[0] + iter * dx / iters
+                    wy = prev[1] + iter * dy / iters
+           #         print '  ', wx, wy
+                    #dx2 = wx - curr[0]
+                    #dy2 = wy - curr[1]
+                    #dist2 = math.sqrt(dx2 * dx2 + dy2 * dy2)
 
-                    dx2 = wx - curr[0]
-                    dy2 = wy - curr[1]
-                    dist2 = math.sqrt(dx2 * dx2 + dy2 * dy2)
-
-                    if dist2 > 0.2:
-                        v.append([wx, wy])
-
-                    else:
-                        break
-
+                    #if dist2 > threshold + 0.001:
                     #v.append([wx, wy])
+
+                   # else:
+                    #    break
+
+                    v.append([wx, wy])
             v.append(curr)
             prev = curr
-        ret.append(v)
 
+        ret.append(v)
 
 
     return ret
@@ -189,9 +192,11 @@ class Person(object):
         sigma_s = 4/3
         """
         ##he cambiado el valor de las sigmas porque la gaussiana que dibujaba con las anteriores era muy grande
+
         sigma_h = 4
         sigma_r = 2
         sigma_s = 2*4/3
+
 
         rot = pi/2 - self.th
 
@@ -285,7 +290,7 @@ class SpecificWorker(GenericWorker):
             pn = Person(p.x, p.z, p.angle)
             #print('Pose x', pn.x, 'Pose z', pn.y, 'Rotacion', pn.th)
             pn.draw(v, drawPersonalSpace=dibujar)
-            #normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 2.0, 1.0, 4/3], elliptical=True))
+            #normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 2.0, 2.0, 2.0], elliptical=True))
             normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 4, 2, 2*4/3], elliptical=True))
         #print ("numero de gaussianas",len(normals))
 
@@ -337,6 +342,7 @@ class SpecificWorker(GenericWorker):
                     plt.xlabel('X')
                     plt.ylabel('Y')
             plt.show()
+
 
 
 

@@ -53,7 +53,7 @@ with open(sys.argv[3], 'r') as f:
         y = parts [1]
         ax.append(x)
         ay.append(y)
-plt.plot(ax, ay, 'go')
+plt.plot(ax, ay, 'g.')
 
 
 plt.xlim([0,10])

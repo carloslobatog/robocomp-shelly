@@ -31,7 +31,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	worldModel->name = "worldModel";
 	innerModel = new InnerModel();
 
-	humanAdvVel = 25;
+	humanAdvVel = 50;
 	humanRot = 0;
 	setWindowTitle("Humanfake 5");
 	

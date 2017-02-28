@@ -231,13 +231,73 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 	LocalPolyLineList l = safePolyList.read(); 
 	
 
+	for (auto polyline : l)
+	{
+		float min = std::numeric_limits<float>::max();
+		float max = std::numeric_limits<float>::min(); 
+		for (auto polylinePoint: polyline)
+		{
+			LocalPointPol lPol;
+			QVec pInLaser = innermodel->transform("laser", QVec::vec3(polylinePoint.x, 0, polylinePoint.z)*(float)1000, "world");
+			lPol.dist  = sqrt(pInLaser.x()*pInLaser.x() + pInLaser.z()*pInLaser.z());
+			lPol.angle = atan2(pInLaser.x(), pInLaser.z());	
+			if( lPol.angle < min ) min = lPol.angle;
+			if( lPol.angle > max ) max = lPol.angle;
+		}
+
+		for (auto &laserSample: laserCombined)
+		{
+			if (laserSample.angle >= min and laserSample.angle <= max and fabs(max-min)<3.14) 
+			{
+				auto previousPoint = polyline[polyline.size()-1];
+				QVec previousPointInLaser = innermodel->transform("laser", (QVec::vec3(previousPoint.x, 0, previousPoint.z)).operator*(1000), "world");
+				float pDist  = sqrt(previousPointInLaser.x()*previousPointInLaser.x() + previousPointInLaser.z()*previousPointInLaser.z());
+				float pAngle = atan2(previousPointInLaser.x(), previousPointInLaser.z());
+				// For each polyline's point
+				for (auto polylinePoint: polyline)
+				{
+					QVec currentPointInLaser = innermodel->transform("laser", (QVec::vec3(polylinePoint.x, 0, polylinePoint.z)).operator*(1000), "world");
+					float cDist  = sqrt(currentPointInLaser.x()*currentPointInLaser.x() + currentPointInLaser.z()*currentPointInLaser.z());
+					float cAngle = atan2(currentPointInLaser.x(), currentPointInLaser.z());
+
+					const float m = std::min<float>(cAngle, pAngle);
+					const float M = std::max<float>(cAngle, pAngle);
+					//printf("angulo: %f   p:%f  c:%f\n", laserSample.angle, cAngle, pAngle);
+					if (laserSample.angle >= m and laserSample.angle <= M and fabs(M-m)<3.14)
+					{
+					//	printf("dentro\n");
+						float mean = (cDist + pDist) / 2.;
+						
+						if (mean<laserSample.dist) laserSample.dist = mean;
+					}
+					pDist = cDist;
+					pAngle = cAngle;
+				}
+			}
+		}
+	}
+	return laserCombined;
+} 
+
+
+/*
+ * ARECELI NO SE FIA DE LUIS
+RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData laserData, SafePolyList &safePolyList, InnerModel *innermodel)
+{
+	RoboCompLaser::TLaserData laserCombined; 
+	laserCombined = laserData;
+	
+	// For each polyline
+	LocalPolyLineList l = safePolyList.read(); 
+	
+
 	for (auto &laserSample: laserCombined)
 	{
 		for (auto polyline : l)
 		{
 			auto previousPoint = polyline[polyline.size()-1];
 			QVec previousPointInLaser = innermodel->transform("laser", (QVec::vec3(previousPoint.x, 0, previousPoint.z)).operator*(1000), "world");
-			float pDist  = std::sqrt(previousPointInLaser.x()*previousPointInLaser.x() + previousPointInLaser.z()*previousPointInLaser.z());
+			float pDist  = sqrt(previousPointInLaser.x()*previousPointInLaser.x() + previousPointInLaser.z()*previousPointInLaser.z());
 			float pAngle = atan2(previousPointInLaser.x(), previousPointInLaser.z());
 			// For each polyline's point
 			for (auto polylinePoint: polyline)
@@ -253,6 +313,7 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 				{
 				//	printf("dentro\n");
 					float mean = (cDist + pDist) / 2.;
+					
 					if (mean<laserSample.dist) laserSample.dist = mean;
 				}
 				pDist = cDist;
@@ -262,7 +323,7 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 	}
 	return laserCombined;
 } 
-
+*/
 bool ElasticBand::addPoints(WayPoints &road, const CurrentTarget &currentTarget)
 {
 	if( road.size() < 2) 
