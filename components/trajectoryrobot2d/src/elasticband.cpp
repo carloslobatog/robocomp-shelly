@@ -281,7 +281,7 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 
 
 /*
- * ARECELI NO SE FIA DE LUIS
+ * ARACELI NO SE FIA DE LUIS
 RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData laserData, SafePolyList &safePolyList, InnerModel *innermodel)
 {
 	RoboCompLaser::TLaserData laserCombined; 
