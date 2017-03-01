@@ -119,7 +119,18 @@ void SpecificWorker::compute()
 		tState.setDescription("Disconnected");
 		currentTarget.state = CurrentTarget::State::DISCONNECTED;
 	}
-		
+	
+	if(newPolyline)
+	{
+		if ( plannerPRM.updateGraph(safePolyList.read()) == true)
+		{
+			#ifdef USE_QTGUI
+				//graphdraw.draw(plannerPRM, viewer);
+			#endif
+		}
+		newPolyline = false;
+	}
+	
 	switch (currentTarget.state)
 	{
 		case CurrentTarget::State::STOP:
@@ -669,24 +680,10 @@ float SpecificWorker::goBackwards(const TargetPose &target)
 void SpecificWorker::setHumanSpace(const PolyLineList& polyList)
 {
   
-qDebug()<<"La polilinea ha llegado";
-//   qDebug() << "------------------------------------------------------------";  
-//   for(auto l: polyList)
-//   {
-//     qDebug() << "Polilinea:";
-//     for(auto p: l)
-//       qDebug() << "	punto" << p.x << p.z;
-//   }
-  safePolyList.write(polyList);
+	qDebug()<<"La polilinea ha llegado";
+	safePolyList.write(polyList);
+	newPolyline=true;
   
-  
-///////////////ESTO ESTA BIEN//////////////
-//   for(auto poli:safePolyList.read()){
-//       qDebug() << "PolilineaSAFE:";
-//       for(auto punto:poli){
-//       qDebug() << "	punto" << punto.x << punto.z;
-//    }
-//   }
 }
 
 TLaserData SpecificWorker::getLaserData()
@@ -814,6 +811,7 @@ void SpecificWorker::ficheroP(LocalPolyLineList polylines, string path, InnerMod
 }
 
 
+
 bool SpecificWorker::updateInnerModel(InnerModel *inner, TrajectoryState &state)
 {
 	try
@@ -836,7 +834,7 @@ bool SpecificWorker::updateInnerModel(InnerModel *inner, TrajectoryState &state)
  	//	fichero(laserData,"laserantes.txt");
 	
 	//	QTime tiempo = QTime::currentTime();
-	//	laserData = elasticband.unionpoligonos(laserData, safePolyList, inner);
+		laserData = elasticband.unionpoligonos(laserData, safePolyList, inner);
 	//	cout << "tardamos (ms) " << tiempo.elapsed() << endl;
 	//	
  	//	fichero(laserData,"laserdespues.txt");

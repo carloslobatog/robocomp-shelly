@@ -125,20 +125,20 @@ static QTime reloj = QTime::currentTime();
 		qDebug() << "	reason: " << (getRobotDistanceToTarget() < threshold) << " distance: "<<getRobotDistanceToTarget() << getRobotDistanceVariationToTarget();
 		setFinished(true);
 	}
-  else
+    else
 	{
 		///////////////////////////////////////////
 		//Check for blocked road
 		///////////////////////////////////////////
-		qDebug() << __FUNCTION__ << "ROAD: Robot distance to last visible" << getRobotDistanceToLastVisible();
+		qDebug() << __FUNCTION__ << "ROAD: Robot distance to last visible" << getRobotDistanceToLastVisible() << (getIterToLastVisiblePoint() < this->end());
 		//print();
-		if( getRobotDistanceToLastVisible() < 150  and   			//PARAMS
+		if( getRobotDistanceToLastVisible() < 250  and   			//PARAMS
 			  getIterToLastVisiblePoint() < this->end())
-{
-		qDebug()<<"BLOCKED";
-			qDebug()<<"distanceToLastVisible"<<getRobotDistanceToLastVisible();
+		{
+			qDebug()<<"BLOCKED" << "distanceToLastVisible" << getRobotDistanceToLastVisible();
 			setBlocked(true);
-}
+			qFatal("BLOCKED");
+		}	
 		else
 			setBlocked(false);
 	}

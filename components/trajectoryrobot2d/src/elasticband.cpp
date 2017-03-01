@@ -81,12 +81,6 @@ bool ElasticBand::update(InnerModel *innermodel, WayPoints &road, const RoboComp
 	//qDebug() << __FILE__ << __FUNCTION__ << "road size"<<  road.size();
 	if (road.isFinished() == true)
 		return false;
-
-	/////////////////////////////////////////////
-	////////////// Union de poligonos////////////
-       //////////////////////////////////////////////
-	//RoboCompLaser::TLaserData myLaser = unionpoligonos(laserData, safePolyList,innermodel); 
-
 	
 	/////////////////////////////////////////////
 	//Tags all points in the road ar visible or blocked, depending on laser visibility. Only visible points are processed in this iteration
@@ -235,6 +229,7 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 	{
 		float min = std::numeric_limits<float>::max();
 		float max = std::numeric_limits<float>::min(); 
+		
 		for (auto polylinePoint: polyline)
 		{
 			LocalPointPol lPol;

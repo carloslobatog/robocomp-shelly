@@ -45,6 +45,11 @@
 #include "sampler.h"
 #include <qlog/qlog.h>
 #include "plannerompl.h"
+#include <QPolygon>
+#include <QPoint>
+#include "safepolylist.h"
+
+
 
 struct VertexPayload
 {	
@@ -96,6 +101,8 @@ class PlannerPRM
 		void connectedComponents( ComponentMap &componentMap, ConnectedComponents &comps, bool print = false) const;
 	
 		Graph graph;
+		
+		bool updateGraph (LocalPolyLineList Polylines);
 			
 	private:
 		InnerModel innerPlanner;

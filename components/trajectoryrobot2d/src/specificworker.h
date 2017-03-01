@@ -247,7 +247,9 @@ class SpecificWorker : public GenericWorker
 		
 		void fichero(TLaserData laser, string path);
 		void ficheroP(LocalPolyLineList p, string path, InnerModel *innermodel);
-		bool flagLaser = false;
+		bool flagLaser = false; //bool para pintar en el monitor
+		
+		bool newPolyline = false; // Para idicar que la polilinea se ha modificado. Lo necesitamos para el planner
 
 };
 

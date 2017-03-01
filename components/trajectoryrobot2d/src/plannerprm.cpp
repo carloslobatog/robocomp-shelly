@@ -280,6 +280,37 @@ bool PlannerPRM::planWithRRT(const QVec &origin, const QVec &target, QList<QVec>
  * @param targetVertex ...
  * @return void
  */
+
+bool PlannerPRM::updateGraph (LocalPolyLineList Polylines)
+{
+	bool modified = false;
+	for (auto poly:Polylines)
+	{
+		QPolygonF qp;
+		
+		
+		for (auto p:poly)
+		{
+			qp << QPointF(p.x*1000,p.z*1000);
+		}
+		//recorrer grafo
+		BGL_FORALL_VERTICES(v, graph, Graph)
+		{
+			//qDebug() << "vertice id" << graph[v].vertex_id << graph[v].pose; 
+			//qDebug()<<"----------------------------------------------------";
+			
+			if (qp.containsPoint(QPointF(graph[v].pose[0],graph[v].pose[2]),Qt::OddEvenFill))
+			{
+				//boost::clear_vertex( v, graph);
+				//boost::remove_vertex(v, graph);
+				//qDebug() << "Borrado punto " << graph[v].vertex_id;
+				modified = true;
+			}		
+		}
+	}
+	return modified;
+}
+
 void PlannerPRM::searchClosestPoints(const QVec& origin, const QVec& target, Vertex& originVertex, Vertex& targetVertex)
 {
 	qDebug() << __FUNCTION__ << "Searching from " << origin << "and " << target;

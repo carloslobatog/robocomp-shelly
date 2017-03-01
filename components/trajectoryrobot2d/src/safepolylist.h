@@ -4,6 +4,8 @@
 
 #include <math.h>
 #include <innermodel/innermodel.h>
+#include <TrajectoryRobot2D.h>
+
 
 typedef struct { float x; float z;} LocalPoint;
 typedef struct { float dist; float angle;} LocalPointPol;
