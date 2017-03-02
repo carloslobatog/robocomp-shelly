@@ -64,7 +64,7 @@ bool Controller::update(InnerModel *innerModel, RoboCompLaser::TLaserData &laser
 		stopTheRobot(omnirobot_proxy);
 		return false;
 	}
-	if(road.requiresReplanning == true ) 
+	if(road.getRequiresReplanning() == true ) 
 	{		
 		qDebug() << __FUNCTION__ << "CONTROLLER: requiresReplanning. Returning to main";
 		stopTheRobot(omnirobot_proxy);

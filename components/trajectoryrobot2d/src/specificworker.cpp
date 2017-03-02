@@ -100,6 +100,18 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 };
 
 
+void SpecificWorker::updateObstacles()
+{
+	//Borrar todos los newobs_X que existan del innermodel y del innermodel viewer
+	
+	//Crear obs por cada polinena
+	InnerModelMesh *newobs = innerModel->newMesh("","world", "/home/robocomp/robocomp/files/osgModels/table.osg", max, 1600, max, 1, tx, 0, tz, 0, 0, 0, true);
+	//añadiirll al innermodel
+	//añadir al innermodelvierwer
+	
+}
+		
+
 /**
  * @brief Main execution loop. Checks if there is an active target
  * @return void
@@ -122,11 +134,14 @@ void SpecificWorker::compute()
 	
 	if(newPolyline)
 	{
+		qDebug()<<"Nueva polilinea. Actualizamos grafo";
 		if ( plannerPRM.updateGraph(safePolyList.read()) == true)
 		{
+			qDebug()<<"Se ha modificado el grafo";
 			#ifdef USE_QTGUI
-				//graphdraw.draw(plannerPRM, viewer);
+				graphdraw.draw(plannerPRM, viewer);
 			#endif
+				
 		}
 		newPolyline = false;
 	}
@@ -148,14 +163,14 @@ void SpecificWorker::compute()
 			setHeadingCommand(innerModel, currentTarget.getRotation().y(), currentTarget, tState, road);
 			break;		
 		case CurrentTarget::State::BLOCKED:
-				road.update();
-				
-				elasticband.update(innerModel, road, laserData, currentTarget, safePolyList);
-				
-				if( road.isBlocked() == false)
-					currentTarget.setState(CurrentTarget::State::GOTO);
-				else
-					qDebug() << __FUNCTION__ << "Blocked";
+			road.update();		
+			elasticband.update(innerModel, road, laserData, currentTarget, safePolyList);	
+			if( road.isBlocked() == true)
+			{
+				qDebug() << __FUNCTION__ << "Blocked. Calling replanning";
+				road.setRequiresReplanning(true);
+			}
+			currentTarget.setState(CurrentTarget::State::GOTO);	
 			break;
 		case CurrentTarget::State::GOBACKWARDS:
 			goBackwardsCommand(innerModel, currentTargetBack, currentTarget, tState, road);
@@ -279,17 +294,24 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 		return true;
 	}
 	//Check if road is blocked and the robot is moving forward.
- 	if (myRoad.isBlocked() == true and bState.advVz > 10)		//Road BLOCKED, go to BLOCKED state and wait it the obstacle moves PARAMS
- 	{
-		controller->stopTheRobot(omnirobot_proxy);
- 		target.setState(CurrentTarget::State::BLOCKED);
-		state.setState("BLOCKED");
-		return false;
- 	}
- 	else
+//  	if (myRoad.isBlocked() == true and bState.advVz > 10)		//Road BLOCKED, go to BLOCKED state and wait it the obstacle moves PARAMS
+//  	{
+// 		controller->stopTheRobot(omnirobot_proxy);
+//  		target.setState(CurrentTarget::State::BLOCKED);
+// 		state.setState("BLOCKED");
+// 		return false;
+//  	}
+// 		else
+// 		{
+// 			target.setState(CurrentTarget::State::GOTO);
+// 			state.setState("EXECUTING");
+// 		}
+		
+	if (myRoad.isBlocked() == true )	//Road BLOCKED, go to BLOCKED state and wait it the obstacle moves PARAMS
 	{
-		target.setState(CurrentTarget::State::GOTO);
-		state.setState("EXECUTING");
+		controller->stopTheRobot(omnirobot_proxy);
+		target.setWithoutPlan(true);
+		myRoad.setBlocked(false);
 	}
 		
 	qDebug() << __FUNCTION__ << "GOTO:" << "Robot at:" << innerModel->transform6D("world", "robot") << "Target:" << currentTarget.getFullPose();
@@ -324,7 +346,7 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 		//Init road   REMOVE TRASH FROM HERE
 		myRoad.reset();
 		myRoad.readRoadFromList(plannerPRM.getPath());
-		myRoad.requiresReplanning = false;
+		myRoad.setRequiresReplanning(false);
 		myRoad.computeDistancesToNext();
 		myRoad.startRoad();
 		state.setPlanningTime(reloj.elapsed());
@@ -450,7 +472,7 @@ bool SpecificWorker::goBackwardsCommand(InnerModel *innerModel, CurrentTarget &c
 	if ((error < MAX_POSITIONING_ERROR) or (errorIncreasing == true))        //TASK IS FINISHED
 	{
 		controller->stopTheRobot(omnirobot_proxy);
-		myRoad.requiresReplanning = true;
+		myRoad.setRequiresReplanning(true);
 		currentT.setWithoutPlan(true);
 		currentT.setState(CurrentTarget::State::GOTO);
 		errorAnt = std::numeric_limits<float>::max();
@@ -791,24 +813,24 @@ void SpecificWorker::mapBasedTarget(const NavigationParameterMap &parameters)
  * @param inner InnerModel that is to be updated
  * @return bool
  */
-void SpecificWorker::fichero(TLaserData laser, string path){
-	ofstream fichero(path, ofstream::out);
-	for (auto l:laser){
-		fichero<< l.angle << " " <<l.dist<< endl;
-	}
-	fichero.close();
-}
-void SpecificWorker::ficheroP(LocalPolyLineList polylines, string path, InnerModel *innermodel){
-	ofstream fichero(path, ofstream::out);
-	for (auto p:polylines){
-		for (auto l:p){
-			QVec point_poli = innermodel->transform("laser", (QVec::vec3(l.x, 0, l.z)).operator*(1000), "world");
-			fichero<< point_poli.x() << " " <<point_poli.z()<< endl;
-			
-		}
-	}
-	fichero.close();
-}
+// void SpecificWorker::fichero(TLaserData laser, string path){
+// 	ofstream fichero(path, ofstream::out);
+// 	for (auto l:laser){
+// 		fichero<< l.angle << " " <<l.dist<< endl;
+// 	}
+// 	fichero.close();
+// }
+// void SpecificWorker::ficheroP(LocalPolyLineList polylines, string path, InnerModel *innermodel){
+// 	ofstream fichero(path, ofstream::out);
+// 	for (auto p:polylines){
+// 		for (auto l:p){
+// 			QVec point_poli = innermodel->transform("laser", (QVec::vec3(l.x, 0, l.z)).operator*(1000), "world");
+// 			fichero<< point_poli.x() << " " <<point_poli.z()<< endl;
+// 			
+// 		}
+// 	}
+// 	fichero.close();
+// }
 
 
 

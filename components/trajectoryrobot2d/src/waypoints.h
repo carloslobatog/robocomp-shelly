@@ -158,34 +158,36 @@ class WayPoints : public QList< WayPoint >
 		 * 
 		 * @return bool
 		 */
-		bool atLastPoint() const 																									{ return (int)(getIndexOfCurrentPoint()+1) == size();}
+		bool atLastPoint() const 																			{ return (int)(getIndexOfCurrentPoint()+1) == size();}
+		void setRequiresReplanning(bool v)																	{ requiresReplanning = v;}
+		bool getRequiresReplanning()																		{ return requiresReplanning; }
 		QLine2D roadTangentAtClosestPoint;
 		float getAngleWithTangentAtClosestPoint() const														{ return angleWithTangentAtClosestPoint;};
-		uint getIndexOfCurrentPoint() const																				{ return indexOfCurrentPoint;};
-		uint getIndexOfNextPoint() const																					{ return indexOfNextPoint;};
-		WayPoint getCurrentPoint() const   	    							                		{ return (*this)[indexOfCurrentPoint];};
+		uint getIndexOfCurrentPoint() const																	{ return indexOfCurrentPoint;};
+		uint getIndexOfNextPoint() const																	{ return indexOfNextPoint;};
+		WayPoint getCurrentPoint() const   	    							                				{ return (*this)[indexOfCurrentPoint];};
 		WayPoint getNextPoint() const	    							                 					{ return (*this)[indexOfNextPoint];};
-		float getRoadCurvatureAtClosestPoint() const															{ return roadCurvatureAtClosestPoint;};
-		float getRobotDistanceToTarget() const																		{ return robotDistanceToTarget;};
-		float getRobotDistanceToLastVisible() const																{ return robotDistanceToLastVisible;};
+		float getRoadCurvatureAtClosestPoint() const														{ return roadCurvatureAtClosestPoint;};
+		float getRobotDistanceToTarget() const																{ return robotDistanceToTarget;};
+		float getRobotDistanceToLastVisible() const															{ return robotDistanceToLastVisible;};
 		float getRobotDistanceVariationToTarget() const 													{ return robotDistanceVariationToTarget;};
-		ulong getETA() const 																											{ return estimatedTimeOfArrival;};
-		WayPoints::iterator getIterToLastVisiblePoint() const											{ return iterToLastVisiblePoint;};
+		ulong getETA() const 																				{ return estimatedTimeOfArrival;};
+		WayPoints::iterator getIterToLastVisiblePoint() const												{ return iterToLastVisiblePoint;};
 		uint32_t getIndexOfClosestPointToRobot() const														{ return indexOfClosestPointToRobot;};
-		bool isBlocked() const																										{ return blockedRoad;};
-		bool isFinished() const                                                   { return finish;};
-		bool isVisible(int i) const  																					    { if( i>=0 and i< this->size()) return (*this)[i].isVisible; else return false;};
-		void setFinished( bool b)																									{ QMutexLocker ml(&mutex); finish = b; }
-		void setBlocked(bool b)																										{ blockedRoad = b;};
+		bool isBlocked() const																				{ return blockedRoad;};
+		bool isFinished() const                                                   							{ return finish;};
+		bool isVisible(int i) const  																		{ if( i>=0 and i< this->size()) return (*this)[i].isVisible; else return false;};
+		void setFinished( bool b)																			{ QMutexLocker ml(&mutex); finish = b; }
+		void setBlocked(bool b)																				{ blockedRoad = b;};
 		
 		int indexOfNextPoint = 1;
 		bool blockedRoad = false;
 		bool isLost = false;
 		int currentCollisionIndex = 0;
 		float currentDistanceToFrontier = 0;
-		bool requiresReplanning = false;
-	
+		
 	private:
+		bool requiresReplanning;
 		float robotDistanceToClosestPoint = 0.f;
 		float robotPerpendicularDistanceToRoad = 0.f;
 		WayPoints::iterator iterToClosestPointToRobot, iterToLastVisiblePoint;

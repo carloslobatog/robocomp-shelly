@@ -287,9 +287,9 @@ bool PlannerPRM::updateGraph (LocalPolyLineList Polylines)
 	for (auto poly:Polylines)
 	{
 		QPolygonF qp;
+		std::vector<Vertex> listtoremove;
 		
-		
-		for (auto p:poly)
+		for (auto p:poly.p)
 		{
 			qp << QPointF(p.x*1000,p.z*1000);
 		}
@@ -301,11 +301,20 @@ bool PlannerPRM::updateGraph (LocalPolyLineList Polylines)
 			
 			if (qp.containsPoint(QPointF(graph[v].pose[0],graph[v].pose[2]),Qt::OddEvenFill))
 			{
-				//boost::clear_vertex( v, graph);
-				//boost::remove_vertex(v, graph);
-				//qDebug() << "Borrado punto " << graph[v].vertex_id;
+				listtoremove.push_back(v);
+			}	
+			
+		}
+		qDebug()<<"Voy a borrar"<<listtoremove.size()<<"Vertices";
+		qDebug() <<  "Quedan" <<  boost::num_vertices(graph) << "vertices en el grafo";
+  
+		
+		for (auto v:listtoremove)
+		{	
+				boost::clear_vertex( v, graph);
+				boost::remove_vertex(v, graph);	
 				modified = true;
-			}		
+				qDebug()<<"listo";
 		}
 	}
 	return modified;

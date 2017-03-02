@@ -137,13 +137,13 @@ static QTime reloj = QTime::currentTime();
 		{
 			qDebug()<<"BLOCKED" << "distanceToLastVisible" << getRobotDistanceToLastVisible();
 			setBlocked(true);
-			qFatal("BLOCKED");
+			//qFatal("BLOCKED");
 		}	
 		else
 			setBlocked(false);
 	}
 	
-	printRobotState(innerModel);
+	//printRobotState(innerModel);
 	//print();
 }
 
