@@ -1,7 +1,7 @@
 <innermodel>
 	<include path="/home/araceli/mirobocomp/robocomp-shelly/etc/shelly.xml"/>
-<!--	<include path="/home/araceli/mirobocomp/robocomp-shelly/etc/autonomyLab.xml"/>  -->
-	<include path="/home/araceli/mirobocomp/robocomp-shelly/etc/pruebasLab.xml"/>
+	<include path="/home/araceli/mirobocomp/robocomp-shelly/etc/autonomyLab.xml"/>  
+<!--	<include path="/home/araceli/mirobocomp/robocomp-shelly/etc/pruebasLab.xml"/>-->
 <!--	<include path="/home/robocomp/robocomp/components/robocomp-shelly/etc/gualzru.xml"/>  -->
 </innermodel>
 

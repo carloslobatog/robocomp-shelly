@@ -99,18 +99,18 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	return true;
 };
 
-
-void SpecificWorker::updateObstacles()
-{
-	//Borrar todos los newobs_X que existan del innermodel y del innermodel viewer
-	
-	//Crear obs por cada polinena
-	InnerModelMesh *newobs = innerModel->newMesh("","world", "/home/robocomp/robocomp/files/osgModels/table.osg", max, 1600, max, 1, tx, 0, tz, 0, 0, 0, true);
-	//añadiirll al innermodel
-	//añadir al innermodelvierwer
-	
-}
-		
+/////////////////NOS QUEDAMOS AQUI/////////////////////
+// void SpecificWorker::updateObstacles()
+// {
+// 	//Borrar todos los newobs_X que existan del innermodel y del innermodel viewer
+// 	
+// 	//Crear obs por cada polinena
+// 	InnerModelMesh *newobs = innerModel->newMesh("","world", "/home/robocomp/robocomp/files/osgModels/table.osg", max, 1600, max, 1, tx, 0, tz, 0, 0, 0, true);
+// 	//añadiirll al innermodel
+// 	//añadir al innermodelvierwer
+// 	
+// }
+// 		
 
 /**
  * @brief Main execution loop. Checks if there is an active target
@@ -163,6 +163,7 @@ void SpecificWorker::compute()
 			setHeadingCommand(innerModel, currentTarget.getRotation().y(), currentTarget, tState, road);
 			break;		
 		case CurrentTarget::State::BLOCKED:
+		  
 			road.update();		
 			elasticband.update(innerModel, road, laserData, currentTarget, safePolyList);	
 			if( road.isBlocked() == true)
@@ -172,6 +173,7 @@ void SpecificWorker::compute()
 			}
 			currentTarget.setState(CurrentTarget::State::GOTO);	
 			break;
+		
 		case CurrentTarget::State::GOBACKWARDS:
 			goBackwardsCommand(innerModel, currentTargetBack, currentTarget, tState, road);
 			break;

@@ -95,8 +95,14 @@ qDebug("escribimos en el fichero personpose.txt la pose de las personas");
 			fichero3<< p.x << " " <<p.z<<" "<< endl;
 		}
 	}
-	
 	fichero3.close();	
+	
+	
+	qDebug()<<"escribimos en el fichero la distancia recorrida"<<totaldist;
+  	ofstream fichero4("dist.txt", ofstream::out);
+	fichero4<< totaldist << endl;
+	totaldist = 0;
+	fichero4.close();
 }
 
 
@@ -332,8 +338,8 @@ void SpecificWorker::compute( )
 			}		
 			
 			
-			qDebug() << "------------------------------------------------------------";
-			qDebug() <<"PERSONA 1\n" <<"Coordenada x"<< person1.x << "Coordenada z"<< person1.z << "Rotacion "<< person1.angle;
+// 			qDebug() << "------------------------------------------------------------";
+// 			qDebug() <<"PERSONA 1\n" <<"Coordenada x"<< person1.x << "Coordenada z"<< person1.z << "Rotacion "<< person1.angle;
 		}
 		
 		if (p2){
@@ -358,8 +364,8 @@ void SpecificWorker::compute( )
 				
 				personaux2=person2;
 			}	
-			qDebug() << "------------------------------------------------------------";
-			qDebug() <<"PERSONA 2\n" <<"Coordenada x"<< person2.x << "Coordenada z"<< person2.z << "Rotacion "<< person2.angle;
+// 			qDebug() << "------------------------------------------------------------";
+// 			qDebug() <<"PERSONA 2\n" <<"Coordenada x"<< person2.x << "Coordenada z"<< person2.z << "Rotacion "<< person2.angle;
 				
 			}	
 		
@@ -387,9 +393,9 @@ void SpecificWorker::compute( )
 			}
 			
 		
-			qDebug() << "------------------------------------------------------------";
-			qDebug() <<"PERSONA 3\n" <<"Coordenada x"<< person3.x << "Coordenada z"<< person3.z << "Rotacion "<< person3.angle;
-				
+// 			qDebug() << "------------------------------------------------------------";
+// 			qDebug() <<"PERSONA 3\n" <<"Coordenada x"<< person3.x << "Coordenada z"<< person3.z << "Rotacion "<< person3.angle;
+// 				
 			}
 			
  		if (p4){
@@ -414,9 +420,9 @@ void SpecificWorker::compute( )
 				
 				personaux4=person4;
 			}
-			qDebug() << "------------------------------------------------------------";
+			/*qDebug() << "------------------------------------------------------------";
 			qDebug() <<"PERSONA 4\n" <<"Coordenada x"<< person4.x << "Coordenada z"<< person4.z << "Rotacion "<< person4.angle;
-				
+			*/	
 			}
  			
  		if (p5){
@@ -441,9 +447,9 @@ void SpecificWorker::compute( )
 				
 				personaux5=person5;
 			}
-			qDebug() << "------------------------------------------------------------";
+			/*qDebug() << "------------------------------------------------------------";
 			qDebug() <<"PERSONA 5\n" <<"Coordenada x"<< person5.x << "Coordenada z"<< person5.z << "Rotacion "<< person5.angle;
-			}	
+			*/}	
 			
 		if (p6){
 			AGMModelSymbol::SPtr personParentP6 = worldModel->getParentByLink(personSymbolIdp6, "RT");
@@ -467,9 +473,9 @@ void SpecificWorker::compute( )
 				personaux6=person6;
 			}
 			
-			qDebug() << "------------------------------------------------------------";
-			qDebug() <<"PERSONA 6\n" <<"Coordenada x"<< person6.x << "Coordenada z"<< person6.z << "Rotacion "<< person6.angle;
-				
+// 			qDebug() << "------------------------------------------------------------";
+// 			qDebug() <<"PERSONA 6\n" <<"Coordenada x"<< person6.x << "Coordenada z"<< person6.z << "Rotacion "<< person6.angle;
+// 				
 			}	
 // 		agaussian(person,3.5,1.5);
 		
@@ -484,23 +490,35 @@ void SpecificWorker::compute( )
 		robot.x=str2float(edgeRTrobot.attributes["tx"])/1000;
 		robot.z=str2float(edgeRTrobot.attributes["tz"])/1000;
 		robot.angle=str2float(edgeRTrobot.attributes["ry"]);
-		
+		/*
 		qDebug() << "------------------------------------------------------------";	
 		qDebug() <<"ROBOT\n" <<"Coordenada x"<< robot.x << "Coordenada z"<< robot.z << "Rotacion "<< robot.angle;
-		
-		qDebug("Guardamos la pose del robot en el vector");
+		*/
 		
 		punto.x=robot.x;
 		punto.z=robot.z;
 		
+		qDebug("Guardamos la pose del robot en el vector");
+		qDebug("------------------------------------------");
 		//Si el ultimo punto es igual que el actual no lo guardo 
 		if (poserobot.size()==0)
 		  poserobot.push_back(punto);
+	  
 		else
 		  if ((poserobot[poserobot.size()-1].x!=punto.x)&&(poserobot[poserobot.size()-1].z!=punto.z))
+		  {
+		    
+		    float  dist=sqrt((punto.x - poserobot[poserobot.size()-1].x)*(punto.x - poserobot[poserobot.size()-1].x)
+		    +(punto.z - poserobot[poserobot.size()-1].z)*(punto.z - poserobot[poserobot.size()-1].z));
+		    
+		    totaldist=totaldist + dist;
+		    
+// 		    qDebug()<<"Distancia calculada"<<dist<<"Distancia total"<<totaldist;
+		    
 		    poserobot.push_back(punto);
-
-	
+		    
+		  }
+		    
 		first = false;
 		cambiopos=false;
 	}

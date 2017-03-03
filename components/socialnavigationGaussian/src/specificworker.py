@@ -266,7 +266,7 @@ class SpecificWorker(GenericWorker):
 
 
         ##Limites de la representacion
-        """""
+
         lx_inf = -6
         lx_sup = 8
         ly_inf = -6
@@ -277,6 +277,7 @@ class SpecificWorker(GenericWorker):
         lx_sup = 10
         ly_inf = 0
         ly_sup = 10
+        """""
         # zs = np.array([fun(x,y) for x,y in zip(np.ravel(X), np.ravel(Y))])
         # Z = zs.reshape(X.shape)
 
