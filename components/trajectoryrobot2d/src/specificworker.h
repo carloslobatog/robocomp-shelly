@@ -32,6 +32,7 @@
 #include "graphdraw.h"
 #include "waypointsdraw.h"
 #include "safepolylist.h"
+#include <QString>
 
 #ifdef USE_QTGUI
 	#include "innerviewer.h"
@@ -250,7 +251,7 @@ class SpecificWorker : public GenericWorker
 		bool flagLaser = false; //bool para pintar en el monitor
 		
 		bool newPolyline = false; // Para idicar que la polilinea se ha modificado. Lo necesitamos para el planner
-
+		void updateObstacles(LocalPolyLineList polylines);
 };
 
 

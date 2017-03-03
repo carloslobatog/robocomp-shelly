@@ -99,18 +99,29 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	return true;
 };
 
-/////////////////NOS QUEDAMOS AQUI/////////////////////
-// void SpecificWorker::updateObstacles()
-// {
-// 	//Borrar todos los newobs_X que existan del innermodel y del innermodel viewer
-// 	
-// 	//Crear obs por cada polinena
-// 	InnerModelMesh *newobs = innerModel->newMesh("","world", "/home/robocomp/robocomp/files/osgModels/table.osg", max, 1600, max, 1, tx, 0, tz, 0, 0, 0, true);
-// 	//añadiirll al innermodel
-// 	//añadir al innermodelvierwer
-// 	
-// }
-// 		
+///////////////NOS QUEDAMOS AQUI/////////////////////
+void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
+{
+	//Borrar todos los newobs_X que existan del innermodel y del innermodel viewer
+	
+	//Crear obs por cada polinena
+	for (int i=0; ; i++)
+	{
+		QString cadena = QString("obs_") + QString::number(i,10);
+		if (not InnerModelDraw::removeObject(viewer->innerViewer, cadena) )
+			break;
+	}
+
+	int count = 0;
+	for (auto poly:polylines)
+	{		
+		InnerModelDraw::addMesh_ignoreExisting(viewer->innerViewer,               QString("obs_")+QString::number(count,10), QString("world"), QVec::vec3(poly.tx,0,poly.tz), QVec::zeros(3), QString("/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds"), QVec::vec3(poly.max,1600,poly.max));
+		count++;
+		
+	}
+	
+}
+		
 
 /**
  * @brief Main execution loop. Checks if there is an active target
@@ -137,6 +148,7 @@ void SpecificWorker::compute()
 		qDebug()<<"Nueva polilinea. Actualizamos grafo";
 		if ( plannerPRM.updateGraph(safePolyList.read()) == true)
 		{
+			updateObstacles(safePolyList.read());
 			qDebug()<<"Se ha modificado el grafo";
 			#ifdef USE_QTGUI
 				graphdraw.draw(plannerPRM, viewer);

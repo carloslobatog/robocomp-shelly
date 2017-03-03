@@ -14,7 +14,7 @@ typedef std::vector<LocalPointPol> PolyLinePol;
 typedef std::vector<LocalPoint> LocalPolyLine;
 
 typedef struct {PolyLinePol p; float min; float max;} LocalPolyLinePolMinMax;
-typedef struct {LocalPolyLine p; float min; float max;} LocalPolyLineMinMax;
+typedef struct {LocalPolyLine p; float min; float max; float tx; float tz;} LocalPolyLineMinMax;
 
 typedef std::vector<LocalPolyLinePolMinMax> LocalPolyLineListPol;
 typedef std::vector<LocalPolyLineMinMax> LocalPolyLineList;
@@ -36,24 +36,44 @@ class SafePolyList
 			LocalPolyLineMinMax poly;
 			for(auto p: s)
 			{
-				LocalPoint punto = {p.x, p.z};
+				LocalPoint punto = {p.x*1000, p.z*1000};
 				poly.p.push_back(punto);
 			}
 			polyLineList.push_back(poly);
 			
 			float max = std::numeric_limits<float>::min();
 			float dist;
+			
+
+			float sumx;
+			float sumz;
+			
 			for (auto p: poly.p)
-			{
-				for (auto q: poly.p)
-				{
-					dist= pow(p.x-q.x,2) + pow(p.z-q.z,2);
-					if (dist>max) max=dist;
+			{				
+				bool first = true;
+				if (first)
+				{	
+				sumx=p.x;
+				sumz=p.z;
 				}
 				
+				for (auto q: poly.p)
+				{
+					if (first)
+					{
+					sumx=sumx+p.x;
+					sumz=sumz+p.z;
+					}
+					dist= pow(p.x-q.x,2) + pow(p.z-q.z,2);
+					if (dist>max) max=dist;
+					
+				}
+				first=false;
 			}
 			poly.max=max;
-		
+			poly.tx=sumx/poly.p.size();
+			poly.tz=sumz/poly.p.size();
+			
 		}
 		
 	

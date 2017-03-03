@@ -291,7 +291,7 @@ bool PlannerPRM::updateGraph (LocalPolyLineList Polylines)
 		
 		for (auto p:poly.p)
 		{
-			qp << QPointF(p.x*1000,p.z*1000);
+			qp << QPointF(p.x,p.z);
 		}
 		//recorrer grafo
 		BGL_FORALL_VERTICES(v, graph, Graph)

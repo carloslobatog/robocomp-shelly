@@ -24,7 +24,7 @@
 #include <QtCore>
 #include <qmat/QMatAll>
 #include <innermodel/innermodel.h>
-#include <innermodeldraw.h>
+#include <innermodel/innermodeldraw.h>
 #include <Laser.h>
 #include <limits>       
 #include "waypoints.h"

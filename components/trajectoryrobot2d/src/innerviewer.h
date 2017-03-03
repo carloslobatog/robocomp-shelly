@@ -26,7 +26,7 @@
 #include "waypoints.h"
 #include <osgViewer/Viewer>
 #include <innermodel/innermodelviewer.h>
-#include <innermodeldraw.h>
+#include <innermodel/innermodeldraw.h>
 
 /**
  * @brief Threaded InnerModelViewer to be used inside components to visualize the model

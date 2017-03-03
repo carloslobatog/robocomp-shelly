@@ -498,14 +498,15 @@ void SpecificWorker::compute( )
 		punto.x=robot.x;
 		punto.z=robot.z;
 		
-		qDebug("Guardamos la pose del robot en el vector");
-		qDebug("------------------------------------------");
+// 		qDebug("Guardamos la pose del robot en el vector");
+// 		qDebug("------------------------------------------");
+		
 		//Si el ultimo punto es igual que el actual no lo guardo 
 		if (poserobot.size()==0)
 		  poserobot.push_back(punto);
 	  
 		else
-		  if ((poserobot[poserobot.size()-1].x!=punto.x)&&(poserobot[poserobot.size()-1].z!=punto.z))
+		  if ((poserobot[poserobot.size()-1].x!=punto.x)||(poserobot[poserobot.size()-1].z!=punto.z))
 		  {
 		    
 		    float  dist=sqrt((punto.x - poserobot[poserobot.size()-1].x)*(punto.x - poserobot[poserobot.size()-1].x)
@@ -513,7 +514,7 @@ void SpecificWorker::compute( )
 		    
 		    totaldist=totaldist + dist;
 		    
-// 		    qDebug()<<"Distancia calculada"<<dist<<"Distancia total"<<totaldist;
+ 		    qDebug()<<"Distancia calculada"<<dist<<"Distancia total"<<totaldist;
 		    
 		    poserobot.push_back(punto);
 		    
