@@ -5,7 +5,7 @@ SET ( SOURCES
   controller.cpp
   qline2d.cpp
   elasticband.cpp
-#  innermodeldraw.cpp
+  innermodeldraw.cpp
   waypoints.cpp
   plannerompl.cpp
   #plannerthunder.cpp

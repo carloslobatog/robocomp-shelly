@@ -102,20 +102,24 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 ///////////////NOS QUEDAMOS AQUI/////////////////////
 void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 {
+	printf("updateObstacles\n");
 	//Borrar todos los newobs_X que existan del innermodel y del innermodel viewer
 	
 	//Crear obs por cada polinena
-	for (int i=0; ; i++)
+	for (int i=0; i<20; i++)
 	{
 		QString cadena = QString("obs_") + QString::number(i,10);
+		printf("borramos %s\n", cadena.toStdString().c_str());
 		if (not InnerModelDraw::removeObject(viewer->innerViewer, cadena) )
 			break;
 	}
 
 	int count = 0;
 	for (auto poly:polylines)
-	{		
-		InnerModelDraw::addMesh_ignoreExisting(viewer->innerViewer,               QString("obs_")+QString::number(count,10), QString("world"), QVec::vec3(poly.tx,0,poly.tz), QVec::zeros(3), QString("/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds"), QVec::vec3(poly.max,1600,poly.max));
+	{
+		QString cadena = QString("obs_")+QString::number(count,10);
+		printf("creamos %s  (%f, %f) %f\n", cadena.toStdString().c_str(), poly.tx, poly.tz, poly.max);
+		InnerModelDraw::addMesh_ignoreExisting(viewer->innerViewer, cadena, QString("world"), QVec::vec3(poly.tx,0,poly.tz), QVec::vec3(1.57,0,0), QString("/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds"), QVec::vec3(poly.max,poly.max,2000));
 		count++;
 		
 	}

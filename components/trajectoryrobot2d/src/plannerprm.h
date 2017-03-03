@@ -41,7 +41,7 @@
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 #include <boost/graph/iteration_macros.hpp>
 #include <nabo/nabo.h>
-#include <innermodel/innermodeldraw.h>
+#include <innermodeldraw.h>
 #include "sampler.h"
 #include <qlog/qlog.h>
 #include "plannerompl.h"

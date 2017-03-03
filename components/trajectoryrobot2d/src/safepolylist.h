@@ -22,58 +22,48 @@ typedef std::vector<LocalPolyLineMinMax> LocalPolyLineList;
 						
 class SafePolyList
 {
-  QMutex mutex;
-  LocalPolyLineList polyLineList;
-  LocalPolyLineListPol polyLineListPol;
+	QMutex mutex;
+	LocalPolyLineList polyLineList;
+	LocalPolyLineListPol polyLineListPol;
   
-  public:	
-    void write(const RoboCompTrajectoryRobot2D::PolyLineList &secuencia)
-    {
+public:
+	void write(const RoboCompTrajectoryRobot2D::PolyLineList &secuencia)
+	{
 		QMutexLocker ml(&mutex);
 		polyLineList.clear();
-		for(auto s: secuencia)
+		for (auto s: secuencia)
 		{
 			LocalPolyLineMinMax poly;
-			for(auto p: s)
+			for (auto p: s)
 			{
 				LocalPoint punto = {p.x*1000, p.z*1000};
 				poly.p.push_back(punto);
 			}
 			polyLineList.push_back(poly);
 			
-			float max = std::numeric_limits<float>::min();
 			float dist;
 			
 
-			float sumx;
-			float sumz;
+			float sumx=0;
+			float sumz=0;
 			
-			for (auto p: poly.p)
-			{				
-				bool first = true;
-				if (first)
-				{	
-				sumx=p.x;
-				sumz=p.z;
-				}
-				
-				for (auto q: poly.p)
-				{
-					if (first)
-					{
-					sumx=sumx+p.x;
-					sumz=sumz+p.z;
-					}
-					dist= pow(p.x-q.x,2) + pow(p.z-q.z,2);
-					if (dist>max) max=dist;
-					
-				}
-				first=false;
+			for (auto q: poly.p)
+			{
+				sumx+=q.x;
+				sumz+=q.z;
 			}
-			poly.max=max;
 			poly.tx=sumx/poly.p.size();
 			poly.tz=sumz/poly.p.size();
 			
+			float max = std::numeric_limits<float>::min();
+			for (auto q: poly.p)
+			{
+				float ix = q.x - poly.tx; 
+				float iz = q.z - poly.tz; 
+				dist = pow(iz,2) + pow(ix,2);
+				if (dist > max) max = dist;
+			}
+			poly.max = max;
 		}
 		
 	
