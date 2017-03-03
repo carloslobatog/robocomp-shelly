@@ -1,0 +1,48 @@
+# Endpoints for subscriptions
+RCISMousePickerTopic.Endpoints=tcp -p 13204
+
+#TrajectoryRobot2DProxy = trajectoryrobot2d:tcp -h robonuc1.local -p 12204
+TrajectoryRobot2DProxy = trajectoryrobot2d:tcp -p 19204
+
+
+# This property is used by the clients to connect to IceStorm.
+TopicManager.Proxy=IceStorm/TopicManager:default -p 9999
+
+Points=10
+
+
+#Puntos en entorno cuadrado
+# Offset 0
+#Point0=0.,0.,+0.0
+#Point1=1000.,3500.
+#Point2=550.,4500.
+#Point3=1300.,5500.
+#Point4=3000.,7000.
+#Point5=6000.,3300.
+#Point6=7000.,1500.
+#Point7=6500.,350.
+#Point8=7000.,6000.
+#Point9=3378.,-0577.,+0.93
+
+#Puntos en entorno lab
+
+# Offset 0
+Point0=500.,500.,0.0
+Point1=3500.,3500.
+Point2=5800.,3000.
+Point3=950.,-3000.
+Point4=1800.,-1500.
+Point5=3000.,-1400.
+Point6=5000.,-2000.,+1.57
+Point7=3378.,-0577.,+0.93
+Point8=5000.,3700.
+Point9=3700.,-2000.
+
+
+Ice.Warn.Connections=0
+Ice.Trace.Network=0
+Ice.Trace.Protocol=0
+Ice.ACM.Client=10
+Ice.ACM.Server=10
+
+
