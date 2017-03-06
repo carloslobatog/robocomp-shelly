@@ -224,6 +224,10 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 
 RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData laserData, SafePolyList &safePolyList, InnerModel *innermodel)
 {
+//   QLine2D laserline(QVec::vec2(0,0), QVec::vec2(4,0));
+//   QVec intersection= laserline.intersectionPoint(QLine2D(QVec::vec2(2,2),QVec::vec2(2,-2)));
+//   qDebug()<<intersection;
+  
 	RoboCompLaser::TLaserData laserCombined; 
 	laserCombined = laserData;
 	
@@ -236,7 +240,7 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 		float min = std::numeric_limits<float>::max();
 		float max = std::numeric_limits<float>::min(); 
 		
-		for (auto polylinePoint: polyline.p)
+		for (auto polylinePoint: polyline)
 		{
 			LocalPointPol lPol;
 			QVec pInLaser = innermodel->transform("laser", QVec::vec3(polylinePoint.x, 0, polylinePoint.z), "world");
@@ -255,16 +259,28 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 				//recta que une el 0,0 con el punto del laser
 				QLine2D laserline(QVec::vec2(0,0), QVec::vec2(lasercart.x(), lasercart.z()));
 				
-				auto previousPoint = polyline.p[polyline.p.size()-1];
+				auto previousPoint = polyline[polyline.size()-1];
 				QVec previousPointInLaser = innermodel->transform("laser", (QVec::vec3(previousPoint.x, 0, previousPoint.z)), "world");	
 				// For each polyline's point
-				for (auto polylinePoint: polyline.p)
+				for (auto polylinePoint: polyline)
 				{
 					QVec currentPointInLaser = innermodel->transform("laser", (QVec::vec3(polylinePoint.x, 0, polylinePoint.z)), "world");
 					QVec intersection= laserline.intersectionPoint(QLine2D(QVec::vec2(previousPointInLaser.x(),previousPointInLaser.z()),QVec::vec2(currentPointInLaser.x(),currentPointInLaser.z())));
 					
-					//Si intersection < lasercart
-						//Y si esta contenido en el segmento. Es decir, previousPointinLaser.x()>intersection.x<currentpointinLaser.x() o algo asi
+					if (intersection.x()<lasercart.x()||intersection.y()<lasercart.z()) 
+					{
+					  bool biggerthanprev=false;
+					  bool smallerthancurr=false;
+					  
+					  if (intersection.x()>previousPointInLaser.x()&&intersection.y()>previousPointInLaser.z()) biggerthanprev=true;
+					  if (intersection.x()<currentPointInLaser.x()&&intersection.y()<currentPointInLaser.z()) smallerthancurr=true; 
+					 
+					  if (biggerthanprev && smallerthancurr)
+					  {
+					    laserSample.dist= sqrt (pow(intersection.x(),2)+pow(intersection.y(),2));
+					  }
+					}
+					  
 				}
 			}
 		}

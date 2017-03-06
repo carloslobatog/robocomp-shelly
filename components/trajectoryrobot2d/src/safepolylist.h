@@ -17,7 +17,7 @@ typedef struct {PolyLinePol p; float min; float max;} LocalPolyLinePolMinMax;
 typedef struct {LocalPolyLine p; float min; float max; float tx; float tz;} LocalPolyLineMinMax;
 
 typedef std::vector<LocalPolyLinePolMinMax> LocalPolyLineListPol;
-typedef std::vector<LocalPolyLineMinMax> LocalPolyLineList;
+typedef std::vector<LocalPolyLine> LocalPolyLineList;
 
 						
 class SafePolyList
@@ -33,14 +33,15 @@ public:
 		polyLineList.clear();
 		for (auto s: secuencia)
 		{
-			LocalPolyLineMinMax poly;
+			//LocalPolyLineMinMax poly;    Si se vuelve a usar poner en todas poly.p 
+			LocalPolyLine poly;
 			for (auto p: s)
 			{
 				LocalPoint punto = {p.x*1000, p.z*1000};
-				poly.p.push_back(punto);
+				poly.push_back(punto);
 			}
 			polyLineList.push_back(poly);
-			
+			/*
 			float dist;
 			
 
@@ -67,7 +68,7 @@ public:
 					if (dist > max) max = dist;
 				}
 			}
-			poly.max = max;
+			poly.max = max;*/
 		}
 		
 	

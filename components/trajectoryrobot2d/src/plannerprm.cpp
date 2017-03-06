@@ -289,7 +289,7 @@ bool PlannerPRM::updateGraph (LocalPolyLineList Polylines)
 		QPolygonF qp;
 		std::vector<Vertex> listtoremove;
 		
-		for (auto p:poly.p)
+		for (auto p:poly)
 		{
 			qp << QPointF(p.x,p.z);
 		}
