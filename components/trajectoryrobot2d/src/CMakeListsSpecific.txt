@@ -3,7 +3,7 @@ SET ( SOURCES
   specificworker.cpp
   specificmonitor.cpp
   controller.cpp
-  qline2d.cpp
+  #qline2d.cpp
   elasticband.cpp
   innermodeldraw.cpp
   waypoints.cpp
@@ -16,6 +16,7 @@ SET ( SOURCES
   innerviewer.cpp
   graphdraw.cpp
   waypointsdraw.cpp
+  
 )
 
 # Headers set

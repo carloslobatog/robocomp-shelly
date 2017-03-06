@@ -57,8 +57,8 @@ def getPolyline(grid, resolution, lx_inf, ly_inf):
 
         points = np.asarray(lista)
         hull = ConvexHull(points)
-        #ret.append(points[hull.vertices])
-
+        ret.append(points[hull.vertices])
+        """""
         # interpolar los puntos
         threshold = 0.1
         #print '-----------------', threshold
@@ -92,7 +92,7 @@ def getPolyline(grid, resolution, lx_inf, ly_inf):
             prev = curr
 
         ret.append(v)
-
+        """
 
     return ret
 

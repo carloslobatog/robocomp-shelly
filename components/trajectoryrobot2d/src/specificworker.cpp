@@ -119,7 +119,7 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 	{
 		QString cadena = QString("obs_")+QString::number(count,10);
 		printf("creamos %s  (%f, %f) %f\n", cadena.toStdString().c_str(), poly.tx, poly.tz, poly.max);
-		InnerModelDraw::addMesh_ignoreExisting(viewer->innerViewer, cadena, QString("world"), QVec::vec3(poly.tx,0,poly.tz), QVec::vec3(1.57,0,0), QString("/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds"), QVec::vec3(poly.max,poly.max,2000));
+		InnerModelDraw::addMesh_ignoreExisting(viewer->innerViewer, cadena, QString("world"), QVec::vec3(poly.tx,0,poly.tz), QVec::vec3(1.57,0,0), QString("/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds"), QVec::vec3(poly.max/2,poly.max/2,1000));
 		count++;
 		
 	}

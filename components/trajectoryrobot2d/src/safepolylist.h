@@ -56,12 +56,16 @@ public:
 			poly.tz=sumz/poly.p.size();
 			
 			float max = std::numeric_limits<float>::min();
+			
 			for (auto q: poly.p)
 			{
-				float ix = q.x - poly.tx; 
-				float iz = q.z - poly.tz; 
-				dist = pow(iz,2) + pow(ix,2);
-				if (dist > max) max = dist;
+				for (auto p:poly.p)
+				{
+					float ix =q.x - p.x; 
+					float iz = q.z - p.z; 
+					dist = sqrt(pow(iz,2) + pow(ix,2));
+					if (dist > max) max = dist;
+				}
 			}
 			poly.max = max;
 		}
