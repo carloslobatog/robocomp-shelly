@@ -258,29 +258,37 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 				
 				//recta que une el 0,0 con el punto del laser
 				QLine2D laserline(QVec::vec2(0,0), QVec::vec2(lasercart.x(), lasercart.z()));
+// 				LineSegment lasersegment(Pointinter(lasercart.x(), lasercart.z()),Pointinter(0,0));
 				
 				auto previousPoint = polyline[polyline.size()-1];
 				QVec previousPointInLaser = innermodel->transform("laser", (QVec::vec3(previousPoint.x, 0, previousPoint.z)), "world");	
 				// For each polyline's point
+				
 				for (auto polylinePoint: polyline)
 				{
 					QVec currentPointInLaser = innermodel->transform("laser", (QVec::vec3(polylinePoint.x, 0, polylinePoint.z)), "world");
 					QVec intersection= laserline.intersectionPoint(QLine2D(QVec::vec2(previousPointInLaser.x(),previousPointInLaser.z()),QVec::vec2(currentPointInLaser.x(),currentPointInLaser.z())));
+ 					/*LineSegment polygonsegment(Pointinter(currentPointInLaser.x(),currentPointInLaser.z()),Pointinter(previousPointInLaser.x(),previousPointInLaser.z()));
+ 					LineSegment intersection= getIntersection(lasersegment,polygonsegment);
+ 		*/			
+// 					if ((intersection.first.x==intersection.second.x)&&(intersection.first.y==intersection.second.y))
+// 					{
+					float pAngle = atan2(previousPointInLaser.x(), previousPointInLaser.z());
+					float cAngle = atan2(currentPointInLaser.x(), currentPointInLaser.z());
 					
-					if (intersection.x()<lasercart.x()||intersection.y()<lasercart.z()) 
+					const float m = std::min<float>(cAngle, pAngle);
+					const float M = std::max<float>(cAngle, pAngle);
+					//printf("angulo: %f   p:%f  c:%f\n", laserSample.angle, cAngle, pAngle);
+					if (laserSample.angle >= m and laserSample.angle <= M and fabs(M-m)<3.14)
 					{
-					  bool biggerthanprev=false;
-					  bool smallerthancurr=false;
-					  
-					  if (intersection.x()>previousPointInLaser.x()&&intersection.y()>previousPointInLaser.z()) biggerthanprev=true;
-					  if (intersection.x()<currentPointInLaser.x()&&intersection.y()<currentPointInLaser.z()) smallerthancurr=true; 
-					 
-					  if (biggerthanprev && smallerthancurr)
-					  {
-					    laserSample.dist= sqrt (pow(intersection.x(),2)+pow(intersection.y(),2));
-					  }
-					}
-					  
+						float distint=sqrt (pow(intersection.x(),2)+pow(intersection.y(),2));					
+						if (distint<laserSample.dist) laserSample.dist= distint;
+					}		
+						
+// 						}
+					
+				previousPointInLaser=currentPointInLaser;
+				
 				}
 			}
 		}

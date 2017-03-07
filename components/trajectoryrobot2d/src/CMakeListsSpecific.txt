@@ -16,7 +16,7 @@ SET ( SOURCES
   innerviewer.cpp
   graphdraw.cpp
   waypointsdraw.cpp
-  
+  intersection.cpp
 )
 
 # Headers set

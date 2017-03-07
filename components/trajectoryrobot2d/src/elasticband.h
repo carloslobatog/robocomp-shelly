@@ -32,7 +32,7 @@
 #include "currenttarget.h"
 #include "linesimplifier/simplifyPath.h"
 #include "safepolylist.h"
-
+#include <intersection.h>
 
 #define FORCE_DISTANCE_LIMIT (ROBOT_WIDTH*1.5)  //mm
 #define ROBOT_STEP (ROBOT_WIDTH * 0.1)

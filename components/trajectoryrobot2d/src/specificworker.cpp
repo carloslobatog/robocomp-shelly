@@ -831,24 +831,24 @@ void SpecificWorker::mapBasedTarget(const NavigationParameterMap &parameters)
  * @param inner InnerModel that is to be updated
  * @return bool
  */
-// void SpecificWorker::fichero(TLaserData laser, string path){
-// 	ofstream fichero(path, ofstream::out);
-// 	for (auto l:laser){
-// 		fichero<< l.angle << " " <<l.dist<< endl;
-// 	}
-// 	fichero.close();
-// }
-// void SpecificWorker::ficheroP(LocalPolyLineList polylines, string path, InnerModel *innermodel){
-// 	ofstream fichero(path, ofstream::out);
-// 	for (auto p:polylines){
-// 		for (auto l:p){
-// 			QVec point_poli = innermodel->transform("laser", (QVec::vec3(l.x, 0, l.z)).operator*(1000), "world");
-// 			fichero<< point_poli.x() << " " <<point_poli.z()<< endl;
-// 			
-// 		}
-// 	}
-// 	fichero.close();
-// }
+void SpecificWorker::fichero(TLaserData laser, string path){
+	ofstream fichero(path, ofstream::out);
+	for (auto l:laser){
+		fichero<< l.angle << " " <<l.dist<< endl;
+	}
+	fichero.close();
+}
+void SpecificWorker::ficheroP(LocalPolyLineList polylines, string path, InnerModel *innermodel){
+	ofstream fichero(path, ofstream::out);
+	for (auto p:polylines){
+		for (auto l:p){
+			QVec point_poli = innermodel->transform("laser", (QVec::vec3(l.x, 0, l.z)), "world");
+			fichero<< point_poli.x() << " " <<point_poli.z()<< endl;
+			
+		}
+	}
+	fichero.close();
+}
 
 
 
@@ -871,14 +871,14 @@ bool SpecificWorker::updateInnerModel(InnerModel *inner, TrajectoryState &state)
 	{
 	//	printf("Escribiendo a laserantes\n");
 		laserData = laser_proxy->getLaserData();
- 	//	fichero(laserData,"laserantes.txt");
+ 		fichero(laserData,"laserantes.txt");
 	
 	//	QTime tiempo = QTime::currentTime();
 		laserData = elasticband.unionpoligonos(laserData, safePolyList, inner);
 	//	cout << "tardamos (ms) " << tiempo.elapsed() << endl;
 	//	
- 	//	fichero(laserData,"laserdespues.txt");
-	//	ficheroP(safePolyList.read(),"poly.txt", inner); 
+ 		fichero(laserData,"laserdespues.txt");
+		ficheroP(safePolyList.read(),"poly.txt", inner); 
 	//	printf("Escribiendo a laserdespues\n");
  	}
 	catch (const Ice::Exception &ex)
