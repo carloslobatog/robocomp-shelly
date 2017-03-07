@@ -252,7 +252,7 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 	
 	//Recorremos todas las muestras del laser
 		for (auto &laserSample: laserCombined)
-		{ //Compruebo que la muestra del laser corte a la polilinea
+		{ //Compruebo que la muestra del laser corta a la polilinea. Es decir si esta comprendida entre el maximo y el minimo de antes
 			if (laserSample.angle >= min and laserSample.angle <= max and fabs(max-min)<3.14) 
 			{
 				QVec lasercart =innermodel->laserTo("laser", "laser", laserSample.dist, laserSample.angle);
@@ -269,14 +269,13 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 					QVec currentPointInLaser = innermodel->transform("laser", (QVec::vec3(polylinePoint.x, 0, polylinePoint.z)), "world");
 					QVec intersection= laserline.intersectionPoint(QLine2D(QVec::vec2(previousPointInLaser.x(),previousPointInLaser.z()),QVec::vec2(currentPointInLaser.x(),currentPointInLaser.z())));
 					
-					//Una vez sacada la interseccion se compruebba que esta dentro del segmento. Para ello se calculan los angulos de los puntos actual y previo
+					//Una vez sacada la interseccion se comprueba que esta dentro del segmento. Para ello se calculan los angulos de los puntos actual y previo
 					float pAngle = atan2(previousPointInLaser.x(), previousPointInLaser.z());
 					float cAngle = atan2(currentPointInLaser.x(), currentPointInLaser.z());
 					
 					const float m = std::min<float>(cAngle, pAngle);
 					const float M = std::max<float>(cAngle, pAngle);
 					//printf("angulo: %f   p:%f  c:%f\n", laserSample.angle, cAngle, pAngle);
-					
 					
 					if (laserSample.angle >= m and laserSample.angle <= M and fabs(M-m)<3.14)
 					{

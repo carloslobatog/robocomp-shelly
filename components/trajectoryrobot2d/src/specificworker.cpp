@@ -102,18 +102,39 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 ///////////////NOS QUEDAMOS AQUI/////////////////////
 void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 {
-// 	printf("updateObstacles\n");
-// 	//Borrar todos los newobs_X que existan del innermodel y del innermodel viewer
-// 	
-// 	//Crear obs por cada polinena
-// 	for (int i=0; i<20; i++)
-// 	{
-// 		QString cadena = QString("obs_") + QString::number(i,10);
-// 		printf("borramos %s\n", cadena.toStdString().c_str());
-// 		if (not InnerModelDraw::removeObject(viewer->innerViewer, cadena) )
-// 			break;
-// 	}
-// 
+	printf("updateObstacles\n");
+	//Borrar todos los newobs_X que existan del innermodel y del innermodel viewer
+	
+	//Crear obs por cada polinena
+	for (int i=0; i<100; i++)
+	{
+		QString cadena = QString("obs_") + QString::number(i,10);
+		printf("borramos %s\n", cadena.toStdString().c_str());
+		if (not InnerModelDraw::removeObject(viewer->innerViewer, cadena) )
+			break;
+	}
+
+	int count = 0;
+	for (auto poly:polylines)
+	{
+		auto previousPoint = poly[poly.size()-1];
+		
+		for (auto currentPoint:poly)
+		{
+		  float dist=sqrt(pow(currentPoint.x-previousPoint.x,2)+pow(currentPoint.z-previousPoint.z,2));
+		  QLine2D line(QVec::vec2(currentPoint.x,currentPoint.z), QVec::vec2(previousPoint.x, previousPoint.z));
+		  float rot = line.getAngleWithZAxis();
+		  
+		  QString cadena = QString("obs_")+QString::number(count,10);	
+		  
+		  InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"),QVec::vec3(previousPoint.x,1000,previousPoint.z), QVec::vec3(1.57,0,rot),  QString("#00FFF0"), QVec::vec3(dist,2000,9));
+		  count++;
+		  previousPoint=currentPoint;
+		}
+		
+		
+	}
+	
 // 	int count = 0;
 // 	for (auto poly:polylines)
 // 	{
