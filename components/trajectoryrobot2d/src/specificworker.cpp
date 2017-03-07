@@ -127,7 +127,7 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 		  
 		  QString cadena = QString("obs_")+QString::number(count,10);	
 		  
-		  InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"),QVec::vec3(previousPoint.x,1000,previousPoint.z), QVec::vec3(1.57,0,rot),  QString("#00FFF0"), QVec::vec3(dist,2000,9));
+		  InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"),QVec::vec3(previousPoint.x+(dist/2)*cos(rot),1000,previousPoint.z+(dist/2)*sin(rot)), QVec::vec3(1.57,0,rot-3.1416/2),  QString("#00FFF0"), QVec::vec3(dist,2000,9));
 		  count++;
 		  previousPoint=currentPoint;
 		}
