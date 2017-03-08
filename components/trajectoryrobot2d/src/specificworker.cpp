@@ -114,6 +114,14 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 			break;
 	}
 
+// 	float p1x= 0;
+// 	float p1z=0;
+// 	float p2x=4000;
+// 	float p2z=4000;
+// 		
+// 	InnerModelDraw::drawLine2Points(viewer->innerViewer,QString("plano01"), QString("world"),  QVec::vec3(p1x,0,p1z),  QVec::vec3(p2x,0,p2z), QString("#00FFFF"));
+
+	
 	int count = 0;
 	for (auto poly:polylines)
 	{
@@ -121,13 +129,14 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 		
 		for (auto currentPoint:poly)
 		{
-		  float dist=sqrt(pow(currentPoint.x-previousPoint.x,2)+pow(currentPoint.z-previousPoint.z,2));
-		  QLine2D line(QVec::vec2(currentPoint.x,currentPoint.z), QVec::vec2(previousPoint.x, previousPoint.z));
-		  float rot = line.getAngleWithZAxis();
+// 		  float dist=sqrt(pow(currentPoint.x-previousPoint.x,2)+pow(currentPoint.z-previousPoint.z,2));
+// 		  QLine2D line(QVec::vec2(currentPoint.x,currentPoint.z), QVec::vec2(previousPoint.x, previousPoint.z));
+// 		  float rot = line.getAngleWithZAxis();
+		  
 		  
 		  QString cadena = QString("obs_")+QString::number(count,10);	
-		  
-		  InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"),QVec::vec3(previousPoint.x+(dist/2)*cos(rot),1000,previousPoint.z+(dist/2)*sin(rot)), QVec::vec3(1.57,0,rot-3.1416/2),  QString("#00FFF0"), QVec::vec3(dist,2000,9));
+		  InnerModelDraw::drawLine2Points(viewer->innerViewer, cadena, QString("world"),  QVec::vec3(currentPoint.x,currentPoint.z,0),  QVec::vec3(previousPoint.x, previousPoint.z,0), QString("#00FFFF"));
+		 // InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"),QVec::vec3(previousPoint.x,1000,previousPoint.z), QVec::vec3(1.57,0,3.141516),  QString("#00FFFF"), QVec::vec3(dist,2000,9));
 		  count++;
 		  previousPoint=currentPoint;
 		}

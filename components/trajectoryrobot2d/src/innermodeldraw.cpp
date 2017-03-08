@@ -143,9 +143,10 @@ void InnerModelDraw::drawLine(InnerModelViewer *innerViewer, QString name, QStri
 
 void InnerModelDraw::drawLine2Points(InnerModelViewer *innerViewer, QString name, QString parent, const QVec& p1, const QVec& p2, QString texture)
 {
-		
-	InnerModelDraw::addPlane_ignoreExisting(innerViewer, name, parent, QVec::vec3(0,0,0), QVec::vec3(0,1,0), texture, QVec::vec3(15, (p1-p2).norm2(), 15));
-		
+	QLine2D line(QVec::vec2(p1.x(),p1.y()), QVec::vec2(p2.x(), p2.y()));	
+	//InnerModelDraw::addPlane_ignoreExisting(innerViewer, name, parent, QVec::vec3(0,0,0), QVec::vec3(0,1,0), texture, QVec::vec3(15, (p1-p2).norm2(), 15));
+	InnerModelDraw::addPlane_ignoreExisting(innerViewer, name, parent, QVec::vec3(p2.x(),p2.y(),0),  line.getPerpendicularVector(), texture, QVec::vec3(15, (p1-p2).norm2(), 15));
+			
 }
 
 

@@ -283,7 +283,7 @@ RoboCompLaser::TLaserData ElasticBand::unionpoligonos(RoboCompLaser::TLaserData 
 						if (distint<laserSample.dist) laserSample.dist= distint;
 					}		
 						
-// 						}
+
 					
 				previousPointInLaser=currentPointInLaser;
 				
