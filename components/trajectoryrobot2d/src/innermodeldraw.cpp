@@ -126,7 +126,7 @@ bool InnerModelDraw::addPlane_notExisting(InnerModelViewer *innerViewer, const Q
 		printf("%s: parent not exists\n", __FUNCTION__);
 		return false;
 	}
-	InnerModelPlane *plane = innerViewer->innerModel->newPlane(item, parent, texture, size(0), size(1), size(2), 1, n(0), n(1), n(2), p(0), p(1), p(2));
+	InnerModelPlane *plane = innerViewer->innerModel->newPlane(item, parent, texture, size(0), size(1), size(2), 1, n(0), n(1), n(2), p(0), p(1), p(2),1);
 	parent->addChild(plane);
 
 	innerViewer->recursiveConstructor(plane, innerViewer->mts[parent->id], innerViewer->mts, innerViewer->meshHash);
@@ -145,8 +145,9 @@ void InnerModelDraw::drawLine2Points(InnerModelViewer *innerViewer, QString name
 {
 	QLine2D line(QVec::vec2(p1.x(),p1.z()), QVec::vec2(p2.x(), p2.z()));
 	float dist=sqrt(pow(p1.x()-p2.x(),2)+pow(p1.z()-p2.z(),2));	
+	QVec norm = line.getPerpendicularVector();
 	//InnerModelDraw::addPlane_ignoreExisting(innerViewer, name, parent, QVec::vec3(0,0,0), QVec::vec3(0,1,0), texture, QVec::vec3(15, (p1-p2).norm2(), 15));
-	InnerModelDraw::addPlane_ignoreExisting(innerViewer, name, parent, QVec::vec3(p2.x(),1000,p2.z()),QVec::vec3(line.getPerpendicularVector().x(),0,line.getPerpendicularVector().y()), texture, QVec::vec3(dist,2000,9));
+	InnerModelDraw::addPlane_ignoreExisting(innerViewer, name, parent, QVec::vec3(p2.x()+dist/2*cos(norm.x()),1000,p2.z()+dist/2*sin(norm.x())),QVec::vec3(norm.x(),0,norm.y()), texture, QVec::vec3(dist,2000,9));
 			
 }
 
