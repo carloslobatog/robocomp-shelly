@@ -152,9 +152,11 @@ void InnerModelDraw::drawLine2Points(InnerModelViewer *innerViewer, QString name
 	if(p1.x()<p2.x()) 
 	{
 	norm[0]=-norm[0];
+	
 	porigen = p2.x()-dist/2*cos(norm.x());
 	pfin = p2.z()-dist/2*sin(norm.x());
 	}
+	
 	//InnerModelDraw::addPlane_ignoreExisting(innerViewer, name, parent, QVec::vec3(0,0,0), QVec::vec3(0,1,0), texture, QVec::vec3(15, (p1-p2).norm2(), 15));
 	InnerModelDraw::addPlane_ignoreExisting(innerViewer, name, parent, QVec::vec3(porigen,1000,pfin),QVec::vec3(norm.x(),0,norm.y()), texture, QVec::vec3(dist,2000,9));
 			

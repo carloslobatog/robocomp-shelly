@@ -114,43 +114,34 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 			break;
 	}
 
-// 	float p1x= 0;
-// 	float p1z=0;
-// 	float p2x=4000;
-// 	float p2z=4000;
-// 		
-// 	InnerModelDraw::drawLine2Points(viewer->innerViewer,QString("plano01"), QString("world"),  QVec::vec3(p1x,0,p1z),  QVec::vec3(p2x,0,p2z), QString("#00FFFF"));
-
-	
-	int count = 0;
-	for (auto poly:polylines)
-	{
-		auto previousPoint = poly[poly.size()-1];
-		
-		for (auto currentPoint:poly)
-		{
-		 
- 		  QLine2D line(QVec::vec2(currentPoint.x,currentPoint.z), QVec::vec2(previousPoint.x, previousPoint.z));
-// 		  float rot = line.getAngleWithZAxis();
-		  
-		  
-		  QString cadena = QString("obs_")+QString::number(count,10);	
-		  InnerModelDraw::drawLine2Points(viewer->innerViewer, cadena, QString("world"),  QVec::vec3(currentPoint.x,0,currentPoint.z),QVec::vec3(previousPoint.x, 0,previousPoint.z), QString("#FFFF00"));
-		 //InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"),QVec::vec3(previousPoint.x,1000,previousPoint.z), QVec::vec3(1.57,0,line.getPerpendicularVector().z()),  QString("#00FFFF"), QVec::vec3(dist,2000,9));
-		  count++;
-		  previousPoint=currentPoint;
-		}
-		
-		
-	}
+ 	float p1x= 3000;
+ 	float p1z=200;
+ 	float p2x=4000;
+ 	float p2z=500;
+ 	QLine2D line(QVec::vec2(p1x,p1z), QVec::vec2(p2x, p2z));	
+	QVec norm = line.getPerpendicularVector();
+	InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, QString("plano0"), QString("world"),QVec::vec3(p1x,1000,p1z), QVec::vec3(norm.x(),0,norm.y()),  QString("#98FB98"), QVec::vec3(sqrt(pow(p1x-p2x,2)+pow(p1z-p2z,2)),2000,9));
+	InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, QString("plano1"), QString("world"),QVec::vec3(p1x,1000,p1z), QVec::vec3(-norm.x(),0,-norm.y()),  QString("#DC443C"), QVec::vec3(sqrt(pow(p1x-p2x,2)+pow(p1z-p2z,2)),2000,9));
 	
 // 	int count = 0;
 // 	for (auto poly:polylines)
 // 	{
-// 		QString cadena = QString("obs_")+QString::number(count,10);
-// 		printf("creamos %s  (%f, %f) %f\n", cadena.toStdString().c_str(), poly.tx, poly.tz, poly.max);
-// 		InnerModelDraw::addMesh_ignoreExisting(viewer->innerViewer, cadena, QString("world"), QVec::vec3(poly.tx,0,poly.tz), QVec::vec3(1.57,0,0), QString("/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds"), QVec::vec3(poly.max/2,poly.max/2,1000));
-// 		count++;
+// 		auto previousPoint = poly[poly.size()-1];
+// 		
+// 		for (auto currentPoint:poly)
+// 		{
+// 		 
+//  		  QLine2D line(QVec::vec2(currentPoint.x,currentPoint.z), QVec::vec2(previousPoint.x, previousPoint.z));
+// // 		  float rot = line.getAngleWithZAxis();
+// 		  
+// 		  
+// 		  QString cadena = QString("obs_")+QString::number(count,10);	
+// 		  InnerModelDraw::drawLine2Points(viewer->innerViewer, cadena, QString("world"),  QVec::vec3(currentPoint.x,0,currentPoint.z),QVec::vec3(previousPoint.x, 0,previousPoint.z), QString("#FFFF00"));
+// 		 //InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"),QVec::vec3(previousPoint.x,1000,previousPoint.z), QVec::vec3(1.57,0,line.getPerpendicularVector().z()),  QString("#00FFFF"), QVec::vec3(dist,2000,9));
+// 		  count++;
+// 		  previousPoint=currentPoint;
+// 		}
+// 		
 // 		
 // 	}
 	
