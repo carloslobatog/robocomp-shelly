@@ -146,8 +146,17 @@ void InnerModelDraw::drawLine2Points(InnerModelViewer *innerViewer, QString name
 	QLine2D line(QVec::vec2(p1.x(),p1.z()), QVec::vec2(p2.x(), p2.z()));
 	float dist=sqrt(pow(p1.x()-p2.x(),2)+pow(p1.z()-p2.z(),2));	
 	QVec norm = line.getPerpendicularVector();
+	//p1 es el current p2 el previo
+	float porigen = p2.x()+dist/2*cos(norm.x());
+	float pfin = p2.z()+dist/2*sin(norm.x());
+	if(p1.x()<p2.x()) 
+	{
+	norm[0]=-norm[0];
+	porigen = p2.x()-dist/2*cos(norm.x());
+	pfin = p2.z()-dist/2*sin(norm.x());
+	}
 	//InnerModelDraw::addPlane_ignoreExisting(innerViewer, name, parent, QVec::vec3(0,0,0), QVec::vec3(0,1,0), texture, QVec::vec3(15, (p1-p2).norm2(), 15));
-	InnerModelDraw::addPlane_ignoreExisting(innerViewer, name, parent, QVec::vec3(p2.x()+dist/2*cos(norm.x()),1000,p2.z()+dist/2*sin(norm.x())),QVec::vec3(norm.x(),0,norm.y()), texture, QVec::vec3(dist,2000,9));
+	InnerModelDraw::addPlane_ignoreExisting(innerViewer, name, parent, QVec::vec3(porigen,1000,pfin),QVec::vec3(norm.x(),0,norm.y()), texture, QVec::vec3(dist,2000,9));
 			
 }
 
