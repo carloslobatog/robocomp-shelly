@@ -1,0 +1,775 @@
+<innermodel>
+	<transform id="robot" tx="4109.682617" ty="0" tz="3145.86084"  rx="0" ry="0.5030407906" rz="0">
+		<transform id="laserPose" tx="0" ty="370" tz="230"  rx="0" ry="0" rz="0">
+			<laser id="laser" port="10003" min="100" max="30000" measures="100" angle="4.199999809" ifconfig="" />
+		</transform>
+		<transform id="monitor_pose" tx="0" ty="1155" tz="70"  rx="0" ry="0" rz="0">
+			<plane id="monitor_mesh" texture="#222266" size="340,270,80" repeat="1000" nx="0" ny="0" nz="-1" px="0" py="0" pz="0" collide="1" />
+		</transform>
+		<transform id="back_caja_pose" tx="0" ty="400" tz="-200"  rx="0" ry="0" rz="0">
+			<plane id="back_caja_mesh" texture="#662222" size="350,250,150" repeat="1000" nx="0" ny="0" nz="1" px="0" py="0" pz="0" collide="1" />
+		</transform>
+		<transform id="front_caja_pose" tx="0" ty="450" tz="150"  rx="0" ry="0" rz="0">
+			<plane id="front_caja_mesh" texture="#662222" size="350,100,350" repeat="1000" nx="0" ny="0" nz="1" px="0" py="0" pz="0" collide="1" />
+		</transform>
+		<plane id="base_mesh" texture="#666666" size="540,275,540" repeat="1000" nx="0" ny="0" nz="-1" px="0" py="137.5" pz="0" collide="1" />
+		<mesh id="barrahombro" file="/home/robocomp/robocomp/files/osgModels/robexarm/barrahombro.3ds" scale="1000,1000,1000" tx="-150" ty="1180" tz="30" rx="0" ry="-1.570796371" rz="0" collide="1" />
+		<mesh id="barracolumna" file="/home/robocomp/robocomp/files/osgModels/basics/cube.3ds" scale="40,500,30" tx="0" ty="700" tz="15" rx="0" ry="0" rz="0" collide="1" />
+		<transform id="base_bodypost" tx="0" ty="1388" tz="0"  rx="0" ry="0" rz="0">
+			<transform id="rgbdHumanPose" tx="0" ty="-98" tz="65"  rx="0" ry="0" rz="0">
+				<rgbd id="rgbdHuman" width="640" height="480" focal="600" port="0" ifconfig="" noise="0" />
+				<mesh id="sensorHumanRGBD" file="/home/robocomp/robocomp/components/robocomp-ursus-rockin/files/makeMeCoffee/cube.3ds" scale="100,21,30" tx="0" ty="0" tz="0" rx="0" ry="0" rz="0" collide="1" />
+			</transform>
+			<transform id="head_z_offset" tx="0" ty="0" tz="120"  rx="0" ry="0" rz="0">
+				<joint id="head_yaw_joint" port="10068" axis="y" home="0" min="-1" max="1" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+					<mesh id="head_base_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="25,25,47.5" tx="0" ty="47.5" tz="0" rx="1.570799947" ry="0" rz="0" collide="1" />
+					<transform id="head_rot_tilt_pose" tx="0" ty="74" tz="0"  rx="0" ry="0" rz="0">
+						<joint id="head_pitch_joint" port="10068" axis="x" home="0" min="-1" max="1" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+							<mesh id="head_center_mesh2" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="35,35,35" tx="0" ty="0" tz="0" rx="0" ry="1.570799947" rz="0" collide="1" />
+							<transform id="rgbd_transform0" tx="0" ty="50" tz="0"  rx="0" ry="0" rz="0">
+								<transform id="rgbd_transform" tx="0" ty="0" tz="10"  rx="0" ry="0" rz="0">
+									<rgbd id="rgbd" width="640" height="480" focal="540" port="10096" ifconfig="10068,12238" noise="0" />
+								</transform>
+								<mesh id="sensorRGBD" file="/home/robocomp/robocomp/files/osgModels/basics/cube2.3ds" scale="100,21,30" tx="0" ty="0" tz="0" rx="0" ry="0" rz="0" collide="1" />
+							</transform>
+						</joint>
+					</transform>
+				</joint>
+			</transform>
+		</transform>
+		<transform id="arm_pose" tx="0" ty="750" tz="0"  rx="0" ry="0" rz="0">
+			<mesh id="shellyArm_BASE_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="70,45,80" tx="0" ty="-30" tz="0" rx="1.570796371" ry="0" rz="0" collide="1" />
+			<mesh id="shellyArm_BASE2_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cube.3ds" scale="20,40,20" tx="0" ty="80" tz="0" rx="0" ry="0" rz="0" collide="1" />
+			<transform id="shellyArm_grasp_pose" tx="0" ty="190" tz="700"  rx="0" ry="0" rz="0">
+			</transform>
+			<joint id="armY" port="10068" axis="y" home="0" min="-0.4399999976" max="0.4399999976" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+				<transform id="shellyArm_2" tx="0" ty="130" tz="0"  rx="0" ry="0" rz="0">
+					<mesh id="shellyArm_BASE3_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="40,40,40" tx="0" ty="0" tz="0" rx="0" ry="1.570796371" rz="0" collide="1" />
+					<joint id="armX1" port="10068" axis="x" home="0" min="-2" max="1" tx="0" ty="0" tz="0"  rx="-1" ry="0" rz="0">
+						<mesh id="shellyArm_HUMERO_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cube.3ds" scale="10,25,120" tx="-25" ty="0" tz="155" rx="0" ry="0" rz="0" collide="1" />
+						<transform id="arm_elbow" tx="0" ty="0" tz="300"  rx="0" ry="0" rz="0">
+							<mesh id="shellyArm_CODO_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="30,30,35" tx="0" ty="0" tz="0" rx="0" ry="1.570796371" rz="0" collide="1" />
+							<joint id="armX2" port="10068" axis="x" home="0" min="-2.700000048" max="2.5" tx="0" ty="0" tz="0"  rx="2.5" ry="0" rz="0">
+								<mesh id="shellyArm_ANTEBRAZO_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cube.3ds" scale="15,15,120" tx="15" ty="0" tz="145" rx="0" ry="0" rz="0" collide="1" />
+								<transform id="arm_wrist" tx="0" ty="0" tz="294"  rx="0" ry="0" rz="0">
+									<joint id="wristX" port="10067" axis="x" home="0" min="-1.700000048" max="1.700000048" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+										<transform id="wrist_end" tx="0" ty="0" tz="74"  rx="0" ry="0" rz="0">
+											<transform id="grabPositionHandR_pre" tx="0" ty="30" tz="0"  rx="0" ry="0" rz="0">
+												<mesh id="finger_wrist_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cube.3ds" scale="45,20,45" tx="0" ty="-20" tz="-10" rx="0" ry="0" rz="0" collide="1" />
+												<transform id="grabPositionHandR" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+													<plane id="handMeshBase" texture="#ffffff" size="85,-85,1" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+													<plane id="handMesh2" texture="/home/robocomp/robocomp/components/robocomp-ursus-rockin/files/april/tag36_11_00025.png" size="70,-70,2" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+												</transform>
+											</transform>
+											<transform id="arm_wrist_8" tx="20" ty="0" tz="0"  rx="0" ry="0" rz="0">
+												<joint id="gripperFinger1" port="10067" axis="y" home="0" min="-1.570796371" max="0.3000000119" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+													<mesh id="finger_wrist_1_mesh2" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="18,5,5" tx="18" ty="12" tz="0" rx="0" ry="0" rz="0" collide="1" />
+													<transform id="finger_wrist_1_1_pre" tx="30" ty="12" tz="0"  rx="0" ry="0.6999999881" rz="0">
+														<mesh id="finger_wrist_1_mesh3" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="5,5,30" tx="0" ty="0" tz="30" rx="0" ry="0" rz="0" collide="1" />
+														<transform id="finger_wrist_1_2_pre" tx="25" ty="0" tz="0"  rx="0" ry="-0.400000006" rz="0">
+															<mesh id="finger_wrist_1_mesh4" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="5,5,20" tx="0" ty="0" tz="80" rx="0" ry="0" rz="0" collide="1" />
+														</transform>
+													</transform>
+													<mesh id="finger_wrist_1_mesh5" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="18,5,5" tx="18" ty="-12" tz="0" rx="0" ry="0" rz="0" collide="1" />
+													<transform id="finger_wrist_1_3_pre" tx="30" ty="-12" tz="0"  rx="0" ry="0.6999999881" rz="0">
+														<mesh id="finger_wrist_1_mesh6" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="5,5,30" tx="0" ty="0" tz="30" rx="0" ry="0" rz="0" collide="1" />
+														<transform id="finger_wrist_1_4_pre" tx="25" ty="0" tz="0"  rx="0" ry="-0.400000006" rz="0">
+															<mesh id="finger_wrist_1_mesh7" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="5,5,20" tx="0" ty="0" tz="80" rx="0" ry="0" rz="0" collide="1" />
+														</transform>
+													</transform>
+												</joint>
+											</transform>
+											<transform id="arm_wrist_9" tx="-20" ty="0" tz="0"  rx="0" ry="0" rz="0">
+												<joint id="gripperFinger2" port="10067" axis="y" home="0" min="-0.3000000119" max="1.570796371" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+													<mesh id="finger_wrist_2_mesh2" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="-18,5,5" tx="-18" ty="0" tz="0" rx="0" ry="0" rz="0" collide="1" />
+													<transform id="finger_wrist_2_1_pre" tx="-30" ty="0" tz="0"  rx="0" ry="-0.6999999881" rz="0">
+														<mesh id="finger_wrist_2_mesh3" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="5,5,30" tx="0" ty="0" tz="30" rx="0" ry="0" rz="0" collide="1" />
+														<transform id="finger_wrist_2_2_pre" tx="-25" ty="0" tz="0"  rx="0" ry="0.400000006" rz="0">
+															<mesh id="finger_wrist_2_mesh4" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="5,5,20" tx="0" ty="0" tz="80" rx="0" ry="0" rz="0" collide="1" />
+														</transform>
+													</transform>
+												</joint>
+											</transform>
+										</transform>
+									</joint>
+								</transform>
+							</joint>
+						</transform>
+					</joint>
+				</transform>
+			</joint>
+		</transform>
+	</transform>
+	<transform id="world" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+		<transform id="floor" tx="2500" ty="-10" tz="0"  rx="0" ry="0" rz="0">
+			<plane id="floor_plane" texture="#eebb77" size="10000,9500,10" repeat="1000" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+		</transform>
+		<transform id="waitPose" tx="3000" ty="0" tz="1000"  rx="0" ry="3.141592741" rz="0">
+		</transform>
+		<transform id="Pose2" tx="2206" ty="0" tz="-2518"  rx="0" ry="-0.7599999905" rz="0">
+		</transform>
+		<transform id="pared6" tx="4418.209473" ty="950" tz="245"  rx="0" ry="0" rz="0">
+			<plane id="muro6" texture="#000088" size="240,1900,9" repeat="1000" nx="221.8098145" ny="0" nz="40.51074219" px="0" py="0" pz="0" collide="1" />
+		</transform>
+		<transform id="pared22" tx="2160.319092" ty="950" tz="29.06390381"  rx="0" ry="0.1000000015" rz="0">
+			<plane id="muro22" texture="#000088" size="208.5520172,1900,9" repeat="1000" nx="-204.6739502" ny="0" nz="-40.03149414" px="0" py="0" pz="0" collide="1" />
+		</transform>
+		<transform id="room_3" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+			<transform id="pared0" tx="-91.89904785" ty="950" tz="2066.808838"  rx="0" ry="0" rz="0">
+				<plane id="muro0" texture="#880000" size="3994.285645,1900,9" repeat="1000" nx="-3992.719971" ny="0" nz="-111.8254395" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="pared1" tx="3235.375244" ty="950" tz="4200.796875"  rx="0" ry="0" rz="0">
+				<plane id="muro1" texture="#880000" size="6771.970703,1900,9" repeat="1000" nx="-275.2558594" ny="0" nz="6766.374512" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="pared2" tx="6695.069336" ty="950" tz="2831.404297"  rx="0" ry="0" rz="0">
+				<plane id="muro2" texture="#880000" size="3017.921631,1900,9" repeat="1000" nx="3014.040039" ny="0" nz="153.0136719" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="pared3" tx="6386.733398" ty="950" tz="1287.88147"  rx="0" ry="0" rz="0">
+				<plane id="muro3" texture="#880000" size="773.140564,1900,9" repeat="1000" nx="73.00537109" ny="0" nz="-769.6860352" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="pared4" tx="6028.624512" ty="950" tz="854.1359253"  rx="0" ry="0" rz="0">
+				<plane id="muro4" texture="#880000" size="796.28302,1900,9" repeat="1000" nx="794.4857178" ny="0" nz="53.47021484" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="pared5" tx="5226.416504" ty="950" tz="411.503479"  rx="0" ry="0" rz="0">
+				<plane id="muro5" texture="#880000" size="1660.368774,1900,9" repeat="1000" nx="90.7791748" ny="0" nz="-1657.885254" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="pared23" tx="1060.72644" ty="950" tz="101.1647949"  rx="0" ry="0" rz="0">
+				<plane id="muro23" texture="#880000" size="2190,1900,9" repeat="1000" nx="60.47216797" ny="0" nz="-2159.153564" px="0" py="0" pz="0" collide="1" />
+			</transform>
+		</transform>
+		<transform id="room_5" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+			<transform id="pared7" tx="4593.410156" ty="950" tz="105.78302"  rx="0" ry="0" rz="0">
+				<plane id="muro7" texture="#008800" size="312.8280945,1900,9" repeat="1000" nx="42.76940918" ny="0" nz="309.890625" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="pared8" tx="4744.106934" ty="950" tz="-70.06689453"  rx="0" ry="0" rz="0">
+				<plane id="muro8" texture="#008800" size="309.0472412,1900,9" repeat="1000" nx="308.9304199" ny="0" nz="-8.497071266" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="pared9" tx="5408.647461" ty="950" tz="-222.9507446"  rx="0" ry="0" rz="0">
+				<plane id="muro9" texture="#008800" size="1337.582397,1900,9" repeat="1000" nx="-3.162842035" ny="0" nz="1337.578613" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="pared10" tx="6087.995117" ty="950" tz="-598.3643799"  rx="0" ry="0" rz="0">
+				<plane id="muro10" texture="#008800" size="754.2857056,1900,9" repeat="1000" nx="753.9900513" ny="0" nz="21.11767578" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="pared11" tx="6501.73291" ty="950" tz="-981.21698"  rx="0" ry="0" rz="0">
+				<plane id="muro11" texture="#008800" size="806.4434814,1900,9" repeat="1000" nx="11.71520996" ny="0" nz="806.3583984" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="pared12" tx="6895.427734" ty="950" tz="-2179.236084"  rx="0" ry="0" rz="0">
+				<plane id="muro12" texture="#008800" size="2384.398438,1900,9" repeat="1000" nx="2384.322998" ny="0" nz="-18.96875" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="pared13" tx="5404.626953" ty="950" tz="-3447.184326"  rx="0" ry="0" rz="0">
+				<plane id="muro13" texture="#008800" size="2966.50708,1900,9" repeat="1000" nx="151.5737305" ny="0" nz="-2962.632324" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="pared14" tx="3928.830322" ty="950" tz="-3720.036865"  rx="0" ry="0" rz="0">
+				<plane id="muro14" texture="#008800" size="394.2858887,1900,9" repeat="1000" nx="394.1313477" ny="0" nz="11.03857422" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="pared15" tx="3728.955811" ty="950" tz="-3931.429443"  rx="0" ry="0" rz="0">
+				<plane id="muro15" texture="#008800" size="411.785553,1900,9" repeat="1000" nx="28.65478516" ny="0" nz="-410.7873535" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="1pared1" tx="1771.427734" ty="950" tz="-4100"  rx="0" ry="0" rz="0">
+				<plane id="1muro1" texture="#008800" size="3500,1900,19" repeat="1000" nx="-165.0117188" ny="0" nz="3442.443848" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="1pared0" tx="96.84216309" ty="950" tz="-2989.551758"  rx="0" ry="-0.05000000075" rz="0">
+				<plane id="1muro0" texture="#00FFFF" size="2590,1900,9" repeat="1000" nx="2484.26001" ny="0" nz="86.72729492" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="1pared4" tx="-1038.025513" ty="950" tz="-1739.770264"  rx="0" ry="0.02500000037" rz="0">
+				<plane id="1muro4" texture="#008800" size="2041,1900,19" repeat="1000" nx="125.6572266" ny="0" nz="-2037.280518" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="pared20" tx="-2030.214111" ty="950" tz="-980.079834"  rx="0" ry="0" rz="0">
+				<plane id="muro20" texture="#008800" size="1600,1900,9" repeat="1000" nx="-1542.252441" ny="0" nz="-43.19433594" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="pared21" tx="64.26171875" ty="950" tz="-141.1133728"  rx="0" ry="0" rz="0">
+				<plane id="muro21" texture="#008800" size="4234.320312,1900,9" repeat="1000" nx="-135.680603" ny="0" nz="4232.145996" px="0" py="0" pz="0" collide="1" />
+			</transform>
+		</transform>
+		<transform id="graph" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+			<transform id="g_0" tx="5041.129883" ty="10" tz="-897.7449951"  rx="0" ry="0" rz="0">
+				<plane id="g_0_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_1" tx="4698.600098" ty="10" tz="2536.73999"  rx="0" ry="0" rz="0">
+				<plane id="g_1_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_2" tx="940.0750122" ty="10" tz="-841.9730225"  rx="0" ry="0" rz="0">
+				<plane id="g_2_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_3" tx="778.742981" ty="10" tz="-3325.129883"  rx="0" ry="0" rz="0">
+				<plane id="g_3_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_4" tx="5993.549805" ty="10" tz="-2394.820068"  rx="0" ry="0" rz="0">
+				<plane id="g_4_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_5" tx="3077.590088" ty="10" tz="2882.449951"  rx="0" ry="0" rz="0">
+				<plane id="g_5_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_6" tx="3675.840088" ty="10" tz="-1733.72998"  rx="0" ry="0" rz="0">
+				<plane id="g_6_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_7" tx="3825.310059" ty="10" tz="206.4409943"  rx="0" ry="0" rz="0">
+				<plane id="g_7_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_8" tx="1755.099976" ty="10" tz="2306.540039"  rx="0" ry="0" rz="0">
+				<plane id="g_8_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_9" tx="3160.469971" ty="10" tz="2294.27002"  rx="0" ry="0" rz="0">
+				<plane id="g_9_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_10" tx="2401.370117" ty="10" tz="3328"  rx="0" ry="0" rz="0">
+				<plane id="g_10_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_11" tx="1699.890015" ty="10" tz="-1254.099976"  rx="0" ry="0" rz="0">
+				<plane id="g_11_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_12" tx="5469.879883" ty="10" tz="-2570.810059"  rx="0" ry="0" rz="0">
+				<plane id="g_12_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_13" tx="4846.350098" ty="10" tz="3561.72998"  rx="0" ry="0" rz="0">
+				<plane id="g_13_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_14" tx="3155.969971" ty="10" tz="-3518.530029"  rx="0" ry="0" rz="0">
+				<plane id="g_14_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_15" tx="1153.280029" ty="10" tz="1387.430054"  rx="0" ry="0" rz="0">
+				<plane id="g_15_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_16" tx="5341.399902" ty="10" tz="-1284.410034"  rx="0" ry="0" rz="0">
+				<plane id="g_16_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_17" tx="2746.209961" ty="10" tz="-3713.689941"  rx="0" ry="0" rz="0">
+				<plane id="g_17_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_18" tx="5413.25" ty="10" tz="2982.820068"  rx="0" ry="0" rz="0">
+				<plane id="g_18_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_19" tx="2251.23999" ty="10" tz="2212.110107"  rx="0" ry="0" rz="0">
+				<plane id="g_19_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_20" tx="3075.209961" ty="10" tz="1425.650024"  rx="0" ry="0" rz="0">
+				<plane id="g_20_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_21" tx="2625.830078" ty="10" tz="3670.600098"  rx="0" ry="0" rz="0">
+				<plane id="g_21_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_22" tx="5584.859863" ty="10" tz="1878.089966"  rx="0" ry="0" rz="0">
+				<plane id="g_22_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_23" tx="2011.339966" ty="10" tz="2279.949951"  rx="0" ry="0" rz="0">
+				<plane id="g_23_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_24" tx="1705.76001" ty="10" tz="2027.540039"  rx="0" ry="0" rz="0">
+				<plane id="g_24_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_25" tx="3839.870117" ty="10" tz="-1240.589966"  rx="0" ry="0" rz="0">
+				<plane id="g_25_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_26" tx="4127.169922" ty="10" tz="-2839.219971"  rx="0" ry="0" rz="0">
+				<plane id="g_26_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_27" tx="2640.629883" ty="10" tz="3230.639893"  rx="0" ry="0" rz="0">
+				<plane id="g_27_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_28" tx="4975.209961" ty="10" tz="-1442.130005"  rx="0" ry="0" rz="0">
+				<plane id="g_28_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_29" tx="1373.810059" ty="10" tz="3343.669922"  rx="0" ry="0" rz="0">
+				<plane id="g_29_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_30" tx="2102.159912" ty="10" tz="1586.689941"  rx="0" ry="0" rz="0">
+				<plane id="g_30_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_31" tx="5738.810059" ty="10" tz="753.440979"  rx="0" ry="0" rz="0">
+				<plane id="g_31_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_32" tx="2637.360107" ty="10" tz="3603.73999"  rx="0" ry="0" rz="0">
+				<plane id="g_32_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_33" tx="1666.650024" ty="10" tz="458.7449951"  rx="0" ry="0" rz="0">
+				<plane id="g_33_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_34" tx="2390.620117" ty="10" tz="2675.52002"  rx="0" ry="0" rz="0">
+				<plane id="g_34_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_35" tx="4105.310059" ty="10" tz="3493.26001"  rx="0" ry="0" rz="0">
+				<plane id="g_35_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_36" tx="2894.939941" ty="10" tz="-2415.48999"  rx="0" ry="0" rz="0">
+				<plane id="g_36_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_37" tx="5701.509766" ty="10" tz="3571.090088"  rx="0" ry="0" rz="0">
+				<plane id="g_37_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_38" tx="885.960022" ty="10" tz="3239.030029"  rx="0" ry="0" rz="0">
+				<plane id="g_38_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_39" tx="3846.47998" ty="10" tz="-578.3959961"  rx="0" ry="0" rz="0">
+				<plane id="g_39_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_40" tx="3717.580078" ty="10" tz="-1860.98999"  rx="0" ry="0" rz="0">
+				<plane id="g_40_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_41" tx="4716.009766" ty="10" tz="-1636.609985"  rx="0" ry="0" rz="0">
+				<plane id="g_41_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_42" tx="2682.199951" ty="10" tz="-2328.090088"  rx="0" ry="0" rz="0">
+				<plane id="g_42_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_43" tx="1125.199951" ty="10" tz="-1902.01001"  rx="0" ry="0" rz="0">
+				<plane id="g_43_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_44" tx="2864.379883" ty="10" tz="1095.400024"  rx="0" ry="0" rz="0">
+				<plane id="g_44_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_45" tx="3338.659912" ty="10" tz="-709.7390137"  rx="0" ry="0" rz="0">
+				<plane id="g_45_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_46" tx="1017.640015" ty="10" tz="3457.830078"  rx="0" ry="0" rz="0">
+				<plane id="g_46_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_47" tx="619.0269775" ty="10" tz="-3178.360107"  rx="0" ry="0" rz="0">
+				<plane id="g_47_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_48" tx="2972.659912" ty="10" tz="2214.040039"  rx="0" ry="0" rz="0">
+				<plane id="g_48_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_49" tx="5908.509766" ty="10" tz="3697.530029"  rx="0" ry="0" rz="0">
+				<plane id="g_49_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_50" tx="4106.669922" ty="10" tz="-992.8989868"  rx="0" ry="0" rz="0">
+				<plane id="g_50_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_51" tx="4498.629883" ty="10" tz="-1116.359985"  rx="0" ry="0" rz="0">
+				<plane id="g_51_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_52" tx="1764.959961" ty="10" tz="-2275.780029"  rx="0" ry="0" rz="0">
+				<plane id="g_52_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_53" tx="3506.929932" ty="10" tz="-2172.48999"  rx="0" ry="0" rz="0">
+				<plane id="g_53_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_54" tx="914.3389893" ty="10" tz="1973.26001"  rx="0" ry="0" rz="0">
+				<plane id="g_54_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_55" tx="5713.379883" ty="10" tz="3537.659912"  rx="0" ry="0" rz="0">
+				<plane id="g_55_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_56" tx="752.848999" ty="10" tz="2494.5"  rx="0" ry="0" rz="0">
+				<plane id="g_56_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_57" tx="984.6119995" ty="10" tz="2083.110107"  rx="0" ry="0" rz="0">
+				<plane id="g_57_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_58" tx="1057.26001" ty="10" tz="-2209.469971"  rx="0" ry="0" rz="0">
+				<plane id="g_58_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_59" tx="4786.790039" ty="10" tz="1977.560059"  rx="0" ry="0" rz="0">
+				<plane id="g_59_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_60" tx="3836.75" ty="10" tz="2207.75"  rx="0" ry="0" rz="0">
+				<plane id="g_60_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_61" tx="560.8829956" ty="10" tz="-3103.330078"  rx="0" ry="0" rz="0">
+				<plane id="g_61_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_62" tx="3121.26001" ty="10" tz="-3585.030029"  rx="0" ry="0" rz="0">
+				<plane id="g_62_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_63" tx="419.4379883" ty="10" tz="-2510.429932"  rx="0" ry="0" rz="0">
+				<plane id="g_63_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_64" tx="2768.52002" ty="10" tz="2717.26001"  rx="0" ry="0" rz="0">
+				<plane id="g_64_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_65" tx="3439.909912" ty="10" tz="2172.439941"  rx="0" ry="0" rz="0">
+				<plane id="g_65_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_66" tx="3814.27002" ty="10" tz="1847.02002"  rx="0" ry="0" rz="0">
+				<plane id="g_66_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_67" tx="5999.959961" ty="10" tz="-2513.209961"  rx="0" ry="0" rz="0">
+				<plane id="g_67_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_68" tx="3563.350098" ty="10" tz="-2716.840088"  rx="0" ry="0" rz="0">
+				<plane id="g_68_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_69" tx="978.7890015" ty="10" tz="-920.6329956"  rx="0" ry="0" rz="0">
+				<plane id="g_69_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_70" tx="5478.160156" ty="10" tz="2717.409912"  rx="0" ry="0" rz="0">
+				<plane id="g_70_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_71" tx="2154.570068" ty="10" tz="446.1229858"  rx="0" ry="0" rz="0">
+				<plane id="g_71_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_72" tx="3476.580078" ty="10" tz="-403.105011"  rx="0" ry="0" rz="0">
+				<plane id="g_72_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_73" tx="3184.850098" ty="10" tz="2187"  rx="0" ry="0" rz="0">
+				<plane id="g_73_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_74" tx="4486.859863" ty="10" tz="1095.72998"  rx="0" ry="0" rz="0">
+				<plane id="g_74_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_75" tx="849.6149902" ty="10" tz="909.2349854"  rx="0" ry="0" rz="0">
+				<plane id="g_75_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_76" tx="212.5249939" ty="10" tz="2106.320068"  rx="0" ry="0" rz="0">
+				<plane id="g_76_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_77" tx="4999.430176" ty="10" tz="3615.699951"  rx="0" ry="0" rz="0">
+				<plane id="g_77_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_78" tx="5239.629883" ty="10" tz="2813.820068"  rx="0" ry="0" rz="0">
+				<plane id="g_78_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_79" tx="5876.600098" ty="10" tz="2072.399902"  rx="0" ry="0" rz="0">
+				<plane id="g_79_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_80" tx="4001.280029" ty="10" tz="-23.30270004"  rx="0" ry="0" rz="0">
+				<plane id="g_80_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_81" tx="983.8079834" ty="10" tz="2805.100098"  rx="0" ry="0" rz="0">
+				<plane id="g_81_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_82" tx="3898.23999" ty="10" tz="-2141.620117"  rx="0" ry="0" rz="0">
+				<plane id="g_82_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_83" tx="3776.879883" ty="10" tz="-2302.340088"  rx="0" ry="0" rz="0">
+				<plane id="g_83_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_84" tx="4203.720215" ty="10" tz="-1556.630005"  rx="0" ry="0" rz="0">
+				<plane id="g_84_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_85" tx="1972.660034" ty="10" tz="-2282.860107"  rx="0" ry="0" rz="0">
+				<plane id="g_85_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_86" tx="823.3889771" ty="10" tz="2585.5"  rx="0" ry="0" rz="0">
+				<plane id="g_86_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_87" tx="444.9660034" ty="10" tz="1131.109985"  rx="0" ry="0" rz="0">
+				<plane id="g_87_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_88" tx="1341.939941" ty="10" tz="1284.619995"  rx="0" ry="0" rz="0">
+				<plane id="g_88_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_89" tx="2828.899902" ty="10" tz="786.5889893"  rx="0" ry="0" rz="0">
+				<plane id="g_89_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_90" tx="2018.109985" ty="10" tz="2955.320068"  rx="0" ry="0" rz="0">
+				<plane id="g_90_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_91" tx="2069.659912" ty="10" tz="837.0910034"  rx="0" ry="0" rz="0">
+				<plane id="g_91_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_92" tx="4999.459961" ty="10" tz="-2261.919922"  rx="0" ry="0" rz="0">
+				<plane id="g_92_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_93" tx="4052.860107" ty="10" tz="-144.9230042"  rx="0" ry="0" rz="0">
+				<plane id="g_93_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_94" tx="2891.610107" ty="10" tz="-1657.880005"  rx="0" ry="0" rz="0">
+				<plane id="g_94_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_95" tx="4272.52002" ty="10" tz="-2698.280029"  rx="0" ry="0" rz="0">
+				<plane id="g_95_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_96" tx="2483.899902" ty="10" tz="1665.859985"  rx="0" ry="0" rz="0">
+				<plane id="g_96_plane" texture="#AA0000" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="g_97" tx="3461.830078" ty="10" tz="3209.719971"  rx="0" ry="0" rz="0">
+				<plane id="g_97_plane" texture="#00AA00" size="60,60,10" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_0" tx="5191.264648" ty="0" tz="-1091.077515"  rx="0" ry="4.052102566" rz="0">
+				<plane id="ge_0_plane" texture="#00A0A0" size="489.5630188,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_1" tx="5008.169922" ty="0" tz="-1169.9375"  rx="0" ry="-1.450292468" rz="0">
+				<plane id="ge_1_plane" texture="#00A0A0" size="548.3616333,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_2" tx="4769.879883" ty="0" tz="-1007.05249"  rx="0" ry="-0.3830700219" rz="0">
+				<plane id="ge_2_plane" texture="#00A0A0" size="584.8920898,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_3" tx="4878.569824" ty="0" tz="-1267.17749"  rx="0" ry="-1.156267285" rz="0">
+				<plane id="ge_3_plane" texture="#00A0A0" size="807.232666,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_4" tx="4573.899902" ty="0" tz="-945.3220215"  rx="0" ry="-0.1014780253" rz="0">
+				<plane id="ge_4_plane" texture="#00A0A0" size="939.2921753,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_5" tx="4622.424805" ty="0" tz="-1227.1875"  rx="0" ry="-0.6666483283" rz="0">
+				<plane id="ge_5_plane" texture="#00A0A0" size="1065.544189,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_6" tx="4443.804688" ty="0" tz="-738.0704956"  rx="0" ry="0.2612085044" rz="0">
+				<plane id="ge_6_plane" texture="#00A0A0" size="1236.597046,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_7" tx="4546.995117" ty="0" tz="-521.3339844"  rx="0" ry="0.6509836316" rz="0">
+				<plane id="ge_7_plane" texture="#00A0A0" size="1242.34375,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_8" tx="4440.5" ty="0" tz="-1069.16748"  rx="0" ry="-0.2780132592" rz="0">
+				<plane id="ge_8_plane" texture="#00A0A0" size="1249.226807,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_9" tx="4521.205078" ty="0" tz="-460.5238647"  rx="0" ry="0.6992055774" rz="0">
+				<plane id="ge_9_plane" texture="#00A0A0" size="1358.65271,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_10" tx="5020.294922" ty="0" tz="-1579.83252"  rx="0" ry="-1.540259957" rz="0">
+				<plane id="ge_10_plane" texture="#00A0A0" size="1364.811157,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_11" tx="4358.484863" ty="0" tz="-1315.737549"  rx="0" ry="-0.5494241118" rz="0">
+				<plane id="ge_11_plane" texture="#00A0A0" size="1600.901978,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_12" tx="4379.35498" ty="0" tz="-1379.367432"  rx="0" ry="-0.629124105" rz="0">
+				<plane id="ge_12_plane" texture="#00A0A0" size="1636.956055,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_13" tx="4258.85498" ty="0" tz="-650.4249878"  rx="0" ry="0.3062110841" rz="0">
+				<plane id="ge_13_plane" texture="#00A0A0" size="1640.879272,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_14" tx="4433.219727" ty="0" tz="-345.6520386"  rx="0" ry="0.7373173237" rz="0">
+				<plane id="ge_14_plane" texture="#00A0A0" size="1642.389893,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_15" tx="4469.685059" ty="0" tz="-1519.682617"  rx="0" ry="-0.8276833892" rz="0">
+				<plane id="ge_15_plane" texture="#00A0A0" size="1689.207642,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_16" tx="4189.89502" ty="0" tz="-803.7420044"  rx="0" ry="0.1099856645" rz="0">
+				<plane id="ge_16_plane" texture="#00A0A0" size="1712.819336,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_17" tx="5255.504883" ty="0" tz="-1734.277588"  rx="0" ry="4.461521626" rz="0">
+				<plane id="ge_17_plane" texture="#00A0A0" size="1727.128662,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_18" tx="5517.339844" ty="0" tz="-1646.282471"  rx="0" ry="4.145785332" rz="0">
+				<plane id="ge_18_plane" texture="#00A0A0" size="1774.355469,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_19" tx="4742.695312" ty="0" tz="2257.149902"  rx="0" ry="4.55596447" rz="0">
+				<plane id="ge_19_plane" texture="#00A0A0" size="566.0915527,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_20" tx="4969.115234" ty="0" tz="2675.280029"  rx="0" ry="2.668284416" rz="0">
+				<plane id="ge_20_plane" texture="#00A0A0" size="607.8540649,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_21" tx="5088.379883" ty="0" tz="2627.074951"  rx="0" ry="2.913854361" rz="0">
+				<plane id="ge_21_plane" texture="#00A0A0" size="800.222168,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_22" tx="5055.924805" ty="0" tz="2759.780029"  rx="0" ry="2.583573341" rz="0">
+				<plane id="ge_22_plane" texture="#00A0A0" size="842.4439697,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_23" tx="4267.674805" ty="0" tz="2372.245117"  rx="0" ry="-0.3646537364" rz="0">
+				<plane id="ge_23_plane" texture="#00A0A0" size="922.5074463,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_24" tx="4772.475098" ty="0" tz="3049.234863"  rx="0" ry="1.713957906" rz="0">
+				<plane id="ge_24_plane" texture="#00A0A0" size="1035.584106,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_25" tx="5141.72998" ty="0" tz="2207.415039"  rx="0" ry="3.780714273" rz="0">
+				<plane id="ge_25_plane" texture="#00A0A0" size="1104.208374,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_26" tx="4849.015137" ty="0" tz="3076.219971"  rx="0" ry="1.842705727" rz="0">
+				<plane id="ge_26_plane" texture="#00A0A0" size="1120.113159,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_27" tx="4256.435059" ty="0" tz="2191.879883"  rx="0" ry="-0.6623858809" rz="0">
+				<plane id="ge_27_plane" texture="#00A0A0" size="1121.495972,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_28" tx="4401.955078" ty="0" tz="3015"  rx="0" ry="1.015613675" rz="0">
+				<plane id="ge_28_plane" texture="#00A0A0" size="1125.577026,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_29" tx="5287.600098" ty="0" tz="2304.569824"  rx="0" ry="3.517068863" rz="0">
+				<plane id="ge_29_plane" texture="#00A0A0" size="1266.213135,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_30" tx="4069.254883" ty="0" tz="2354.589844"  rx="0" ry="-0.2817296088" rz="0">
+				<plane id="ge_30_plane" texture="#00A0A0" size="1310.349365,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_31" tx="5205.990234" ty="0" tz="3037.199951"  rx="0" ry="2.36307025" rz="0">
+				<plane id="ge_31_plane" texture="#00A0A0" size="1425.348633,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_32" tx="5200.054688" ty="0" tz="3053.915039"  rx="0" ry="2.340763092" rz="0">
+				<plane id="ge_32_plane" texture="#00A0A0" size="1440.731812,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_33" tx="4592.72998" ty="0" tz="1816.234985"  rx="0" ry="-1.424901605" rz="0">
+				<plane id="ge_33_plane" texture="#00A0A0" size="1456.483398,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_34" tx="3941.725098" ty="0" tz="2361.870117"  rx="0" ry="-0.2270578593" rz="0">
+				<plane id="ge_34_plane" texture="#00A0A0" size="1553.627075,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_35" tx="3929.535156" ty="0" tz="2415.504883"  rx="0" ry="-0.1563528031" rz="0">
+				<plane id="ge_35_plane" texture="#00A0A0" size="1557.124268,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_36" tx="3888.095215" ty="0" tz="2709.594971"  rx="0" ry="0.2101202756" rz="0">
+				<plane id="ge_36_plane" texture="#00A0A0" size="1657.4646,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_37" tx="5734.919922" ty="0" tz="-2542.01001"  rx="0" ry="3.033354282" rz="0">
+				<plane id="ge_37_plane" texture="#00A0A0" size="533.2003784,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_38" tx="4871.200195" ty="0" tz="-2634.544922"  rx="0" ry="-0.1060597152" rz="0">
+				<plane id="ge_38_plane" texture="#00A0A0" size="1204.125977,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_39" tx="4798.524902" ty="0" tz="-2705.015137"  rx="0" ry="-0.1973009557" rz="0">
+				<plane id="ge_39_plane" texture="#00A0A0" size="1369.274902,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_40" tx="4623.379883" ty="0" tz="-2436.575195"  rx="0" ry="0.1572669297" rz="0">
+				<plane id="ge_40_plane" texture="#00A0A0" size="1714.154297,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_41" tx="4516.615234" ty="0" tz="-2643.825195"  rx="0" ry="-0.07644538581" rz="0">
+				<plane id="ge_41_plane" texture="#00A0A0" size="1912.114136,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_42" tx="4488.404785" ty="0" tz="-2371.649902"  rx="0" ry="0.2002008706" rz="0">
+				<plane id="ge_42_plane" texture="#00A0A0" size="2002.955688,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_43" tx="1858.550049" ty="0" tz="2153.745117"  rx="0" ry="-0.6903964877" rz="0">
+				<plane id="ge_43_plane" texture="#00A0A0" size="396.3456421,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_44" tx="2200.97998" ty="0" tz="2477.734863"  rx="0" ry="2.335174322" rz="0">
+				<plane id="ge_44_plane" texture="#00A0A0" size="548.0229492,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_45" tx="2014.724976" ty="0" tz="2617.63501"  rx="0" ry="1.580820203" rz="0">
+				<plane id="ge_45_plane" texture="#00A0A0" size="675.4040527,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_46" tx="2056.75" ty="0" tz="1933.319946"  rx="0" ry="4.582126617" rz="0">
+				<plane id="ge_46_plane" texture="#00A0A0" size="699.1835938,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_47" tx="2247.619873" ty="0" tz="1972.905029"  rx="0" ry="4.056506157" rz="0">
+				<plane id="ge_47_plane" texture="#00A0A0" size="774.8673096,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_48" tx="2389.929932" ty="0" tz="2498.60498"  rx="0" ry="2.61784339" rz="0">
+				<plane id="ge_48_plane" texture="#00A0A0" size="874.3922119,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_49" tx="2492" ty="0" tz="2246.995117"  rx="0" ry="3.210047483" rz="0">
+				<plane id="ge_49_plane" texture="#00A0A0" size="963.5767822,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_50" tx="1497.976074" ty="0" tz="2181.530029"  rx="0" ry="-0.1894172877" rz="0">
+				<plane id="ge_50_plane" texture="#00A0A0" size="1045.426392,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_51" tx="2206.35498" ty="0" tz="2803.975098"  rx="0" ry="1.927064657" rz="0">
+				<plane id="ge_51_plane" texture="#00A0A0" size="1118.272095,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_52" tx="1462.839478" ty="0" tz="2126.60498"  rx="0" ry="-0.2726110518" rz="0">
+				<plane id="ge_52_plane" texture="#00A0A0" size="1139.065308,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_53" tx="2325.984863" ty="0" tz="2755.294922"  rx="0" ry="2.155512333" rz="0">
+				<plane id="ge_53_plane" texture="#00A0A0" size="1140.095337,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_54" tx="2585.905029" ty="0" tz="2287.109863"  rx="0" ry="3.129131556" rz="0">
+				<plane id="ge_54_plane" texture="#00A0A0" size="1149.219238,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_55" tx="1497.573975" ty="0" tz="2542.524902"  rx="0" ry="0.472471565" rz="0">
+				<plane id="ge_55_plane" texture="#00A0A0" size="1153.951782,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_56" tx="1676.639893" ty="0" tz="1782.284912"  rx="0" ry="-0.9787380099" rz="0">
+				<plane id="ge_56_plane" texture="#00A0A0" size="1199.490723,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_57" tx="1417.364502" ty="0" tz="2432.725098"  rx="0" ry="0.251750797" rz="0">
+				<plane id="ge_57_plane" texture="#00A0A0" size="1226.616577,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_58" tx="1582.310059" ty="0" tz="1833.689941"  rx="0" ry="-0.8050805926" rz="0">
+				<plane id="ge_58_plane" texture="#00A0A0" size="1238.08667,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_59" tx="1910.610107" ty="0" tz="452.4339905"  rx="0" ry="3.167455912" rz="0">
+				<plane id="ge_59_plane" texture="#00A0A0" size="488.0832825,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_60" tx="1868.155029" ty="0" tz="647.9179688"  rx="0" ry="2.387749434" rz="0">
+				<plane id="ge_60_plane" texture="#00A0A0" size="552.7772217,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_61" tx="1504.294922" ty="0" tz="871.6824951"  rx="0" ry="1.196190834" rz="0">
+				<plane id="ge_61_plane" texture="#00A0A0" size="887.4154053,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_62" tx="1258.132568" ty="0" tz="683.9899902"  rx="0" ry="0.5038957" rz="0">
+				<plane id="ge_62_plane" texture="#00A0A0" size="932.9992065,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_63" tx="2247.774902" ty="0" tz="622.6669922"  rx="0" ry="2.866658926" rz="0">
+				<plane id="ge_63_plane" texture="#00A0A0" size="1207.603638,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_64" tx="2265.514893" ty="0" tz="777.0725098"  rx="0" ry="2.65302372" rz="0">
+				<plane id="ge_64_plane" texture="#00A0A0" size="1356.424194,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_65" tx="1055.808105" ty="0" tz="794.9274902"  rx="0" ry="0.5031189322" rz="0">
+				<plane id="ge_65_plane" texture="#00A0A0" size="1394.484375,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_66" tx="2370.929932" ty="0" tz="942.1975098"  rx="0" ry="2.540019035" rz="0">
+				<plane id="ge_66_plane" texture="#00A0A0" size="1708.492432,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_67" tx="1958.945068" ty="0" tz="1335.42749"  rx="0" ry="1.892616153" rz="0">
+				<plane id="ge_67_plane" texture="#00A0A0" size="1848.251831,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_68" tx="1710.875" ty="0" tz="1382.642578"  rx="0" ry="1.618627667" rz="0">
+				<plane id="ge_68_plane" texture="#00A0A0" size="1849.910767,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_69" tx="3344.844971" ty="0" tz="650.9205322"  rx="0" ry="3.888104677" rz="0">
+				<plane id="ge_69_plane" texture="#00A0A0" size="1309.058838,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_70" tx="531.0699463" ty="0" tz="1507.777588"  rx="0" ry="1.081720948" rz="0">
+				<plane id="ge_70_plane" texture="#00A0A0" size="1356.059082,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_71" tx="801.2319946" ty="0" tz="1701.867432"  rx="0" ry="1.509831071" rz="0">
+				<plane id="ge_71_plane" texture="#00A0A0" size="1588.215698,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_72" tx="854.6744995" ty="0" tz="2912.265137"  rx="0" ry="1.66624856" rz="0">
+				<plane id="ge_72_plane" texture="#00A0A0" size="656.5185547,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_73" tx="920.5145264" ty="0" tz="3021.665039"  rx="0" ry="1.789902091" rz="0">
+				<plane id="ge_73_plane" texture="#00A0A0" size="893.6963501,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_74" tx="1098.599487" ty="0" tz="2964.584961"  rx="0" ry="2.198750734" rz="0">
+				<plane id="ge_74_plane" texture="#00A0A0" size="936.9017944,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_75" tx="1319.982544" ty="0" tz="-1048.036499"  rx="0" ry="3.638585567" rz="0">
+				<plane id="ge_75_plane" texture="#00A0A0" size="864.3884888,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_76" tx="1032.637451" ty="0" tz="-1371.991455"  rx="0" ry="4.539492607" rz="0">
+				<plane id="ge_76_plane" texture="#00A0A0" size="1076.080688,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_77" tx="998.6674805" ty="0" tz="-1525.721436"  rx="0" ry="4.626904964" rz="0">
+				<plane id="ge_77_plane" texture="#00A0A0" size="1372.508789,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_78" tx="1352.517456" ty="0" tz="-1558.876465"  rx="0" ry="4.190320969" rz="0">
+				<plane id="ge_78_plane" texture="#00A0A0" size="1654.157715,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_79" tx="679.7564697" ty="0" tz="-1676.201416"  rx="0" ry="-1.268324256" rz="0">
+				<plane id="ge_79_plane" texture="#00A0A0" size="1747.80188,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_80" tx="1456.367554" ty="0" tz="-1562.416504"  rx="0" ry="4.090588093" rz="0">
+				<plane id="ge_80_plane" texture="#00A0A0" size="1772.678101,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_81" tx="1915.842529" ty="0" tz="-1249.926514"  rx="0" ry="3.537591457" rz="0">
+				<plane id="ge_81_plane" texture="#00A0A0" size="2115.229004,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_82" tx="1811.137451" ty="0" tz="-1585.031494"  rx="0" ry="3.847853661" rz="0">
+				<plane id="ge_82_plane" texture="#00A0A0" size="2289.878418,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_83" tx="750.4790039" ty="0" tz="-1972.651611"  rx="0" ry="-1.404658437" rz="0">
+				<plane id="ge_83_plane" texture="#00A0A0" size="2292.928467,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_84" tx="779.5510254" ty="0" tz="-2010.166504"  rx="0" ry="-1.434239268" rz="0">
+				<plane id="ge_84_plane" texture="#00A0A0" size="2358.342041,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_85" tx="2139.367432" ty="0" tz="-775.8560181"  rx="0" ry="3.086518288" rz="0">
+				<plane id="ge_85_plane" texture="#00A0A0" size="2402.227295,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_86" tx="859.4089966" ty="0" tz="-2083.551514"  rx="0" ry="-1.505916953" rz="0">
+				<plane id="ge_86_plane" texture="#00A0A0" size="2488.39209,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_87" tx="1762.47644" ty="0" tz="-3519.409912"  rx="0" ry="3.336575985" rz="0">
+				<plane id="ge_87_plane" texture="#00A0A0" size="2005.468872,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_88" tx="1836.841431" ty="0" tz="-2870.310059"  rx="0" ry="2.735624075" rz="0">
+				<plane id="ge_88_plane" texture="#00A0A0" size="2303.418213,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_89" tx="1950.001465" ty="0" tz="-3455.080078"  rx="0" ry="3.252089739" rz="0">
+				<plane id="ge_89_plane" texture="#00A0A0" size="2356.890869,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_90" tx="1967.356445" ty="0" tz="-3421.830078"  rx="0" ry="3.22276926" rz="0">
+				<plane id="ge_90_plane" texture="#00A0A0" size="2385.081055,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_91" tx="878.7659912" ty="0" tz="-2122.881348"  rx="0" ry="1.653801799" rz="0">
+				<plane id="ge_91_plane" texture="#00A0A0" size="2412.803955,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_92" tx="2857.475098" ty="0" tz="3243.094971"  rx="0" ry="1.022810698" rz="0">
+				<plane id="ge_92_plane" texture="#00A0A0" size="845.0217285,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_93" tx="2851.709961" ty="0" tz="3276.524902"  rx="0" ry="1.050323129" rz="0">
+				<plane id="ge_93_plane" texture="#00A0A0" size="908.4425049,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_94" tx="5377.429688" ty="0" tz="3629.629883"  rx="0" ry="3.014429808" rz="0">
+				<plane id="ge_94_plane" texture="#00A0A0" size="1070.805664,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+			<transform id="ge_95" tx="5576.030273" ty="0" tz="1868.130615"  rx="0" ry="4.567382336" rz="0">
+				<plane id="ge_95_plane" texture="#00A0A0" size="2253.024902,15,15" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+			</transform>
+		</transform>
+	</transform>
+	<plane id="polyline_obs_5" texture="#FFFF00" size="141.4213562,2000,70" repeat="1" nx="-100" ny="0" nz="-100" px="4050" py="1000" pz="3050" collide="1" />
+	<plane id="polyline_obs_0" texture="#FFFF00" size="100,2000,70" repeat="1" nx="0" ny="0" nz="-100" px="4150" py="1000" pz="3300" collide="1" />
+	<plane id="polyline_obs_1" texture="#FFFF00" size="141.4213562,2000,70" repeat="1" nx="100" ny="0" nz="-100" px="4050" py="1000" pz="3250" collide="1" />
+	<plane id="polyline_obs_2" texture="#FFFF00" size="282.8427124,2000,70" repeat="1" nx="200" ny="0" nz="200" px="4100" py="1000" pz="3100" collide="1" />
+	<plane id="polyline_obs_3" texture="#FFFF00" size="100,2000,70" repeat="1" nx="0" ny="0" nz="100" px="4250" py="1000" pz="3000" collide="1" />
+	<plane id="polyline_obs_4" texture="#FFFF00" size="200,2000,70" repeat="1" nx="-200" ny="0" nz="0" px="4300" py="1000" pz="3100" collide="1" />
+</innermodel>

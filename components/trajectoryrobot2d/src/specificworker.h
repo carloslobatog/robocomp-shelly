@@ -229,7 +229,7 @@ class SpecificWorker : public GenericWorker
 		bool updateInnerModel(InnerModel* inner, TrajectoryState &state);
 		bool insertObstacle();
 		bool removeNode(const QString &item);
-		void addPlane(QString item, QString parent, QString path, QVec scale, QVec t, QVec r);
+// 		void addPlane(QString item, QString parent, QString path, QVec scale, QVec t, QVec r);
 		void readRoadFromFile(string name, WayPoints *road);
 		void setRobotInitialPose(float x, float z, float alpha);
 		void drawTarget(const QVec &target);

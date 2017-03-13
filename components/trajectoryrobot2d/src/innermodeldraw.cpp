@@ -126,13 +126,17 @@ bool InnerModelDraw::addPlane_notExisting(InnerModelViewer *innerViewer, const Q
 		printf("%s: parent not exists\n", __FUNCTION__);
 		return false;
 	}
-	InnerModelPlane *plane = innerViewer->innerModel->newPlane(item, parent, texture, size(0), size(1), size(2), 1, n(0), n(1), n(2), p(0), p(1), p(2),true);
+	InnerModelPlane *plane = innerViewer->innerModel->newPlane(item, parent, texture, size(0), size(1), size(2), 1, n(0), n(1), n(2), p(0), p(1), p(2), true);
 	parent->addChild(plane);
 
+// 	innerViewer->innerModel->save(item+".xml");
 	innerViewer->recursiveConstructor(plane, innerViewer->mts[parent->id], innerViewer->mts, innerViewer->meshHash);
-		
+
 	return true;
 }
+
+
+
 
 void InnerModelDraw::drawLine(InnerModelViewer *innerViewer, QString name, QString parent, const QVec& normalVector, float length, float width, QString texture)
 {
@@ -143,9 +147,7 @@ void InnerModelDraw::drawLine(InnerModelViewer *innerViewer, QString name, QStri
 
 void InnerModelDraw::drawLine2Points(InnerModelViewer *innerViewer, QString name, QString parent, const QVec& p1, const QVec& p2, QString texture)
 {
-
 	InnerModelDraw::addPlane_ignoreExisting(innerViewer, name, parent, QVec::vec3(0,0,0), QVec::vec3(0,1,0), texture, QVec::vec3(15, (p1-p2).norm2(), 15));
-			
 }
 
 

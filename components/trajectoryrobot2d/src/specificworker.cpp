@@ -105,24 +105,21 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 	printf("updateObstacles\n");
 	//Borrar todos los newpolyline_obs_X que existan del innermodel y del innermodel viewer
 	
-	//Crear obs por cada polinena
-	for (int i=0; i<100; i++)
-	{
-		QString cadena = QString("polyline_obs_") + QString::number(i,10);
-		printf("borramos %s\n", cadena.toStdString().c_str());
-		if (not InnerModelDraw::removeObject(viewer->innerViewer, cadena) )
-			break;
-	}
+	//Crear obs por cada polinenaf
+// 	for (int i=0; i<100; i++)
+// 	{
+// 		QString cadena = QString("polyline_obs_") + QString::number(i,10);
+// 		printf("puntero a %s: %p\n", cadena.toStdString().c_str(), viewer->innerModel->getNode(cadena));
+// 
+// 		qDebug()<<"intentamos borrar "<<cadena;
+// 		if (not InnerModelDraw::removeObject(viewer->innerViewer, cadena) )
+// 		{
+// 			printf("removeObject devuelve falso\n");
+// 			break;
+// 		}
+// 	}
 
-//  	float p1x= 3000;
-//  	float p1z=200;
-//  	float p2x=4000;
-//  	float p2z=500;
-//  	QLine2D line(QVec::vec2(p1x,p1z), QVec::vec2(p2x, p2z));	
-// 	QVec norm = line.getPerpendicularVector();
-// 	InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, QString("plano0"), QString("world"),QVec::vec3(p1x,1000,p1z), QVec::vec3(norm.x(),0,norm.y()),  QString("#98FB98"), QVec::vec3(sqrt(pow(p1x-p2x,2)+pow(p1z-p2z,2)),2000,9));
-// 	InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, QString("plano1"), QString("world"),QVec::vec3(p1x,1000,p1z), QVec::vec3(-norm.x(),0,-norm.y()),  QString("#DC443C"), QVec::vec3(sqrt(pow(p1x-p2x,2)+pow(p1z-p2z,2)),2000,9));
-	
+
 	int count = 0;
 	for (auto poly:polylines)
 	{
@@ -130,8 +127,6 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 		
 		for (auto currentPoint:poly)
 		{
-// 			QLine2D line(QVec::vec2(currentPoint.x,currentPoint.z), QVec::vec2(previousPoint.x, previousPoint.z));
-// 		  	float rot = line.getAngleWithZAxis();
 			
 			QString cadena = QString("polyline_obs_")+QString::number(count,10);
 			qDebug()<<"nombre"<<cadena;
@@ -145,7 +140,7 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 			normal(2) = normal(0);
 			normal(0) = -temp;
 			
-			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,70));
+			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("root"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,70));
 			count++;
 			previousPoint=currentPoint;
 		}
@@ -192,6 +187,10 @@ void SpecificWorker::compute()
 		newPolyline = false;
 	}
 	
+	//if (innerModel->getNode("polyline_obs_0") == NULL ) qFatal("");
+	
+	if (road.isBlocked()) currentTarget.setState(CurrentTarget::State::BLOCKED);
+	
 	switch (currentTarget.state)
 	{
 		case CurrentTarget::State::STOP:
@@ -209,15 +208,20 @@ void SpecificWorker::compute()
 			setHeadingCommand(innerModel, currentTarget.getRotation().y(), currentTarget, tState, road);
 			break;		
 		case CurrentTarget::State::BLOCKED:
-		  
+			
+			controller->stopTheRobot(omnirobot_proxy);
 			road.update();		
 			elasticband.update(innerModel, road, laserData, currentTarget, safePolyList);	
 			if( road.isBlocked() == true)
 			{
+				
 				qDebug() << __FUNCTION__ << "Blocked. Calling replanning";
 				road.setRequiresReplanning(true);
+				//road.setBlocked(true);
 			}
+	
 			currentTarget.setState(CurrentTarget::State::GOTO);	
+			
 			break;
 		
 		case CurrentTarget::State::GOBACKWARDS:
@@ -404,9 +408,9 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 	///////////////////////////////////
 	// Update the band
 	/////////////////////////////////
-	qDebug()<<"Se debe actualizar elasticband";
+	
 	elasticband.update(innerModel, myRoad, laserData, target, safePolyList);
-	qDebug()<<"Se ha debido actualizar elasticband";
+
 	//qFatal("aqui");
 	///////////////////////////////////
 	// compute all measures relating the robot to the road
@@ -901,11 +905,14 @@ bool SpecificWorker::updateInnerModel(InnerModel *inner, TrajectoryState &state)
 	printf("a\n");
 	try
 	{
-		printf("colisiona: %d\n", inner->collide("base_mesh", "polyline_obs_3"));
+		printf("1\n");
+		inner->save("caca.xml");
+		printf("colisiona: %d\n", inner->collide("base_mesh", "polyline_obs_1"));
+		printf("2\n");
 	}
 	catch(...)
 	{
-		
+		printf("3\n");
 	}
 	printf("b\n");
 
@@ -983,16 +990,14 @@ void SpecificWorker::drawTarget(const QVec &target)
 {
 #ifdef USE_QTGUI
 	//Draw target as green box
-	InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, "target", "world", QVec::vec3(target(0), 5, target(2)),
-	                                        QVec::vec3(1, 0, 0), "#00FF00", QVec::vec3(100, 100, 100));
+	InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, "target", "world", QVec::vec3(target(0), 5, target(2)), QVec::vec3(1, 0, 0), "#00FF00", QVec::vec3(100, 100, 100));
 #endif
 }
 
 void SpecificWorker::drawGreenBoxOnTarget(const QVec &target)
 {
 #ifdef USE_QTGUI
-	InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, "target", "world", QVec::vec3(target(0), 1800, target(2)),
-	                                        QVec::vec3(1, 0, 0), "#00FA00", QVec::vec3(150, 150, 150));
+	InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, "target", "world", QVec::vec3(target(0), 1800, target(2)), QVec::vec3(1, 0, 0), "#00FA00", QVec::vec3(150, 150, 150));
 #endif
 
 }
@@ -1048,17 +1053,16 @@ bool SpecificWorker::removeNode(const QString &item)
  * @param r ...
  * @return void
  */
-void SpecificWorker::addPlane(QString item, QString parentS, QString path, QVec scale, QVec t, QVec r)
-{
-	InnerModelTransform *parent = dynamic_cast<InnerModelTransform *>(innerModel->getNode(parentS));
-	if (innerModel->getNode(item) != NULL)
-		removeNode(item);
-	InnerModelMesh *mesh = innerModel->newMesh(item, parent, path, scale(0), scale(1), scale(2), 0, t(0), t(1), t(2),
-	                                           r(0), r(1), r(2));
-	mesh->setScale(scale(0), scale(1), scale(2));
-	parent->addChild(mesh);
-}
-
+// void SpecificWorker::addPlane(QString item, QString parentS, QString path, QVec scale, QVec t, QVec r)
+// {
+// 	InnerModelTransform *parent = dynamic_cast<InnerModelTransform *>(innerModel->getNode(parentS));
+// 	if (innerModel->getNode(item) != NULL)
+// 		removeNode(item);
+// 	InnerModelMesh *mesh = innerModel->newMesh(item, parent, path, scale(0), scale(1), scale(2), 0, t(0), t(1), t(2), r(0), r(1), r(2));
+// 	mesh->setScale(scale(0), scale(1), scale(2));
+// 	parent->addChild(mesh);
+// }
+// 
 
 bool SpecificWorker::insertObstacle()
 {

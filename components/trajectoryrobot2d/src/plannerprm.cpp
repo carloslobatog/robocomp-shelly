@@ -66,7 +66,7 @@ void PlannerPRM::initialize(Sampler* sampler_, const RoboCompCommonBehavior::Par
 			qFatal("Planner-Initialize. Aborting. Could not find enough free points to build de graph"); 
 		
 		qDebug() << __FUNCTION__ << "Creating with " << nPointsInGraph << "nodes and " << nNeighboursInGraph << "neighboors";
-    constructGraph(pointList, nNeighboursInGraph, maxDistToSearchmm, robotRadiusmm);  ///GET From IM ----------------------------------
+		constructGraph(pointList, nNeighboursInGraph, maxDistToSearchmm, robotRadiusmm);  ///GET From IM ----------------------------------
 		qDebug() << __FUNCTION__ << "Graph constructed with " << pointList.size() << "points";
 		writeGraphToFile(graphFileName);
 	}

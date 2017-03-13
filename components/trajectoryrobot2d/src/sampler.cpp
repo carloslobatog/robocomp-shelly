@@ -105,16 +105,17 @@ std::tuple<bool, QString> Sampler::checkRobotValidStateAtTarget(const QVec &targ
 	//// Check if the robot at the target collides with any know object
 	///////////////////////	
 	for ( auto &in : robotNodes )
+	{
 		for ( auto &out : restNodes )
 		{
 			if ( innerModelSampler->collide( in, out))
 			{
-				//qDebug() << __FUNCTION__ << "collision de " << in << " con " << out;
-				diagnosis += "Collision of robot's mesh '" + in + "' with '" + out + "' at robot position " 
-											+ QString::number(targetPos.x()) + ", " + QString::number(targetPos.z());
+				qDebug() << __FUNCTION__ << "collision de " << in << " con " << out;
+				diagnosis += "Collision of robot's mesh '" + in + "' with '" + out + "' at robot position " + QString::number(targetPos.x()) + ", " + QString::number(targetPos.z());
 				return std::make_tuple(false, diagnosis);
 			}
 		}
+	}
 	return std::make_tuple(true, diagnosis);
 }
 
