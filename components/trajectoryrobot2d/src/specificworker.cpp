@@ -103,47 +103,55 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 {
 	printf("updateObstacles\n");
-	//Borrar todos los newobs_X que existan del innermodel y del innermodel viewer
+	//Borrar todos los newpolyline_obs_X que existan del innermodel y del innermodel viewer
 	
 	//Crear obs por cada polinena
 	for (int i=0; i<100; i++)
 	{
-		QString cadena = QString("obs_") + QString::number(i,10);
+		QString cadena = QString("polyline_obs_") + QString::number(i,10);
 		printf("borramos %s\n", cadena.toStdString().c_str());
 		if (not InnerModelDraw::removeObject(viewer->innerViewer, cadena) )
 			break;
 	}
 
- 	float p1x= 3000;
- 	float p1z=200;
- 	float p2x=4000;
- 	float p2z=500;
- 	QLine2D line(QVec::vec2(p1x,p1z), QVec::vec2(p2x, p2z));	
-	QVec norm = line.getPerpendicularVector();
-	InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, QString("plano0"), QString("world"),QVec::vec3(p1x,1000,p1z), QVec::vec3(norm.x(),0,norm.y()),  QString("#98FB98"), QVec::vec3(sqrt(pow(p1x-p2x,2)+pow(p1z-p2z,2)),2000,9));
-	InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, QString("plano1"), QString("world"),QVec::vec3(p1x,1000,p1z), QVec::vec3(-norm.x(),0,-norm.y()),  QString("#DC443C"), QVec::vec3(sqrt(pow(p1x-p2x,2)+pow(p1z-p2z,2)),2000,9));
+//  	float p1x= 3000;
+//  	float p1z=200;
+//  	float p2x=4000;
+//  	float p2z=500;
+//  	QLine2D line(QVec::vec2(p1x,p1z), QVec::vec2(p2x, p2z));	
+// 	QVec norm = line.getPerpendicularVector();
+// 	InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, QString("plano0"), QString("world"),QVec::vec3(p1x,1000,p1z), QVec::vec3(norm.x(),0,norm.y()),  QString("#98FB98"), QVec::vec3(sqrt(pow(p1x-p2x,2)+pow(p1z-p2z,2)),2000,9));
+// 	InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, QString("plano1"), QString("world"),QVec::vec3(p1x,1000,p1z), QVec::vec3(-norm.x(),0,-norm.y()),  QString("#DC443C"), QVec::vec3(sqrt(pow(p1x-p2x,2)+pow(p1z-p2z,2)),2000,9));
 	
-// 	int count = 0;
-// 	for (auto poly:polylines)
-// 	{
-// 		auto previousPoint = poly[poly.size()-1];
-// 		
-// 		for (auto currentPoint:poly)
-// 		{
-// 		 
-//  		  QLine2D line(QVec::vec2(currentPoint.x,currentPoint.z), QVec::vec2(previousPoint.x, previousPoint.z));
-// // 		  float rot = line.getAngleWithZAxis();
-// 		  
-// 		  
-// 		  QString cadena = QString("obs_")+QString::number(count,10);	
-// 		  InnerModelDraw::drawLine2Points(viewer->innerViewer, cadena, QString("world"),  QVec::vec3(currentPoint.x,0,currentPoint.z),QVec::vec3(previousPoint.x, 0,previousPoint.z), QString("#FFFF00"));
-// 		 //InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"),QVec::vec3(previousPoint.x,1000,previousPoint.z), QVec::vec3(1.57,0,line.getPerpendicularVector().z()),  QString("#00FFFF"), QVec::vec3(dist,2000,9));
-// 		  count++;
-// 		  previousPoint=currentPoint;
-// 		}
-// 		
-// 		
-// 	}
+	int count = 0;
+	for (auto poly:polylines)
+	{
+		auto previousPoint = poly[poly.size()-1];
+		
+		for (auto currentPoint:poly)
+		{
+// 			QLine2D line(QVec::vec2(currentPoint.x,currentPoint.z), QVec::vec2(previousPoint.x, previousPoint.z));
+// 		  	float rot = line.getAngleWithZAxis();
+			
+			QString cadena = QString("polyline_obs_")+QString::number(count,10);
+			qDebug()<<"nombre"<<cadena;
+			QVec ppoint = QVec::vec3(previousPoint.x, 1000, previousPoint.z);
+			QVec cpoint = QVec::vec3(currentPoint.x, 1000, currentPoint.z);
+			QVec center = (cpoint + ppoint).operator*(0.5);
+			
+			QVec normal = (cpoint-ppoint);
+			float dist=normal.norm2();	
+			float temp = normal(2);
+			normal(2) = normal(0);
+			normal(0) = -temp;
+			
+			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,70));
+			count++;
+			previousPoint=currentPoint;
+		}
+		
+		
+	}
 	
 }
 		
@@ -155,6 +163,7 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 void SpecificWorker::compute()
 {
 	static QTime reloj = QTime::currentTime();
+
 
 	flagLaser = false;
 	
@@ -887,7 +896,21 @@ bool SpecificWorker::updateInnerModel(InnerModel *inner, TrajectoryState &state)
 	{
 		qDebug() << __FUNCTION__ << "Can't connect to OmniRobot proxy. Retrying...";
 		return false;
-	}	
+	}
+	
+	printf("a\n");
+	try
+	{
+		printf("colisiona: %d\n", inner->collide("base_mesh", "polyline_obs_3"));
+	}
+	catch(...)
+	{
+		
+	}
+	printf("b\n");
+
+	
+	
 	try
 	{
 	//	printf("Escribiendo a laserantes\n");
