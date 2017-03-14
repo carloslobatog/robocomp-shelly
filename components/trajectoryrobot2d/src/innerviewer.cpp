@@ -43,6 +43,7 @@ InnerViewer::InnerViewer( InnerModel *innerModel_, uint period_, QObject *parent
 	viewer.getLight()->setSpecular(osg::Vec4(1.0, 1.0, 1.0, 1.0));
 	
 	innerModel = innerModel_->copy();
+	
 	innerViewer = new InnerModelViewer(innerModel, "root", root, true);
 	viewer.setSceneData(root);
 	

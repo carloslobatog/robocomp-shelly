@@ -99,27 +99,30 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	return true;
 };
 
-///////////////NOS QUEDAMOS AQUI/////////////////////
+
 void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 {
-	printf("updateObstacles\n");
+	qDebug() << __FUNCTION__ << "updateObstacles";
 	//Borrar todos los newpolyline_obs_X que existan del innermodel y del innermodel viewer
 	
 	//Crear obs por cada polinenaf
-// 	for (int i=0; i<100; i++)
-// 	{
-// 		QString cadena = QString("polyline_obs_") + QString::number(i,10);
-// 		printf("puntero a %s: %p\n", cadena.toStdString().c_str(), viewer->innerModel->getNode(cadena));
-// 
-// 		qDebug()<<"intentamos borrar "<<cadena;
-// 		if (not InnerModelDraw::removeObject(viewer->innerViewer, cadena) )
-// 		{
-// 			printf("removeObject devuelve falso\n");
-// 			break;
-// 		}
-// 	}
+	for (int i=0; i<100; i++)
+	{
+		QString cadena = QString("polyline_obs_") + QString::number(i,10);
+		//printf("puntero a %s: %p\n", cadena.toStdString().c_str(), viewer->innerModel->getNode(cadena));
 
+		qDebug() << __FUNCTION__ <<"intentamos borrar "<<cadena;
+		if (innerModel->getNode(cadena))
+				innerModel->removeNode(cadena);
+		
+		if (not InnerModelDraw::removeObject(viewer->innerViewer, cadena) )
+		{
+			printf("removeObject devuelve falso\n");
+			break;
+ 		}
+	}
 
+		
 	int count = 0;
 	for (auto poly:polylines)
 	{
@@ -129,7 +132,7 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 		{
 			
 			QString cadena = QString("polyline_obs_")+QString::number(count,10);
-			qDebug()<<"nombre"<<cadena;
+			qDebug() << __FUNCTION__ << "nombre"<<cadena;
 			QVec ppoint = QVec::vec3(previousPoint.x, 1000, previousPoint.z);
 			QVec cpoint = QVec::vec3(currentPoint.x, 1000, currentPoint.z);
 			QVec center = (cpoint + ppoint).operator*(0.5);
@@ -139,15 +142,49 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 			float temp = normal(2);
 			normal(2) = normal(0);
 			normal(0) = -temp;
+			qDebug() << __FUNCTION__ << "nombre1"<<cadena;
 			
-			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("root"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,70));
+ 			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,70));			
+			qDebug() << __FUNCTION__ << "nombre2"<<cadena;
+			
+			///////////////////////////////////////////////////////////////////////////////
+			if (innerModel->getNode(cadena))
+			{
+				innerModel->removeNode(cadena);
+				qDebug() << __FUNCTION__ << "borrado " << cadena;
+			}
+			
+			qDebug() << __FUNCTION__ << "nombre3"<<cadena;
+			
+			InnerModelNode *parent = innerModel->getNode(QString("world"));			
+			if (parent == NULL)
+				printf("%s: parent not exists\n", __FUNCTION__);
+			else
+			{
+				qDebug() << __FUNCTION__ << "nombre3.1"<<cadena;					
+				InnerModelPlane *plane;
+				try
+				{
+					if (innerModel->getNode(cadena))
+						qDebug() << "SHIT!!!!!!!!!!!!!!!!!!!!!!!!";
+					plane  = innerModel->newPlane(cadena, parent, QString("#FFFF00"), dist, 2000, 70, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
+					qDebug() << __FUNCTION__ << "nombre3.2"<<cadena;
+					parent->addChild(plane); 
+				}
+				catch(QString es)
+				{ qDebug() << "EXCEPCION" << es;}
+			
+				qDebug() << __FUNCTION__ << "nombre4"<<cadena;
+			}
+			
+	
+			qDebug() << __FUNCTION__ << "nombre5" << cadena;
+	
+			////////////////////////////////////////////////////////////////////////////////////
 			count++;
 			previousPoint=currentPoint;
 		}
-		
-		
 	}
-	
 }
 		
 
@@ -187,7 +224,7 @@ void SpecificWorker::compute()
 		newPolyline = false;
 	}
 	
-	//if (innerModel->getNode("polyline_obs_0") == NULL ) qFatal("");
+
 	
 	if (road.isBlocked()) currentTarget.setState(CurrentTarget::State::BLOCKED);
 	
@@ -209,7 +246,7 @@ void SpecificWorker::compute()
 			break;		
 		case CurrentTarget::State::BLOCKED:
 			
-			controller->stopTheRobot(omnirobot_proxy);
+		//	controller->stopTheRobot(omnirobot_proxy);
 			road.update();		
 			elasticband.update(innerModel, road, laserData, currentTarget, safePolyList);	
 			if( road.isBlocked() == true)
@@ -368,11 +405,13 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 		
 	qDebug() << __FUNCTION__ << "GOTO:" << "Robot at:" << innerModel->transform6D("world", "robot") << "Target:" << currentTarget.getFullPose();
 	// Get here when robot is stuck
-// 	if(myRoad.requiresReplanning == true)
-// 	{
-// 	 		//qDebug() << __FUNCTION__ << "STUCK, PLANNING REQUIRED";
-// 	 		//computePlan(innerModel);
-// 	}
+	
+	
+	if(myRoad.getRequiresReplanning() == true)
+	{
+	 		qDebug() << __FUNCTION__ << "STUCK, PLANNING REQUIRED";
+	 	//	plannerPRM.computePlan(innerModel);
+	}
 	
 	//////////////////////////////////////////
 	// Check if there is a plan for the target
@@ -902,34 +941,41 @@ bool SpecificWorker::updateInnerModel(InnerModel *inner, TrajectoryState &state)
 		return false;
 	}
 	
-	printf("a\n");
-	try
+	
+	printf("COLISIONES\n");
+	for (int i=0; i<20; i++)
 	{
-		printf("1\n");
-		inner->save("caca.xml");
-		printf("colisiona: %d\n", inner->collide("base_mesh", "polyline_obs_1"));
-		printf("2\n");
+		try
+		{
+			printf("%d ", inner->collide("base_mesh", "polyline_obs_"+QString::number(i)));
+		}
+		catch(int e)
+		{
+			printf("EXCEPCION %d\n", e);
+		}	
+		catch(QString s)
+		{
+			qDebug() << "EXCEPCION" << s;
+		}
+		catch(...)
+		{
+			qDebug()  << "OTRA COSA";
+		}
 	}
-	catch(...)
-	{
-		printf("3\n");
-	}
-	printf("b\n");
+	printf("\n");
 
-	
-	
 	try
 	{
 	//	printf("Escribiendo a laserantes\n");
 		laserData = laser_proxy->getLaserData();
- 		fichero(laserData,"laserantes.txt");
+ 	//	fichero(laserData,"laserantes.txt");
 	
 	//	QTime tiempo = QTime::currentTime();
 		laserData = elasticband.unionpoligonos(laserData, safePolyList, inner);
 	//	cout << "tardamos (ms) " << tiempo.elapsed() << endl;
 	//	
- 		fichero(laserData,"laserdespues.txt");
-		ficheroP(safePolyList.read(),"poly.txt", inner); 
+ 	//	fichero(laserData,"laserdespues.txt");
+	//	ficheroP(safePolyList.read(),"poly.txt", inner); 
 	//	printf("Escribiendo a laserdespues\n");
  	}
 	catch (const Ice::Exception &ex)

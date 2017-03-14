@@ -31,13 +31,13 @@ with open(sys.argv[2], 'r') as f:
         ath.append(th)
 
     for i in range(len(ax)):
-        body = plt.Circle((ax[i], ay[i]), radius=0.35, fill=False)
+        body = plt.Circle((ax[i], ay[i]), radius=0.30, fill=False)
         plt.gca().add_patch(body)
 
 
-        x_aux = ax[i] + 0.35* cos(pi/2 - ath[i]);
+        x_aux = ax[i] + 0.30* cos(pi/2 - ath[i]);
 
-        y_aux = ay[i] + 0.35 * sin(pi/2 - ath[i]);
+        y_aux = ay[i] + 0.30 * sin(pi/2 - ath[i]);
 
         heading = plt.Line2D((ax[i], x_aux), (ay[i], y_aux), lw=1, color='k')
         plt.gca().add_line(heading)

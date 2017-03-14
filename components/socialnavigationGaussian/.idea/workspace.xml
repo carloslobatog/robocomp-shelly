@@ -46,8 +46,8 @@
       <file leaf-file-name="specificworker.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/specificworker.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="297" column="15" lean-forward="false" selection-start-line="297" selection-start-column="15" selection-end-line="297" selection-end-column="15" />
+            <state relative-caret-position="279">
+              <caret line="107" column="18" lean-forward="false" selection-start-line="107" selection-start-column="18" selection-end-line="107" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -171,8 +171,8 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -761,8 +761,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/specificworker.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="297" column="15" lean-forward="false" selection-start-line="297" selection-start-column="15" selection-end-line="297" selection-end-column="15" />
+        <state relative-caret-position="279">
+          <caret line="107" column="18" lean-forward="false" selection-start-line="107" selection-start-column="18" selection-end-line="107" selection-end-column="18" />
           <folding />
         </state>
       </provider>

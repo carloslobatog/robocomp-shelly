@@ -105,7 +105,7 @@ class Person(object):
     xdot = 0
     ydot = 0
 
-    _radius = 0.35
+    _radius = 0.30
     """ Public Methods """
 
     def __init__(self, x=0, y=0, th=0):
@@ -295,7 +295,7 @@ class SpecificWorker(GenericWorker):
             normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 4, 2, 2*4/3], elliptical=True))
         #print ("numero de gaussianas",len(normals))
 
-        h = 0.9
+        h = 0.4
         resolution = 0.1
         limits = [[lx_inf, lx_sup], [ly_inf, ly_sup]]
         _, z = Normal.makeGrid(normals, h, 2, limits=limits, resolution=resolution)
