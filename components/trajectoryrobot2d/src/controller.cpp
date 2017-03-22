@@ -125,15 +125,18 @@ bool Controller::update(InnerModel *innerModel, RoboCompLaser::TLaserData &laser
 	QVec radialDir = radialLine.getNormalizedDirectionVector();
 
 	// Turn radialDir towards the road if robot's perpendicular distance to road is != 0
+	// Compute turn angle
 	float mod = exponentialFunction(1.f/road.getRobotPerpendicularDistanceToRoad(), 1./250, 0.5, 0 );
+	// Compute rotation matrix for radialDir
 	Rot2D fix( mod * sgn(road.getRobotPerpendicularDistanceToRoad()));
+	// rotate radialDir with angle
 	radialDir = fix * radialDir;
 	
 	//Now change sense and scale according to properties of the road and target
 	float modulus = MAX_ADV_SPEED 
 									* exponentialFunction(road.getRoadCurvatureAtClosestPoint(), 5, 0.7 , 0.1)									
 									* exponentialFunction(1./road.getRobotDistanceToTarget(),1./700, 0.4, 0.1)
-									* exponentialFunction(vrot, 0.6, 0.1);
+									* exponentialFunction(vrot, 0.3, 0.1);
 									
 	radialDir = radialDir * (T)-modulus;
 	

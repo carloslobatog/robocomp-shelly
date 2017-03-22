@@ -142,43 +142,36 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 			float temp = normal(2);
 			normal(2) = normal(0);
 			normal(0) = -temp;
-			qDebug() << __FUNCTION__ << "nombre1"<<cadena;
 			
  			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,90));
-			qDebug() << __FUNCTION__ << "nombre2"<<cadena;
-			
-			///////////////////////////////////////////////////////////////////////////////
+		
+			//////////////////////////////////////SE METE LA PARED EN EL INNER///////////////////////////////////
 			if (innerModel->getNode(cadena))
 			{
 				innerModel->removeNode(cadena);
-				qDebug() << __FUNCTION__ << "borrado " << cadena;
+			//	qDebug() << __FUNCTION__ << "borrado " << cadena;
 			}
 			
-			qDebug() << __FUNCTION__ << "nombre3"<<cadena;
-			
+	
 			InnerModelNode *parent = innerModel->getNode(QString("world"));			
 			if (parent == NULL)
 				printf("%s: parent not exists\n", __FUNCTION__);
 			else
-			{
-				qDebug() << __FUNCTION__ << "nombre3.1"<<cadena;					
+			{			
 				InnerModelPlane *plane;
 				try
 				{
 					if (innerModel->getNode(cadena))
 						qDebug() << "SHIT!!!!!!!!!!!!!!!!!!!!!!!!";
 					plane  = innerModel->newPlane(cadena, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
-					qDebug() << __FUNCTION__ << "nombre3.2"<<cadena;
+
 					parent->addChild(plane); 
 				}
 				catch(QString es)
 				{ qDebug() << "EXCEPCION" << es;}
-			
-				qDebug() << __FUNCTION__ << "nombre4"<<cadena;
+
 			}
 			
-	
-			qDebug() << __FUNCTION__ << "nombre5" << cadena;
 	
 			////////////////////////////////////////////////////////////////////////////////////
 			count++;
@@ -221,10 +214,6 @@ void SpecificWorker::compute()
 			#endif
 		
 			sampler.initialize(innerModel, params);
-// 			plannerPRM.initialize(&sampler, params);
-// 			road.initialize(innerModel, params);
-// 			elasticband.initialize( params);
-//  		controller = new Controller(innerModel, laserData, params, 2 );
 		}
 		
 		newPolyline = false;

@@ -107,7 +107,7 @@ std::tuple<bool, QString> Sampler::checkRobotValidStateAtTarget(const QVec &targ
 	///////////////////////
 	//// Check if the robot at the target collides with any know object
 	///////////////////////
-	innerModelSampler->save("lalalala.xml");
+//	innerModelSampler->save("lalalala.xml");
 	for ( auto &in : robotNodes )
 	{
 		for ( auto &out : restNodes )
