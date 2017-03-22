@@ -144,7 +144,7 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 			normal(0) = -temp;
 			qDebug() << __FUNCTION__ << "nombre1"<<cadena;
 			
- 			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,70));			
+ 			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,90));
 			qDebug() << __FUNCTION__ << "nombre2"<<cadena;
 			
 			///////////////////////////////////////////////////////////////////////////////
@@ -167,7 +167,7 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 				{
 					if (innerModel->getNode(cadena))
 						qDebug() << "SHIT!!!!!!!!!!!!!!!!!!!!!!!!";
-					plane  = innerModel->newPlane(cadena, parent, QString("#FFFF00"), dist, 2000, 70, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
+					plane  = innerModel->newPlane(cadena, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
 					qDebug() << __FUNCTION__ << "nombre3.2"<<cadena;
 					parent->addChild(plane); 
 				}
@@ -209,7 +209,7 @@ void SpecificWorker::compute()
 		currentTarget.state = CurrentTarget::State::DISCONNECTED;
 	}
 	
-	if(newPolyline)
+	if (newPolyline)
 	{
 		qDebug()<<"Nueva polilinea. Actualizamos grafo";
 		if ( plannerPRM.updateGraph(safePolyList.read()) == true)
@@ -219,10 +219,19 @@ void SpecificWorker::compute()
 			#ifdef USE_QTGUI
 				graphdraw.draw(plannerPRM, viewer);
 			#endif
-				
+		
+			sampler.initialize(innerModel, params);
+// 			plannerPRM.initialize(&sampler, params);
+// 			road.initialize(innerModel, params);
+// 			elasticband.initialize( params);
+//  		controller = new Controller(innerModel, laserData, params, 2 );
 		}
+		
 		newPolyline = false;
+		
+	//	printf("%p %p\n", innerModel, sampler.innerModelSampler);
 	}
+	//	printf("%p %p\n", innerModel, sampler.innerModelSampler);
 	
 
 	
@@ -253,6 +262,7 @@ void SpecificWorker::compute()
 			{
 				
 				qDebug() << __FUNCTION__ << "Blocked. Calling replanning";
+				controller->stopTheRobot(omnirobot_proxy);
 				road.setRequiresReplanning(true);
 				//road.setBlocked(true);
 			}
@@ -303,7 +313,7 @@ void SpecificWorker::compute()
 	}
 	
 	worker_params_mutex->lock();
-		//save framerate in params
+// 		//save framerate in params
 		worker_params["frameRate"].value = std::to_string(reloj.restart()/1000.f);
 	worker_params_mutex->unlock();
 }
@@ -407,10 +417,12 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 	// Get here when robot is stuck
 	
 	
-	if(myRoad.getRequiresReplanning() == true)
+	if (myRoad.getRequiresReplanning() == true)
 	{
-	 		qDebug() << __FUNCTION__ << "STUCK, PLANNING REQUIRED";
-	 	//	plannerPRM.computePlan(innerModel);
+		qDebug() << __FUNCTION__ << "STUCK, PLANNING REQUIRED";
+// 		QVec localT = target.getTranslation();
+// 		plannerPRM.computePath(localT, innerModel);
+		target.setWithoutPlan(true);
 	}
 	
 	//////////////////////////////////////////
@@ -942,28 +954,6 @@ bool SpecificWorker::updateInnerModel(InnerModel *inner, TrajectoryState &state)
 	}
 	
 	
-	printf("COLISIONES\n");
-	for (int i=0; i<20; i++)
-	{
-		try
-		{
-			printf("%d ", inner->collide("base_mesh", "polyline_obs_"+QString::number(i)));
-		}
-		catch(int e)
-		{
-			printf("EXCEPCION %d\n", e);
-		}	
-		catch(QString s)
-		{
-			qDebug() << "EXCEPCION" << s;
-		}
-		catch(...)
-		{
-			qDebug()  << "OTRA COSA";
-		}
-	}
-	printf("\n");
-
 	try
 	{
 	//	printf("Escribiendo a laserantes\n");

@@ -20,7 +20,7 @@
 
 #include <QObject>
 #include <qmat/QMatAll>
-#include <innermodel/innermodel.h>
+// #include <innermodel/innermodel.h>
 #include <boost/bind.hpp>
 #include <ompl/base/spaces/RealVectorStateSpace.h>
 #include <ompl/geometric/SimpleSetup.h>
@@ -41,7 +41,7 @@ class PlannerOMPL : public QObject
 {
 	public:
 		PlannerOMPL(){}
-		PlannerOMPL(InnerModel *innerModel_, QObject *parent=0);
+// 		PlannerOMPL(el_, QObject *parent=0);
 		bool setPath(const QVec& origin, const QVec &target);
 		bool computePath(const QVec& origin, const QVec& target, int maxTime);
 		void initialize(Sampler* sampler);

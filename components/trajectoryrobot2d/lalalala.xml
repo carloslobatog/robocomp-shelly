@@ -1,0 +1,199 @@
+<innermodel>
+	<transform id="robot" tx="1453.799072" ty="0" tz="2660.146729"  rx="0" ry="0" rz="0">
+		<transform id="laserPose" tx="0" ty="370" tz="230"  rx="0" ry="0" rz="0">
+			<laser id="laser" port="10003" min="100" max="30000" measures="100" angle="4.199999809" ifconfig="" />
+		</transform>
+		<transform id="monitor_pose" tx="0" ty="1155" tz="70"  rx="0" ry="0" rz="0">
+			<plane id="monitor_mesh" texture="#222266" size="340,270,80" repeat="1000" nx="0" ny="0" nz="-1" px="0" py="0" pz="0" collide="1" />
+		</transform>
+		<transform id="back_caja_pose" tx="0" ty="400" tz="-200"  rx="0" ry="0" rz="0">
+			<plane id="back_caja_mesh" texture="#662222" size="350,250,150" repeat="1000" nx="0" ny="0" nz="1" px="0" py="0" pz="0" collide="1" />
+		</transform>
+		<transform id="front_caja_pose" tx="0" ty="450" tz="150"  rx="0" ry="0" rz="0">
+			<plane id="front_caja_mesh" texture="#662222" size="350,100,350" repeat="1000" nx="0" ny="0" nz="1" px="0" py="0" pz="0" collide="1" />
+		</transform>
+		<plane id="base_mesh" texture="#666666" size="540,275,540" repeat="1000" nx="0" ny="0" nz="-1" px="0" py="137.5" pz="0" collide="1" />
+		<mesh id="barrahombro" file="/home/robocomp/robocomp/files/osgModels/robexarm/barrahombro.3ds" scale="1000,1000,1000" tx="-150" ty="1180" tz="30" rx="0" ry="-1.570796371" rz="0" collide="1" />
+		<mesh id="barracolumna" file="/home/robocomp/robocomp/files/osgModels/basics/cube.3ds" scale="40,500,30" tx="0" ty="700" tz="15" rx="0" ry="0" rz="0" collide="1" />
+		<transform id="base_bodypost" tx="0" ty="1388" tz="0"  rx="0" ry="0" rz="0">
+			<transform id="rgbdHumanPose" tx="0" ty="-98" tz="65"  rx="0" ry="0" rz="0">
+				<rgbd id="rgbdHuman" width="640" height="480" focal="600" port="0" ifconfig="" noise="0" />
+				<mesh id="sensorHumanRGBD" file="/home/robocomp/robocomp/components/robocomp-ursus-rockin/files/makeMeCoffee/cube.3ds" scale="100,21,30" tx="0" ty="0" tz="0" rx="0" ry="0" rz="0" collide="1" />
+			</transform>
+			<transform id="head_z_offset" tx="0" ty="0" tz="120"  rx="0" ry="0" rz="0">
+				<joint id="head_yaw_joint" port="10068" axis="y" home="0" min="-1" max="1" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+					<mesh id="head_base_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="25,25,47.5" tx="0" ty="47.5" tz="0" rx="1.570799947" ry="0" rz="0" collide="1" />
+					<transform id="head_rot_tilt_pose" tx="0" ty="74" tz="0"  rx="0" ry="0" rz="0">
+						<joint id="head_pitch_joint" port="10068" axis="x" home="0" min="-1" max="1" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+							<mesh id="head_center_mesh2" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="35,35,35" tx="0" ty="0" tz="0" rx="0" ry="1.570799947" rz="0" collide="1" />
+							<transform id="rgbd_transform0" tx="0" ty="50" tz="0"  rx="0" ry="0" rz="0">
+								<transform id="rgbd_transform" tx="0" ty="0" tz="10"  rx="0" ry="0" rz="0">
+									<rgbd id="rgbd" width="640" height="480" focal="540" port="10096" ifconfig="10068,12238" noise="0" />
+								</transform>
+								<mesh id="sensorRGBD" file="/home/robocomp/robocomp/files/osgModels/basics/cube2.3ds" scale="100,21,30" tx="0" ty="0" tz="0" rx="0" ry="0" rz="0" collide="1" />
+							</transform>
+						</joint>
+					</transform>
+				</joint>
+			</transform>
+		</transform>
+		<transform id="arm_pose" tx="0" ty="750" tz="0"  rx="0" ry="0" rz="0">
+			<mesh id="shellyArm_BASE_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="70,45,80" tx="0" ty="-30" tz="0" rx="1.570796371" ry="0" rz="0" collide="1" />
+			<mesh id="shellyArm_BASE2_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cube.3ds" scale="20,40,20" tx="0" ty="80" tz="0" rx="0" ry="0" rz="0" collide="1" />
+			<transform id="shellyArm_grasp_pose" tx="0" ty="190" tz="700"  rx="0" ry="0" rz="0">
+			</transform>
+			<joint id="armY" port="10068" axis="y" home="0" min="-0.4399999976" max="0.4399999976" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+				<transform id="shellyArm_2" tx="0" ty="130" tz="0"  rx="0" ry="0" rz="0">
+					<mesh id="shellyArm_BASE3_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="40,40,40" tx="0" ty="0" tz="0" rx="0" ry="1.570796371" rz="0" collide="0" />
+					<joint id="armX1" port="10068" axis="x" home="0" min="-2" max="1" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="-1">
+						<mesh id="shellyArm_HUMERO_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cube.3ds" scale="10,25,120" tx="-25" ty="0" tz="155" rx="0" ry="0" rz="0" collide="1" />
+						<transform id="arm_elbow" tx="0" ty="0" tz="300"  rx="0" ry="0" rz="0">
+							<mesh id="shellyArm_CODO_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="30,30,35" tx="0" ty="0" tz="0" rx="0" ry="1.570796371" rz="0" collide="0" />
+							<joint id="armX2" port="10068" axis="x" home="0" min="-2.700000048" max="2.5" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="2.5">
+								<mesh id="shellyArm_ANTEBRAZO_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cube.3ds" scale="15,15,120" tx="15" ty="0" tz="145" rx="0" ry="0" rz="0" collide="1" />
+								<transform id="arm_wrist" tx="0" ty="0" tz="294"  rx="0" ry="0" rz="0">
+									<joint id="wristX" port="10067" axis="x" home="0" min="-1.700000048" max="1.700000048" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+										<transform id="wrist_end" tx="0" ty="0" tz="74"  rx="0" ry="0" rz="0">
+											<transform id="grabPositionHandR_pre" tx="0" ty="30" tz="0"  rx="0" ry="0" rz="0">
+												<mesh id="finger_wrist_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cube.3ds" scale="45,20,45" tx="0" ty="-20" tz="-10" rx="0" ry="0" rz="0" collide="1" />
+												<transform id="grabPositionHandR" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+													<plane id="handMeshBase" texture="#ffffff" size="85,-85,1" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+													<plane id="handMesh2" texture="/home/robocomp/robocomp/components/robocomp-ursus-rockin/files/april/tag36_11_00025.png" size="70,-70,2" repeat="1" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="1" />
+												</transform>
+											</transform>
+											<transform id="arm_wrist_8" tx="20" ty="0" tz="0"  rx="0" ry="0" rz="0">
+												<joint id="gripperFinger1" port="10067" axis="y" home="0" min="-1.570796371" max="0.3000000119" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+													<mesh id="finger_wrist_1_mesh2" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="18,5,5" tx="18" ty="12" tz="0" rx="0" ry="0" rz="0" collide="1" />
+													<transform id="finger_wrist_1_1_pre" tx="30" ty="12" tz="0"  rx="0" ry="0.6999999881" rz="0">
+														<mesh id="finger_wrist_1_mesh3" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="5,5,30" tx="0" ty="0" tz="30" rx="0" ry="0" rz="0" collide="1" />
+														<transform id="finger_wrist_1_2_pre" tx="25" ty="0" tz="0"  rx="0" ry="-0.400000006" rz="0">
+															<mesh id="finger_wrist_1_mesh4" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="5,5,20" tx="0" ty="0" tz="80" rx="0" ry="0" rz="0" collide="1" />
+														</transform>
+													</transform>
+													<mesh id="finger_wrist_1_mesh5" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="18,5,5" tx="18" ty="-12" tz="0" rx="0" ry="0" rz="0" collide="1" />
+													<transform id="finger_wrist_1_3_pre" tx="30" ty="-12" tz="0"  rx="0" ry="0.6999999881" rz="0">
+														<mesh id="finger_wrist_1_mesh6" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="5,5,30" tx="0" ty="0" tz="30" rx="0" ry="0" rz="0" collide="1" />
+														<transform id="finger_wrist_1_4_pre" tx="25" ty="0" tz="0"  rx="0" ry="-0.400000006" rz="0">
+															<mesh id="finger_wrist_1_mesh7" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="5,5,20" tx="0" ty="0" tz="80" rx="0" ry="0" rz="0" collide="1" />
+														</transform>
+													</transform>
+												</joint>
+											</transform>
+											<transform id="arm_wrist_9" tx="-20" ty="0" tz="0"  rx="0" ry="0" rz="0">
+												<joint id="gripperFinger2" port="10067" axis="y" home="0" min="-0.3000000119" max="1.570796371" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+													<mesh id="finger_wrist_2_mesh2" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="-18,5,5" tx="-18" ty="0" tz="0" rx="0" ry="0" rz="0" collide="1" />
+													<transform id="finger_wrist_2_1_pre" tx="-30" ty="0" tz="0"  rx="0" ry="-0.6999999881" rz="0">
+														<mesh id="finger_wrist_2_mesh3" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="5,5,30" tx="0" ty="0" tz="30" rx="0" ry="0" rz="0" collide="1" />
+														<transform id="finger_wrist_2_2_pre" tx="-25" ty="0" tz="0"  rx="0" ry="0.400000006" rz="0">
+															<mesh id="finger_wrist_2_mesh4" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="5,5,20" tx="0" ty="0" tz="80" rx="0" ry="0" rz="0" collide="1" />
+														</transform>
+													</transform>
+												</joint>
+											</transform>
+										</transform>
+									</joint>
+								</transform>
+							</joint>
+						</transform>
+					</joint>
+				</transform>
+			</joint>
+		</transform>
+	</transform>
+	<transform id="world" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+		<transform id="floor" tx="2500" ty="-10" tz="0"  rx="0" ry="0" rz="0">
+			<plane id="floor_plane" texture="#eebb77" size="10000,9500,10" repeat="1000" nx="0" ny="1" nz="0" px="0" py="0" pz="0" collide="0" />
+		</transform>
+		<transform id="waitPose" tx="3000" ty="0" tz="1000"  rx="0" ry="3.141592741" rz="0">
+		</transform>
+		<transform id="Pose2" tx="2206" ty="0" tz="-2518"  rx="0" ry="-0.7599999905" rz="0">
+		</transform>
+		<transform id="pared6" tx="4418.209473" ty="950" tz="245"  rx="0" ry="0" rz="0">
+			<plane id="muro6" texture="#000088" size="240,1900,9" repeat="1000" nx="221.8098145" ny="0" nz="40.51074219" px="0" py="0" pz="0" collide="0" />
+		</transform>
+		<transform id="pared22" tx="2160.319092" ty="950" tz="29.06390381"  rx="0" ry="0.1000000015" rz="0">
+			<plane id="muro22" texture="#000088" size="208.5520172,1900,9" repeat="1000" nx="-204.6739502" ny="0" nz="-40.03149414" px="0" py="0" pz="0" collide="0" />
+		</transform>
+		<transform id="room_3" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+			<transform id="pared0" tx="-91.89904785" ty="950" tz="2066.808838"  rx="0" ry="0" rz="0">
+				<plane id="muro0" texture="#880000" size="3994.285645,1900,9" repeat="1000" nx="-3992.719971" ny="0" nz="-111.8254395" px="0" py="0" pz="0" collide="0" />
+			</transform>
+			<transform id="pared1" tx="3235.375244" ty="950" tz="4200.796875"  rx="0" ry="0" rz="0">
+				<plane id="muro1" texture="#880000" size="6771.970703,1900,9" repeat="1000" nx="-275.2558594" ny="0" nz="6766.374512" px="0" py="0" pz="0" collide="0" />
+			</transform>
+			<transform id="pared2" tx="6695.069336" ty="950" tz="2831.404297"  rx="0" ry="0" rz="0">
+				<plane id="muro2" texture="#880000" size="3017.921631,1900,9" repeat="1000" nx="3014.040039" ny="0" nz="153.0136719" px="0" py="0" pz="0" collide="0" />
+			</transform>
+			<transform id="pared3" tx="6386.733398" ty="950" tz="1287.88147"  rx="0" ry="0" rz="0">
+				<plane id="muro3" texture="#880000" size="773.140564,1900,9" repeat="1000" nx="73.00537109" ny="0" nz="-769.6860352" px="0" py="0" pz="0" collide="0" />
+			</transform>
+			<transform id="pared4" tx="6028.624512" ty="950" tz="854.1359253"  rx="0" ry="0" rz="0">
+				<plane id="muro4" texture="#880000" size="796.28302,1900,9" repeat="1000" nx="794.4857178" ny="0" nz="53.47021484" px="0" py="0" pz="0" collide="0" />
+			</transform>
+			<transform id="pared5" tx="5226.416504" ty="950" tz="411.503479"  rx="0" ry="0" rz="0">
+				<plane id="muro5" texture="#880000" size="1660.368774,1900,9" repeat="1000" nx="90.7791748" ny="0" nz="-1657.885254" px="0" py="0" pz="0" collide="0" />
+			</transform>
+			<transform id="pared23" tx="1060.72644" ty="950" tz="101.1647949"  rx="0" ry="0" rz="0">
+				<plane id="muro23" texture="#880000" size="2190,1900,9" repeat="1000" nx="60.47216797" ny="0" nz="-2159.153564" px="0" py="0" pz="0" collide="0" />
+			</transform>
+		</transform>
+		<transform id="room_5" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+			<transform id="pared7" tx="4593.410156" ty="950" tz="105.78302"  rx="0" ry="0" rz="0">
+				<plane id="muro7" texture="#008800" size="312.8280945,1900,9" repeat="1000" nx="42.76940918" ny="0" nz="309.890625" px="0" py="0" pz="0" collide="0" />
+			</transform>
+			<transform id="pared8" tx="4744.106934" ty="950" tz="-70.06689453"  rx="0" ry="0" rz="0">
+				<plane id="muro8" texture="#008800" size="309.0472412,1900,9" repeat="1000" nx="308.9304199" ny="0" nz="-8.497071266" px="0" py="0" pz="0" collide="0" />
+			</transform>
+			<transform id="pared9" tx="5408.647461" ty="950" tz="-222.9507446"  rx="0" ry="0" rz="0">
+				<plane id="muro9" texture="#008800" size="1337.582397,1900,9" repeat="1000" nx="-3.162842035" ny="0" nz="1337.578613" px="0" py="0" pz="0" collide="0" />
+			</transform>
+			<transform id="pared10" tx="6087.995117" ty="950" tz="-598.3643799"  rx="0" ry="0" rz="0">
+				<plane id="muro10" texture="#008800" size="754.2857056,1900,9" repeat="1000" nx="753.9900513" ny="0" nz="21.11767578" px="0" py="0" pz="0" collide="0" />
+			</transform>
+			<transform id="pared11" tx="6501.73291" ty="950" tz="-981.21698"  rx="0" ry="0" rz="0">
+				<plane id="muro11" texture="#008800" size="806.4434814,1900,9" repeat="1000" nx="11.71520996" ny="0" nz="806.3583984" px="0" py="0" pz="0" collide="0" />
+			</transform>
+			<transform id="pared12" tx="6895.427734" ty="950" tz="-2179.236084"  rx="0" ry="0" rz="0">
+				<plane id="muro12" texture="#008800" size="2384.398438,1900,9" repeat="1000" nx="2384.322998" ny="0" nz="-18.96875" px="0" py="0" pz="0" collide="0" />
+			</transform>
+			<transform id="pared13" tx="5404.626953" ty="950" tz="-3447.184326"  rx="0" ry="0" rz="0">
+				<plane id="muro13" texture="#008800" size="2966.50708,1900,9" repeat="1000" nx="151.5737305" ny="0" nz="-2962.632324" px="0" py="0" pz="0" collide="0" />
+			</transform>
+			<transform id="pared14" tx="3928.830322" ty="950" tz="-3720.036865"  rx="0" ry="0" rz="0">
+				<plane id="muro14" texture="#008800" size="394.2858887,1900,9" repeat="1000" nx="394.1313477" ny="0" nz="11.03857422" px="0" py="0" pz="0" collide="0" />
+			</transform>
+			<transform id="pared15" tx="3728.955811" ty="950" tz="-3931.429443"  rx="0" ry="0" rz="0">
+				<plane id="muro15" texture="#008800" size="411.785553,1900,9" repeat="1000" nx="28.65478516" ny="0" nz="-410.7873535" px="0" py="0" pz="0" collide="0" />
+			</transform>
+			<transform id="1pared1" tx="1771.427734" ty="950" tz="-4100"  rx="0" ry="0" rz="0">
+				<plane id="1muro1" texture="#008800" size="3500,1900,19" repeat="1000" nx="-165.0117188" ny="0" nz="3442.443848" px="0" py="0" pz="0" collide="0" />
+			</transform>
+			<transform id="1pared0" tx="96.84216309" ty="950" tz="-2989.551758"  rx="0" ry="-0.05000000075" rz="0">
+				<plane id="1muro0" texture="#00FFFF" size="2590,1900,9" repeat="1000" nx="2484.26001" ny="0" nz="86.72729492" px="0" py="0" pz="0" collide="0" />
+			</transform>
+			<transform id="1pared4" tx="-1038.025513" ty="950" tz="-1739.770264"  rx="0" ry="0.02500000037" rz="0">
+				<plane id="1muro4" texture="#008800" size="2041,1900,19" repeat="1000" nx="125.6572266" ny="0" nz="-2037.280518" px="0" py="0" pz="0" collide="0" />
+			</transform>
+			<transform id="pared20" tx="-2030.214111" ty="950" tz="-980.079834"  rx="0" ry="0" rz="0">
+				<plane id="muro20" texture="#008800" size="1600,1900,9" repeat="1000" nx="-1542.252441" ny="0" nz="-43.19433594" px="0" py="0" pz="0" collide="0" />
+			</transform>
+			<transform id="pared21" tx="64.26171875" ty="950" tz="-141.1133728"  rx="0" ry="0" rz="0">
+				<plane id="muro21" texture="#008800" size="4234.320312,1900,9" repeat="1000" nx="-135.680603" ny="0" nz="4232.145996" px="0" py="0" pz="0" collide="0" />
+			</transform>
+		</transform>
+		<plane id="polyline_obs_0" texture="#FFFF00" size="200,2000,90" repeat="1" nx="200" ny="0" nz="0" px="3300" py="1000" pz="3000" collide="1" />
+		<plane id="polyline_obs_1" texture="#FFFF00" size="1004.987549,2000,90" repeat="1" nx="1000" ny="0" nz="100" px="3350" py="1000" pz="2400" collide="1" />
+		<plane id="polyline_obs_2" texture="#FFFF00" size="141.4213562,2000,90" repeat="1" nx="100" ny="0" nz="100" px="3450" py="1000" pz="1850" collide="1" />
+		<plane id="polyline_obs_3" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="100" ny="0" nz="200" px="3600" py="1000" pz="1750" collide="1" />
+		<plane id="polyline_obs_4" texture="#FFFF00" size="600,2000,90" repeat="1" nx="0" ny="0" nz="600" px="4000" py="1000" pz="1700" collide="1" />
+		<plane id="polyline_obs_5" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="-100" ny="0" nz="200" px="4400" py="1000" pz="1750" collide="1" />
+		<plane id="polyline_obs_6" texture="#FFFF00" size="141.4213562,2000,90" repeat="1" nx="-100" ny="0" nz="100" px="4550" py="1000" pz="1850" collide="1" />
+		<plane id="polyline_obs_7" texture="#FFFF00" size="1004.987549,2000,90" repeat="1" nx="-1000" ny="0" nz="100" px="4650" py="1000" pz="2400" collide="1" />
+		<plane id="polyline_obs_8" texture="#FFFF00" size="200,2000,90" repeat="1" nx="-200" ny="0" nz="0" px="4700" py="1000" pz="3000" collide="1" />
+		<plane id="polyline_obs_9" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="-200" ny="0" nz="-100" px="4650" py="1000" pz="3200" collide="1" />
+		<plane id="polyline_obs_10" texture="#FFFF00" size="424.2640686,2000,90" repeat="1" nx="-300" ny="0" nz="-300" px="4450" py="1000" pz="3450" collide="1" />
+		<plane id="polyline_obs_11" texture="#FFFF00" size="600,2000,90" repeat="1" nx="0" ny="0" nz="-600" px="4000" py="1000" pz="3600" collide="1" />
+		<plane id="polyline_obs_12" texture="#FFFF00" size="424.2640686,2000,90" repeat="1" nx="300" ny="0" nz="-300" px="3550" py="1000" pz="3450" collide="1" />
+		<plane id="polyline_obs_13" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="200" ny="0" nz="-100" px="3350" py="1000" pz="3200" collide="1" />
+	</transform>
+</innermodel>

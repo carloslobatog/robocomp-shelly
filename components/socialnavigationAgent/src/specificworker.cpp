@@ -66,43 +66,64 @@ SpecificWorker::~SpecificWorker()
 {
 }
 
-void SpecificWorker::cambiarvalor(int value){
+void SpecificWorker::cambiarvalor(int value)
+{
 	valorprox=value;
 	qDebug()<<"Proximidad"<<valorprox;
 	
 }
 
-void SpecificWorker::grabarfichero(){
+void SpecificWorker::grabarfichero()
+{
+	
   qDebug("escribimos en el fichero robotpose.txt la pose del robot");
   	ofstream fichero("robotpose.txt", ofstream::out);
-	for (auto p:poserobot){
+	for (auto p:poserobot)
+	{
 		fichero<< p.x << " " <<p.z<< endl;
 	}
 	fichero.close();
 	
 qDebug("escribimos en el fichero personpose.txt la pose de las personas");
   	ofstream fichero2("personpose.txt", ofstream::out);
-	for (auto person:totalpersons){
+	for (auto person:totalpersons)
+	{
 		fichero2<< person.x << " " <<person.z<<" "<<person.angle<< endl;
 	}
 	fichero2.close();	
 	poserobot.clear();
 	
+	
 	qDebug("escribimos en el fichero poly.txt la polilinea");
   	ofstream fichero3("poly.txt", ofstream::out);
-	for (auto s:secuencia){
+	
+	for (auto s:secuencia)
+	{
 		for (auto p: s){
 			fichero3<< p.x << " " <<p.z<<" "<< endl;
 		}
 	}
 	fichero3.close();	
 	
-	
 	qDebug()<<"escribimos en el fichero la distancia recorrida"<<totaldist;
   	ofstream fichero4("dist.txt", ofstream::out);
 	fichero4<< totaldist << endl;
 	totaldist = 0;
 	fichero4.close();
+
+	/////Guardar cada polilinea por separado
+	int i = 0;
+	for (auto s:secuencia){
+		QString name = QString("polyline")+QString::number(i,10)+QString(".txt");
+		ofstream fichero5(name.toUtf8().constData(), ofstream::out);
+			for (auto p: s)
+			{
+				fichero5<< p.x << " " <<p.z<<" "<< endl;
+			}
+			i++;
+			fichero5.close();
+		}
+
 }
 
 

@@ -3,7 +3,7 @@
 //  RDP
 //
 //  Created by Yongjiao Yu on 14-6-13.
-//  Copyright (c) 2014年 ___RCPD___. All rights reserved.
+//  Copyright (c) 2014. All rights reserved.
 //
 
 
@@ -16,8 +16,7 @@
 #include <cmath>
 
 //"Point" struct stand for each GPS coordinates(x,y). Methods related are used only for simplification of calculation in implementation.
-
-typedef struct Point
+struct Point
 {
 	double x;
 	double y;
@@ -42,18 +41,17 @@ typedef struct Point
 	Point( double x_, double y_) : x(x_), y(y_)
 	{}
 	Point(){}
-
-} Point;
+};
 
 class simplifyPath
 {
-	//"findMaximumDistance" used as part of implementation for RDP algorithm.
-	private:
-		const std::pair<int, double> findMaximumDistance(const std::vector<Point> &Points) const;
+//"findMaximumDistance" used as part of implementation for RDP algorithm.
+private:
+	const std::pair<int, double> findMaximumDistance(const std::vector<Point> &Points) const;
 
-	//"simplifyWithRDP" returns the simplified path with a Point vector. The function takes in the paths to be simplified and a customerized thresholds for the simplication.
-	public:
-		std::vector<Point> simplifyWithRDP(std::vector<Point> &Points, double epsilon) const;
+//"simplifyWithRDP" returns the simplified path with a Point vector. The function takes in the paths to be simplified and a customerized thresholds for the simplication.
+public:
+	std::vector<Point> simplifyWithRDP(std::vector<Point> &Points, double epsilon) const;
 };
 
 #endif 

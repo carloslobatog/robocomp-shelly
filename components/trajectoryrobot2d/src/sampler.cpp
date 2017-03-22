@@ -33,7 +33,8 @@ Sampler::Sampler()
 void Sampler::initialize(InnerModel *inner, const RoboCompCommonBehavior::ParameterList &params)
 {
 	qDebug() << __FUNCTION__ << "Sampler: Copying InnerModel...";
-	innerModelSampler = inner->copy();
+ 	//innerModelSampler = inner->copy();
+	innerModelSampler = inner;
 	
 	try
 	{
@@ -76,7 +77,7 @@ void Sampler::initialize(InnerModel *inner, const RoboCompCommonBehavior::Parame
  * @param targetRot robot rotation in world ref system
  * 
  * @return bool: true if target is a valid position for the robot. 
- */ 
+ */
 
 std::tuple<bool, QString> Sampler::checkRobotValidStateAtTarget(const QVec &targetPos, const QVec &targetRot) const 
 {
@@ -95,15 +96,18 @@ std::tuple<bool, QString> Sampler::checkRobotValidStateAtTarget(const QVec &targ
 		return std::make_tuple(false, diagnosis);
 	}
 	foreach( QRectF r, innerRegions)
+	{
 		if( r.contains( QPointF(targetPos.x(), targetPos.z())) == true )
 		{
 			diagnosis += "InnerRegion " + QVariant(r).toString() + "contains the point";
 			return std::make_tuple(false, diagnosis);
 		}
-	
+	}
+
 	///////////////////////
 	//// Check if the robot at the target collides with any know object
-	///////////////////////	
+	///////////////////////
+	innerModelSampler->save("lalalala.xml");
 	for ( auto &in : robotNodes )
 	{
 		for ( auto &out : restNodes )

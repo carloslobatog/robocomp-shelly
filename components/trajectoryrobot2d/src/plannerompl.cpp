@@ -19,8 +19,8 @@
 
 
 
-PlannerOMPL::PlannerOMPL(InnerModel *innerModel_, QObject *parent)
-{
+// PlannerOMPL::PlannerOMPL(InnerModel *innerModel_, QObject *parent)
+// {
 // 	xMin = 0.;
 // 	xMax = 10000.;
 // 	zMin = -10000.;
@@ -51,7 +51,7 @@ PlannerOMPL::PlannerOMPL(InnerModel *innerModel_, QObject *parent)
 // 	//simpleSetUp->setPlanner(ob::PlannerPtr(new og::RRTstar(simpleSetUp->getSpaceInformation())));
 // 	//simpleSetUp->setPlanner(ob::PlannerPtr(new og::PRMstar(simpleSetUp->getSpaceInformation())));
 // 	//simpleSetUp->setPlanner(ob::PlannerPtr(new og::LBTRRT(simpleSetUp->getSpaceInformation())));
-}
+// }
 
 ob::ValidStateSamplerPtr PlannerOMPL::allocOBValidStateSampler(const ob::SpaceInformation *si)
 {

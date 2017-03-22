@@ -45,13 +45,13 @@ class Sampler
 		QRectF getOuterRegion() const { return outerRegion;};
 		mutable QMutex mutex;
 		
+		InnerModel *innerModelSampler;
 	private:
 		std::vector<QString> robotNodes;
 		std::vector<QString> restNodes;
 		std::set<QString> excludedNodes;
 		QList<QRectF> innerRegions;
 		QRectF outerRegion;
-		InnerModel *innerModelSampler;
 		void recursiveIncludeMeshes(InnerModelNode *node, QString robotId, bool inside, std::vector<QString> &in, std::vector<QString> &out, std::set<QString> &excluded);
 		
 };
