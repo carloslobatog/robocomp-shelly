@@ -136,7 +136,7 @@ bool Controller::update(InnerModel *innerModel, RoboCompLaser::TLaserData &laser
 	float modulus = MAX_ADV_SPEED 
 									* exponentialFunction(road.getRoadCurvatureAtClosestPoint(), 5, 0.7 , 0.1)									
 									* exponentialFunction(1./road.getRobotDistanceToTarget(),1./700, 0.4, 0.1)
-									* exponentialFunction(vrot, 0.3, 0.1);
+									* exponentialFunction(vrot, 0.4, 0.1);
 									
 	radialDir = radialDir * (T)-modulus;
 	

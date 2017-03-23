@@ -302,15 +302,15 @@ class SpecificWorker(GenericWorker):
         grid = GM.filterEdges(z, h)
 
 
-      #  plt.figure()
-      #  plt.imshow(z, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+        #plt.figure()
+        #plt.imshow(z, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
 
        # plt.figure()
        # plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
 
-       # plt.figure()
+        plt.figure()
         plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
         plt.xlabel('X')
         plt.ylabel('Y')
@@ -343,8 +343,5 @@ class SpecificWorker(GenericWorker):
                     plt.xlabel('X')
                     plt.ylabel('Y')
             plt.show()
-
-
-
 
         return polylines
