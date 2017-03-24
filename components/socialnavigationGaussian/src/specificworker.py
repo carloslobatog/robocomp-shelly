@@ -256,7 +256,9 @@ class SpecificWorker(GenericWorker):
     def getPolylines(self, persons, v, dibujar):
 
         plt.close("all")
-        plt.figure()
+       ##DESCOMENTAR EL FIGUREEE
+       # plt.figure()
+
         #ax = fig.add_subplot(111, projection='3d')
 
         #fig, ax = plt.subplots()
@@ -307,11 +309,11 @@ class SpecificWorker(GenericWorker):
 
 
        # plt.figure()
-       # plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+       #plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
 
-        plt.figure()
-        plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+        #plt.figure()
+        #plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
         plt.xlabel('X')
         plt.ylabel('Y')
         plt.axis('equal')
@@ -333,7 +335,7 @@ class SpecificWorker(GenericWorker):
                 polyline.append(punto)
             polylines.append(polyline)
 
-
+        """""
         if (dibujar):
             for ps in polylines:
               #  plt.figure()
@@ -344,4 +346,6 @@ class SpecificWorker(GenericWorker):
                     plt.ylabel('Y')
             plt.show()
 
+        """
+        plt.show()
         return polylines
