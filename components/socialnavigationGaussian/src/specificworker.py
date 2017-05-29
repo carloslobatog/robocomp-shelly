@@ -268,18 +268,18 @@ class SpecificWorker(GenericWorker):
 
 
         ##Limites de la representacion
-
+        """""
         lx_inf = -6
         lx_sup = 8
         ly_inf = -6
         ly_sup = 8
-        """""
+         """""
         ##cambio los limites para los otros valores de sigma
         lx_inf = 0
         lx_sup = 10
         ly_inf = 0
         ly_sup = 10
-        """""
+
         # zs = np.array([fun(x,y) for x,y in zip(np.ravel(X), np.ravel(Y))])
         # Z = zs.reshape(X.shape)
 
@@ -304,18 +304,18 @@ class SpecificWorker(GenericWorker):
         grid = GM.filterEdges(z, h)
 
 
-        plt.figure()
-        plt.imshow(z, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+        #plt.figure()
+        #plt.imshow(z, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
         #plt.figure()
         #plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
-
-        plt.figure()
-        plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
-        plt.xlabel('X')
-        plt.ylabel('Y')
-        plt.axis('equal')
+        if (dibujar):
+            plt.figure()
+            plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+            plt.xlabel('X')
+            plt.ylabel('Y')
+            plt.axis('equal')
 
         np.savetxt('log.txt', grid, fmt='%i')
 
