@@ -13,7 +13,7 @@ with open(sys.argv[1], 'r') as f:
         y = parts [1]
         ax.append(x)
         ay.append(y)
-plt.plot(ax, ay, 'r-')
+plt.plot(ax, ay, 'b-')
 
 with open(sys.argv[2], 'r') as f:
     ax = []
