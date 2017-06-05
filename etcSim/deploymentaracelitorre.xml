@@ -58,9 +58,9 @@
  <dependence alias="base" />
   <dependence alias="socialnavigG" />
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost socialnavAgnt /home/robocomp/mirobocomp/robocomp-shelly/components/socialnavigationAgent ./bin/socialnavigationAgent /home/robocomp/mirobocomp/robocomp-shelly/etcSim/socialnavigationAgent.conf" />
+  <upCommand command="rcremote localhost socialnavAgnt /home/robocomp/robocomp/components/robocomp-araceli/components/socialnavigationAgent ./bin/socialnavigationAgent /home/robocomp/robocomp/components/robocomp-araceli/etcSim/socialnavigationAgent.conf" />
   <downCommand command="killall -9 socialnavigationAgent" />
-  <configFile path="/home/robocomp/mirobocomp/robocomp-shelly/etcSim/socialnavigationAgent.conf" />
+  <configFile path="/home/robocomp/robocomp/components/robocomp-araceli/etcSim/socialnavigationAgent.conf" />
   <xpos value="-77.9789855056" />
   <ypos value="-53.5106363282" />
   <radius value="10.0" />
@@ -69,9 +69,9 @@
 
  <node alias="socialnavigG" endpoint="socialnavigationgaussian:tcp -h localhost -p 20020">
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost socialnavGauss /home/robocomp/mirobocomp/robocomp-shelly/components/socialnavigationGaussian python src/socialnavigationGaussian.py etc/config" />
+  <upCommand command="rcremote localhost socialnavGauss /home/robocomp/robocomp/components/robocomp-araceli/components/socialnavigationGaussian python src/socialnavigationGaussian.py etc/config" />
   <downCommand command="pkill -9 -f socialnavigationGaussian.py"/>
-<configFile path="/home/robocomp/mirobocomp/robocomp-shelly/etcSim/socialnavigationGaussian.conf" />
+<configFile path="/home/robocomp/robocomp/components/robocomp-araceli/etcSim/socialnavigationGaussian.conf" />
   <xpos value="-171.097569307" />
   <ypos value="-23.5106363282" />
   <radius value="10.0" />
@@ -82,9 +82,9 @@
   <dependence alias="executive" />
  <dependence alias="base" />
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost humanFakeA /home/robocomp/mirobocomp/robocomp-shelly/components/fakeHumanAgent ./bin/fakeHumanAgent /home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake.conf" />
+  <upCommand command="rcremote localhost humanFakeA /home/robocomp/robocomp/components/robocomp-araceli/components/fakeHumanAgent ./bin/fakeHumanAgent /home/robocomp/robocomp/components/robocomp-araceli/etcSim/humanFake.conf" />
   <downCommand command="killall -9 fakeHumanAgent" />
-  <configFile path="/home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake.conf" />
+  <configFile path="/home/robocomp/robocomp/components/robocomp-araceli/etcSim/humanFake.conf" />
   <xpos value="-250.9789855056" />
   <ypos value="-240.5106363282" />
   <radius value="10.0" />
@@ -95,9 +95,9 @@
   <dependence alias="executive" />
  <dependence alias="base" />
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost humanFakeANew /home/robocomp/mirobocomp/robocomp-shelly/components/fakeHumanAgentNew ./bin/fakeHumanAgentNew /home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFakeNew.conf" />
+  <upCommand command="rcremote localhost humanFakeANew /home/robocomp/robocomp/components/robocomp-araceli/components/fakeHumanAgentNew ./bin/fakeHumanAgentNew /home/robocomp/robocomp/components/robocomp-araceli/etcSim/humanFakeNew.conf" />
   <downCommand command="killall -9 fakeHumanAgentNew" />
-  <configFile path="/home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFakeNew.conf" />
+  <configFile path="/home/robocomp/robocomp/components/robocomp-araceli/etcSim/humanFakeNew.conf" />
   <xpos value="-250.9789855056" />
   <ypos value="-210.5106363282" />
   <radius value="10.0" />
@@ -108,9 +108,9 @@
   <dependence alias="executive" />
  <dependence alias="base" />
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost humanFakeA3 /home/robocomp/mirobocomp/robocomp-shelly/components/fakeHumanAgent3 ./bin/fakeHumanAgent3 /home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake3.conf" />
+  <upCommand command="rcremote localhost humanFakeA3 /home/robocomp/robocomp/components/robocomp-araceli/components/fakeHumanAgent3 ./bin/fakeHumanAgent3 /home/robocomp/robocomp/components/robocomp-araceli/etcSim/humanFake3.conf" />
   <downCommand command="killall -9 fakeHumanAgent3" />
-  <configFile path="/home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake3.conf" />
+  <configFile path="/home/robocomp/robocomp/components/robocomp-araceli/etcSim/humanFake3.conf" />
   <xpos value="-250.9789855056" />
   <ypos value="-180.5106363282" />
   <radius value="10.0" />
@@ -121,9 +121,9 @@
   <dependence alias="executive" />
  <dependence alias="base" />
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost humanFakeA4 /home/robocomp/mirobocomp/robocomp-shelly/components/fakeHumanAgent4 ./bin/fakeHumanAgent4 /home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake4.conf" />
+  <upCommand command="rcremote localhost humanFakeA4 /home/robocomp/robocomp/components/robocomp-araceli/components/fakeHumanAgent4 ./bin/fakeHumanAgent4 /home/robocomp/robocomp/components/robocomp-araceli/etcSim/humanFake4.conf" />
   <downCommand command="killall -9 fakeHumanAgent4" />
-  <configFile path="/home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake4.conf" />
+  <configFile path="/home/robocomp/robocomp/components/robocomp-araceli/etcSim/humanFake4.conf" />
   <xpos value="-250.9789855056" />
   <ypos value="-150.5106363282" />
   <radius value="10.0" />
@@ -134,9 +134,9 @@
   <dependence alias="executive" />
  <dependence alias="base" />
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost humanFakeA5 /home/robocomp/mirobocomp/robocomp-shelly/components/fakeHumanAgent5 ./bin/fakeHumanAgent5 /home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake5.conf" />
+  <upCommand command="rcremote localhost humanFakeA5 /home/robocomp/robocomp/components/robocomp-araceli/components/fakeHumanAgent5 ./bin/fakeHumanAgent5 /home/robocomp/robocomp/components/robocomp-araceli/etcSim/humanFake5.conf" />
   <downCommand command="killall -9 fakeHumanAgent5" />
-  <configFile path="/home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake5.conf" />
+  <configFile path="/home/robocomp/robocomp/components/robocomp-araceli/etcSim/humanFake5.conf" />
   <xpos value="-250.9789855056" />
   <ypos value="-120.5106363282" />
   <radius value="10.0" />
@@ -147,9 +147,9 @@
   <dependence alias="executive" />
  <dependence alias="base" />
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost humanFakeA6 /home/robocomp/mirobocomp/robocomp-shelly/components/fakeHumanAgent6 ./bin/fakeHumanAgent6 /home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake6.conf" />
+  <upCommand command="rcremote localhost humanFakeA6 /home/robocomp/robocomp/components/robocomp-araceli/components/fakeHumanAgent6 ./bin/fakeHumanAgent6 /home/robocomp/robocomp/components/robocomp-araceli/etcSim/humanFake6.conf" />
   <downCommand command="killall -9 fakeHumanAgent6" />
-  <configFile path="/home/robocomp/mirobocomp/robocomp-shelly/etcSim/humanFake6.conf" />
+  <configFile path="/home/robocomp/robocomp/components/robocomp-araceli/etcSim/humanFake6.conf" />
   <xpos value="-250.9789855056" />
   <ypos value="-90.5106363282" />
   <radius value="10.0" />
@@ -239,9 +239,9 @@
 
  <node alias="laser" endpoint="laser:tcp -h localhost -p 10003">
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost rgbd /home/robocomp/mirobocomp/robocomp-shelly/etcSim rcis simulation.xml -f 100" />
+  <upCommand command="rcremote localhost rgbd /home/robocomp/robocomp/components/robocomp-araceli/etcSim rcis simulation.xml -f 100" />
   <downCommand command="killall -9 rcis" />
-  <configFile path="rcremote localhost configs /home/robocomp/mirobocomp/robocomp-shelly/etcSim kate simulation.xml" />
+  <configFile path="rcremote localhost configs /home/robocomp/robocomp/components/robocomp-araceli/etcSim kate simulation.xml" />
   <xpos value="-58.4646681749" />
   <ypos value="165.374688364" />
   <radius value="10.0" />
@@ -274,9 +274,9 @@
 
  <node alias="base" endpoint="omnirobot:tcp -h localhost -p 12238">
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost rgbd /home/robocomp/mirobocomp/robocomp-shelly/etcSim rcis simulation.xml -f 100" />
+  <upCommand command="rcremote localhost rgbd /home/robocomp/robocomp/components/robocomp-araceli/etcSim rcis simulation.xml -f 100" />
   <downCommand command="killall -9 rcis" />
-  <configFile path="rcremote localhost configs /home/robocomp/mirobocomp/robocomp-shelly/etcSim kate simulation.xml" />
+  <configFile path="rcremote localhost configs /home/robocomp/robocomp/components/robocomp-araceli/etcSim kate simulation.xml" />
   <xpos value="-116.350970747" />
   <ypos value="164.639174274" />
   <radius value="10.0" />
@@ -298,9 +298,9 @@
 
  <node alias="faulhaber" endpoint="jointmotor:tcp -p 10067">
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost rgbd /home/robocomp/mirobocomp/robocomp-shelly/etcSim rcis simulation.xml -f 100" />
+  <upCommand command="rcremote localhost rgbd /home/robocomp/robocomp/components/robocomp-araceli/etcSim rcis simulation.xml -f 100" />
   <downCommand command="killall -9 rcis" />
-  <configFile path="rcremote localhost configs /home/robocomp/mirobocomp/robocomp-shelly/etcSim kate simulation.xml" />
+  <configFile path="rcremote localhost configs /home/robocomp/robocomp/components/robocomp-araceli/etcSim kate simulation.xml" />
   <xpos value="63.4167829126" />
   <ypos value="166.413095626" />
   <radius value="10.0" />
@@ -309,9 +309,9 @@
 
  <node alias="dynamixel" endpoint="jointmotor:tcp -p 10068">
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost rgbd /home/robocomp/mirobocomp/robocomp-shelly/etcSim rcis simulation.xml -f 100" />
+  <upCommand command="rcremote localhost rgbd /home/robocomp/robocomp/components/robocomp-araceli/etcSim rcis simulation.xml -f 100" />
   <downCommand command="killall -9 rcis" />
-  <configFile path="rcremote localhost configs /home/robocomp/mirobocomp/robocomp-shelly/etcSim kate simulation.xml" />
+  <configFile path="rcremote localhost configs /home/robocomp/robocomp/components/robocomp-araceli/etcSim kate simulation.xml" />
   <xpos value="108.31002484" />
   <ypos value="163.908963394" />
   <radius value="10.0" />
@@ -332,9 +332,9 @@
  <node alias="rgbd" endpoint="rgbd:tcp -p 10096">
   <dependence alias="comJoint" />
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost rgbd /home/robocomp/mirobocomp/robocomp-shelly/etcSim rcis simulation.xml -f 100" />
+  <upCommand command="rcremote localhost rgbd /home/robocomp/robocomp/components/robocomp-araceli/etcSim rcis simulation.xml -f 100" />
   <downCommand command="killall -9 rcis" />
-  <configFile path="rcremote localhost configs /home/robocomp/mirobocomp/robocomp-shelly/etcSim kate simulation.xml" />
+  <configFile path="rcremote localhost configs /home/robocomp/robocomp/components/robocomp-araceli/etcSim kate simulation.xml" />
   <xpos value="0.962021992792" />
   <ypos value="165.532650985" />
   <radius value="10.0" />
@@ -461,9 +461,9 @@
   <dependence alias="base" />
   <dependence alias="laser" />
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost trajectory2d /home/robocomp/mirobocomp/robocomp-shelly/components/trajectoryrobot2d ./bin/trajectoryrobot2d --Ice.Config=/home/robocomp/mirobocomp/robocomp-shelly/etcSim/trajectoryrobot2d.conf" />
+  <upCommand command="rcremote localhost trajectory2d /home/robocomp/robocomp/components/robocomp-araceli/components/trajectoryrobot2d ./bin/trajectoryrobot2d --Ice.Config=/home/robocomp/robocomp/components/robocomp-araceli/etcSim/trajectoryrobot2d.conf" />
   <downCommand command="killall -9 trajectoryrobot2d" />
-  <configFile path="/home/robocomp/mirobocomp/robocomp-shelly/etcSim/trajectoryrobot2d.conf" />
+  <configFile path="/home/robocomp/robocomp/components/robocomp-araceli/etcSim/trajectoryrobot2d.conf" />
   <xpos value="-171.097569307" />
   <ypos value="29.0234676211" />
   <radius value="10.0" />
