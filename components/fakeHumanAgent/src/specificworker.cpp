@@ -35,7 +35,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	humanAdvVel = 50;
 	humanRot = 0;
 	
-	setWindowTitle("Humanfake 1");
+	setWindowTitle("1");
 //	lastJoystickEvent = QTime::currentTime();
 }
 
@@ -72,7 +72,7 @@ void SpecificWorker::includeInRCIS()
 		mesh.scaleX = mesh.scaleY = mesh.scaleZ = 12;
 		mesh.render = 0;
 		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
-		mesh.meshPath = "/home/robocomp/mirobocomp/robocomp-shelly/models/human01.3ds";
+		mesh.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/human01.3ds";
 		innermodelmanager_proxy->addMesh("fakeperson_mesh", "fakeperson", mesh);
 	}
 	catch (...)
@@ -142,7 +142,7 @@ void SpecificWorker::includeInAGM()
 	personMesh->setAttribute("collidable", "false");
 	personMesh->setAttribute("imName", "fakepersonMesh");
 	personMesh->setAttribute("imType", "mesh");
-	personMesh->setAttribute("path", "/home/araceli/tfg/models/human01.3ds");
+	personMesh->setAttribute("path", "/home/robocomp/robocomp/components/robocomp-araceli/models/human01.3ds");
 	personMesh->setAttribute("render", "NormalRendering");
 	personMesh->setAttribute("scalex", "12");
 	personMesh->setAttribute("scaley", "12");
