@@ -470,6 +470,17 @@
   <color value="#FF3333" />
  </node>
 
+ <node alias="testtrajectory2D" endpoint="RCISMousePickerTopic:tcp -h localhost -p 13204">
+  <dependence alias="trajectory2d"/>
+  <workingDir path="/home/robocomp/"/>
+  <upCommand command="rcremote localhost testtrajectory2D /home/robocomp/robocomp/components/robocomp-shelly/components/testTrajectoryRobot2D python src/testTrajectoryRobot2D.py etc/config"/>
+  <downCommand command="pkill -9 -f testTrajectoryRobot2D.py"/>
+  <configFile path="/home/robocomp/robocomp/components/robocomp-shelly/etcSim/testtrajectory.conf"/>
+  <xpos value="-271.097569307"/><ypos value="-63.5106363282"/>
+  <radius value="10.0"/>
+  <color value="#33FF33"/>
+ </node>
+
  <node alias="slam" endpoint="commonbehavior:tcp -p 11059">
   <dependence alias="laser" />
   <dependence alias="base" />

@@ -49,7 +49,7 @@ bool GraphDraw::draw(const PlannerPRM& planner, InnerViewer* viewer)
 	for(auto comp : compList)
 	{
 		QString c = color.at(j++%color.size());
-		qDebug() << __FUNCTION__<< "color C" << c << comp.second.size();
+	//	qDebug() << __FUNCTION__<< "color C" << c << comp.second.size();
 		for(auto elem : comp.second)
 		{
 			item = "g_" + QString::number(i);

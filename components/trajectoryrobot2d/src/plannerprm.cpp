@@ -334,6 +334,7 @@ bool PlannerPRM::updateGraph(LocalPolyLineList Polylines)
 			modified = true;
 		}
 	}
+
 	return modified;
 }
 

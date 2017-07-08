@@ -1,7 +1,8 @@
 <innermodel>
-	<include path="/home/robocomp/robocomp/components/robocomp-araceli/etc/shelly.xml"/>
-	<include path="/home/robocomp/robocomp/components/robocomp-araceli/etc/autonomyLab.xml"/> 
-<!--	<include path="/home/robocomp/robocomp/components/robocomp-araceli/etc/pruebasLab.xml"/>--> 
+	<include path="/home/robocomp/robocomp/components/robocomp-shelly/etc/shelly.xml"/>
+<!--	<include path="/home/robocomp/robocomp/components/robocomp-shelly/etc/autonomyLab.xml"/> -->
+<!--	<include path="/home/robocomp/robocomp/components/robocomp-araceli/etc/autonomyLab.xml"/> -->
+	<include path="/home/robocomp/robocomp/components/robocomp-araceli/etc/pruebasLab.xml"/> 
 <!--	<include path="/home/robocomp/robocomp/robocomp/components/robocomp-shelly/etc/gualzru.xml"/>  -->
 <!--	<include path="/home/robocomp/robocomp/components/robocomp-araceli/etc/ejemplo.xml"/>-->
 </innermodel>

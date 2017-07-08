@@ -138,6 +138,7 @@ class Person(object):
 
         Z = self._calculatePersonalSpace(X, Y)
 
+
         if (drawPersonalSpace):
             # print(Z)
             # http://www.python-course.eu/matplotlib_contour_plot.php
@@ -156,9 +157,6 @@ class Person(object):
            # plt.plot(dat0[:, 0], dat0[:, 1], '*b-')
 
 
-            # CS = plt.contour(X, Y, Z, 10)
-            #surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
-
             # Corpo
             body = plt.Circle((self.x, self.y), radius=self._radius, fill=False)
             plt.gca().add_patch(body)
@@ -175,8 +173,15 @@ class Person(object):
             heading = plt.Line2D((self.x, x_aux), (self.y, y_aux), lw=1, color='k')
             plt.gca().add_line(heading)
 
+            """
             plt.axis('equal')
-
+            fig = plt.figure()
+            ax = fig.add_subplot(111, projection='3d')
+            ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
+            """""
+            plt.xlabel('X')
+            plt.ylabel('Y')
+            plt.axis('equal')
 
         return Z
 
@@ -272,7 +277,7 @@ class SpecificWorker(GenericWorker):
         lx_sup = 8
         ly_inf = -6
         ly_sup = 8
-         """""
+        """""
         ##cambio los limites para los otros valores de sigma
         lx_inf = 0
         lx_sup = 10
@@ -296,7 +301,7 @@ class SpecificWorker(GenericWorker):
             normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 4, 2, 2*4/3], elliptical=True))
         #print ("numero de gaussianas",len(normals))
 
-        h = 0.4
+        h = 0.6
         resolution = 0.1
         limits = [[lx_inf, lx_sup], [ly_inf, ly_sup]]
         _, z = Normal.makeGrid(normals, h, 2, limits=limits, resolution=resolution)
@@ -310,7 +315,7 @@ class SpecificWorker(GenericWorker):
         #plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
         if (dibujar):
-            plt.figure()
+           # plt.figure()
             plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
             plt.xlabel('X')
             plt.ylabel('Y')

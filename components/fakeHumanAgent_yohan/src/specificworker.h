@@ -99,12 +99,9 @@ public slots:
 	void rotar(int valor);
 	void giroP();
 	void giroR();
-    void rb1();
-    void rb2();
-    void rb3();
-		void rb4();
-		void rb5();
-
+    //void rb1();
+    //void rb2();
+    //void rb3();
 
 private:
 
@@ -122,7 +119,7 @@ private:
 	void includeInAGM();
 
 
-	int32_t personSymbolId[5];
+	int32_t personSymbolId;
 
 	QTime lastJoystickEvent;
 	QJoyStick *joystick;
