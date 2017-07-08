@@ -130,7 +130,7 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 		
 		for (auto currentPoint:poly)
 		{
-			
+			//qDebug()<<"INCLUIMOS EN INNERDRAW";
 			QString cadena = QString("polyline_obs_")+QString::number(count,10);
 			qDebug() << __FUNCTION__ << "nombre"<<cadena;
 			QVec ppoint = QVec::vec3(previousPoint.x, 1000, previousPoint.z);
@@ -145,11 +145,17 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 			
  			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,90));
 		
-			//////////////////////////////////////SE METE LA PARED EN EL INNER///////////////////////////////////
+// 			//////////////////////////////////////SE METE LA PARED EN EL INNER///////////////////////////////////
+			//qDebug()<<"INCLUIMOS EN INNERMODEL";
 			if (innerModel->getNode(cadena))
 			{
-				innerModel->removeNode(cadena);
-			//	qDebug() << __FUNCTION__ << "borrado " << cadena;
+				try
+				{
+					innerModel->removeNode(cadena);
+					qDebug() << __FUNCTION__ << "borrado " << cadena;
+				}
+				  
+				catch(QString es){ qDebug() << "EXCEPCION" << es;}
 			}
 			
 	
@@ -207,7 +213,6 @@ void SpecificWorker::compute()
 		qDebug()<<"Nueva polilinea. Actualizamos grafo";
 		if ( plannerPRM.updateGraph(safePolyList.read()) == true)
 		{
-			updateObstacles(safePolyList.read());
 			qDebug()<<"Se ha modificado el grafo";
 			#ifdef USE_QTGUI
 				graphdraw.draw(plannerPRM, viewer);
@@ -216,6 +221,7 @@ void SpecificWorker::compute()
 			sampler.initialize(innerModel, params);
 		}
 		
+		updateObstacles(safePolyList.read());
 		newPolyline = false;
 		
 	//	printf("%p %p\n", innerModel, sampler.innerModelSampler);
