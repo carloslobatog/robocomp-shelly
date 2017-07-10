@@ -111,13 +111,13 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 		QString cadena = QString("polyline_obs_") + QString::number(i,10);
 		//printf("puntero a %s: %p\n", cadena.toStdString().c_str(), viewer->innerModel->getNode(cadena));
 
-		qDebug() << __FUNCTION__ <<"intentamos borrar "<<cadena;
+		//qDebug() << __FUNCTION__ <<"intentamos borrar "<<cadena;
 		if (innerModel->getNode(cadena))
 				innerModel->removeNode(cadena);
 		
 		if (not InnerModelDraw::removeObject(viewer->innerViewer, cadena) )
 		{
-			printf("removeObject devuelve falso\n");
+		//	printf("removeObject devuelve falso\n");
 			break;
  		}
 	}
@@ -132,7 +132,7 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 		{
 			//qDebug()<<"INCLUIMOS EN INNERDRAW";
 			QString cadena = QString("polyline_obs_")+QString::number(count,10);
-			qDebug() << __FUNCTION__ << "nombre"<<cadena;
+			//qDebug() << __FUNCTION__ << "nombre"<<cadena;
 			QVec ppoint = QVec::vec3(previousPoint.x, 1000, previousPoint.z);
 			QVec cpoint = QVec::vec3(currentPoint.x, 1000, currentPoint.z);
 			QVec center = (cpoint + ppoint).operator*(0.5);
@@ -152,7 +152,7 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 				try
 				{
 					innerModel->removeNode(cadena);
-					qDebug() << __FUNCTION__ << "borrado " << cadena;
+				//	qDebug() << __FUNCTION__ << "borrado " << cadena;
 				}
 				  
 				catch(QString es){ qDebug() << "EXCEPCION" << es;}
@@ -209,20 +209,36 @@ void SpecificWorker::compute()
 	}
 	
 	if (newPolyline)
+	
 	{
-		qDebug()<<"Nueva polilinea. Actualizamos grafo";
-		if ( plannerPRM.updateGraph(safePolyList.read()) == true)
-		{
-			qDebug()<<"Se ha modificado el grafo";
-			#ifdef USE_QTGUI
-				graphdraw.draw(plannerPRM, viewer);
-			#endif
+		qDebug()<<"Nueva polilinea. llamamos a UpdateGraph";
 		
+		if ( plannerPRM.updateGraph(safePolyList.read()) == true)
+		{	
+			qDebug()<<"El grafo ha cambiado";
+			#ifdef USE_QTGUI
+			qDebug()<<"Entramos en Graphdraw.draw";
+				graphdraw.draw(plannerPRM, viewer);
+			qDebug()<<"Salimos de GraphDraw";
+			#endif
+			qDebug()<<"Llamamos a Sampler.initialize";
 			sampler.initialize(innerModel, params);
+			qDebug()<<"Salimos de Sampler.initialize";
+				
 		}
 		
+		else
+		{
+			qDebug()<<"El grafo no ha cambiado";
+		}
+		
+		qDebug()<<"LLamamos a updateObstacles";
 		updateObstacles(safePolyList.read());
+		qDebug()<<"Salimos e UpdateObstacles";
 		newPolyline = false;
+		
+		////SE CIERRA CADA VEZ QUE LLAMAMOS AL SAMPLER.INITIALIZE UNA VEZ QUE SE HA AÑADIDO LA POLILINEA EN EL INNERMODEL
+		
 		
 	//	printf("%p %p\n", innerModel, sampler.innerModelSampler);
 	}
@@ -454,9 +470,9 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 	///////////////////////////////////
 	// Update the band
 	/////////////////////////////////
-	
+	qDebug()<<"Llamamos a elasticband";
 	elasticband.update(innerModel, myRoad, laserData, target, safePolyList);
-
+	qDebug()<<"Salimos de elasticband";
 	//qFatal("aqui");
 	///////////////////////////////////
 	// compute all measures relating the robot to the road
@@ -802,6 +818,7 @@ void SpecificWorker::setHumanSpace(const PolyLineList& polyList)
   
 	qDebug()<<"La polilinea ha llegado";
 	safePolyList.write(polyList);
+	
 	newPolyline=true;
   
 }

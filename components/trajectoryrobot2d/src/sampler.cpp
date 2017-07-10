@@ -33,11 +33,13 @@ Sampler::Sampler()
 void Sampler::initialize(InnerModel *inner, const RoboCompCommonBehavior::ParameterList &params)
 {
 	qDebug() << __FUNCTION__ << "Sampler: Copying InnerModel...";
- 	//innerModelSampler = inner->copy();
-	innerModelSampler = inner;
+ 	qDebug()<< __FUNCTION__ << "----------------1---------------";
+	innerModelSampler = inner->copy();
 	
+	//innerModelSampler = inner;
+	qDebug()<< __FUNCTION__ << "-----------------2----------------";
 	try
-	{
+	{	qDebug()<< __FUNCTION__ << "-----------------3----------------";
 		outerRegion.setLeft(std::stof(params.at("OuterRegionLeft").value));
 		outerRegion.setRight(std::stof(params.at("OuterRegionRight").value));
 		outerRegion.setBottom(std::stof(params.at("OuterRegionBottom").value));
@@ -55,7 +57,7 @@ void Sampler::initialize(InnerModel *inner, const RoboCompCommonBehavior::Parame
 
 	if(outerRegion.isNull())  
 		qFatal("Sampler-Initialize. Aborting. OuterRegion is not properly initialized");    //CHANGE TO THROW
-
+	
 	robotNodes.clear(); restNodes.clear(); 
 	QStringList ls = QString::fromStdString(params.at("ExcludedObjectsInCollisionCheck").value).replace(" ", "" ).split(',');
 	qDebug() << __FUNCTION__ << ls.size() << "objects read for exclusion list";
@@ -63,8 +65,9 @@ void Sampler::initialize(InnerModel *inner, const RoboCompCommonBehavior::Parame
 		excludedNodes.insert(s);
 	
 	// Compute the list of meshes that correspond to robot, world and possibly some additionally excluded ones
+	qDebug()<< __FUNCTION__ << "-------------------4------------------";
 	recursiveIncludeMeshes(innerModelSampler->getRoot(), "robot", false, robotNodes, restNodes, excludedNodes);
-	
+	qDebug()<< __FUNCTION__ << "-----------------------5------------------";///AQUI ESTA EL ERROR
 	//Init random sequence generator
 	qsrand( QTime::currentTime().msec() );
 }
