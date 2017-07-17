@@ -101,7 +101,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 
 
 void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
-{
+{	
 	qDebug() << __FUNCTION__ << "updateObstacles";
 	//Borrar todos los newpolyline_obs_X que existan del innermodel y del innermodel viewer
 	
@@ -218,13 +218,9 @@ void SpecificWorker::compute()
 			qDebug()<<"El grafo ha cambiado";
 			#ifdef USE_QTGUI
 			qDebug()<<"Entramos en Graphdraw.draw";
-				graphdraw.draw(plannerPRM, viewer);
+			graphdraw.draw(plannerPRM, viewer);
 			qDebug()<<"Salimos de GraphDraw";
-			#endif
-			qDebug()<<"Llamamos a Sampler.initialize";
-			sampler.initialize(innerModel, params);
-			qDebug()<<"Salimos de Sampler.initialize";
-				
+			#endif		
 		}
 		
 		else
@@ -235,14 +231,19 @@ void SpecificWorker::compute()
 		qDebug()<<"LLamamos a updateObstacles";
 		updateObstacles(safePolyList.read());
 		qDebug()<<"Salimos e UpdateObstacles";
+	
+		
+		qDebug()<<"Llamamos a Sampler.initialize";
+		//sampler.initialize(innerModel, params);
+		qDebug()<<"Salimos de Sampler.initialize";
 		newPolyline = false;
-		
+	
 		////SE CIERRA CADA VEZ QUE LLAMAMOS AL SAMPLER.INITIALIZE UNA VEZ QUE SE HA AÑADIDO LA POLILINEA EN EL INNERMODEL
+		//printf("%p %p\n", innerModel, sampler.innerModelSampler);
+	
 		
-		
-	//	printf("%p %p\n", innerModel, sampler.innerModelSampler);
 	}
-	//	printf("%p %p\n", innerModel, sampler.innerModelSampler);
+	
 	
 
 	

@@ -103,6 +103,8 @@ class PlannerPRM
 		Graph graph;
 		
 		bool updateGraph (LocalPolyLineList Polylines);
+		std::vector<Edge> listtoremoveE;
+		//std::vector<Vertex> listtoremoveV;
 			
 	private:
 		InnerModel innerPlanner;

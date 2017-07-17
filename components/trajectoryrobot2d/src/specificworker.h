@@ -139,6 +139,8 @@ class SpecificWorker : public GenericWorker
 		CurrentTarget currentTarget;
 		CurrentTarget currentTargetAnt, currentTargetBack;
 		InnerModel *innerModel;
+
+		
 		RoboCompCommonBehavior::ParameterList worker_params;
 		QMutex *worker_params_mutex;
 		/**

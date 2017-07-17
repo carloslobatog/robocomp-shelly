@@ -282,26 +282,54 @@ bool PlannerPRM::planWithRRT(const QVec &origin, const QVec &target, QList<QVec>
  */
 
 bool PlannerPRM::updateGraph(LocalPolyLineList Polylines)
-{
+{	
+	static bool f = true;
 	bool modified = false;
 	for (auto poly:Polylines)
 	{
-		std::vector<Edge> listtoremoveE;
-		std::vector<Vertex> listtoremoveV;
+		
 		QPolygonF qp;
+		
+		if (f==false and listtoremoveE.empty()==false)
+		{
+		  qDebug("dentro");
+		  for (auto e:listtoremoveE)
+		    {	
+		      
+			Vertex origen;
+			Vertex fin;
+			
+			BGL_FORALL_VERTICES(v, graph, Graph)
+			{
+			  if (graph[e.m_source].pose == graph[v].pose) origen = v;
+			  
+			  
+			  if (graph[e.m_target].pose == graph[v].pose) fin = v;
+			}
+			
+			EdgePayload edge;
+			edge.dist = (QVec(graph[origen].pose) - QVec(graph[fin].pose)).norm2();
+			boost::add_edge(origen, fin, edge, graph);
+		//	qDebug()<<"listo";
+		    }
+		  
+		}
+		
+		listtoremoveE.clear();	
 		for (auto p:poly)
 		{
 			qp << QPointF(p.x,p.z);
 		}
 		
 		//recorrer grafo
-		BGL_FORALL_VERTICES(v, graph, Graph)
+		/*BGL_FORALL_VERTICES(v, graph, Graph)
 		{
 			if (qp.containsPoint(QPointF(graph[v].pose[0],graph[v].pose[2]),Qt::OddEvenFill))
 			{
 				listtoremoveV.push_back(v);
 			}	
 		}
+		*/
 		BGL_FORALL_EDGES(e, graph, Graph)
 		{
 			QPointF s(graph[e.m_source].pose[0],graph[e.m_source].pose[2]);
@@ -327,14 +355,14 @@ bool PlannerPRM::updateGraph(LocalPolyLineList Polylines)
 			modified = true;
 		//	qDebug()<<"listo";
 		}
-		for (auto v:listtoremoveV)
-		{
-			boost::clear_vertex(v, graph);
-			boost::remove_vertex(v, graph);
-			modified = true;
-		}
+// 		for (auto v:listtoremoveV)
+// 		{
+// 			boost::clear_vertex(v, graph);
+// 			boost::remove_vertex(v, graph);
+// 			modified = true;
+// 		}
 	}
-
+	f=false;
 	return modified;
 }
 
