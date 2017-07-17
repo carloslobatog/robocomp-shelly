@@ -285,51 +285,81 @@ bool PlannerPRM::updateGraph(LocalPolyLineList Polylines)
 {	
 	static bool f = true;
 	bool modified = false;
-	for (auto poly:Polylines)
-	{
+	Graph oldgraph;
+	
+	if (f) oldgraph = graph;
+	
 		
-		QPolygonF qp;
-		
-		if (f==false and listtoremoveE.empty()==false)
+// 		if (f==false and listtoremoveV.empty()==false)
+// 		{	
+// 			for (auto v:listtoremoveV)
+// 			{	
+// 				qDebug()<<"vertice pos"<< oldgraph[v].pose[0] ;
+// 				qDebug("------1--------");
+// 				Vertex ver = boost::add_vertex(graph);
+// 				qDebug("------2--------");
+// 				vertexMap.insert(100,ver);  
+// 				qDebug("------3--------");
+// 				graph[ver].pose = oldgraph[v].pose;
+// 				qDebug()<<"vertice pos2"<<graph[v].pose[0] ;
+// 				qDebug("------4--------");
+// 				graph[ver].vertex_id= oldgraph[v].vertex_id;
+// 				qDebug("------5--------");
+// 			}
+// 		}
+// 		
+		if (f==false and listtotalE.empty()==false)
 		{
 		  qDebug("dentro");
-		  for (auto e:listtoremoveE)
+
+		  for (auto e:listtotalE)
 		    {	
 		      
-			Vertex origen;
-			Vertex fin;
+			Vertex origen= NULL;
+			Vertex fin = NULL;
 			
 			BGL_FORALL_VERTICES(v, graph, Graph)
 			{
-			  if (graph[e.m_source].pose == graph[v].pose) origen = v;
-			  
-			  
+			  if (graph[e.m_source].pose == graph[v].pose) origen = v;	  
 			  if (graph[e.m_target].pose == graph[v].pose) fin = v;
 			}
 			
-			EdgePayload edge;
-			edge.dist = (QVec(graph[origen].pose) - QVec(graph[fin].pose)).norm2();
-			boost::add_edge(origen, fin, edge, graph);
+			if (origen!=NULL and fin!=NULL)
+			{
+				EdgePayload edge;
+				edge.dist = (QVec(graph[origen].pose) - QVec(graph[fin].pose)).norm2();
+				boost::add_edge(origen, fin, edge, graph);
+			}
+			
 		//	qDebug()<<"listo";
 		    }
-		  
+		    
+		  listtotalE.clear();
 		}
+	
+	
+	
+	for (auto poly:Polylines)
+	{
 		
-		listtoremoveE.clear();	
+		QPolygonF qp;					
+		listtoremoveE.clear();
+		listtoremoveV.clear();
+		
 		for (auto p:poly)
 		{
 			qp << QPointF(p.x,p.z);
 		}
 		
 		//recorrer grafo
-		/*BGL_FORALL_VERTICES(v, graph, Graph)
-		{
-			if (qp.containsPoint(QPointF(graph[v].pose[0],graph[v].pose[2]),Qt::OddEvenFill))
-			{
-				listtoremoveV.push_back(v);
-			}	
-		}
-		*/
+// 		BGL_FORALL_VERTICES(v, graph, Graph)
+// 		{
+// 			if (qp.containsPoint(QPointF(graph[v].pose[0],graph[v].pose[2]),Qt::OddEvenFill))
+// 			{
+// 				listtoremoveV.push_back(v);
+// 			}	
+// 		}
+		
 		BGL_FORALL_EDGES(e, graph, Graph)
 		{
 			QPointF s(graph[e.m_source].pose[0],graph[e.m_source].pose[2]);
@@ -351,17 +381,21 @@ bool PlannerPRM::updateGraph(LocalPolyLineList Polylines)
 // 		qDebug() <<  "Quedan" <<  boost::num_vertices(graph) << "vertices en el grafo";
 		for (auto e:listtoremoveE)
 		{	
+			listtotalE.push_back(e);
 			boost::remove_edge(e, graph);	
 			modified = true;
 		//	qDebug()<<"listo";
 		}
+		
 // 		for (auto v:listtoremoveV)
 // 		{
 // 			boost::clear_vertex(v, graph);
 // 			boost::remove_vertex(v, graph);
 // 			modified = true;
 // 		}
+		
 	}
+	
 	f=false;
 	return modified;
 }
