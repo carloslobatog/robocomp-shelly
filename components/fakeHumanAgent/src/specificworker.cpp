@@ -62,7 +62,7 @@ void SpecificWorker::includeInRCIS()
 		pose.rx = 0;
 		pose.ry = 3.141516;
 		pose.rz = 0;
-		innermodelmanager_proxy->addTransform("fakeperson", "static", "root", pose);
+		innermodelmanager_proxy->addTransform("fakeperson1", "static", "root", pose);
 
 		RoboCompInnerModelManager::meshType mesh;
 		mesh.pose.x  = mesh.pose.y  = mesh.pose.z  = 0;
@@ -73,7 +73,7 @@ void SpecificWorker::includeInRCIS()
 		mesh.render = 0;
 		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
 		mesh.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/human01.3ds";
-		innermodelmanager_proxy->addMesh("fakeperson_mesh", "fakeperson", mesh);
+		innermodelmanager_proxy->addMesh("fakeperson_mesh", "fakeperson1", mesh);
 	}
 	catch (...)
 	{
@@ -92,11 +92,11 @@ void SpecificWorker::includeInAGM()
 	printf("includeInAGM begins\n");
 
 	int idx=0;
-	while ((personSymbolId = worldModel->getIdentifierByType("person", idx++)) != -1)
+	while ((personSymbolId = worldModel->getIdentifierByType("person1", idx++)) != -1)
 	{
 		printf("%d %d\n", idx, personSymbolId);
 		if (idx > 4) exit(0);
-		if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == "fakeperson")
+		if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == "fakeperson1")
 		{
 			printf("found %d!!\n", personSymbolId);
 			break;
@@ -111,17 +111,17 @@ void SpecificWorker::includeInAGM()
 	AGMModel::SPtr newModel(new AGMModel(worldModel));
 
 	// Symbolic part
-	AGMModelSymbol::SPtr person =   newModel->newSymbol("person");
+	AGMModelSymbol::SPtr person =   newModel->newSymbol("person1");
 	personSymbolId = person->identifier;
 	printf("Got personSymbolId: %d\n", personSymbolId);
-	person->setAttribute("imName", "fakeperson");
+	person->setAttribute("imName", "fakeperson1");
 	person->setAttribute("imType", "transform");
 	AGMModelSymbol::SPtr personSt = newModel->newSymbol("personSt");
 	printf("person %d status %d\n", person->identifier, personSt->identifier);
 
 	newModel->addEdge(person, personSt, "hasStatus");
 	newModel->addEdge(person, personSt, "noReach");
-	newModel->addEdge(person, personSt, "person");
+	newModel->addEdge(person, personSt, "person1");
 	
 	newModel->addEdgeByIdentifiers(person->identifier, 3, "in");
 
@@ -323,28 +323,28 @@ void SpecificWorker::move (){
 		coordInItem.x = 0;
 		coordInItem.y = 0;
 		coordInItem.z =humanAdvVel;
-		innermodelmanager_proxy->transform("root", "fakeperson", coordInItem, coordInBase);
+		innermodelmanager_proxy->transform("root", "fakeperson1", coordInItem, coordInBase);
 	
 	 }
 	 else if (tbutton.down==true){
 		coordInItem.x = 0;
 		coordInItem.y = 0;
 		coordInItem.z =-humanAdvVel;
-		innermodelmanager_proxy->transform("root", "fakeperson", coordInItem, coordInBase);
+		innermodelmanager_proxy->transform("root", "fakeperson1", coordInItem, coordInBase);
 	 }
 	 
 	 else if (tbutton.right==true){
 		coordInItem.z = 0;
 		coordInItem.y = 0;
 		coordInItem.x =humanAdvVel;
-		innermodelmanager_proxy->transform("root", "fakeperson", coordInItem, coordInBase);
+		innermodelmanager_proxy->transform("root", "fakeperson1", coordInItem, coordInBase);
 	 }
 	 
 	 else if (tbutton.left==true){
 		coordInItem.z = 0;
 		coordInItem.y = 0;
 		coordInItem.x =-humanAdvVel;
-		innermodelmanager_proxy->transform("root", "fakeperson", coordInItem, coordInBase);
+		innermodelmanager_proxy->transform("root", "fakeperson1", coordInItem, coordInBase);
 	 }
 	 
 	else if (tbutton.rotacion==true){
@@ -353,7 +353,7 @@ void SpecificWorker::move (){
 		coordInItem.x=0;
 		coordInItem.y=0;
 		coordInItem.z=0;
-		innermodelmanager_proxy->transform("root", "fakeperson", coordInItem, coordInBase);
+		innermodelmanager_proxy->transform("root", "fakeperson1", coordInItem, coordInBase);
 		
 	} 
 		
@@ -367,7 +367,7 @@ void SpecificWorker::move (){
 	
 		qDebug()<<"Pose x: "<<pose.x <<"Pose z:"<<pose.z<<"Rotacion:"<<pose.ry;
 		
-		innermodelmanager_proxy->setPoseFromParent("fakeperson", pose);
+		innermodelmanager_proxy->setPoseFromParent("fakeperson1", pose);
 		
 
 		AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(personSymbolId, "RT");

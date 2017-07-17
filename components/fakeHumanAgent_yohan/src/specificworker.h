@@ -82,7 +82,7 @@ public:
 	int xpos,ypos,zpos; //controller
 	float theta;
 	int warpcontrol;
-
+	int meshsize[5];
 public slots:
 	void compute();
 	//void receivedJoyStickEvent(int value, int type, int number);
@@ -99,9 +99,12 @@ public slots:
 	void rotar(int valor);
 	void giroP();
 	void giroR();
-    //void rb1();
-    //void rb2();
-    //void rb3();
+    void rb1();
+    void rb2();
+    void rb3();
+		void rb4();
+		void rb5();
+
 
 private:
 
@@ -115,11 +118,11 @@ private:
 	void sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel);
 
 
-	void includeInRCIS();
+	void includeInRCIS(int i);
 	void includeInAGM();
 
 
-	int32_t personSymbolId;
+	int32_t personSymbolId[5];
 
 	QTime lastJoystickEvent;
 	QJoyStick *joystick;

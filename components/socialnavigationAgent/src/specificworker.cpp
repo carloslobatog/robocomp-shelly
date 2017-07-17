@@ -31,7 +31,7 @@
 
 SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 {
-
+	
 	active = false;
 	active = false;
 	
@@ -57,6 +57,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	proximidad->QSlider::setMaximum (100);	
 	proximidad->QSlider::setTracking (false);	
 	proximidad->QSlider::setValue (50);
+	
 }		
 
 /**
@@ -227,7 +228,7 @@ void SpecificWorker::compute( )
 {
 	static bool first=true;
 	if (first)
-	{
+	{	
 		qLog::getInstance()->setProxy("both", logger_proxy);
 		rDebug2(("navigationAgent started"));
 		
@@ -250,32 +251,38 @@ void SpecificWorker::compute( )
  	
  	//Obtenemos el modelo de fake human
  	
- 	if (p1==false){
+ 	if (p1==false)
+	{
+	
  	int idx=0;
 
-	while ((personSymbolIdp1 = worldModel->getIdentifierByType("person", idx++)) != -1)
-	{
-		if (idx > 4) exit(0);
-		if (worldModel->getSymbolByIdentifier(personSymbolIdp1)->getAttribute("imName") == "fakeperson")
+		while ((personSymbolIdp1 = worldModel->getIdentifierByType("person1", idx++)) != -1)
 		{
-			p1=true;
-			break;
+			if (idx > 4) exit(0);
+			if (worldModel->getSymbolByIdentifier(personSymbolIdp1)->getAttribute("imName") == "fakeperson1")
+			{	
+				p1=true;
+				break;
+			}			
 		}
+	
 	}
-	}
-	if (p2==false){
-	int idx=0;
-	while ((personSymbolIdp2 = worldModel->getIdentifierByType("person2", idx++)) != -1)
+	
+	if (p2==false)
 	{
+		int idx=0;
+		while ((personSymbolIdp2 = worldModel->getIdentifierByType("person2", idx++)) != -1)
+		{
 
-		if (idx > 4) exit(0);
-		if (worldModel->getSymbolByIdentifier(personSymbolIdp2)->getAttribute("imName") == "fakeperson2")
-		{
-			p2=true;
-			break;
+			if (idx > 4) exit(0);
+			if (worldModel->getSymbolByIdentifier(personSymbolIdp2)->getAttribute("imName") == "fakeperson2")
+			{
+				p2=true;
+				break;
+			}
 		}
 	}
-	}
+	
 	if (p3==false){
 	int idx=0;		
 	while ((personSymbolIdp3 = worldModel->getIdentifierByType("person3", idx++)) != -1)
@@ -328,10 +335,11 @@ void SpecificWorker::compute( )
 			break;
 		}
 	}
-	}		
+	}	
+	
 	if (cambiopos==true)
 	{
-	  
+	 
 	  //EN LA ESTRUCTURA PERSONA, LAS DISTANCIAS ESTAN ALMACENADAS EN METROS
 		
 		if (p1){
@@ -480,24 +488,28 @@ void SpecificWorker::compute( )
 			person6.z=str2float(edgeRTp6.attributes["tz"])/1000;
 			person6.angle=str2float(edgeRTp6.attributes["ry"]);
 			//comprobamos si la persona se ha movido
-				if (first){
+				if (first)
+				{
 				personaux6=person6;
 				movperson=true;
-			}
-			else
-			{
-				if  (movperson==false){
-					if ((personaux6.x!=person6.x)||(personaux6.z!=person6.z)||(personaux6.angle!=person6.angle))
-						movperson = true;
 				}
+				else
+				{
+					if  (movperson==false)
+					{
+						if ((personaux6.x!=person6.x)||(personaux6.z!=person6.z)||(personaux6.angle!=person6.angle))
+						movperson = true;
+					}
 				
 				personaux6=person6;
-			}
+				}
 			
 // 			qDebug() << "------------------------------------------------------------";
 // 			qDebug() <<"PERSONA 6\n" <<"Coordenada x"<< person6.x << "Coordenada z"<< person6.z << "Rotacion "<< person6.angle;
 // 				
-			}	
+			}
+			
+	
 // 		agaussian(person,3.5,1.5);
 		
 		
@@ -540,9 +552,12 @@ void SpecificWorker::compute( )
 		    poserobot.push_back(punto);
 		    
 		  }
+		  
+		 
 		    
 		first = false;
 		cambiopos=false;
+		
 	}
 	
 		  
@@ -1689,13 +1704,13 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 		//roomsPolygons = extractPolygonsFromModel(worldModel);
 
 	if (innerModel) delete innerModel;
+	
 	innerModel = AGMInner::extractInnerModel(worldModel, "world", true);
-	
-	cambiopos=true;
-	
-	printf("structuralChange>>\n");
-}
 
+	cambiopos=true;
+	printf("structuralChange>>\n");
+	
+}
 void SpecificWorker::symbolUpdated(const RoboCompAGMWorldModel::Node& modification)
 {
   //qDebug()<<"symbolUpdated";

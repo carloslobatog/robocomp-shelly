@@ -32,11 +32,11 @@ Sampler::Sampler()
  */
 void Sampler::initialize(InnerModel *inner, const RoboCompCommonBehavior::ParameterList &params)
 {
+  
 	qDebug() << __FUNCTION__ << "Sampler: Copying InnerModel...";
  	qDebug()<< __FUNCTION__ << "----------------1---------------";
-	innerModelSampler = inner->copy();
-	
-	//innerModelSampler = inner;
+	//innerModelSampler = inner->copy();
+	innerModelSampler = inner;
 	qDebug()<< __FUNCTION__ << "-----------------2----------------";
 	try
 	{	qDebug()<< __FUNCTION__ << "-----------------3----------------";
@@ -332,23 +332,26 @@ bool Sampler::checkRobotValidDirectionToTarget(const QVec & origin , const QVec 
  * @return void
  */
 void Sampler::recursiveIncludeMeshes(InnerModelNode *node, QString robotId, bool inside, std::vector<QString> &in, std::vector<QString> &out, std::set<QString> &excluded)
-{
+{	
+
 	if (node->id == robotId)
 	{
 		inside = true;
 	}
-	
+
 	InnerModelMesh *mesh;
 	InnerModelPlane *plane;
 	InnerModelTransform *transformation;
-
+	
 	if ((transformation = dynamic_cast<InnerModelTransform *>(node)))  
 	{
 		for (int i=0; i<node->children.size(); i++)
 		{
 			recursiveIncludeMeshes(node->children[i], robotId, inside, in, out, excluded);
 		}
+		
 	}
+	
 	else if ((mesh = dynamic_cast<InnerModelMesh *>(node)) or (plane = dynamic_cast<InnerModelPlane *>(node)))
 	{
 		if( std::find(excluded.begin(), excluded.end(), node->id) == excluded.end() )			
@@ -362,6 +365,7 @@ void Sampler::recursiveIncludeMeshes(InnerModelNode *node, QString robotId, bool
 					out.push_back(node->id);
 		}
 	}
+	
 }
 
 //NOT WORKING WELL
