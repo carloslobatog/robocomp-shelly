@@ -287,35 +287,32 @@ bool PlannerPRM::updateGraph(LocalPolyLineList Polylines)
 	bool modified = false;
 	Graph oldgraph;
 	
-	for (auto poly:Polylines)
-	{
-		
-		QPolygonF qp;
-		
-		if (f) oldgraph = graph;
+	if (f) oldgraph = graph;
+	
 		
 // 		if (f==false and listtoremoveV.empty()==false)
 // 		{	
 // 			for (auto v:listtoremoveV)
 // 			{	
-// 				
+// 				qDebug()<<"vertice pos"<< oldgraph[v].pose[0] ;
 // 				qDebug("------1--------");
 // 				Vertex ver = boost::add_vertex(graph);
 // 				qDebug("------2--------");
-// 				vertexMap.insert(1,ver);  
+// 				vertexMap.insert(100,ver);  
 // 				qDebug("------3--------");
 // 				graph[ver].pose = oldgraph[v].pose;
+// 				qDebug()<<"vertice pos2"<<graph[v].pose[0] ;
 // 				qDebug("------4--------");
 // 				graph[ver].vertex_id= oldgraph[v].vertex_id;
 // 				qDebug("------5--------");
 // 			}
 // 		}
 // 		
-		if (f==false and listtoremoveE.empty()==false)
+		if (f==false and listtotalE.empty()==false)
 		{
 		  qDebug("dentro");
 
-		  for (auto e:listtoremoveE)
+		  for (auto e:listtotalE)
 		    {	
 		      
 			Vertex origen= NULL;
@@ -336,12 +333,19 @@ bool PlannerPRM::updateGraph(LocalPolyLineList Polylines)
 			
 		//	qDebug()<<"listo";
 		    }
-		  
+		    
+		  listtotalE.clear();
 		}
+	
+	
+	
+	for (auto poly:Polylines)
+	{
 		
-				
+		QPolygonF qp;					
 		listtoremoveE.clear();
 		listtoremoveV.clear();
+		
 		for (auto p:poly)
 		{
 			qp << QPointF(p.x,p.z);
@@ -377,6 +381,7 @@ bool PlannerPRM::updateGraph(LocalPolyLineList Polylines)
 // 		qDebug() <<  "Quedan" <<  boost::num_vertices(graph) << "vertices en el grafo";
 		for (auto e:listtoremoveE)
 		{	
+			listtotalE.push_back(e);
 			boost::remove_edge(e, graph);	
 			modified = true;
 		//	qDebug()<<"listo";
@@ -388,6 +393,7 @@ bool PlannerPRM::updateGraph(LocalPolyLineList Polylines)
 // 			boost::remove_vertex(v, graph);
 // 			modified = true;
 // 		}
+		
 	}
 	
 	f=false;

@@ -104,6 +104,7 @@ class PlannerPRM
 		
 		bool updateGraph (LocalPolyLineList Polylines);
 		std::vector<Edge> listtoremoveE;
+		std::vector<Edge> listtotalE;
 		std::vector<Vertex> listtoremoveV;
 			
 	private:
