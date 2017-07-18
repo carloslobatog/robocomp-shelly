@@ -289,62 +289,45 @@ bool PlannerPRM::updateGraph(LocalPolyLineList Polylines)
 	
 	if (f) oldgraph = graph;
 	
-		
-// 		if (f==false and listtoremoveV.empty()==false)
-// 		{	
-// 			for (auto v:listtoremoveV)
-// 			{	
-// 				qDebug()<<"vertice pos"<< oldgraph[v].pose[0] ;
-// 				qDebug("------1--------");
-// 				Vertex ver = boost::add_vertex(graph);
-// 				qDebug("------2--------");
-// 				vertexMap.insert(100,ver);  
-// 				qDebug("------3--------");
-// 				graph[ver].pose = oldgraph[v].pose;
-// 				qDebug()<<"vertice pos2"<<graph[v].pose[0] ;
-// 				qDebug("------4--------");
-// 				graph[ver].vertex_id= oldgraph[v].vertex_id;
-// 				qDebug("------5--------");
-// 			}
-// 		}
-// 		
-		if (f==false and listtotalE.empty()==false)
-		{
-		  qDebug("dentro");
+  
+	else if (listtotalE.empty()==false)
+	{
+		qDebug("dentro");
 
-		  for (auto e:listtotalE)
-		    {	
-		      
-			Vertex origen= NULL;
-			Vertex fin = NULL;
-			
-			BGL_FORALL_VERTICES(v, graph, Graph)
-			{
-			  if (graph[e.m_source].pose == graph[v].pose) origen = v;	  
-			  if (graph[e.m_target].pose == graph[v].pose) fin = v;
-			}
-			
-			if (origen!=NULL and fin!=NULL)
-			{
-				EdgePayload edge;
-				edge.dist = (QVec(graph[origen].pose) - QVec(graph[fin].pose)).norm2();
-				boost::add_edge(origen, fin, edge, graph);
-			}
-			
-		//	qDebug()<<"listo";
-		    }
+		for (auto e:listtotalE)
+		{	
+
+		Vertex origen= NULL;
+		Vertex fin = NULL;
+
+		BGL_FORALL_VERTICES(v, graph, Graph)
+		{
+			if (graph[e.m_source].pose == graph[v].pose) origen = v;	  
+			if (graph[e.m_target].pose == graph[v].pose) fin = v;
+		}
+	
+		if (origen!=NULL and fin!=NULL)
+		{
+			EdgePayload edge;
+			edge.dist = (QVec(graph[origen].pose) - QVec(graph[fin].pose)).norm2();
+			boost::add_edge(origen, fin, edge, graph);
+	  }
+	  
+	      //	qDebug()<<"listo";
+		}
 		    
 		  listtotalE.clear();
 		}
-	
-	
+		
+	//VA MAS LENTO
+	//connectCloseElements();
 	
 	for (auto poly:Polylines)
 	{
 		
 		QPolygonF qp;					
 		listtoremoveE.clear();
-		listtoremoveV.clear();
+		//listtoremoveV.clear();
 		
 		for (auto p:poly)
 		{
@@ -355,7 +338,7 @@ bool PlannerPRM::updateGraph(LocalPolyLineList Polylines)
 // 		BGL_FORALL_VERTICES(v, graph, Graph)
 // 		{
 // 			if (qp.containsPoint(QPointF(graph[v].pose[0],graph[v].pose[2]),Qt::OddEvenFill))
-// 			{
+// 			{	
 // 				listtoremoveV.push_back(v);
 // 			}	
 // 		}
@@ -389,12 +372,15 @@ bool PlannerPRM::updateGraph(LocalPolyLineList Polylines)
 		
 // 		for (auto v:listtoremoveV)
 // 		{
+// 			
 // 			boost::clear_vertex(v, graph);
 // 			boost::remove_vertex(v, graph);
 // 			modified = true;
 // 		}
 		
 	}
+	
+	
 	
 	f=false;
 	return modified;
@@ -454,10 +440,9 @@ bool PlannerPRM::searchGraph(const Vertex &originVertex, const Vertex &targetVer
 	auto distanceMap = boost::make_iterator_property_map(&distances[0], propmapIndex);
 
 	boost::dijkstra_shortest_paths(graph, originVertex, boost::weight_map(boost::get(&EdgePayload::dist, graph))
-															.vertex_index_map(propmapIndex)
-															.predecessor_map(predecessorMap)
- 															.distance_map(distanceMap));
-
+								.vertex_index_map(propmapIndex)
+								.predecessor_map(predecessorMap)
+ 								.distance_map(distanceMap));
 	//////////////////////////
 	// Extract a shortest path
 	//////////////////////////
