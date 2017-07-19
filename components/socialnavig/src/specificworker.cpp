@@ -177,8 +177,11 @@ SNGPolylineSeq SpecificWorker::gauss(bool dibujar)
 
 void SpecificWorker::UpdateInnerModel(SNGPolylineSeq secuencia){
   
+  
 QMutexLocker locker(mutex);
 qDebug() << __FUNCTION__ << "UpdadeInnerModel";
+
+
 
 //EXTRAER INNER DEL AGM 	
 	inner = AGMInner::extractInnerModel(worldModel, "world", false);
@@ -250,11 +253,14 @@ qDebug() << __FUNCTION__ << "UpdadeInnerModel";
 		}
 	}
 	
-	
+	if (i==3) inner->save("innerInicio.xml"); 
+	if (i==50) inner->save("innerfinal.xml"); 
 	
 	inner->save("AGMdelInner.xml"); 
 	qDebug()<<"guardamos Inner";
 	innerModel=inner;
+	
+	i++;
 }
 
 

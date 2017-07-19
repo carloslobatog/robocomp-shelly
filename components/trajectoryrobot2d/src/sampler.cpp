@@ -36,7 +36,9 @@ void Sampler::initialize(InnerModel *inner, const RoboCompCommonBehavior::Parame
 	qDebug() << __FUNCTION__ << "Sampler: Copying InnerModel...";
  	qDebug()<< __FUNCTION__ << "----------------1---------------";
 	//innerModelSampler = inner->copy();
+	
 	innerModelSampler = inner;
+	
 	qDebug()<< __FUNCTION__ << "-----------------2----------------";
 	try
 	{	qDebug()<< __FUNCTION__ << "-----------------3----------------";
@@ -66,7 +68,9 @@ void Sampler::initialize(InnerModel *inner, const RoboCompCommonBehavior::Parame
 	
 	// Compute the list of meshes that correspond to robot, world and possibly some additionally excluded ones
 	qDebug()<< __FUNCTION__ << "-------------------4------------------";
+	
 	recursiveIncludeMeshes(innerModelSampler->getRoot(), "robot", false, robotNodes, restNodes, excludedNodes);
+
 	qDebug()<< __FUNCTION__ << "-----------------------5------------------";///AQUI ESTA EL ERROR
 	//Init random sequence generator
 	qsrand( QTime::currentTime().msec() );
@@ -333,7 +337,7 @@ bool Sampler::checkRobotValidDirectionToTarget(const QVec & origin , const QVec 
  */
 void Sampler::recursiveIncludeMeshes(InnerModelNode *node, QString robotId, bool inside, std::vector<QString> &in, std::vector<QString> &out, std::set<QString> &excluded)
 {	
-
+	
 	if (node->id == robotId)
 	{
 		inside = true;
@@ -347,7 +351,8 @@ void Sampler::recursiveIncludeMeshes(InnerModelNode *node, QString robotId, bool
 	{
 		for (int i=0; i<node->children.size(); i++)
 		{
-			recursiveIncludeMeshes(node->children[i], robotId, inside, in, out, excluded);
+		recursiveIncludeMeshes(node->children[i], robotId, inside, in, out, excluded);
+			
 		}
 		
 	}

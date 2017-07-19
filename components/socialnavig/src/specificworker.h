@@ -113,7 +113,7 @@ public:
 	bool conversation = false;
 	bool checkconversation();
 
-	
+	int i = 0;
 	
 	//////////////
 	/// SERVANTS

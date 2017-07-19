@@ -102,6 +102,9 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 
 void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 {	
+ 	if (innerModel) delete innerModel;
+ 	innerModel= new InnerModel(params.at("InnerModel").value);
+	
 	qDebug() << __FUNCTION__ << "updateObstacles";
 	//Borrar todos los newpolyline_obs_X que existan del innermodel y del innermodel viewer
 	
@@ -112,8 +115,8 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 		//printf("puntero a %s: %p\n", cadena.toStdString().c_str(), viewer->innerModel->getNode(cadena));
 
 		//qDebug() << __FUNCTION__ <<"intentamos borrar "<<cadena;
-		if (innerModel->getNode(cadena))
-				innerModel->removeNode(cadena);
+// 		if (innerModel->getNode(cadena))
+// 				innerModel->removeNode(cadena);
 		
 		if (not InnerModelDraw::removeObject(viewer->innerViewer, cadena) )
 		{
@@ -153,7 +156,8 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 			{
 				try
 				{
-					innerModel->removeNode(cadena);
+					innerModel->removeNode(cadena);	
+					
 				//	qDebug() << __FUNCTION__ << "borrado " << cadena;
 				}
 				  
@@ -186,6 +190,8 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 			previousPoint=currentPoint;
 		}
 	}
+	
+
 }
 		
 
@@ -236,7 +242,7 @@ void SpecificWorker::compute()
 	
 		
 		qDebug()<<"Llamamos a Sampler.initialize";
-		//sampler.initialize(innerModel, params);
+		sampler.initialize(innerModel, params);
 		qDebug()<<"Salimos de Sampler.initialize";
 		newPolyline = false;
 	
