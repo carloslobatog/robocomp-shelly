@@ -1,0 +1,17 @@
+import "TrajectoryRobot2D.idsl";
+import "Logger.idsl";
+import "OmniRobot.idsl";
+import "SocialNavigationGaussian.idsl";
+
+Component socialnavig
+{
+	Communications
+	{
+		requires TrajectoryRobot2D, OmniRobot, SocialNavigationGaussian;
+		publishes Logger;
+	};
+	language Cpp;
+	gui Qt(QWidget);
+	options agmagent;
+};
+

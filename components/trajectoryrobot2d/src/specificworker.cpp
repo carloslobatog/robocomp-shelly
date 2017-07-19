@@ -146,6 +146,8 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
  			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,90));
 		
 // 			//////////////////////////////////////SE METE LA PARED EN EL INNER///////////////////////////////////
+			
+			
 			//qDebug()<<"INCLUIMOS EN INNERMODEL";
 			if (innerModel->getNode(cadena))
 			{
