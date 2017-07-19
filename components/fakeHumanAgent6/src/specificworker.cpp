@@ -256,7 +256,8 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	
 	//giro->setNotchesVisible(true);
 	giro->QAbstractSlider::setMinimum (0);
-	giro->QAbstractSlider::setMaximum (360);	
+	giro->QAbstractSlider::setMaximum (360);
+	giro->QAbstractSlider::setSliderPosition(pose.ry);	
 	return true;
 }
 
@@ -306,7 +307,7 @@ void SpecificWorker::giroR(){
 //MOVE
 
 void SpecificWorker::move (){
-  
+  humanRot=pose.ry;
   RoboCompInnerModelManager::coord3D coordInItem;
   RoboCompInnerModelManager::coord3D coordInBase;
   
@@ -383,10 +384,16 @@ void SpecificWorker::compute()
 	//static QTime lastCompute = QTime::currentTime();
 	
 	
-	if ((tbutton.up==true)||(tbutton.down==true)||(tbutton.right==true)||(tbutton.left==true)||(tbutton.rotacion==true)){
-	  move();
-	}
-	
+		try
+		{
+		
+		    if ((tbutton.up==true)||(tbutton.down==true)||(tbutton.right==true)||(tbutton.left==true)||(tbutton.rotacion==true))
+		    {
+		      move();
+		    }
+	    
+		}		
+		catch(...){}
 	
 	
 
