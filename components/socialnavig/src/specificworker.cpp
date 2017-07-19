@@ -42,7 +42,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	haveTarget = false;
 	
 	//No se si hace falta crearlo de nuevo para extraer las polilineas del innermodel
-// 	inner = new InnerModel(); 
+	inner = new InnerModel(); 
 // 	world = AGMModel::SPtr(new AGMModel());
 	
 	
@@ -177,26 +177,12 @@ SNGPolylineSeq SpecificWorker::gauss(bool dibujar)
 
 void SpecificWorker::UpdateInnerModel(SNGPolylineSeq secuencia){
   
+QMutexLocker locker(mutex);
 qDebug() << __FUNCTION__ << "UpdadeInnerModel";
-//EXTRAER INNER DEL AGM 
-  
-	//Here i try to extract the innermodel from the agm
-	try
-	{	
-// 		RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
-// 		AGMModelConverter::fromIceToInternal(w, worldModel);
-// 		if (innerModel) delete innerModel;
-	
-// 		innerModel = AGMInner::extractInnerModel(worldModel, "world", false);
+
+//EXTRAER INNER DEL AGM 	
+	inner = AGMInner::extractInnerModel(worldModel, "world", false);
 		
-		qDebug()<<"Extraemos Inner del AGM";
-		
-	}
-	catch(...)
-	{
-		printf("The executive is probably not running, waiting for first AGM model publication...");
-	}
-	
 //INSERTAR POLILINEAS
 	
 
@@ -205,6 +191,7 @@ qDebug() << __FUNCTION__ << "UpdadeInnerModel";
   
 	for (auto s:secuencia)
 	{
+		qDebug()<<"Polilinea";
 		auto previousPoint = s[s.size()-1];
 		
 		for (auto currentPoint:s)
@@ -221,18 +208,14 @@ qDebug() << __FUNCTION__ << "UpdadeInnerModel";
 			float temp = normal(2);
 			normal(2) = normal(0);
 			normal(0) = -temp;
-// 			
-//  			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,90));
-// 		
-// 			//////////////////////////////////////SE METE LA PARED EN EL INNER///////////////////////////////////
-			
+		
 			
 			//qDebug()<<"INCLUIMOS EN INNERMODEL";
-			if (innerModel->getNode(cadena))
+			if (inner->getNode(cadena))
 			{
 				try
 				{
-					innerModel->removeNode(cadena);
+					inner->removeNode(cadena);
 				//	qDebug() << __FUNCTION__ << "borrado " << cadena;
 				}
 				  
@@ -240,7 +223,7 @@ qDebug() << __FUNCTION__ << "UpdadeInnerModel";
 			}
 			
 	
-			InnerModelNode *parent = innerModel->getNode(QString("world"));			
+			InnerModelNode *parent = inner->getNode(QString("world"));			
 			if (parent == NULL)
 				printf("%s: parent not exists\n", __FUNCTION__);
 			else
@@ -248,9 +231,9 @@ qDebug() << __FUNCTION__ << "UpdadeInnerModel";
 				InnerModelPlane *plane;
 				try
 				{
-					if (innerModel->getNode(cadena))
+					if (inner->getNode(cadena))
 						qDebug() << "SHIT!!!!!!!!!!!!!!!!!!!!!!!!";
-					plane  = innerModel->newPlane(cadena, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
+					plane  = inner->newPlane(cadena, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
 
 					parent->addChild(plane); 
 					qDebug()<<"Plaaaaaaaaaaaaaaano";
@@ -269,9 +252,9 @@ qDebug() << __FUNCTION__ << "UpdadeInnerModel";
 	
 	
 	
-	innerModel->save("AGMdelInner.xml"); 
+	inner->save("AGMdelInner.xml"); 
 	qDebug()<<"guardamos Inner";
-	
+	innerModel=inner;
 }
 
 
@@ -280,6 +263,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 {
 	Period = 200;
 	timer.start(Period);
+	
 	return true;
 	
 }
