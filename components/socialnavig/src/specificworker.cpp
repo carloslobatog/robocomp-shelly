@@ -1,5 +1,4 @@
-/*	SOCIAL NAVIGATION ANTES
- * 
+ /*		SOCIAL NAVIGATION NUEVO
  *    Copyright (C) 2006-2010 by RoboLab - University of Extremadura
  *
  *    This file is part of RoboComp
@@ -19,6 +18,7 @@
  */
 
  #include "specificworker.h"
+#include <../trajectoryrobot2d/src/innermodeldraw.h>
  #include <math.h> 
 
 
@@ -40,7 +40,13 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	worldModel->name = "worldModel";
 	innerModel = new InnerModel();
 	haveTarget = false;
-
+	
+	//No se si hace falta crearlo de nuevo para extraer las polilineas del innermodel
+// 	inner = new InnerModel(); 
+// 	world = AGMModel::SPtr(new AGMModel());
+	
+	
+	
 	//Timed slot to read TrajectoryRobot2D state
 	connect(&trajReader, SIGNAL(timeout()), this, SLOT(readTrajState()));
 	//Dibujar gaussiana
@@ -74,6 +80,7 @@ void SpecificWorker::cambiarvalor(int value)
 	qDebug()<<"Proximidad"<<valorprox;
 	
 }
+
 
 void SpecificWorker::grabarfichero()
 {
@@ -167,6 +174,108 @@ SNGPolylineSeq SpecificWorker::gauss(bool dibujar)
 
 }
 
+
+void SpecificWorker::UpdateInnerModel(SNGPolylineSeq secuencia){
+  
+qDebug() << __FUNCTION__ << "UpdadeInnerModel";
+//EXTRAER INNER DEL AGM 
+  
+	//Here i try to extract the innermodel from the agm
+	try
+	{	
+// 		RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
+// 		AGMModelConverter::fromIceToInternal(w, worldModel);
+// 		if (innerModel) delete innerModel;
+	
+// 		innerModel = AGMInner::extractInnerModel(worldModel, "world", false);
+		
+		qDebug()<<"Extraemos Inner del AGM";
+		
+	}
+	catch(...)
+	{
+		printf("The executive is probably not running, waiting for first AGM model publication...");
+	}
+	
+//INSERTAR POLILINEAS
+	
+
+	int count = 0;
+	
+  
+	for (auto s:secuencia)
+	{
+		auto previousPoint = s[s.size()-1];
+		
+		for (auto currentPoint:s)
+		{
+			//qDebug()<<"INCLUIMOS EN INNERDRAW";
+			QString cadena = QString("polyline_obs_")+QString::number(count,10);
+			//qDebug() << __FUNCTION__ << "nombre"<<cadena;
+			QVec ppoint = QVec::vec3(previousPoint.x*1000, 1000, previousPoint.z*1000);
+			QVec cpoint = QVec::vec3(currentPoint.x*1000, 1000, currentPoint.z*1000);
+			QVec center = (cpoint + ppoint).operator*(0.5);
+			
+			QVec normal = (cpoint-ppoint);
+			float dist=normal.norm2();	
+			float temp = normal(2);
+			normal(2) = normal(0);
+			normal(0) = -temp;
+// 			
+//  			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,90));
+// 		
+// 			//////////////////////////////////////SE METE LA PARED EN EL INNER///////////////////////////////////
+			
+			
+			//qDebug()<<"INCLUIMOS EN INNERMODEL";
+			if (innerModel->getNode(cadena))
+			{
+				try
+				{
+					innerModel->removeNode(cadena);
+				//	qDebug() << __FUNCTION__ << "borrado " << cadena;
+				}
+				  
+				catch(QString es){ qDebug() << "EXCEPCION" << es;}
+			}
+			
+	
+			InnerModelNode *parent = innerModel->getNode(QString("world"));			
+			if (parent == NULL)
+				printf("%s: parent not exists\n", __FUNCTION__);
+			else
+			{			
+				InnerModelPlane *plane;
+				try
+				{
+					if (innerModel->getNode(cadena))
+						qDebug() << "SHIT!!!!!!!!!!!!!!!!!!!!!!!!";
+					plane  = innerModel->newPlane(cadena, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
+
+					parent->addChild(plane); 
+					qDebug()<<"Plaaaaaaaaaaaaaaano";
+				}
+				catch(QString es)
+				{ qDebug() << "EXCEPCION" << es;}
+
+			}
+			
+	
+			////////////////////////////////////////////////////////////////////////////////////
+			count++;
+			previousPoint=currentPoint;
+		}
+	}
+	
+	
+	
+	innerModel->save("AGMdelInner.xml"); 
+	qDebug()<<"guardamos Inner";
+	
+}
+
+
+
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 {
 	Period = 200;
@@ -176,53 +285,6 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 }
 
 
-// //////////////////////////////// COMPROBAMOS SI LAS DOS PERSONAS SE ESTAN COMUNICANDO //////////////////////////
-// bool SpecificWorker::checkconversation(){
-// 	
-// 	//UMBRALES DE DISTANCIA Y ANGULO
-// 	float anglethr = 30*0.0175;  //30 grados x 0,0175 para pasar a radianes
-// 	float distancethr = 2.5;
-// 	
-// 	bool checkangle = false;
-// 	bool checkdistance = false;	
-// 	
-//  	//COMPROBAMOS ANGULO
-// 	float angleinf = PI/2 - anglethr;
-// 	float anglesup = PI/2 + anglethr;
-// 	
-// 	
-// 		
-// 	if (((angleinf<person1.angle && person1.angle < anglesup)&&
-// 		(2*PI-angleinf > person2.angle && person2.angle > 2*PI - anglesup))||
-// 		((2*PI-angleinf > person1.angle && person1.angle > 2*PI - anglesup)&&
-// 		(angleinf<person2.angle && person2.angle < anglesup)))
-// 		
-// 		
-// 		checkangle = true;
-// 	
-// 	else
-// 		checkangle= false;
-// 	
-// 		
-// 	//COMPROBAMOS DISTANCIA
-// 	float distance = sqrt(((person2.x-person1.x)*(person2.x-person1.x))+((person2.z-person1.z)*(person2.z-person1.z)));
-// 	qDebug()<<"Las dos personas se encuentran a "<<distance<<" metros de distancia";
-// 	
-// 	if (distance <= distancethr)
-// 		checkdistance= true;
-// 	else 
-// 		checkdistance= false;
-// 	
-// 	
-// 	//SI SE DAN LAS DOS CONDICIONES LAS PERSONAS ESTAN HABLANDO
-// 	if (checkangle && checkdistance)
-// 		return true;
-// 	else
-// 		return false;
-// 	
-// }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 void SpecificWorker::compute( )
@@ -571,9 +633,12 @@ void SpecificWorker::compute( )
 		try
 		{
 		 
-		  qDebug()<<"llamamos al trajectory";
-		 SNGPolylineSeq secuencia=gauss(false);
+		 qDebug()<<"llamamos al trajectory";
+		 SNGPolylineSeq secuencia = gauss(false);
+		 qDebug()<<"llamamos al updateInnerModel";
+		 UpdateInnerModel(secuencia);
 		  
+		
 		  RoboCompTrajectoryRobot2D::PolyLineList lista;
 		  
 		  for(auto s: secuencia)
@@ -591,7 +656,7 @@ void SpecificWorker::compute( )
 		  }
 		  qDebug()<<"llamamos al SetHumanSpace";
 
-		  trajectoryrobot2d_proxy->setHumanSpace(lista);
+		 // trajectoryrobot2d_proxy->setHumanSpace(lista);
 		}
 		catch( const Ice::Exception &e)
 		{ std::cout << e << std::endl;}
@@ -601,54 +666,10 @@ void SpecificWorker::compute( )
 				
 			
 
+	//actionExecution();
 		
 }	 	
-	//actionExecution();
 	
-
-
-// double SpecificWorker::agaussian(Person person, float x, float y){
-// 
-//   
-//   double sigma_h=2.0;
-//   double sigma_r=1.0;
-//   double sigma_s=4/3;
-//   
-//   double alpha;
-//   double nalpha;
-//   double sigma;
-//   
-//   //falta comprobar que tetha esta bien y representarlo
-//   
-//   float tetha= PI/2 - person.angle;
-//      
-//  
-//   
-//       alpha= atan2(y-person.z,x-person.x)- tetha + PI/2;
-//       qDebug()<<"alpha"<<alpha;
-//      
-//      nalpha= atan2(sin(alpha),cos(alpha));
-//      qDebug()<<"alpha normalizado"<<nalpha;
-//     
-//      if (nalpha<=0)
-// 	sigma=sigma_r;
-//      else
-// 	sigma=sigma_h;
-//    
-//     
-// 	double    a = pow(cos(tetha),2)/(2*pow(sigma,2)) + pow(sin(tetha),2)/(2*pow(sigma_s,2));
-// 	double    b =  (sin(2*tetha))/(4*pow(sigma,2)) - (sin(2*tetha))/(4*pow(sigma_s,2));
-// 	double    c = pow(sin(tetha),2)/(2*pow(sigma,2))+ pow(cos(tetha),2)/(2*pow(sigma_s,2));
-//      
-// 	qDebug()<<"a"<<a<<"b"<<b<<"c"<<c;
-// 
-// 	double  g = exp(-(a*pow((x - person.x),2) + 2*b*(x - person.x)*(y - person.z) + c*pow((y - person.z),2))) ;    
-//      
-//      
-//         qDebug()<<"El valor de la gaussiana g es "<<g;
-//  return g;
-//  
-// } 
 
 
 /**
@@ -1701,12 +1722,13 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 	printf("<<structuralChange\n");
 
 	AGMModelConverter::fromIceToInternal(modification, worldModel);
+	
 	//if (roomsPolygons.size()==0 and worldModel->numberOfSymbols()>0)
 		//roomsPolygons = extractPolygonsFromModel(worldModel);
 
 	if (innerModel) delete innerModel;
 	
-	innerModel = AGMInner::extractInnerModel(worldModel, "world", true);
+	innerModel = AGMInner::extractInnerModel(worldModel, "world", false);
 
 	cambiopos=true;
 	printf("structuralChange>>\n");
