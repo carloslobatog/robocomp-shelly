@@ -267,17 +267,63 @@
 				<mesh id="fridge_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cube2.3ds" scale="600,1850,600" tx="0" ty="0" tz="0" rx="0" ry="0" rz="0" collide="1" />
 			</transform>
 		</transform>
-		<transform id="fakeperson1" tx="3390.590088" ty="0" tz="1751.189941"  rx="0" ry="3.377500057" rz="0">
+		<transform id="fakeperson4" tx="2700" ty="0" tz="-1700"  rx="0" ry="4.730000019" rz="0">
+			<mesh id="fakepersonMesh4" file="/home/robocomp/robocomp/components/robocomp-araceli/models/human04.3ds" scale="900,900,900" tx="0" ty="0" tz="0" rx="1.570796371" ry="0" rz="0" collide="0" />
+		</transform>
+		<transform id="fakeperson1" tx="5500" ty="0" tz="2450"  rx="0" ry="0" rz="0">
 			<mesh id="fakepersonMesh" file="/home/robocomp/robocomp/components/robocomp-araceli/models/human01.3ds" scale="12,12,12" tx="0" ty="0" tz="0" rx="1.570796371" ry="0" rz="3.141592741" collide="0" />
 		</transform>
-		<plane id="polyline_obs_0" texture="#FFFF00" size="282.8427124,2000,90" repeat="1" nx="200" ny="0" nz="-200" px="3000" py="1000" pz="1900" collide="1" />
-		<plane id="polyline_obs_1" texture="#FFFF00" size="100,2000,90" repeat="1" nx="100" ny="0" nz="0" px="2900" py="1000" pz="1750" collide="1" />
-		<plane id="polyline_obs_2" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="200" ny="0" nz="100" px="2950" py="1000" pz="1600" collide="1" />
-		<plane id="polyline_obs_3" texture="#FFFF00" size="282.8427124,2000,90" repeat="1" nx="200" ny="0" nz="200" px="3100" py="1000" pz="1400" collide="1" />
-		<plane id="polyline_obs_4" texture="#FFFF00" size="400,2000,90" repeat="1" nx="0" ny="0" nz="400" px="3400" py="1000" pz="1300" collide="1" />
-		<plane id="polyline_obs_5" texture="#FFFF00" size="282.8427124,2000,90" repeat="1" nx="-200" ny="0" nz="200" px="3700" py="1000" pz="1400" collide="1" />
-		<plane id="polyline_obs_6" texture="#FFFF00" size="300,2000,90" repeat="1" nx="-300" ny="0" nz="0" px="3800" py="1000" pz="1650" collide="1" />
-		<plane id="polyline_obs_7" texture="#FFFF00" size="447.2135925,2000,90" repeat="1" nx="-200" ny="0" nz="-400" px="3600" py="1000" pz="1900" collide="1" />
-		<plane id="polyline_obs_8" texture="#FFFF00" size="300,2000,90" repeat="1" nx="0" ny="0" nz="-300" px="3250" py="1000" pz="2000" collide="1" />
+		<transform id="fakeperson2" tx="5000" ty="0" tz="1500"  rx="0" ry="0" rz="0">
+			<mesh id="fakepersonMesh2" file="/home/robocomp/robocomp/components/robocomp-araceli/models/human02.3ds" scale="1.120000005,1.120000005,1.120000005" tx="0" ty="0" tz="0" rx="1.570796371" ry="0" rz="3.141592741" collide="0" />
+		</transform>
+		<transform id="fakeperson3" tx="5999.919922" ty="0" tz="1350"  rx="0" ry="0" rz="0">
+			<mesh id="fakepersonMesh3" file="/home/robocomp/robocomp/components/robocomp-araceli/models/human03.3ds" scale="8,8,8" tx="0" ty="0" tz="0" rx="1.570796371" ry="0" rz="1.570796371" collide="0" />
+		</transform>
+		<transform id="fakeperson6" tx="2450" ty="0" tz="50"  rx="0" ry="0" rz="0">
+			<mesh id="fakepersonMesh6" file="/home/robocomp/robocomp/components/robocomp-araceli/models/human06.3ds" scale="23,23,23" tx="0" ty="0" tz="0" rx="1.570796371" ry="0" rz="3.141592741" collide="0" />
+		</transform>
+		<transform id="fakeperson5" tx="2050" ty="0" tz="-2749.959961"  rx="0" ry="0" rz="0">
+			<mesh id="fakepersonMesh5" file="/home/robocomp/robocomp/components/robocomp-araceli/models/human05.3ds" scale="800,800,800" tx="0" ty="0" tz="0" rx="1.570796371" ry="0" rz="0" collide="0" />
+		</transform>
+		<plane id="polyline_obs_0" texture="#FFFF00" size="538.5164795,2000,90" repeat="1" nx="-500" ny="0" nz="200" px="2800" py="1000" pz="-2350" collide="1" />
+		<plane id="polyline_obs_1" texture="#FFFF00" size="700,2000,90" repeat="1" nx="-700" ny="0" nz="0" px="2900" py="1000" pz="-1750" collide="1" />
+		<plane id="polyline_obs_2" texture="#FFFF00" size="282.8427124,2000,90" repeat="1" nx="-200" ny="0" nz="-200" px="2800" py="1000" pz="-1300" collide="1" />
+		<plane id="polyline_obs_3" texture="#FFFF00" size="316.2277527,2000,90" repeat="1" nx="100" ny="0" nz="-300" px="2550" py="1000" pz="-1250" collide="1" />
+		<plane id="polyline_obs_4" texture="#FFFF00" size="282.8427124,2000,90" repeat="1" nx="200" ny="0" nz="-200" px="2300" py="1000" pz="-1400" collide="1" />
+		<plane id="polyline_obs_5" texture="#FFFF00" size="1166.19043,2000,90" repeat="1" nx="1000" ny="0" nz="-600" px="1900" py="1000" pz="-2000" collide="1" />
+		<plane id="polyline_obs_6" texture="#FFFF00" size="300,2000,90" repeat="1" nx="300" ny="0" nz="0" px="1600" py="1000" pz="-2650" collide="1" />
+		<plane id="polyline_obs_7" texture="#FFFF00" size="141.4213562,2000,90" repeat="1" nx="100" ny="0" nz="100" px="1650" py="1000" pz="-2850" collide="1" />
+		<plane id="polyline_obs_8" texture="#FFFF00" size="316.2277527,2000,90" repeat="1" nx="100" ny="0" nz="300" px="1850" py="1000" pz="-2950" collide="1" />
+		<plane id="polyline_obs_9" texture="#FFFF00" size="200,2000,90" repeat="1" nx="0" ny="0" nz="200" px="2100" py="1000" pz="-3000" collide="1" />
+		<plane id="polyline_obs_10" texture="#FFFF00" size="316.2277527,2000,90" repeat="1" nx="-100" ny="0" nz="300" px="2350" py="1000" pz="-2950" collide="1" />
+		<plane id="polyline_obs_11" texture="#FFFF00" size="141.4213562,2000,90" repeat="1" nx="-100" ny="0" nz="100" px="2550" py="1000" pz="-2850" collide="1" />
+		<plane id="polyline_obs_12" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="-200" ny="0" nz="100" px="2650" py="1000" pz="-2700" collide="1" />
+		<plane id="polyline_obs_13" texture="#FFFF00" size="300,2000,90" repeat="1" nx="0" ny="0" nz="-300" px="2450" py="1000" pz="500" collide="1" />
+		<plane id="polyline_obs_14" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="100" ny="0" nz="-200" px="2200" py="1000" pz="450" collide="1" />
+		<plane id="polyline_obs_15" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="200" ny="0" nz="-100" px="2050" py="1000" pz="300" collide="1" />
+		<plane id="polyline_obs_16" texture="#FFFF00" size="200,2000,90" repeat="1" nx="200" ny="0" nz="0" px="2000" py="1000" pz="100" collide="1" />
+		<plane id="polyline_obs_17" texture="#FFFF00" size="141.4213562,2000,90" repeat="1" nx="100" ny="0" nz="100" px="2050" py="1000" pz="-50" collide="1" />
+		<plane id="polyline_obs_18" texture="#FFFF00" size="316.2277527,2000,90" repeat="1" nx="100" ny="0" nz="300" px="2250" py="1000" pz="-150" collide="1" />
+		<plane id="polyline_obs_19" texture="#FFFF00" size="100,2000,90" repeat="1" nx="0" ny="0" nz="100" px="2450" py="1000" pz="-200" collide="1" />
+		<plane id="polyline_obs_20" texture="#FFFF00" size="316.2277527,2000,90" repeat="1" nx="-100" ny="0" nz="300" px="2650" py="1000" pz="-150" collide="1" />
+		<plane id="polyline_obs_21" texture="#FFFF00" size="141.4213562,2000,90" repeat="1" nx="-100" ny="0" nz="100" px="2850" py="1000" pz="-50" collide="1" />
+		<plane id="polyline_obs_22" texture="#FFFF00" size="200,2000,90" repeat="1" nx="-200" ny="0" nz="0" px="2900" py="1000" pz="100" collide="1" />
+		<plane id="polyline_obs_23" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="-200" ny="0" nz="-100" px="2850" py="1000" pz="300" collide="1" />
+		<plane id="polyline_obs_24" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="-100" ny="0" nz="-200" px="2700" py="1000" pz="450" collide="1" />
+		<plane id="polyline_obs_25" texture="#FFFF00" size="141.4213562,2000,90" repeat="1" nx="-100" ny="0" nz="100" px="6450" py="1000" pz="1250" collide="1" />
+		<plane id="polyline_obs_26" texture="#FFFF00" size="100,2000,90" repeat="1" nx="-100" ny="0" nz="0" px="6500" py="1000" pz="1350" collide="1" />
+		<plane id="polyline_obs_27" texture="#FFFF00" size="1077.032959,2000,90" repeat="1" nx="-1000" ny="0" nz="-400" px="6300" py="1000" pz="1900" collide="1" />
+		<plane id="polyline_obs_28" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="-200" ny="0" nz="-100" px="6050" py="1000" pz="2500" collide="1" />
+		<plane id="polyline_obs_29" texture="#FFFF00" size="424.2640686,2000,90" repeat="1" nx="-300" ny="0" nz="-300" px="5850" py="1000" pz="2750" collide="1" />
+		<plane id="polyline_obs_30" texture="#FFFF00" size="400,2000,90" repeat="1" nx="0" ny="0" nz="-400" px="5500" py="1000" pz="2900" collide="1" />
+		<plane id="polyline_obs_31" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="100" ny="0" nz="-200" px="5200" py="1000" pz="2850" collide="1" />
+		<plane id="polyline_obs_32" texture="#FFFF00" size="360.5551147,2000,90" repeat="1" nx="300" ny="0" nz="-200" px="5000" py="1000" pz="2650" collide="1" />
+		<plane id="polyline_obs_33" texture="#FFFF00" size="984.8858032,2000,90" repeat="1" nx="900" ny="0" nz="-400" px="4700" py="1000" pz="2050" collide="1" />
+		<plane id="polyline_obs_34" texture="#FFFF00" size="100,2000,90" repeat="1" nx="100" ny="0" nz="0" px="4500" py="1000" pz="1550" collide="1" />
+		<plane id="polyline_obs_35" texture="#FFFF00" size="282.8427124,2000,90" repeat="1" nx="200" ny="0" nz="200" px="4600" py="1000" pz="1400" collide="1" />
+		<plane id="polyline_obs_36" texture="#FFFF00" size="412.3105774,2000,90" repeat="1" nx="100" ny="0" nz="400" px="4900" py="1000" pz="1250" collide="1" />
+		<plane id="polyline_obs_37" texture="#FFFF00" size="608.2762451,2000,90" repeat="1" nx="100" ny="0" nz="600" px="5400" py="1000" pz="1150" collide="1" />
+		<plane id="polyline_obs_38" texture="#FFFF00" size="400,2000,90" repeat="1" nx="0" ny="0" nz="400" px="5900" py="1000" pz="1100" collide="1" />
+		<plane id="polyline_obs_39" texture="#FFFF00" size="316.2277527,2000,90" repeat="1" nx="-100" ny="0" nz="300" px="6250" py="1000" pz="1150" collide="1" />
 	</transform>
 </innermodel>
