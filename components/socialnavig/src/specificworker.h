@@ -53,9 +53,9 @@ public:
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
 	
 //bool para indicar si se ha movido la persona, lo utilizare para imprimir la coordenada de la persona cada vez que se mueva
-	bool cambiopos=false;
+	bool changepos=false;
 	
-	SNGPolylineSeq secuencia;
+	SNGPolylineSeq sequence;
 	
 	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
 	SNGPersonSeq totalpersons; //este es para leer el fichero
@@ -95,15 +95,15 @@ public:
 
 	//PARA GUARDAR LOS DATOS EN UN ARCHIVO
 
-	struct Punto {
+	struct Point {
 	  float x;
 	  float z;
 	};
-	Punto punto;
-	vector <Punto> poserobot;
+	Point point;
+	vector <Point> poserobot;
 	
 	//PARA LEER EL VALOR DEL SLIDER
-	int valorprox = 0;
+	int prox = 0;
 
 	
 	//PARA GUARDAR LA DISTANCIA RECORRIDA
@@ -139,8 +139,8 @@ public slots:
  	void compute();
 	void readTrajState();
 	SNGPolylineSeq gauss(bool dibujar=true);
-	void cambiarvalor(int valor);
-	void grabarfichero();
+	void changevalue(int valor);
+	void savedata();
 	void UpdateInnerModel(SNGPolylineSeq seq);
 
 private:
