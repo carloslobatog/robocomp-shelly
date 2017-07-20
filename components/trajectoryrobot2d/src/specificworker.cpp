@@ -123,12 +123,15 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 		//	printf("removeObject devuelve falso\n");
 			break;
  		}
+ 		
 	}
 
 		
 	int count = 0;
+	
 	for (auto poly:polylines)
 	{
+	  
 		auto previousPoint = poly[poly.size()-1];
 		
 		for (auto currentPoint:poly)
@@ -148,20 +151,14 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 			
  			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,90));
 		
-// 			//////////////////////////////////////SE METE LA PARED EN EL INNER///////////////////////////////////
+// 			////////////////////////////////////////////////////////////////
 			
 			
 			//qDebug()<<"INCLUIMOS EN INNERMODEL";
 			if (innerModel->getNode(cadena))
-			{
-				try
-				{
-					innerModel->removeNode(cadena);	
-					
-				//	qDebug() << __FUNCTION__ << "borrado " << cadena;
-				}
-				  
-				catch(QString es){ qDebug() << "EXCEPCION" << es;}
+			{			
+			qDebug()<<"Eliminamos "<<cadena;  
+			innerModel->removeNode(cadena);				
 			}
 			
 	
@@ -176,8 +173,10 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 					if (innerModel->getNode(cadena))
 						qDebug() << "SHIT!!!!!!!!!!!!!!!!!!!!!!!!";
 					plane  = innerModel->newPlane(cadena, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
-
+					qDebug()<<"Nueva"<<cadena; 
 					parent->addChild(plane); 
+					
+					
 				}
 				catch(QString es)
 				{ qDebug() << "EXCEPCION" << es;}
@@ -191,6 +190,7 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 		}
 	}
 	
+	innerModel->save("guardoinnerparaverquepacha.xml");
 
 }
 		
