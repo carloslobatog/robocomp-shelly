@@ -102,9 +102,9 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 
 void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 {	
- 	if (innerModel) delete innerModel;
- 	innerModel= new InnerModel(params.at("InnerModel").value);
-	
+//  	if (innerModel) delete innerModel;
+//  	innerModel= new InnerModel(params.at("InnerModel").value);
+// 	
 	qDebug() << __FUNCTION__ << "updateObstacles";
 	//Borrar todos los newpolyline_obs_X que existan del innermodel y del innermodel viewer
 	
@@ -155,10 +155,13 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 			
 			
 			//qDebug()<<"INCLUIMOS EN INNERMODEL";
-			if (innerModel->getNode(cadena))
-			{			
+			if (innerModel->getNode(cadena)!= NULL)
+			{		
 			qDebug()<<"Eliminamos "<<cadena;  
-			innerModel->removeNode(cadena);				
+			
+			innerModel->removeNode(cadena);
+
+							
 			}
 			
 	
@@ -170,12 +173,18 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 				InnerModelPlane *plane;
 				try
 				{
-					if (innerModel->getNode(cadena))
-						qDebug() << "SHIT!!!!!!!!!!!!!!!!!!!!!!!!";
-					plane  = innerModel->newPlane(cadena, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
-					qDebug()<<"Nueva"<<cadena; 
-					parent->addChild(plane); 
+// 					if (innerModel->getNode(cadena))
+// 						qDebug() << "SHIT!!!!!!!!!!!!!!!!!!!!!!!!";
 					
+					if(innerModel->getNode(cadena)== NULL)
+					{
+					plane  = innerModel->newPlane(cadena, parent, QString("#FFFF00"), dist, 2000, 90, 1,
+							normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
+					qDebug()<<"Nueva"<<cadena; 
+					
+		
+					parent->addChild(plane); 
+					}
 					
 				}
 				catch(QString es)
@@ -190,7 +199,7 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 		}
 	}
 	
-	innerModel->save("guardoinnerparaverquepacha.xml");
+	innerModel->save("guardoinner.xml");
 
 }
 		
