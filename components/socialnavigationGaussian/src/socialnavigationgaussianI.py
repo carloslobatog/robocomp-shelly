@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2016 by YOUR NAME HERE
+# Copyright (C) 2017 by YOUR NAME HERE
 #
 #    This file is part of RoboComp
 #
@@ -28,21 +28,39 @@ except:
 if len(ROBOCOMP)<1:
 	print 'ROBOCOMP environment variable not set! Exiting.'
 	sys.exit()
-	
 
-preStr = "-I/opt/robocomp/interfaces/ -I"+ROBOCOMP+"/interfaces/ --all /opt/robocomp/interfaces/"
+additionalPathStr = ''
+icePaths = []
+try:
+	SLICE_PATH = os.environ['SLICE_PATH'].split(':')
+	for p in SLICE_PATH:
+		icePaths.append(p)
+		additionalPathStr += ' -I' + p + ' '
+	icePaths.append('/opt/robocomp/interfaces')
+except:
+	print 'SLICE_PATH environment variable was not exported. Using only the default paths'
+	pass
 
-Ice.loadSlice(preStr+"SocialNavigationGaussian.ice")
+ice_SocialNavigationGaussian = False
+for p in icePaths:
+	print 'Trying', p, 'to load SocialNavigationGaussian.ice'
+	if os.path.isfile(p+'/SocialNavigationGaussian.ice'):
+		print 'Using', p, 'to load SocialNavigationGaussian.ice'
+		preStr = "-I/opt/robocomp/interfaces/ -I"+ROBOCOMP+"/interfaces/ " + additionalPathStr + " --all "+p+'/'
+		wholeStr = preStr+"SocialNavigationGaussian.ice"
+		Ice.loadSlice(wholeStr)
+		ice_SocialNavigationGaussian = True
+		break
+if not ice_SocialNavigationGaussian:
+	print 'Couln\'t load SocialNavigationGaussian'
+	sys.exit(-1)
 from RoboCompSocialNavigationGaussian import *
 
 class SocialNavigationGaussianI(SocialNavigationGaussian):
 	def __init__(self, worker):
 		self.worker = worker
 
-	def getPolylines(self, persons, v, d, c):
-		return self.worker.getPolylines(persons, v, d)
-
-
-
-
-
+	def getPassOnRight(self, persons, v, d, c):
+		return self.worker.getPassOnRight(persons, v, d)
+	def getPersonalSpace(self, persons, v, d, c):
+		return self.worker.getPersonalSpace(persons, v, d)
