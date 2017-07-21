@@ -1,7 +1,0 @@
-import "/robocomp/interfaces/IDSLs/FaceTabletUrsus.idsl";
-Component FaceTabletControlComp{
-	Communications{
-			implements FaceTabletUrsus;
-	};
-	language Cpp;
-};
