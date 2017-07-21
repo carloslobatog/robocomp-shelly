@@ -58,41 +58,6 @@ def getPolyline(grid, resolution, lx_inf, ly_inf):
         points = np.asarray(lista)
         hull = ConvexHull(points)
         ret.append(points[hull.vertices])
-        """""
-        # interpolar los puntos
-        threshold = 0.1
-        #print '-----------------', threshold
-        v = []
-        prev = points[hull.vertices][-1]
-        for curr in points[hull.vertices]:
-            dx = curr[0] - prev[0]
-            dy = curr[1] - prev[1]
-            dist = math.sqrt(dx * dx + dy * dy)
-         #   print prev, curr, dist
-
-            if dist > threshold:
-                iters = dist / threshold
-          #      print 'dentro', iters, 'dx', dx, 'dy', dy
-                for iter in xrange(int(iters)):
-                    wx = prev[0] + iter * dx / iters
-                    wy = prev[1] + iter * dy / iters
-           #         print '  ', wx, wy
-                    #dx2 = wx - curr[0]
-                    #dy2 = wy - curr[1]
-                    #dist2 = math.sqrt(dx2 * dx2 + dy2 * dy2)
-
-                    #if dist2 > threshold + 0.001:
-                    #v.append([wx, wy])
-
-                   # else:
-                    #    break
-
-                    v.append([wx, wy])
-            v.append(curr)
-            prev = curr
-
-        ret.append(v)
-        """
 
     return ret
 
@@ -106,6 +71,7 @@ class Person(object):
     ydot = 0
 
     _radius = 0.30
+
     """ Public Methods """
 
     def __init__(self, x=0, y=0, th=0):
@@ -125,7 +91,6 @@ class Person(object):
             else:
                 aprox = int(v/10) - 1
 
-
             #numero de curvas de contorno que se van a dibujar
 
             # define grid.
@@ -140,15 +105,8 @@ class Person(object):
 
 
         if (drawPersonalSpace):
-            # print(Z)
-            # http://www.python-course.eu/matplotlib_contour_plot.php
-            # https://es.mathworks.com/matlabcentral/answers/230934-how-to-extract-x-and-y-position-of-contour-line
-            #surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
-
-            ##PROBLEMICA -> a partir de nc> 4 dibuja una linea de menos. Por eso en el caso de que v==100 he puesto que aprox=nc-2
 
             CS = plt.contour(X, Y, Z, nc)
-
             dat0 = CS.allsegs[aprox][0]
 
             #print(dat0)
@@ -239,9 +197,8 @@ class SpecificWorker(GenericWorker):
         # except:
         #	traceback.print_exc()
         #	print "Error reading config params"
-
-
         return True
+
 
     @QtCore.Slot()
     def compute(self):
@@ -257,7 +214,7 @@ class SpecificWorker(GenericWorker):
     #
     # getPolyline
     #
-    def getPolylines(self, persons, v, dibujar):
+    def getPersonalSpace(self, persons, v, dibujar):
 
         plt.close("all")
        ##DESCOMENTAR EL FIGUREEE
@@ -352,3 +309,16 @@ class SpecificWorker(GenericWorker):
         """
         plt.show()
         return polylines
+
+
+
+
+    #
+    # getPassOnRight
+    #
+    def getPassOnRight(self, persons, v, d):
+        ret = SNGPolylineSeq()
+        #
+        # implementCODE
+        #
+        return ret

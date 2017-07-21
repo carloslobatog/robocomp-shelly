@@ -1,4 +1,4 @@
-import "/robocomp/interfaces/IDSLs/SocialNavigationGaussian.idsl";
+import "SocialNavigationGaussian.idsl";
 
 Component socialnavigationGaussian
 {
