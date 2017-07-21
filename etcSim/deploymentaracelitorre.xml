@@ -58,7 +58,7 @@
  <dependence alias="base" />
   <dependence alias="socialnavigG" />
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost socialnavAgnt /home/robocomp/robocomp/components/robocomp-araceli/components/socialnavigationAgent ./bin/socialnavigationAgent /home/robocomp/robocomp/components/robocomp-araceli/etcSim/socialnavigationAgent.conf" />
+  <upCommand command="rcremote localhost socialnavAgnt /home/robocomp/robocomp/components/robocomp-araceli/components/socialOLDAgent ./bin/socialOLDAgent /home/robocomp/robocomp/components/robocomp-araceli/etcSim/socialnavigationAgent.conf" />
   <downCommand command="killall -9 socialnavigationAgent" />
   <configFile path="/home/robocomp/robocomp/components/robocomp-araceli/etcSim/socialnavigationAgent.conf" />
   <xpos value="-77.9789855056" />

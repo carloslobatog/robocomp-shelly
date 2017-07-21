@@ -102,9 +102,9 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 
 void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 {	
-//  	if (innerModel) delete innerModel;
-//  	innerModel= new InnerModel(params.at("InnerModel").value);
-// 	
+ 	if (innerModel) delete innerModel;
+ 	innerModel= new InnerModel(params.at("InnerModel").value);
+	
 	qDebug() << __FUNCTION__ << "updateObstacles";
 	//Borrar todos los newpolyline_obs_X que existan del innermodel y del innermodel viewer
 	

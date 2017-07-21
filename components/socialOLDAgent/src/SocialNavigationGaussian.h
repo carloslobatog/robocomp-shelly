@@ -97,6 +97,7 @@ struct SNGPerson
     ::Ice::Float x;
     ::Ice::Float z;
     ::Ice::Float angle;
+    ::Ice::Float vel;
 };
 
 typedef ::std::vector< ::RoboCompSocialNavigationGaussian::SNGPerson> SNGPersonSeq;
@@ -171,7 +172,7 @@ template<>
 struct StreamableTraits< ::RoboCompSocialNavigationGaussian::SNGPerson>
 {
     static const StreamHelperCategory helper = StreamHelperCategoryStruct;
-    static const int minWireSize = 12;
+    static const int minWireSize = 16;
     static const bool fixedLength = true;
 };
 
@@ -183,6 +184,7 @@ struct StreamWriter< ::RoboCompSocialNavigationGaussian::SNGPerson, S>
         __os->write(v.x);
         __os->write(v.z);
         __os->write(v.angle);
+        __os->write(v.vel);
     }
 };
 
@@ -194,6 +196,7 @@ struct StreamReader< ::RoboCompSocialNavigationGaussian::SNGPerson, S>
         __is->read(v.x);
         __is->read(v.z);
         __is->read(v.angle);
+        __is->read(v.vel);
     }
 };
 
