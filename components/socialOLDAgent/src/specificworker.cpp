@@ -351,6 +351,7 @@ void SpecificWorker::compute( )
 			person1.x = str2float(edgeRTp1.attributes["tx"])/1000;
 			person1.z = str2float(edgeRTp1.attributes["tz"])/1000;
 			person1.angle = str2float(edgeRTp1.attributes["ry"]);
+			person1.vel=0;
 			
 			//comprobamos si la persona se ha movido
 			if (first){
@@ -379,7 +380,7 @@ void SpecificWorker::compute( )
 			person2.x=str2float(edgeRTp2.attributes["tx"])/1000;
 			person2.z=str2float(edgeRTp2.attributes["tz"])/1000;
 			person2.angle=str2float(edgeRTp2.attributes["ry"]);
-			
+			person2.vel=0;
 			//comprobamos si la persona se ha movido
 				if (first){
 				personaux2=person2;
@@ -406,7 +407,7 @@ void SpecificWorker::compute( )
 			person3.x=str2float(edgeRTp3.attributes["tx"])/1000;
 			person3.z=str2float(edgeRTp3.attributes["tz"])/1000;
 			person3.angle=str2float(edgeRTp3.attributes["ry"]);
-			
+			person3.vel=0;
 			//comprobamos si la persona se ha movido
 				if (first){
 				personaux3=person3;
@@ -435,7 +436,7 @@ void SpecificWorker::compute( )
 			person4.x=str2float(edgeRTp4.attributes["tx"])/1000;
 			person4.z=str2float(edgeRTp4.attributes["tz"])/1000;
 			person4.angle=str2float(edgeRTp4.attributes["ry"]);
-			
+			person4.vel=0;
 			//comprobamos si la persona se ha movido
 				if (first){
 				personaux4=person4;
@@ -462,7 +463,7 @@ void SpecificWorker::compute( )
 			person5.x=str2float(edgeRTp5.attributes["tx"])/1000;
 			person5.z=str2float(edgeRTp5.attributes["tz"])/1000;
 			person5.angle=str2float(edgeRTp5.attributes["ry"]);
-			
+			person5.vel=0;
 			//comprobamos si la persona se ha movido
 				if (first){
 				personaux5=person5;
@@ -488,7 +489,8 @@ void SpecificWorker::compute( )
 			person6.x=str2float(edgeRTp6.attributes["tx"])/1000;
 			person6.z=str2float(edgeRTp6.attributes["tz"])/1000;
 			person6.angle=str2float(edgeRTp6.attributes["ry"]);
-			//comprobamos si la persona se ha movido
+			person6.vel=0;
+			
 				if (first)
 				{
 				personaux6=person6;
