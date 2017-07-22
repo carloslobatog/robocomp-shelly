@@ -89,6 +89,13 @@ public:
 	int inix[5];
 	int autoz[5];
 	int iniz[5];
+	int gox[5];
+	int goz[5];
+	float gorot[5];
+	int xdire[5];
+	int zdire[5];
+	int xpath[5];
+	int zpath[5];
 public slots:
 	void counterVel();
 	void compute();
@@ -113,11 +120,8 @@ public slots:
 		void rb5();
 		void changeVel();
 		void autoCheck();
-		void autoPilot1();
-		void autoPilot2();
-		void autoPilot3();
-		void autoPilot4();
-		void autoPilot5();
+		void autoPilot();
+
 
 
 
