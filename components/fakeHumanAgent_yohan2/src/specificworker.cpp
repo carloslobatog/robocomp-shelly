@@ -18,6 +18,7 @@
  */
 #include "specificworker.h"
 #include <qt4/QtGui/qdial.h>
+#include <math.h>
 
 
 
@@ -28,8 +29,8 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 {
 				for(int i=0;i<5;i++)
 				{
-					autox[i]=std::numeric_limits<int>::quiet_NaN();
-					autoz[i]=std::numeric_limits<int>::quiet_NaN();
+					autox[i]=60000;
+					autoz[i]=60000;
 					autocounter[i]=0;
 					humanAdvVel[i] = 50;
 			  }
@@ -51,7 +52,6 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
         humansymbol="person1";
         meshpath="/home/robocomp/robocomp/components/robocomp-araceli/models/human0";
         setWindowTitle("Humanfake");
-	
 				meshsize[0]=12;
 				meshsize[1]=1.12;
 				meshsize[2]=8;
@@ -121,7 +121,7 @@ void SpecificWorker::includeInAGM()
 						fakehumanmesh.append(std::to_string(humancount));
 						humansymbol="person";
 						humansymbol.append(std::to_string(humancount));
-						meshpath="/home/robocomp/robocomp/components/robocomp-araceli/models/human0";
+						meshpath="/home/robocomp/robocomp/components/robocomp-araceli/models//human0";
 						meshpath.append(std::to_string(humancount));
 						meshpath.append(".3ds");
 						humancount++;
@@ -284,7 +284,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 					fakehuman.append(std::to_string(humancount));
 					fakehumanmesh="fakeperson_mesh";
 					fakehumanmesh.append(std::to_string(humancount));
-					meshpath="/home/robocomp/robocomp/components/robocomp-araceli/models/human0";
+					meshpath="/home/robocomp/robocomp/components/robocomp-robocomp-araceli/models/human0";
 					meshpath.append(std::to_string(humancount));
 					meshpath.append(".3ds");
 					std::cout<<fakehuman<<"\n";
@@ -360,58 +360,146 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 
         return true;
 }
-	void SpecificWorker::autoPilot1()
+	void SpecificWorker::autoPilot()
 	{
+			for(int i=0;i<5;i++)
+			{
+			if (autocounter[i]==1)
+			{
+			if (autox[i]!=60000)
+			{
+				if(autoz[i]>iniz[i])
+				zdire[i]=1;
+				else
+				zdire[i]=-1;
+				if(autox[i]>inix[i])
+				xdire[i]=1;
+				else
+				xdire[i]=-1;
+				fakehuman="fakeperson";
+				fakehuman.append(std::to_string(i+1));
+				gorot[i]=atan2(abs(autoz[i]-iniz[i]),abs(autox[i]-inix[i]));
+				if(autoz[i]>iniz[i]&&autox[i]>inix[i])
+				{
+					humanRot=1.57-gorot[i];
+					gox[i]=humanAdvVel[i]*cos(gorot[i]);
+					goz[i]=humanAdvVel[i]*sin(gorot[i]);
+					xpath[i]=xpath[i]+gox[i];
+					zpath[i]=zpath[i]+goz[i];
+				}
+				else if(autoz[i]<iniz[i]&&autox[i]>inix[i])
+				{
+					humanRot=1.57+gorot[i];
+					gox[i]=humanAdvVel[i]*cos(gorot[i]);
+					goz[i]=-humanAdvVel[i]*sin(gorot[i]);
+					xpath[i]=xpath[i]+gox[i];
+					zpath[i]=zpath[i]+goz[i];
+				}
+				else if(autoz[i]>iniz[i]&&autox[i]<inix[i])
+				{
+					humanRot=4.71+gorot[i];
+					gox[i]=-humanAdvVel[i]*cos(gorot[i]);
+					goz[i]=humanAdvVel[i]*sin(gorot[i]);
+					xpath[i]=xpath[i]+gox[i];
+					zpath[i]=zpath[i]+goz[i];
+				}
+				else if(autoz[i]<iniz[i]&&autox[i]<inix[i])
+				{
+					humanRot=4.71-gorot[i];
+					gox[i]=-humanAdvVel[i]*cos(gorot[i]);
+					goz[i]=-humanAdvVel[i]*sin(gorot[i]);
+					xpath[i]=xpath[i]+gox[i];
+					zpath[i]=zpath[i]+goz[i];
+				}
+				else if(autoz[i]==iniz[i])
+				{	zdire[i]=2;
+					if(xdire[i]==1)
+					{
+						xpath[i]=xpath[i]+humanAdvVel[i];
+						humanRot=1.57;
+					}
+					else
+					{
+						xpath[i]=xpath[i]-humanAdvVel[i];
+						humanRot=4.71;
+					}
+				}
+				else if(autox[i]==inix[i])
+				{
+					xdire[i]=2;
+					if(zdire[i]==1)
+					{
+						zpath[i]=zpath[i]+humanAdvVel[i];
+						humanRot=0;
+					}
+					else
+					{
+						zpath[i]=zpath[i]-humanAdvVel[i];
+						humanRot=3.14;
+					}
+				}
 
-		if (!std::isnan(autox[0]))
-		{
-			;
+
+
+				if((xdire[i]==1&&xpath[i]>=autox[i])||(xdire[i]==-1&&xpath[i]<=autox[i])||(zdire[i]==1&&zpath[i]>=autoz[i])||(zdire[i]==-1&&zpath[i]<=autoz[i]))
+				{
+
+					int tmp;
+					tmp=autox[i];
+					autox[i]=inix[i];
+					inix[i]=tmp;
+					tmp=autoz[i];
+					autoz[i]=iniz[i];
+					iniz[i]=tmp;
+				}
+				else
+				{
+
+					pose.x = xpath[i];
+					pose.y = 0;
+					pose.z = zpath[i];
+					pose.rx = 0;
+					pose.ry =humanRot;
+					pose.rz = 0;
+
+
+					innermodelmanager_proxy->setPoseFromParent(fakehuman, pose);
+
+
+					AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(personSymbolId[i], "RT");
+					AGMModelEdge &edgeRT  = worldModel->getEdgeByIdentifiers(personParent->identifier, personSymbolId[i], "RT");
+					edgeRT.attributes["tx"] = float2str(xpath[i]);
+					edgeRT.attributes["ty"] = float2str(0);
+					edgeRT.attributes["tz"] = float2str(zpath[i]);
+					edgeRT.attributes["rx"] = "0";
+					edgeRT.attributes["ry"] = float2str(humanRot);
+					edgeRT.attributes["rz"] = "0";
+
+
+					AGMMisc::publishEdgeUpdate(edgeRT, agmexecutive_proxy);
+			}
+		}
+		}
 		}
 	}
-	void SpecificWorker::autoPilot2()
-	{
 
-		if (!std::isnan(autox[1]))
-		{
-			;
-		}
-	}
-	void SpecificWorker::autoPilot3()
-	{
-
-		if (!std::isnan(autox[2]))
-		{
-			;
-		}
-	}
-	void SpecificWorker::autoPilot4()
-	{
-
-		if (!std::isnan(autox[3]))
-		{
-			;
-		}
-	}
-	void SpecificWorker::autoPilot5()
-	{
-
-		if (!std::isnan(autox[4]))
-		{
-			;
-		}
-	}
 	void SpecificWorker::autoCheck()
 	{
 		if (autocounter[humannum-1]==0)
 			{
 				autocounter[humannum-1]=1;
-
+				inix[humannum-1]=pose.x;
+				iniz[humannum-1]=pose.z;
+				xpath[humannum-1]=pose.x;
+				zpath[humannum-1]=pose.z;
 				qDebug()<<"AutoPilot ON";
+				qDebug()<<"Initail x:"<<inix[humannum-1]<<" Inital z:"<<iniz[humannum-1];
+
 			}
 		else
 		{
-			autox[humannum-1]=std::numeric_limits<int>::quiet_NaN();
-			autoz[humannum-1]=std::numeric_limits<int>::quiet_NaN();
+			autox[humannum-1]=60000;
+			autoz[humannum-1]=60000;
 			autocounter[humannum-1]=0;
 			qDebug()<<"AutoPilot OFF";
 		}
@@ -436,8 +524,12 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 void SpecificWorker::warp(){
 	if(autocounter[humannum-1]==1)
 	{
-		autox[humannum]=(X_POS->text()).toInt();
-		autoz[humannum]=(Z_POS->text()).toInt();
+		autox[humannum-1]=(X_POS->text()).toInt();
+		autoz[humannum-1]=(Z_POS->text()).toInt();
+		qDebug()<<"Final X:"<<autox[humannum-1]<<" Final Z:"<<autoz[humannum-1];
+		X_POS->clear();
+		Z_POS->clear();
+		Theta->clear();
 	}
 	else
 	warpcontrol=1;
@@ -682,17 +774,7 @@ void SpecificWorker::compute()
 						}
 					}
 
-					if(humannum==1&&autocounter[humannum-1]==1)
-					autoPilot1();
-					else if(humannum==2&&autocounter[humannum-1]==1)
-					autoPilot2();
-					else if(humannum==3&&autocounter[humannum-1]==1)
-					autoPilot3();
-					else if(humannum==4&&autocounter[humannum-1]==1)
-					autoPilot4();
-					else if(humannum==5&&autocounter[humannum-1]==1)
-					autoPilot5();
-
+					autoPilot();
 
       	}
 

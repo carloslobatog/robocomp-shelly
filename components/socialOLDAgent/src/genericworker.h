@@ -82,10 +82,10 @@ public:
 	bool isActive() { return active; }
 
 
-	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;
-	LoggerPrx logger_proxy;
-	OmniRobotPrx omnirobot_proxy;
 	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
+	OmniRobotPrx omnirobot_proxy;
+	LoggerPrx logger_proxy;
+	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 
 	virtual bool reloadConfigAgent() = 0;

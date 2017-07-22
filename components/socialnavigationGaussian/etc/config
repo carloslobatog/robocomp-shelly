@@ -2,7 +2,6 @@
 SocialNavigationGaussian.Endpoints=tcp -p 20020
 
 
-
 # This property is used by the clients to connect to IceStorm.
 TopicManager.Proxy=IceStorm/TopicManager:default -p 9999
 

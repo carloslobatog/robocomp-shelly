@@ -25,6 +25,13 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <layout class="QGridLayout" name="gridLayout">
+      <item row="3" column="1">
+       <widget class="QPushButton" name="down">
+        <property name="text">
+         <string>DOWN</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="1">
        <widget class="QDial" name="giro"/>
       </item>
@@ -46,13 +53,6 @@
        <widget class="QPushButton" name="right">
         <property name="text">
          <string>RIGHT</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QPushButton" name="down">
-        <property name="text">
-         <string>DOWN</string>
         </property>
        </widget>
       </item>
@@ -120,7 +120,7 @@
     <rect>
      <x>20</x>
      <y>230</y>
-     <width>468</width>
+     <width>487</width>
      <height>26</height>
     </rect>
    </property>
@@ -197,7 +197,7 @@
   <widget class="QPushButton" name="changeVelocity">
    <property name="geometry">
     <rect>
-     <x>340</x>
+     <x>350</x>
      <y>270</y>
      <width>88</width>
      <height>34</height>
@@ -213,6 +213,7 @@
   <zorder>Send</zorder>
   <zorder>layoutWidget</zorder>
   <zorder>changeVelocity</zorder>
+  <zorder>radioButton_5</zorder>
  </widget>
  <tabstops>
   <tabstop>left</tabstop>

@@ -141,9 +141,9 @@ int ::socialOLDAgent::run(int argc, char* argv[])
 	int status=EXIT_SUCCESS;
 
 	OmniRobotPrx omnirobot_proxy;
+	LoggerPrx logger_proxy;
 	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;
 	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
-	LoggerPrx logger_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 
 	string proxy, tmp;
