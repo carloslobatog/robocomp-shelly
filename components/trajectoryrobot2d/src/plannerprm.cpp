@@ -367,7 +367,7 @@ bool PlannerPRM::updateGraph(LocalPolyLineList Polylines)
 			listtotalE.push_back(e);
 			boost::remove_edge(e, graph);	
 			modified = true;
-		//	qDebug()<<"listo";
+// 		//	qDebug()<<"listo";
 		}
 		
 // 		for (auto v:listtoremoveV)

@@ -40,7 +40,9 @@
 namespace
 {
 
-const ::std::string __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPolylines_name = "getPolylines";
+const ::std::string __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPersonalSpace_name = "getPersonalSpace";
+
+const ::std::string __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPassOnRight_name = "getPassOnRight";
 
 }
 
@@ -66,19 +68,19 @@ void
 }
 
 ::RoboCompSocialNavigationGaussian::SNGPolylineSeq
-IceProxy::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context* __ctx)
+IceProxy::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context* __ctx)
 {
-    ::IceInternal::InvocationObserver __observer(this, __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPolylines_name, __ctx);
+    ::IceInternal::InvocationObserver __observer(this, __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPersonalSpace_name, __ctx);
     int __cnt = 0;
     while(true)
     {
         ::IceInternal::Handle< ::IceDelegate::Ice::Object> __delBase;
         try
         {
-            __checkTwowayOnly(__RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPolylines_name);
+            __checkTwowayOnly(__RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPersonalSpace_name);
             __delBase = __getDelegate(false);
             ::IceDelegate::RoboCompSocialNavigationGaussian::SocialNavigationGaussian* __del = dynamic_cast< ::IceDelegate::RoboCompSocialNavigationGaussian::SocialNavigationGaussian*>(__delBase.get());
-            return __del->getPolylines(persons, v, d, __ctx, __observer);
+            return __del->getPersonalSpace(persons, v, d, __ctx, __observer);
         }
         catch(const ::IceInternal::LocalExceptionWrapper& __ex)
         {
@@ -92,13 +94,13 @@ IceProxy::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getPolylin
 }
 
 ::Ice::AsyncResultPtr
-IceProxy::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::begin_getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+IceProxy::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::begin_getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
 {
-    __checkAsyncTwowayOnly(__RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPolylines_name);
-    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPolylines_name, __del, __cookie);
+    __checkAsyncTwowayOnly(__RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPersonalSpace_name);
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPersonalSpace_name, __del, __cookie);
     try
     {
-        __result->__prepare(__RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPolylines_name, ::Ice::Normal, __ctx);
+        __result->__prepare(__RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPersonalSpace_name, ::Ice::Normal, __ctx);
         ::IceInternal::BasicStream* __os = __result->__startWriteParams(::Ice::DefaultFormat);
         __os->write(persons);
         __os->write(v);
@@ -114,9 +116,88 @@ IceProxy::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::begin_getP
 }
 
 ::RoboCompSocialNavigationGaussian::SNGPolylineSeq
-IceProxy::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::end_getPolylines(const ::Ice::AsyncResultPtr& __result)
+IceProxy::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::end_getPersonalSpace(const ::Ice::AsyncResultPtr& __result)
 {
-    ::Ice::AsyncResult::__check(__result, this, __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPolylines_name);
+    ::Ice::AsyncResult::__check(__result, this, __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPersonalSpace_name);
+    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq __ret;
+    bool __ok = __result->__wait();
+    try
+    {
+        if(!__ok)
+        {
+            try
+            {
+                __result->__throwUserException();
+            }
+            catch(const ::Ice::UserException& __ex)
+            {
+                throw ::Ice::UnknownUserException(__FILE__, __LINE__, __ex.ice_name());
+            }
+        }
+        ::IceInternal::BasicStream* __is = __result->__startReadParams();
+        __is->read(__ret);
+        __result->__endReadParams();
+        return __ret;
+    }
+    catch(const ::Ice::LocalException& ex)
+    {
+        __result->__getObserver().failed(ex.ice_name());
+        throw;
+    }
+}
+
+::RoboCompSocialNavigationGaussian::SNGPolylineSeq
+IceProxy::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context* __ctx)
+{
+    ::IceInternal::InvocationObserver __observer(this, __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPassOnRight_name, __ctx);
+    int __cnt = 0;
+    while(true)
+    {
+        ::IceInternal::Handle< ::IceDelegate::Ice::Object> __delBase;
+        try
+        {
+            __checkTwowayOnly(__RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPassOnRight_name);
+            __delBase = __getDelegate(false);
+            ::IceDelegate::RoboCompSocialNavigationGaussian::SocialNavigationGaussian* __del = dynamic_cast< ::IceDelegate::RoboCompSocialNavigationGaussian::SocialNavigationGaussian*>(__delBase.get());
+            return __del->getPassOnRight(persons, v, d, __ctx, __observer);
+        }
+        catch(const ::IceInternal::LocalExceptionWrapper& __ex)
+        {
+            __handleExceptionWrapper(__delBase, __ex, __observer);
+        }
+        catch(const ::Ice::LocalException& __ex)
+        {
+            __handleException(__delBase, __ex, true, __cnt, __observer);
+        }
+    }
+}
+
+::Ice::AsyncResultPtr
+IceProxy::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::begin_getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+{
+    __checkAsyncTwowayOnly(__RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPassOnRight_name);
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPassOnRight_name, __del, __cookie);
+    try
+    {
+        __result->__prepare(__RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPassOnRight_name, ::Ice::Normal, __ctx);
+        ::IceInternal::BasicStream* __os = __result->__startWriteParams(::Ice::DefaultFormat);
+        __os->write(persons);
+        __os->write(v);
+        __os->write(d);
+        __result->__endWriteParams();
+        __result->__send(true);
+    }
+    catch(const ::Ice::LocalException& __ex)
+    {
+        __result->__exceptionAsync(__ex);
+    }
+    return __result;
+}
+
+::RoboCompSocialNavigationGaussian::SNGPolylineSeq
+IceProxy::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::end_getPassOnRight(const ::Ice::AsyncResultPtr& __result)
+{
+    ::Ice::AsyncResult::__check(__result, this, __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPassOnRight_name);
     ::RoboCompSocialNavigationGaussian::SNGPolylineSeq __ret;
     bool __ok = __result->__wait();
     try
@@ -169,9 +250,9 @@ IceProxy::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::__newInsta
 }
 
 ::RoboCompSocialNavigationGaussian::SNGPolylineSeq
-IceDelegateM::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context* __context, ::IceInternal::InvocationObserver& __observer)
+IceDelegateM::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context* __context, ::IceInternal::InvocationObserver& __observer)
 {
-    ::IceInternal::Outgoing __og(__handler.get(), __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPolylines_name, ::Ice::Normal, __context, __observer);
+    ::IceInternal::Outgoing __og(__handler.get(), __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPersonalSpace_name, ::Ice::Normal, __context, __observer);
     try
     {
         ::IceInternal::BasicStream* __os = __og.startWriteParams(::Ice::DefaultFormat);
@@ -212,7 +293,50 @@ IceDelegateM::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getPol
 }
 
 ::RoboCompSocialNavigationGaussian::SNGPolylineSeq
-IceDelegateD::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context* __context, ::IceInternal::InvocationObserver&)
+IceDelegateM::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context* __context, ::IceInternal::InvocationObserver& __observer)
+{
+    ::IceInternal::Outgoing __og(__handler.get(), __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPassOnRight_name, ::Ice::Normal, __context, __observer);
+    try
+    {
+        ::IceInternal::BasicStream* __os = __og.startWriteParams(::Ice::DefaultFormat);
+        __os->write(persons);
+        __os->write(v);
+        __os->write(d);
+        __og.endWriteParams();
+    }
+    catch(const ::Ice::LocalException& __ex)
+    {
+        __og.abort(__ex);
+    }
+    bool __ok = __og.invoke();
+    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq __ret;
+    try
+    {
+        if(!__ok)
+        {
+            try
+            {
+                __og.throwUserException();
+            }
+            catch(const ::Ice::UserException& __ex)
+            {
+                ::Ice::UnknownUserException __uue(__FILE__, __LINE__, __ex.ice_name());
+                throw __uue;
+            }
+        }
+        ::IceInternal::BasicStream* __is = __og.startReadParams();
+        __is->read(__ret);
+        __og.endReadParams();
+        return __ret;
+    }
+    catch(const ::Ice::LocalException& __ex)
+    {
+        throw ::IceInternal::LocalExceptionWrapper(__ex, false);
+    }
+}
+
+::RoboCompSocialNavigationGaussian::SNGPolylineSeq
+IceDelegateD::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context* __context, ::IceInternal::InvocationObserver&)
 {
     class _DirectI : public ::IceInternal::Direct
     {
@@ -235,7 +359,7 @@ IceDelegateD::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getPol
             {
                 throw ::Ice::OperationNotExistException(__FILE__, __LINE__, _current.id, _current.facet, _current.operation);
             }
-            _result = servant->getPolylines(_m_persons, _m_v, _m_d, _current);
+            _result = servant->getPersonalSpace(_m_persons, _m_v, _m_d, _current);
             return ::Ice::DispatchOK;
         }
         
@@ -248,7 +372,79 @@ IceDelegateD::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getPol
     };
     
     ::Ice::Current __current;
-    __initCurrent(__current, __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPolylines_name, ::Ice::Normal, __context);
+    __initCurrent(__current, __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPersonalSpace_name, ::Ice::Normal, __context);
+    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq __result;
+    try
+    {
+        _DirectI __direct(__result, persons, v, d, __current);
+        try
+        {
+            __direct.getServant()->__collocDispatch(__direct);
+        }
+        catch(...)
+        {
+            __direct.destroy();
+            throw;
+        }
+        __direct.destroy();
+    }
+    catch(const ::Ice::SystemException&)
+    {
+        throw;
+    }
+    catch(const ::IceInternal::LocalExceptionWrapper&)
+    {
+        throw;
+    }
+    catch(const ::std::exception& __ex)
+    {
+        ::IceInternal::LocalExceptionWrapper::throwWrapper(__ex);
+    }
+    catch(...)
+    {
+        throw ::IceInternal::LocalExceptionWrapper(::Ice::UnknownException(__FILE__, __LINE__, "unknown c++ exception"), false);
+    }
+    return __result;
+}
+
+::RoboCompSocialNavigationGaussian::SNGPolylineSeq
+IceDelegateD::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context* __context, ::IceInternal::InvocationObserver&)
+{
+    class _DirectI : public ::IceInternal::Direct
+    {
+    public:
+
+        _DirectI(::RoboCompSocialNavigationGaussian::SNGPolylineSeq& __result, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& __p_persons, ::Ice::Float __p_v, bool __p_d, const ::Ice::Current& __current) : 
+            ::IceInternal::Direct(__current),
+            _result(__result),
+            _m_persons(__p_persons),
+            _m_v(__p_v),
+            _m_d(__p_d)
+        {
+        }
+        
+        virtual ::Ice::DispatchStatus
+        run(::Ice::Object* object)
+        {
+            ::RoboCompSocialNavigationGaussian::SocialNavigationGaussian* servant = dynamic_cast< ::RoboCompSocialNavigationGaussian::SocialNavigationGaussian*>(object);
+            if(!servant)
+            {
+                throw ::Ice::OperationNotExistException(__FILE__, __LINE__, _current.id, _current.facet, _current.operation);
+            }
+            _result = servant->getPassOnRight(_m_persons, _m_v, _m_d, _current);
+            return ::Ice::DispatchOK;
+        }
+        
+    private:
+        
+        ::RoboCompSocialNavigationGaussian::SNGPolylineSeq& _result;
+        const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& _m_persons;
+        ::Ice::Float _m_v;
+        bool _m_d;
+    };
+    
+    ::Ice::Current __current;
+    __initCurrent(__current, __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getPassOnRight_name, ::Ice::Normal, __context);
     ::RoboCompSocialNavigationGaussian::SNGPolylineSeq __result;
     try
     {
@@ -320,7 +516,7 @@ RoboCompSocialNavigationGaussian::SocialNavigationGaussian::ice_staticId()
 }
 
 ::Ice::DispatchStatus
-RoboCompSocialNavigationGaussian::SocialNavigationGaussian::___getPolylines(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+RoboCompSocialNavigationGaussian::SocialNavigationGaussian::___getPersonalSpace(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
 {
     __checkMode(::Ice::Normal, __current.mode);
     ::IceInternal::BasicStream* __is = __inS.startReadParams();
@@ -331,7 +527,26 @@ RoboCompSocialNavigationGaussian::SocialNavigationGaussian::___getPolylines(::Ic
     __is->read(v);
     __is->read(d);
     __inS.endReadParams();
-    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq __ret = getPolylines(persons, v, d, __current);
+    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq __ret = getPersonalSpace(persons, v, d, __current);
+    ::IceInternal::BasicStream* __os = __inS.__startWriteParams(::Ice::DefaultFormat);
+    __os->write(__ret);
+    __inS.__endWriteParams(true);
+    return ::Ice::DispatchOK;
+}
+
+::Ice::DispatchStatus
+RoboCompSocialNavigationGaussian::SocialNavigationGaussian::___getPassOnRight(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+{
+    __checkMode(::Ice::Normal, __current.mode);
+    ::IceInternal::BasicStream* __is = __inS.startReadParams();
+    ::RoboCompSocialNavigationGaussian::SNGPersonSeq persons;
+    ::Ice::Float v;
+    bool d;
+    __is->read(persons);
+    __is->read(v);
+    __is->read(d);
+    __inS.endReadParams();
+    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq __ret = getPassOnRight(persons, v, d, __current);
     ::IceInternal::BasicStream* __os = __inS.__startWriteParams(::Ice::DefaultFormat);
     __os->write(__ret);
     __inS.__endWriteParams(true);
@@ -342,7 +557,8 @@ namespace
 {
 const ::std::string __RoboCompSocialNavigationGaussian__SocialNavigationGaussian_all[] =
 {
-    "getPolylines",
+    "getPassOnRight",
+    "getPersonalSpace",
     "ice_id",
     "ice_ids",
     "ice_isA",
@@ -354,7 +570,7 @@ const ::std::string __RoboCompSocialNavigationGaussian__SocialNavigationGaussian
 ::Ice::DispatchStatus
 RoboCompSocialNavigationGaussian::SocialNavigationGaussian::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& current)
 {
-    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__RoboCompSocialNavigationGaussian__SocialNavigationGaussian_all, __RoboCompSocialNavigationGaussian__SocialNavigationGaussian_all + 5, current.operation);
+    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__RoboCompSocialNavigationGaussian__SocialNavigationGaussian_all, __RoboCompSocialNavigationGaussian__SocialNavigationGaussian_all + 6, current.operation);
     if(r.first == r.second)
     {
         throw ::Ice::OperationNotExistException(__FILE__, __LINE__, current.id, current.facet, current.operation);
@@ -364,21 +580,25 @@ RoboCompSocialNavigationGaussian::SocialNavigationGaussian::__dispatch(::IceInte
     {
         case 0:
         {
-            return ___getPolylines(in, current);
+            return ___getPassOnRight(in, current);
         }
         case 1:
         {
-            return ___ice_id(in, current);
+            return ___getPersonalSpace(in, current);
         }
         case 2:
         {
-            return ___ice_ids(in, current);
+            return ___ice_id(in, current);
         }
         case 3:
         {
-            return ___ice_isA(in, current);
+            return ___ice_ids(in, current);
         }
         case 4:
+        {
+            return ___ice_isA(in, current);
+        }
+        case 5:
         {
             return ___ice_ping(in, current);
         }

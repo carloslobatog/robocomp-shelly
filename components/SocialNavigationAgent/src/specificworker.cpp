@@ -170,8 +170,8 @@ SNGPolylineSeq SpecificWorker::gauss(bool draw)
 	totalpersons=persons;
 	
 	sequence.clear();
-	sequence = socialnavigationgaussian_proxy->getPolylines(persons, prox, draw);
-
+	
+	sequence = socialnavigationgaussian_proxy->getPersonalSpace(persons, prox, draw);
 	
 	return sequence;
 
@@ -391,7 +391,9 @@ void SpecificWorker::compute( )
 			person1.x = str2float(edgeRTp1.attributes["tx"])/1000;
 			person1.z = str2float(edgeRTp1.attributes["tz"])/1000;
 			person1.angle = str2float(edgeRTp1.attributes["ry"]);
+			//person1.vel=str2float(edgeRTp1.attributes["velocity"]);
 			
+			//qDebug()<<"Velocity"<<person1.vel;
 			
 		
 			if (first)
