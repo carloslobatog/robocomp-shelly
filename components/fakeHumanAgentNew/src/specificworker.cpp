@@ -107,7 +107,7 @@ void SpecificWorker::includeInAGM()
 	AGMModel::SPtr newModel(new AGMModel(worldModel));
 
 	// Symbolic part
-	AGMModelSymbol::SPtr person2=   newModel->newSymbol("person2");
+	AGMModelSymbol::SPtr person2 =   newModel->newSymbol("person2");
 	personSymbolId = person2->identifier;
 	printf("Got personSymbolId: %d\n", personSymbolId);
 	person2->setAttribute("imName", "fakeperson2");

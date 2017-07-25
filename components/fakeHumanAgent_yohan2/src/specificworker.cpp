@@ -112,20 +112,20 @@ void SpecificWorker::includeInRCIS(int i)
 void SpecificWorker::includeInAGM()
 {
 
-					 AGMModel::SPtr newModel(new AGMModel(worldModel));
-					for(int i=0;i<hnum;i++)
-					{
-						fakehuman="fakeperson";
-						fakehuman.append(std::to_string(humancount));
-						fakehumanmesh="fakepersonMesh";
-						fakehumanmesh.append(std::to_string(humancount));
-						humansymbol="person";
-						humansymbol.append(std::to_string(humancount));
-						meshpath="/home/robocomp/robocomp/components/robocomp-araceli/models//human0";
-						meshpath.append(std::to_string(humancount));
-						meshpath.append(".3ds");
-						humancount++;
-						std::cout<<fakehuman<<"\n";
+	AGMModel::SPtr newModel(new AGMModel(worldModel));
+	for(int i=0;i<hnum;i++)
+	{
+		fakehuman="fakeperson";
+		fakehuman.append(std::to_string(humancount));
+		fakehumanmesh="fakepersonMesh";
+		fakehumanmesh.append(std::to_string(humancount));
+		humansymbol="person";
+		humansymbol.append(std::to_string(humancount));
+		meshpath="/home/robocomp/robocomp/components/robocomp-araceli/models//human0";
+		meshpath.append(std::to_string(humancount));
+		meshpath.append(".3ds");
+		humancount++;
+		std::cout<<fakehuman<<"\n";
 
 
 	          printf("includeInAGM begins\n");
@@ -162,7 +162,7 @@ void SpecificWorker::includeInAGM()
 		          printf("Got personSymbolId: %d\n", personSymbolId[i]);
 		          person->setAttribute("imName", fakehuman);
 		          person->setAttribute("imType", "transform");
-							person->setAttribute("velocity",std::to_string(humanAdvVel[i]));
+			  person->setAttribute("velocity",std::to_string(humanAdvVel[i]));
 		          AGMModelSymbol::SPtr personSt = newModel->newSymbol("personSt");
 		          printf("person %d status %d\n", person->identifier, personSt->identifier);
 

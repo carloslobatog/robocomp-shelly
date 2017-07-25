@@ -18,11 +18,11 @@
  */
 
 
-/** \mainpage RoboComp::socialOLDAgent
+/** \mainpage RoboComp::socialOldAgent
  *
  * \section intro_sec Introduction
  *
- * The socialOLDAgent component...
+ * The socialOldAgent component...
  *
  * \section interface_sec Interface
  *
@@ -34,7 +34,7 @@
  * ...
  *
  * \subsection install2_ssec Compile and install
- * cd socialOLDAgent
+ * cd socialOldAgent
  * <br>
  * cmake . && make
  * <br>
@@ -52,7 +52,7 @@
  *
  * \subsection execution_ssec Execution
  *
- * Just: "${PATH_TO_BINARY}/socialOLDAgent --Ice.Config=${PATH_TO_CONFIG_FILE}"
+ * Just: "${PATH_TO_BINARY}/socialOldAgent --Ice.Config=${PATH_TO_CONFIG_FILE}"
  *
  * \subsection running_ssec Once running
  *
@@ -97,10 +97,10 @@
 using namespace std;
 using namespace RoboCompCommonBehavior;
 
-class socialOLDAgent : public RoboComp::Application
+class socialOldAgent : public RoboComp::Application
 {
 public:
-	socialOLDAgent (QString prfx) { prefix = prfx.toStdString(); }
+	socialOldAgent (QString prfx) { prefix = prfx.toStdString(); }
 private:
 	void initialize();
 	std::string prefix;
@@ -110,14 +110,14 @@ public:
 	virtual int run(int, char*[]);
 };
 
-void ::socialOLDAgent::initialize()
+void ::socialOldAgent::initialize()
 {
 	// Config file properties read example
 	// configGetString( PROPERTY_NAME_1, property1_holder, PROPERTY_1_DEFAULT_VALUE );
 	// configGetInt( PROPERTY_NAME_2, property1_holder, PROPERTY_2_DEFAULT_VALUE );
 }
 
-int ::socialOLDAgent::run(int argc, char* argv[])
+int ::socialOldAgent::run(int argc, char* argv[])
 {
 #ifdef USE_QTGUI
 	QApplication a(argc, argv);  // GUI application
@@ -140,14 +140,31 @@ int ::socialOLDAgent::run(int argc, char* argv[])
 
 	int status=EXIT_SUCCESS;
 
+	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
 	OmniRobotPrx omnirobot_proxy;
 	LoggerPrx logger_proxy;
 	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;
-	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 
 	string proxy, tmp;
 	initialize();
+
+
+	try
+	{
+		if (not GenericMonitor::configGetString(communicator(), prefix, "SocialNavigationGaussianProxy", proxy, ""))
+		{
+			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy SocialNavigationGaussianProxy\n";
+		}
+		socialnavigationgaussian_proxy = SocialNavigationGaussianPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
+	}
+	catch(const Ice::Exception& ex)
+	{
+		cout << "[" << PROGRAM_NAME << "]: Exception: " << ex;
+		return EXIT_FAILURE;
+	}
+	rInfo("SocialNavigationGaussianProxy initialized Ok!");
+	mprx["SocialNavigationGaussianProxy"] = (::IceProxy::Ice::Object*)(&socialnavigationgaussian_proxy);//Remote server proxy creation example
 
 
 	try
@@ -182,23 +199,6 @@ int ::socialOLDAgent::run(int argc, char* argv[])
 	}
 	rInfo("TrajectoryRobot2DProxy initialized Ok!");
 	mprx["TrajectoryRobot2DProxy"] = (::IceProxy::Ice::Object*)(&trajectoryrobot2d_proxy);//Remote server proxy creation example
-
-
-	try
-	{
-		if (not GenericMonitor::configGetString(communicator(), prefix, "SocialNavigationGaussianProxy", proxy, ""))
-		{
-			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy SocialNavigationGaussianProxy\n";
-		}
-		socialnavigationgaussian_proxy = SocialNavigationGaussianPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
-	}
-	catch(const Ice::Exception& ex)
-	{
-		cout << "[" << PROGRAM_NAME << "]: Exception: " << ex;
-		return EXIT_FAILURE;
-	}
-	rInfo("SocialNavigationGaussianProxy initialized Ok!");
-	mprx["SocialNavigationGaussianProxy"] = (::IceProxy::Ice::Object*)(&socialnavigationgaussian_proxy);//Remote server proxy creation example
 
 
 	try
@@ -392,7 +392,7 @@ int main(int argc, char* argv[])
 			printf("Configuration prefix: <%s>\n", prefix.toStdString().c_str());
 		}
 	}
-	::socialOLDAgent app(prefix);
+	::socialOldAgent app(prefix);
 
 	return app.main(argc, argv, configFile.c_str());
 }

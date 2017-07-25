@@ -58,6 +58,41 @@ def getPolyline(grid, resolution, lx_inf, ly_inf):
         points = np.asarray(lista)
         hull = ConvexHull(points)
         ret.append(points[hull.vertices])
+        """""
+        # interpolar los puntos
+        threshold = 0.1
+        #print '-----------------', threshold
+        v = []
+        prev = points[hull.vertices][-1]
+        for curr in points[hull.vertices]:
+            dx = curr[0] - prev[0]
+            dy = curr[1] - prev[1]
+            dist = math.sqrt(dx * dx + dy * dy)
+         #   print prev, curr, dist
+
+            if dist > threshold:
+                iters = dist / threshold
+          #      print 'dentro', iters, 'dx', dx, 'dy', dy
+                for iter in xrange(int(iters)):
+                    wx = prev[0] + iter * dx / iters
+                    wy = prev[1] + iter * dy / iters
+           #         print '  ', wx, wy
+                    #dx2 = wx - curr[0]
+                    #dy2 = wy - curr[1]
+                    #dist2 = math.sqrt(dx2 * dx2 + dy2 * dy2)
+
+                    #if dist2 > threshold + 0.001:
+                    #v.append([wx, wy])
+
+                   # else:
+                    #    break
+
+                    v.append([wx, wy])
+            v.append(curr)
+            prev = curr
+
+        ret.append(v)
+        """
 
     return ret
 
@@ -69,18 +104,18 @@ class Person(object):
     polyline = []
     xdot = 0
     ydot = 0
+    vel=0
 
     _radius = 0.30
-
     """ Public Methods """
 
-    def __init__(self, x=0, y=0, th=0):
+    def __init__(self, x=0, y=0, th=0,vel=0):
         self.x = x
         self.y = y
         self.th = th
+        self.vel = vel
 
-
-    def draw(self, v, drawPersonalSpace=False):
+    def draw(self, v,sigma_h,sigma_r,sigma_s,rot, drawPersonalSpace=False):
         #numero de curvas de contorno
         nc = 10
         if v <= 20:
@@ -90,6 +125,7 @@ class Person(object):
                 aprox = nc - 2
             else:
                 aprox = int(v/10) - 1
+
 
             #numero de curvas de contorno que se van a dibujar
 
@@ -101,12 +137,18 @@ class Person(object):
         X, Y = np.meshgrid(x, y)
         # plt.plot(X, Y, '*')
 
-        Z = self._calculatePersonalSpace(X, Y)
-
+        Z = self._calculatePersonalSpace(X, Y,sigma_h,sigma_r,sigma_s,rot)
 
         if (drawPersonalSpace):
+            # print(Z)
+            # http://www.python-course.eu/matplotlib_contour_plot.php
+            # https://es.mathworks.com/matlabcentral/answers/230934-how-to-extract-x-and-y-position-of-contour-line
+            #surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
+
+            ##PROBLEMICA -> a partir de nc> 4 dibuja una linea de menos. Por eso en el caso de que v==100 he puesto que aprox=nc-2
 
             CS = plt.contour(X, Y, Z, nc)
+
             dat0 = CS.allsegs[aprox][0]
 
             #print(dat0)
@@ -114,6 +156,9 @@ class Person(object):
             ##Dibujar la polilinea
            # plt.plot(dat0[:, 0], dat0[:, 1], '*b-')
 
+
+            # CS = plt.contour(X, Y, Z, 10)
+            #surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
 
             # Corpo
             body = plt.Circle((self.x, self.y), radius=self._radius, fill=False)
@@ -131,15 +176,8 @@ class Person(object):
             heading = plt.Line2D((self.x, x_aux), (self.y, y_aux), lw=1, color='k')
             plt.gca().add_line(heading)
 
-            """
             plt.axis('equal')
-            fig = plt.figure()
-            ax = fig.add_subplot(111, projection='3d')
-            ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
-            """""
-            plt.xlabel('X')
-            plt.ylabel('Y')
-            plt.axis('equal')
+
 
         return Z
 
@@ -147,20 +185,15 @@ class Person(object):
 
     """ Private Methods """
 
-    def _calculatePersonalSpace(self, x, y):
-        """""
+    def _calculatePersonalSpace(self, x, y,sigma_h,sigma_r,sigma_s,rot):
+        """"",sigma_h
         sigma_h = 2.0
         sigma_r = 1.0
         sigma_s = 4/3
         """
         ##he cambiado el valor de las sigmas porque la gaussiana que dibujaba con las anteriores era muy grande
 
-        sigma_h = 4
-        sigma_r = 2
-        sigma_s = 2*4/3
 
-
-        rot = pi/2 - self.th
 
 
         alpha = np.arctan2(y - self.y, x - self.x) - rot - pi / 2
@@ -197,8 +230,9 @@ class SpecificWorker(GenericWorker):
         # except:
         #	traceback.print_exc()
         #	print "Error reading config params"
-        return True
 
+
+        return True
 
     @QtCore.Slot()
     def compute(self):
@@ -253,12 +287,12 @@ class SpecificWorker(GenericWorker):
         for p in persons:
             pn = Person(p.x, p.z, p.angle)
             #print('Pose x', pn.x, 'Pose z', pn.y, 'Rotacion', pn.th)
-            pn.draw(v, drawPersonalSpace=dibujar)
+            pn.draw(v,4,2,2*4/3,pi/2 - pn.th, drawPersonalSpace=dibujar)
             #normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 2.0, 2.0, 2.0], elliptical=True))
             normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 4, 2, 2*4/3], elliptical=True))
         #print ("numero de gaussianas",len(normals))
 
-        h = 0.6
+        h = 0.4
         resolution = 0.1
         limits = [[lx_inf, lx_sup], [ly_inf, ly_sup]]
         _, z = Normal.makeGrid(normals, h, 2, limits=limits, resolution=resolution)
@@ -272,7 +306,7 @@ class SpecificWorker(GenericWorker):
         #plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
         if (dibujar):
-           # plt.figure()
+            plt.figure()
             plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
             plt.xlabel('X')
             plt.ylabel('Y')
@@ -310,15 +344,53 @@ class SpecificWorker(GenericWorker):
         plt.show()
         return polylines
 
+    def getPassOnRight(self, persons, v, dibujar):
+
+        plt.close("all")
 
 
+        lx_inf = -6
+        lx_sup = 8
+        ly_inf = -6
+        ly_sup = 8
 
-    #
-    # getPassOnRight
-    #
-    def getPassOnRight(self, persons, v, d):
-        ret = SNGPolylineSeq()
-        #
-        # implementCODE
-        #
-        return ret
+        normals = []
+
+        for p in persons:
+            pn = Person(p.x, p.z, p.angle, p.vel)
+
+            pn.draw(v,(50/((7*pn.vel/50)+43)*4), (50/((7*pn.vel/50)+43)*4)/2, 2*(50/((7*pn.vel/50)+43)*4)/3,pi/2-pn.th, drawPersonalSpace=dibujar)
+            pn.draw(v,4, 1.5, 10/3, pi - pn.th, drawPersonalSpace=dibujar)
+
+            normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, (50/((7*pn.vel/50)+43)*4), (50/((7*pn.vel/50)+43)*4)/2, 2*(50/((7*pn.vel/50)+43)*4)/3], elliptical=True))
+            normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th , 4, 1.5, 10/3], elliptical=True))
+
+
+        h = 0.4
+        resolution = 0.1
+        limits = [[lx_inf, lx_sup], [ly_inf, ly_sup]]
+        _, z = Normal.makeGrid(normals, h, 2, limits=limits, resolution=resolution)
+        grid = GM.filterEdges(z, h)
+
+        if (dibujar):
+            plt.figure()
+            plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+            plt.xlabel('X')
+            plt.ylabel('Y')
+            plt.axis('equal')
+
+        np.savetxt('log.txt', grid, fmt='%i')
+
+        polylines = []
+        totalpuntosorden = getPolyline(grid, resolution, lx_inf, ly_inf)
+
+        for pol in totalpuntosorden:
+            polyline = []
+            for pnt in pol:
+                punto = SNGPoint2D()
+                punto.x = pnt[0]
+                punto.z = pnt[1]
+                polyline.append(punto)
+            polylines.append(polyline)
+        plt.show()
+        return polylines

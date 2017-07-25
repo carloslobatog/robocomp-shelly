@@ -205,8 +205,11 @@ struct StreamReader< ::RoboCompSocialNavigationGaussian::SNGPerson, S>
 namespace RoboCompSocialNavigationGaussian
 {
 
-class Callback_SocialNavigationGaussian_getPolylines_Base : virtual public ::IceInternal::CallbackBase { };
-typedef ::IceUtil::Handle< Callback_SocialNavigationGaussian_getPolylines_Base> Callback_SocialNavigationGaussian_getPolylinesPtr;
+class Callback_SocialNavigationGaussian_getPersonalSpace_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_SocialNavigationGaussian_getPersonalSpace_Base> Callback_SocialNavigationGaussian_getPersonalSpacePtr;
+
+class Callback_SocialNavigationGaussian_getPassOnRight_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_SocialNavigationGaussian_getPassOnRight_Base> Callback_SocialNavigationGaussian_getPassOnRightPtr;
 
 }
 
@@ -220,39 +223,39 @@ class SocialNavigationGaussian : virtual public ::IceProxy::Ice::Object
 {
 public:
 
-    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d)
+    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d)
     {
-        return getPolylines(persons, v, d, 0);
+        return getPersonalSpace(persons, v, d, 0);
     }
-    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context& __ctx)
+    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context& __ctx)
     {
-        return getPolylines(persons, v, d, &__ctx);
+        return getPersonalSpace(persons, v, d, &__ctx);
     }
 #ifdef ICE_CPP11
     ::Ice::AsyncResultPtr
-    begin_getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return __begin_getPolylines(persons, v, d, 0, __response, __exception, __sent);
+        return __begin_getPersonalSpace(persons, v, d, 0, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_getPolylines(persons, v, d, 0, ::Ice::newCallback(__completed, __sent), 0);
+        return begin_getPersonalSpace(persons, v, d, 0, ::Ice::newCallback(__completed, __sent), 0);
     }
     ::Ice::AsyncResultPtr
-    begin_getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return __begin_getPolylines(persons, v, d, &__ctx, __response, __exception, __sent);
+        return __begin_getPersonalSpace(persons, v, d, &__ctx, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_getPolylines(persons, v, d, &__ctx, ::Ice::newCallback(__completed, __sent));
+        return begin_getPersonalSpace(persons, v, d, &__ctx, ::Ice::newCallback(__completed, __sent));
     }
     
 private:
 
-    ::Ice::AsyncResultPtr __begin_getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+    ::Ice::AsyncResultPtr __begin_getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
     {
         class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
         {
@@ -271,7 +274,7 @@ private:
                 ::RoboCompSocialNavigationGaussian::SNGPolylineSeq __ret;
                 try
                 {
-                    __ret = __proxy->end_getPolylines(__result);
+                    __ret = __proxy->end_getPersonalSpace(__result);
                 }
                 catch(::Ice::Exception& ex)
                 {
@@ -288,48 +291,161 @@ private:
             
             ::std::function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)> _response;
         };
-        return begin_getPolylines(persons, v, d, __ctx, new Cpp11CB(__response, __exception, __sent));
+        return begin_getPersonalSpace(persons, v, d, __ctx, new Cpp11CB(__response, __exception, __sent));
     }
     
 public:
 #endif
 
-    ::Ice::AsyncResultPtr begin_getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d)
+    ::Ice::AsyncResultPtr begin_getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d)
     {
-        return begin_getPolylines(persons, v, d, 0, ::IceInternal::__dummyCallback, 0);
+        return begin_getPersonalSpace(persons, v, d, 0, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context& __ctx)
+    ::Ice::AsyncResultPtr begin_getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context& __ctx)
     {
-        return begin_getPolylines(persons, v, d, &__ctx, ::IceInternal::__dummyCallback, 0);
+        return begin_getPersonalSpace(persons, v, d, &__ctx, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_getPolylines(persons, v, d, 0, __del, __cookie);
+        return begin_getPersonalSpace(persons, v, d, 0, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_getPolylines(persons, v, d, &__ctx, __del, __cookie);
+        return begin_getPersonalSpace(persons, v, d, &__ctx, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::RoboCompSocialNavigationGaussian::Callback_SocialNavigationGaussian_getPolylinesPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::RoboCompSocialNavigationGaussian::Callback_SocialNavigationGaussian_getPersonalSpacePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_getPolylines(persons, v, d, 0, __del, __cookie);
+        return begin_getPersonalSpace(persons, v, d, 0, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context& __ctx, const ::RoboCompSocialNavigationGaussian::Callback_SocialNavigationGaussian_getPolylinesPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context& __ctx, const ::RoboCompSocialNavigationGaussian::Callback_SocialNavigationGaussian_getPersonalSpacePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_getPolylines(persons, v, d, &__ctx, __del, __cookie);
+        return begin_getPersonalSpace(persons, v, d, &__ctx, __del, __cookie);
     }
 
-    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq end_getPolylines(const ::Ice::AsyncResultPtr&);
+    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq end_getPersonalSpace(const ::Ice::AsyncResultPtr&);
     
 private:
 
-    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*);
-    ::Ice::AsyncResultPtr begin_getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d)
+    {
+        return getPassOnRight(persons, v, d, 0);
+    }
+    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context& __ctx)
+    {
+        return getPassOnRight(persons, v, d, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_getPassOnRight(persons, v, d, 0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_getPassOnRight(persons, v, d, 0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_getPassOnRight(persons, v, d, &__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_getPassOnRight(persons, v, d, &__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+    {
+        class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
+        {
+        public:
+
+            Cpp11CB(const ::std::function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& responseFunc, const ::std::function<void (const ::Ice::Exception&)>& exceptionFunc, const ::std::function<void (bool)>& sentFunc) :
+                ::IceInternal::Cpp11FnCallbackNC(exceptionFunc, sentFunc),
+                _response(responseFunc)
+            {
+                CallbackBase::checkCallback(true, responseFunc || exceptionFunc != nullptr);
+            }
+
+            virtual void __completed(const ::Ice::AsyncResultPtr& __result) const
+            {
+                ::RoboCompSocialNavigationGaussian::SocialNavigationGaussianPrx __proxy = ::RoboCompSocialNavigationGaussian::SocialNavigationGaussianPrx::uncheckedCast(__result->getProxy());
+                ::RoboCompSocialNavigationGaussian::SNGPolylineSeq __ret;
+                try
+                {
+                    __ret = __proxy->end_getPassOnRight(__result);
+                }
+                catch(::Ice::Exception& ex)
+                {
+                    Cpp11FnCallbackNC::__exception(__result, ex);
+                    return;
+                }
+                if(_response != nullptr)
+                {
+                    _response(__ret);
+                }
+            }
+        
+        private:
+            
+            ::std::function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)> _response;
+        };
+        return begin_getPassOnRight(persons, v, d, __ctx, new Cpp11CB(__response, __exception, __sent));
+    }
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d)
+    {
+        return begin_getPassOnRight(persons, v, d, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context& __ctx)
+    {
+        return begin_getPassOnRight(persons, v, d, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getPassOnRight(persons, v, d, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getPassOnRight(persons, v, d, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::RoboCompSocialNavigationGaussian::Callback_SocialNavigationGaussian_getPassOnRightPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getPassOnRight(persons, v, d, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, ::Ice::Float v, bool d, const ::Ice::Context& __ctx, const ::RoboCompSocialNavigationGaussian::Callback_SocialNavigationGaussian_getPassOnRightPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getPassOnRight(persons, v, d, &__ctx, __del, __cookie);
+    }
+
+    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq end_getPassOnRight(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
     
@@ -456,7 +572,9 @@ class SocialNavigationGaussian : virtual public ::IceDelegate::Ice::Object
 {
 public:
 
-    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&) = 0;
+    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&) = 0;
+
+    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&) = 0;
 };
 
 }
@@ -474,7 +592,9 @@ class SocialNavigationGaussian : virtual public ::IceDelegate::RoboCompSocialNav
 {
 public:
 
-    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
+    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
+
+    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
 };
 
 }
@@ -492,7 +612,9 @@ class SocialNavigationGaussian : virtual public ::IceDelegate::RoboCompSocialNav
 {
 public:
 
-    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
+    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
+
+    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
 };
 
 }
@@ -514,8 +636,11 @@ public:
     virtual const ::std::string& ice_id(const ::Ice::Current& = ::Ice::Current()) const;
     static const ::std::string& ice_staticId();
 
-    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPolylines(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Current& = ::Ice::Current()) = 0;
-    ::Ice::DispatchStatus ___getPolylines(::IceInternal::Incoming&, const ::Ice::Current&);
+    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPersonalSpace(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___getPersonalSpace(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___getPassOnRight(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Ice::DispatchStatus __dispatch(::IceInternal::Incoming&, const ::Ice::Current&);
 
@@ -544,7 +669,7 @@ namespace RoboCompSocialNavigationGaussian
 {
 
 template<class T>
-class CallbackNC_SocialNavigationGaussian_getPolylines : public Callback_SocialNavigationGaussian_getPolylines_Base, public ::IceInternal::TwowayCallbackNC<T>
+class CallbackNC_SocialNavigationGaussian_getPersonalSpace : public Callback_SocialNavigationGaussian_getPersonalSpace_Base, public ::IceInternal::TwowayCallbackNC<T>
 {
 public:
 
@@ -554,7 +679,7 @@ public:
     typedef void (T::*Sent)(bool);
     typedef void (T::*Response)(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&);
 
-    CallbackNC_SocialNavigationGaussian_getPolylines(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+    CallbackNC_SocialNavigationGaussian_getPersonalSpace(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
         : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), response(cb)
     {
     }
@@ -565,7 +690,7 @@ public:
         ::RoboCompSocialNavigationGaussian::SNGPolylineSeq __ret;
         try
         {
-            __ret = __proxy->end_getPolylines(__result);
+            __ret = __proxy->end_getPersonalSpace(__result);
         }
         catch(::Ice::Exception& ex)
         {
@@ -581,20 +706,20 @@ public:
     Response response;
 };
 
-template<class T> Callback_SocialNavigationGaussian_getPolylinesPtr
-newCallback_SocialNavigationGaussian_getPolylines(const IceUtil::Handle<T>& instance, void (T::*cb)(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+template<class T> Callback_SocialNavigationGaussian_getPersonalSpacePtr
+newCallback_SocialNavigationGaussian_getPersonalSpace(const IceUtil::Handle<T>& instance, void (T::*cb)(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
 {
-    return new CallbackNC_SocialNavigationGaussian_getPolylines<T>(instance, cb, excb, sentcb);
+    return new CallbackNC_SocialNavigationGaussian_getPersonalSpace<T>(instance, cb, excb, sentcb);
 }
 
-template<class T> Callback_SocialNavigationGaussian_getPolylinesPtr
-newCallback_SocialNavigationGaussian_getPolylines(T* instance, void (T::*cb)(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+template<class T> Callback_SocialNavigationGaussian_getPersonalSpacePtr
+newCallback_SocialNavigationGaussian_getPersonalSpace(T* instance, void (T::*cb)(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
 {
-    return new CallbackNC_SocialNavigationGaussian_getPolylines<T>(instance, cb, excb, sentcb);
+    return new CallbackNC_SocialNavigationGaussian_getPersonalSpace<T>(instance, cb, excb, sentcb);
 }
 
 template<class T, typename CT>
-class Callback_SocialNavigationGaussian_getPolylines : public Callback_SocialNavigationGaussian_getPolylines_Base, public ::IceInternal::TwowayCallback<T, CT>
+class Callback_SocialNavigationGaussian_getPersonalSpace : public Callback_SocialNavigationGaussian_getPersonalSpace_Base, public ::IceInternal::TwowayCallback<T, CT>
 {
 public:
 
@@ -604,7 +729,7 @@ public:
     typedef void (T::*Sent)(bool , const CT&);
     typedef void (T::*Response)(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&, const CT&);
 
-    Callback_SocialNavigationGaussian_getPolylines(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+    Callback_SocialNavigationGaussian_getPersonalSpace(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
         : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), response(cb)
     {
     }
@@ -615,7 +740,7 @@ public:
         ::RoboCompSocialNavigationGaussian::SNGPolylineSeq __ret;
         try
         {
-            __ret = __proxy->end_getPolylines(__result);
+            __ret = __proxy->end_getPersonalSpace(__result);
         }
         catch(::Ice::Exception& ex)
         {
@@ -631,16 +756,116 @@ public:
     Response response;
 };
 
-template<class T, typename CT> Callback_SocialNavigationGaussian_getPolylinesPtr
-newCallback_SocialNavigationGaussian_getPolylines(const IceUtil::Handle<T>& instance, void (T::*cb)(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+template<class T, typename CT> Callback_SocialNavigationGaussian_getPersonalSpacePtr
+newCallback_SocialNavigationGaussian_getPersonalSpace(const IceUtil::Handle<T>& instance, void (T::*cb)(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
-    return new Callback_SocialNavigationGaussian_getPolylines<T, CT>(instance, cb, excb, sentcb);
+    return new Callback_SocialNavigationGaussian_getPersonalSpace<T, CT>(instance, cb, excb, sentcb);
 }
 
-template<class T, typename CT> Callback_SocialNavigationGaussian_getPolylinesPtr
-newCallback_SocialNavigationGaussian_getPolylines(T* instance, void (T::*cb)(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+template<class T, typename CT> Callback_SocialNavigationGaussian_getPersonalSpacePtr
+newCallback_SocialNavigationGaussian_getPersonalSpace(T* instance, void (T::*cb)(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
-    return new Callback_SocialNavigationGaussian_getPolylines<T, CT>(instance, cb, excb, sentcb);
+    return new Callback_SocialNavigationGaussian_getPersonalSpace<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_SocialNavigationGaussian_getPassOnRight : public Callback_SocialNavigationGaussian_getPassOnRight_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&);
+
+    CallbackNC_SocialNavigationGaussian_getPassOnRight(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), response(cb)
+    {
+    }
+
+    virtual void __completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::RoboCompSocialNavigationGaussian::SocialNavigationGaussianPrx __proxy = ::RoboCompSocialNavigationGaussian::SocialNavigationGaussianPrx::uncheckedCast(__result->getProxy());
+        ::RoboCompSocialNavigationGaussian::SNGPolylineSeq __ret;
+        try
+        {
+            __ret = __proxy->end_getPassOnRight(__result);
+        }
+        catch(::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::__exception(__result, ex);
+            return;
+        }
+        if(response)
+        {
+            (::IceInternal::CallbackNC<T>::callback.get()->*response)(__ret);
+        }
+    }
+
+    Response response;
+};
+
+template<class T> Callback_SocialNavigationGaussian_getPassOnRightPtr
+newCallback_SocialNavigationGaussian_getPassOnRight(const IceUtil::Handle<T>& instance, void (T::*cb)(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_SocialNavigationGaussian_getPassOnRight<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_SocialNavigationGaussian_getPassOnRightPtr
+newCallback_SocialNavigationGaussian_getPassOnRight(T* instance, void (T::*cb)(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_SocialNavigationGaussian_getPassOnRight<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_SocialNavigationGaussian_getPassOnRight : public Callback_SocialNavigationGaussian_getPassOnRight_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&, const CT&);
+
+    Callback_SocialNavigationGaussian_getPassOnRight(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), response(cb)
+    {
+    }
+
+    virtual void __completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::RoboCompSocialNavigationGaussian::SocialNavigationGaussianPrx __proxy = ::RoboCompSocialNavigationGaussian::SocialNavigationGaussianPrx::uncheckedCast(__result->getProxy());
+        ::RoboCompSocialNavigationGaussian::SNGPolylineSeq __ret;
+        try
+        {
+            __ret = __proxy->end_getPassOnRight(__result);
+        }
+        catch(::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::__exception(__result, ex);
+            return;
+        }
+        if(response)
+        {
+            (::IceInternal::Callback<T, CT>::callback.get()->*response)(__ret, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    Response response;
+};
+
+template<class T, typename CT> Callback_SocialNavigationGaussian_getPassOnRightPtr
+newCallback_SocialNavigationGaussian_getPassOnRight(const IceUtil::Handle<T>& instance, void (T::*cb)(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_SocialNavigationGaussian_getPassOnRight<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_SocialNavigationGaussian_getPassOnRightPtr
+newCallback_SocialNavigationGaussian_getPassOnRight(T* instance, void (T::*cb)(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_SocialNavigationGaussian_getPassOnRight<T, CT>(instance, cb, excb, sentcb);
 }
 
 }

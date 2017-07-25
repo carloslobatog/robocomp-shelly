@@ -400,10 +400,10 @@ bool Sampler::checkRobotValidDirectionToTargetBinarySearch(const QVec & origin ,
 	QMat r1q = innerModelSampler->getRotationMatrixTo("world", "robot");	
 
 	// Create a tall box for robot body with center at zero and sides:
-	boost::shared_ptr<fcl::Box> robotBox(new fcl::Box(wRob, hRob, wRob));
+	//boost::shared_ptr<fcl::Box> robotBox(new fcl::Box(wRob, hRob, wRob));
 	
 	// Create a collision object
-	fcl::CollisionObject robotBoxCol(robotBox);
+//	fcl::CollisionObject robotBoxCol(robotBox);
 	
 	//Create and fcl rotation matrix to orient the box with the robot
 	const fcl::Matrix3f R1( r1q(0,0), r1q(0,1), r1q(0,2), r1q(1,0), r1q(1,1), r1q(1,2), r1q(2,0), r1q(2,1), r1q(2,2) );

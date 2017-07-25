@@ -5,7 +5,7 @@
 #define USE_QTGUI
 
 
-#define PROGRAM_NAME    "socialOLDAgent"
-#define SERVER_FULL_NAME   "RoboComp socialOLDAgent:: socialOLDAgent"
+#define PROGRAM_NAME    "socialOldAgent"
+#define SERVER_FULL_NAME   "RoboComp socialOldAgent:: socialOldAgent"
 
 #endif

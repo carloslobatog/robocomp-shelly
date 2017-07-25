@@ -2,16 +2,17 @@ import "TrajectoryRobot2D.idsl";
 import "Logger.idsl";
 import "OmniRobot.idsl";
 import "SocialNavigationGaussian.idsl";
+import "InnerModelManager.idsl";
 
-Component socialOLDAgent
+Component socialOldAgent,
 {
 	Communications
 	{
-		requires TrajectoryRobot2D, OmniRobot, SocialNavigationGaussian;
+		requires TrajectoryRobot2D, OmniRobot, SocialNavigationGaussian, InnerModelManager;
 		publishes Logger;
 	};
 	language Cpp;
 	gui Qt(QWidget);
-	options agmagent;
+	options agmagent, innermodelviewer;
 };
 
