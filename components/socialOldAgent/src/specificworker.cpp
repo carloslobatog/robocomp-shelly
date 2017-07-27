@@ -28,7 +28,6 @@
 */
 
 
-
 SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 {
 
@@ -183,6 +182,7 @@ SNGPolylineSeq SpecificWorker::gausspor(bool dibujar)
 
 	return secuencia2;
 
+	
 }
 
 void SpecificWorker::addObjects()
@@ -329,7 +329,8 @@ SNGPolylineSeq SpecificWorker::objectInteraction()
  	qDebug()<<"---------1------------";
 	
 	SNGPersonSeq persons;
-
+	SNGPersonSeq objects;
+	
 	//push back es para incluir a la persona en el vector de personas
 	if (p1) 	persons.push_back(person1); 
 	if (p2) 	persons.push_back(person2);
@@ -340,7 +341,20 @@ SNGPolylineSeq SpecificWorker::objectInteraction()
 
 	totalpersons=persons; 
 	qDebug()<<"---------2----------";
-		
+	
+	object.x =3.550;
+	object.z =3.650;
+	object.angle=3.1415926535;
+	    
+
+	objects.push_back(object);
+	
+	secuenciaObj.clear();
+	// secuenciaObj = socialnavigationgaussian_proxy-> getObjectInteraction(persons,objects,true);
+	secuenciaObj =socialnavigationgaussian_proxy->getObjectInteraction(persons,objects,true);
+	
+	qDebug()<<"---------3----------";
+	
 // 	AGMModelSymbol::SPtr objectP = worldModel->getParentByLink(objectSymbolId, "RT");
 // 	AGMModelEdge &edgeRT  = worldModel->getEdgeByIdentifiers(objectP->identifier,objectSymbolId, "RT");
 // 	object.x = str2float(edgeRT.attributes["tx"])/1000;

@@ -54,7 +54,7 @@ public:
 //bool para indicar si se ha movido la persona, lo utilizare para imprimir la coordenada de la persona cada vez que se mueva
 	bool cambiopos=false;
 
-	SNGPolylineSeq secuencia,secuencia2;
+	SNGPolylineSeq secuencia,secuencia2,secuenciaObj;
 
 	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
 	SNGPersonSeq totalpersons; //este es para leer el fichero

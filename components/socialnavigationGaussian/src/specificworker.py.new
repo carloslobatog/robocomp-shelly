@@ -84,3 +84,14 @@ class SpecificWorker(GenericWorker):
 		#
 		return ret
 
+
+	#
+	# getObjectInteraction
+	#
+	def getObjectInteraction(self, persons, objects, d):
+		ret = SNGPolylineSeq()
+		#
+		#implementCODE
+		#
+		return ret
+
