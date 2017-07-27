@@ -44,7 +44,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	connect(&trajReader, SIGNAL(timeout()), this, SLOT(readTrajState()));
 	//Dibujar gaussiana
 	connect(gaussiana,SIGNAL(clicked()),this, SLOT(gauss()));
-  connect(por,SIGNAL(clicked()),this, SLOT(gausspor()));
+	connect(por,SIGNAL(clicked()),this, SLOT(gausspor()));
 	//Sacar la pose del robot
 	connect(datos,SIGNAL(clicked()),this, SLOT(grabarfichero()));
 	//trajReader.start(1000);
@@ -126,8 +126,6 @@ qDebug("escribimos en el fichero personpose.txt la pose de las personas");
 		}
 
 }
-
-
 SNGPolylineSeq SpecificWorker::gauss(bool dibujar)
 {
 
@@ -171,18 +169,12 @@ SNGPolylineSeq SpecificWorker::gausspor(bool dibujar)
 	SNGPersonSeq persons;
 
 	//push back es para incluir a la persona en el vector de personas
-	if (pp1)
-	persons.push_back(person1);
-	if (pp2)
-	persons.push_back(person2);
-	if (pp3)
-	persons.push_back(person3);
-	if (pp4)
-	persons.push_back(person4);
-	if (pp5)
-	persons.push_back(person5);
-	if (pp6)
-	persons.push_back(person6);
+	if (pp1)	persons.push_back(person1);
+	if (pp2)	persons.push_back(person2);
+	if (pp3)	persons.push_back(person3);
+	if (pp4)	persons.push_back(person4);
+	if (pp5)	persons.push_back(person5);
+	if (pp6)	persons.push_back(person6);
 
 	totalpersons=persons;
 
@@ -195,157 +187,146 @@ SNGPolylineSeq SpecificWorker::gausspor(bool dibujar)
 
 void SpecificWorker::addObjects()
 {
-  
-		try
-	{	
-		pose.x = 3550;
-		pose.y = 0;
-		pose.z = 3650;
-		pose.rx = 0;
-		pose.ry = 0;
-		pose.rz = 0;
-		innermodelmanager_proxy->addTransform("cafetera", "static", "root", pose);
-
-		RoboCompInnerModelManager::meshType mesh;
-		mesh.pose.x  = mesh.pose.y  = mesh.pose.z  = 0;
-		mesh.pose.rx = 0;
-		mesh.pose.ry = 0;
-		mesh.pose.rz = 0;
-		
-		mesh.scaleX = mesh.scaleY = mesh.scaleZ = 12;
-		mesh.render = 0;
-		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
-		mesh.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/cafe.3ds";
-		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/basics/cube2.3ds";
-		innermodelmanager_proxy->addMesh("objectMesh", "cafetera", mesh);
-	}
-	catch (...)
-	{
-		printf("Can't create fake peson\n");
-	}
-
-	printf("includeInRCIS ends\n");
-
-
-	std::string m ="  ";
-	int idx=0;
-	while ((objectSymbolId = worldModel->getIdentifierByType("objectCaf", idx++)) != -1)
-	{
-		printf("%d %d\n", idx, objectSymbolId);
-		if (idx > 4) exit(0);
-		if (worldModel->getSymbolByIdentifier(objectSymbolId)->getAttribute("imName") == "cafetera")
-		{
-			printf("found %d!!\n", objectSymbolId);
-			break;
-		}
-	}
-	if (objectSymbolId != -1)
-	{
-		printf("Object already in the AGM model\n");
-		return;
-	}
-
-	AGMModel::SPtr newModel(new AGMModel(worldModel));
-
-	// Symbolic part
-	AGMModelSymbol::SPtr object =   newModel->newSymbol("objectCaf");
-	objectSymbolId = object->identifier;
-	printf("Got personSymbolId: %d\n", objectSymbolId);
-	object->setAttribute("imName", "cafetera");
-	object->setAttribute("imType", "transform");
-	AGMModelSymbol::SPtr objectSt = newModel->newSymbol("objectSt");
-	printf("person %d status %d\n", object->identifier, objectSt->identifier);
-
-	newModel->addEdge(object, objectSt, "hasStatus");
-	newModel->addEdge(object, objectSt, "noReach");
-	newModel->addEdge(object, objectSt, "objectCaf");
-	
-	newModel->addEdgeByIdentifiers(object->identifier, 3, "in");
-
-
-	// Geometric part
-	std::map<std::string, std::string> edgeRTAtrs;
-	edgeRTAtrs["tx"] = "3550";
-	edgeRTAtrs["ty"] = "0";
-	edgeRTAtrs["tz"] = "3650";
-	edgeRTAtrs["rx"] = "0";
-	edgeRTAtrs["ry"] = "0";
-	edgeRTAtrs["rz"] = "0";
-	newModel->addEdgeByIdentifiers(100, object->identifier, "RT", edgeRTAtrs);
-
-
-	AGMModelSymbol::SPtr objectMesh = newModel->newSymbol("mesh");
-	printf("objectMesh %d\n", objectMesh->identifier);
-	objectMesh->setAttribute("collidable", "false");
-	objectMesh->setAttribute("imName", "objectMesh");
-	objectMesh->setAttribute("imType", "mesh");
-	objectMesh->setAttribute("path", "/home/robocomp/robocomp/components/robocomp-araceli/models/cafe.3ds");
-	objectMesh->setAttribute("render", "NormalRendering");
-	objectMesh->setAttribute("scalex", "12");
-	objectMesh->setAttribute("scaley", "12");
-	objectMesh->setAttribute("scalez", "12");
-
-	edgeRTAtrs["tx"] = "0";
-	edgeRTAtrs["ty"] = "0";
-	edgeRTAtrs["tz"] = "0";
-	edgeRTAtrs["rx"] = "1.570796326794";
-	edgeRTAtrs["ry"] = "0";
-	edgeRTAtrs["rz"] = "3.1415926535";
-	newModel->addEdge(object, objectMesh, "RT", edgeRTAtrs);
-
-
-	while (true)
-	{
-		try
-		{
-			sendModificationProposal(worldModel, newModel,m);
-		
-			break;
-		}
-		catch(const RoboCompAGMExecutive::Locked &e)
-		{
-			printf("agmexecutive locked...\n");
-		}
-		catch(const RoboCompAGMExecutive::OldModel &e)
-		{
-			return;
-		}
-		catch(const RoboCompAGMExecutive::InvalidChange &e)
-		{ 
-			exit(1);
-		}
-		sleep(1);
-	}
-
-	printf("includeInAGM ends\n");
+//   qDebug()<<"AAAAAAADDDD OOOOOOBBBJEEEECTTTSS";
+//   //////////cafetera//////////////
+// 	try
+// 	{	
+// 		pose.x = 3550;
+// 		pose.y = 950;
+// 		pose.z = 3650;
+// 		pose.rx = 0;
+// 		pose.ry = M_PIl;
+// 		pose.rz = 0;
+// 		innermodelmanager_proxy->addTransform("cafetera", "static", "root", pose);
+// 
+// 		RoboCompInnerModelManager::meshType mesh;
+// 		mesh.pose.x  = mesh.pose.y  = mesh.pose.z  = 0;
+// 		mesh.pose.rx = M_PIl/2;
+// 		mesh.pose.ry = 0;
+// 		mesh.pose.rz = M_PIl;
+// 		
+// 		mesh.scaleX = mesh.scaleY = mesh.scaleZ = 20;
+// 		mesh.render = 0;
+// 		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
+// 		mesh.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/cafe.3ds";
+// 		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/basics/cube2.3ds";
+// 		innermodelmanager_proxy->addMesh("objectMesh", "cafetera", mesh);
+// 	}
+// 	catch (...)
+// 	{
+// 		printf("Can't create object\n");
+// 	}
+// 
+// 	printf("includeInRCIS ends\n");
+// 	 
+// 	static bool first = true;
+// 	if (not first) return;
+// 	first = false;
+// 
+// 	std::string m ="  ";
+// 	int idx=0;
+// 	while ((objectSymbolId = worldModel->getIdentifierByType("objectI", idx++)) != -1)
+// 	{
+// 		printf("%d %d\n", idx, objectSymbolId);
+// 		if (idx > 4) exit(0);
+// 		if (worldModel->getSymbolByIdentifier(objectSymbolId)->getAttribute("imName") == "cafetera")
+// 		{
+// 			printf("found %d!!\n", objectSymbolId);
+// 			break;
+// 		}
+// 	}
+// 	if (objectSymbolId != -1)
+// 	{
+// 		printf("Object already in the AGM model\n");
+// 		return;
+// 	}
+// 
+// 	AGMModel::SPtr newModel(new AGMModel(worldModel));
+// 
+// 	// Symbolic part
+// 	AGMModelSymbol::SPtr cafetera =   newModel->newSymbol("objectI");
+// 	objectSymbolId = cafetera->identifier;
+// 	printf("Got objectSymbolId: %d\n", objectSymbolId);
+// 	cafetera->setAttribute("imName", "cafetera");
+// 	cafetera->setAttribute("imType", "transform");
+// 	AGMModelSymbol::SPtr cafeteraSt = newModel->newSymbol("objectSt");
+// 	printf("object %d status %d\n", cafetera->identifier, cafeteraSt->identifier);
+// 
+// 	newModel->addEdge(cafetera, cafeteraSt, "hasStatus");
+// 	newModel->addEdge(cafetera, cafeteraSt, "noReach");
+// 	newModel->addEdge(cafetera, cafeteraSt, "objectI");
+// 	try
+// 	{
+// 	newModel->addEdgeByIdentifiers(cafetera->identifier, 3, "in");
+// 	}
+// 	catch(...)
+// 	{
+// 	  printf("PROOOOOBLEMA...\n");
+// 	}
+// 	
+// 
+// 
+// 	// Geometric part
+// 	std::map<std::string, std::string> edgeRTAtrs;
+// 	edgeRTAtrs["tx"] = "3550";
+// 	edgeRTAtrs["ty"] = "950";
+// 	edgeRTAtrs["tz"] = "3650";
+// 	edgeRTAtrs["rx"] = "0";
+// 	edgeRTAtrs["ry"] = "3.1415926535";
+// 	edgeRTAtrs["rz"] = "0";
+// 	newModel->addEdgeByIdentifiers(100, cafetera ->identifier, "RT", edgeRTAtrs);
+// 
+// 
+// 	AGMModelSymbol::SPtr cafeteraMesh = newModel->newSymbol("mesh");
+// 	printf("cafeteraMesh %d\n", cafeteraMesh->identifier);
+// 	cafeteraMesh->setAttribute("collidable", "false");
+// 	cafeteraMesh->setAttribute("imName", "cafeteraMesh");
+// 	cafeteraMesh->setAttribute("imType", "mesh");
+// 	cafeteraMesh->setAttribute("path", "/home/robocomp/robocomp/components/robocomp-araceli/models/cafe.3ds");
+// 	cafeteraMesh->setAttribute("render", "NormalRendering");
+// 	cafeteraMesh->setAttribute("scalex", "20");
+// 	cafeteraMesh->setAttribute("scaley", "20");
+// 	cafeteraMesh->setAttribute("scalez", "20");
+// 
+// 	edgeRTAtrs["tx"] = "0";
+// 	edgeRTAtrs["ty"] = "0";
+// 	edgeRTAtrs["tz"] = "0";
+// 	edgeRTAtrs["rx"] = "1.570796326794";
+// 	edgeRTAtrs["ry"] = "0";
+// 	edgeRTAtrs["rz"] = "3.1415926535";
+// 	newModel->addEdge(cafetera, cafeteraMesh, "RT", edgeRTAtrs);
+// 
+// 
+// 
+// 	while (true)
+// 	{
+// 		try
+// 		{
+// 			sendModificationProposal(worldModel, newModel,m);
+// 			break;
+// 		}
+// 		catch(const RoboCompAGMExecutive::Locked &e)
+// 		{
+// 			printf("agmexecutive locked...\n");
+// 		}
+// 		catch(const RoboCompAGMExecutive::OldModel &e)
+// 		{
+// 			return;
+// 		}
+// 		catch(const RoboCompAGMExecutive::InvalidChange &e)
+// 		{ 
+// 			exit(1);
+// 		}
+// 		sleep(1);
+// 	}
+// 
+// 	printf("includeInAGM ends\n");
 }
 
 SNGPolylineSeq SpecificWorker::objectInteraction()
 {
-	addObjects();
- 	qDebug()<<"OOOOOOOOOOOOBJECT INTERATION";
-// 	int idx=0;
-// 	while ((objectSymbolId = worldModel->getIdentifierByType("object", idx++)) != -1)
-// 	{
-// 	  
-// 		if (idx > 4) exit(0);
-//                 if (worldModel->getSymbolByIdentifier(objectSymbolId)->getAttribute("imName") == "fridge")
-// 		{	
-// 			
-// 			AGMModelSymbol::SPtr objectParent = worldModel->getParentByLink(objectSymbolId , "RT");
-// 			AGMModelEdge &edgeRT  = worldModel->getEdgeByIdentifiers(objectParent->identifier, objectSymbolId, "RT");
-// 			
-// 			
-// 			object.x = str2float(edgeRT.attributes["tx"]);
-// 			object.z = str2float(edgeRT.attributes["tz"]);
-// 			  
-// 			break;
-// 			
-// 		}
-// 	}
-// 	qDebug()<<"Objeto x"<<object.x<<"Objeto z"<<object.z;
 	
-	
+ 	qDebug()<<"---------1------------";
 	
 	SNGPersonSeq persons;
 
@@ -358,14 +339,21 @@ SNGPolylineSeq SpecificWorker::objectInteraction()
 	if (p6) 	persons.push_back(person6);
 
 	totalpersons=persons; 
-	
-	object.x=3210;
-	object.z=-3720;
-	qDebug()<<"Objeto"<<"Pose x"<<object.x<<"Pose z"<<object.z;
+	qDebug()<<"---------2----------";
+		
+// 	AGMModelSymbol::SPtr objectP = worldModel->getParentByLink(objectSymbolId, "RT");
+// 	AGMModelEdge &edgeRT  = worldModel->getEdgeByIdentifiers(objectP->identifier,objectSymbolId, "RT");
+// 	object.x = str2float(edgeRT.attributes["tx"])/1000;
+// 	object.z = str2float(edgeRT.attributes["tz"])/1000;
+// 			
+// 		
+// 	
+// 
+// 	qDebug()<<"Objeto"<<"Pose x"<<object.x<<"Pose z"<<object.z;
 
 	
 	
-	
+	/*
 	for (auto p: persons)
 	{
 //  	float angleinf= (p.angle - 10)*0.0175;  
@@ -397,7 +385,7 @@ SNGPolylineSeq SpecificWorker::objectInteraction()
 	i++;  
 	}
 	
-	
+	*/
 	return secuencia;
 	
 }
@@ -405,9 +393,12 @@ SNGPolylineSeq SpecificWorker::objectInteraction()
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 {
 	Period = 200;
+
+
+	//ddObjects();
+	
 	timer.start(Period);
 	return true;
-
 }
 
 

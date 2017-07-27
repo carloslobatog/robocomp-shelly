@@ -119,8 +119,10 @@ void SpecificWorker::includeInAGM()
 	newModel->addEdge(person2, personSt, "noReach");
 	newModel->addEdge(person2, personSt, "person");
 	
+	
 	newModel->addEdgeByIdentifiers(person2->identifier, 3, "in");
-
+	
+	
 
 	// Geometric part
 	std::map<std::string, std::string> edgeRTAtrs;

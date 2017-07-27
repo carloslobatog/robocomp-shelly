@@ -25,8 +25,7 @@
 #include <stdio.h>
 #include <vector>
 #include <QFile>
-
-
+#include <innermodel/innermodel.h>
 
 
 //PROBLEMA: con python 3.5 da error al compilar
@@ -88,7 +87,7 @@ public:
 	int32_t robotSymbolId;
 	
 	int32_t objectSymbolId;
-
+	int32_t objectSymbolId1;
 	//BOOL PARA COMPROBAR SI LA PERSONA ESTA EN EL MUNDO
 	bool p1=false;
 	bool p2=false;
@@ -103,7 +102,7 @@ public:
 	bool pp5=false;
 	bool pp6=false;
 
-	RoboCompInnerModelManager::Pose3D pose;
+	//RoboCompInnerModelManager::Pose3D pose;
 	//PARA GUARDAR LOS DATOS EN UN ARCHIVO
 
 	struct Punto {
@@ -173,6 +172,7 @@ private:
 	void setIdentifierOfRobotsLocation(AGMModel::SPtr &worldModel, int32_t identifier);
 
 private:
+	RoboCompInnerModelManager::Pose3D pose;
 	std::string action;
 	ParameterMap params;
 	AGMModel::SPtr worldModel;
