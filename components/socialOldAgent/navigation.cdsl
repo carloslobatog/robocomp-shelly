@@ -4,7 +4,7 @@ import "OmniRobot.idsl";
 import "SocialNavigationGaussian.idsl";
 import "InnerModelManager.idsl";
 
-Component socialOldAgent,
+Component socialOldAgent
 {
 	Communications
 	{
@@ -13,6 +13,6 @@ Component socialOldAgent,
 	};
 	language Cpp;
 	gui Qt(QWidget);
-	options agmagent, innermodelviewer;
+	options agmagent;
 };
 

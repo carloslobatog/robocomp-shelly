@@ -306,7 +306,7 @@ class SpecificWorker(GenericWorker):
         #plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
         if (dibujar):
-            plt.figure()
+           # plt.figure()
             plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
             plt.xlabel('X')
             plt.ylabel('Y')

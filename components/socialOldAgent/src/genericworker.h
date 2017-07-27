@@ -33,6 +33,7 @@
 #include <OmniRobot.h>
 #include <GenericBase.h>
 #include <SocialNavigationGaussian.h>
+#include <InnerModelManager.h>
 #include <agm.h>
 
 #define CHECK_PERIOD 5000
@@ -48,6 +49,7 @@ using namespace RoboCompOmniRobot;
 using namespace RoboCompSocialNavigationGaussian;
 using namespace RoboCompGenericBase;
 using namespace RoboCompAGMExecutive;
+using namespace RoboCompInnerModelManager;
 using namespace RoboCompPlanning;
 using namespace RoboCompLogger;
 using namespace RoboCompAGMCommonBehavior;
@@ -82,10 +84,11 @@ public:
 	bool isActive() { return active; }
 
 
-	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
 	OmniRobotPrx omnirobot_proxy;
 	LoggerPrx logger_proxy;
 	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;
+	InnerModelManagerPrx innermodelmanager_proxy;
+	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 
 	virtual bool reloadConfigAgent() = 0;
