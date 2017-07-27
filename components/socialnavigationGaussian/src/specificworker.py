@@ -19,6 +19,8 @@
 
 import sys, os, traceback, time
 import pickle
+
+import matplotlib.patches as patches
 from PySide import *
 from genericworker import *
 import matplotlib.pyplot as plt
@@ -30,6 +32,7 @@ from scipy.spatial import ConvexHull
 from normal import Normal
 import GaussianMix as GM
 import checkboundaries as ck
+
 import math
 
 
@@ -394,3 +397,41 @@ class SpecificWorker(GenericWorker):
             polylines.append(polyline)
         plt.show()
         return polylines
+
+
+
+    #
+    # getObjectInteraction
+    #
+    def getObjectInteraction(self, persons, objects, d):
+        print("getObjectInteration")
+        ret = []
+        print (objects)
+        plt.figure()
+
+        for o in objects:
+            obj = Person(o.x, o.z, o.angle)
+            rect = plt.Rectangle((obj.x-0.25,obj.y-0.25),0.5,0.5,fill=False)
+            plt.gca().add_patch(rect)
+            x_aux = obj.x + 0.25 * cos(pi / 2 - obj.th);
+            y_aux = obj.y + 0.25 * sin(pi / 2 - obj.th);
+            heading = plt.Line2D((obj.x, x_aux), (obj.y, y_aux), lw=1, color='b')
+            plt.gca().add_line(heading)
+
+            for p in persons:
+
+                pn = Person (p.x, p.z, p.angle)
+                if (d):
+                    body = plt.Circle((pn.x, pn.y), radius=0.3, fill=False)
+                    plt.gca().add_patch(body)
+
+                    x_aux = pn.x + 0.30 * cos(pi / 2 - pn.th);
+                    y_aux = pn.y + 0.30 * sin(pi / 2 - pn.th);
+                    heading = plt.Line2D((pn.x, x_aux), (pn.y, y_aux), lw=1, color='k')
+                    plt.gca().add_line(heading)
+                    plt.axis('equal')
+                    plt.show()
+
+
+        return ret
+

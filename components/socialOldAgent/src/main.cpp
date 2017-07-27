@@ -142,10 +142,10 @@ int ::socialOldAgent::run(int argc, char* argv[])
 	int status=EXIT_SUCCESS;
 
 	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
-	InnerModelManagerPrx innermodelmanager_proxy;
 	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;
-	LoggerPrx logger_proxy;
 	OmniRobotPrx omnirobot_proxy;
+	LoggerPrx logger_proxy;
+	InnerModelManagerPrx innermodelmanager_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 
 	string proxy, tmp;
@@ -167,23 +167,6 @@ int ::socialOldAgent::run(int argc, char* argv[])
 	}
 	rInfo("SocialNavigationGaussianProxy initialized Ok!");
 	mprx["SocialNavigationGaussianProxy"] = (::IceProxy::Ice::Object*)(&socialnavigationgaussian_proxy);//Remote server proxy creation example
-
-
-	try
-	{
-		if (not GenericMonitor::configGetString(communicator(), prefix, "InnerModelManagerProxy", proxy, ""))
-		{
-			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy InnerModelManagerProxy\n";
-		}
-		innermodelmanager_proxy = InnerModelManagerPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
-	}
-	catch(const Ice::Exception& ex)
-	{
-		cout << "[" << PROGRAM_NAME << "]: Exception: " << ex;
-		return EXIT_FAILURE;
-	}
-	rInfo("InnerModelManagerProxy initialized Ok!");
-	mprx["InnerModelManagerProxy"] = (::IceProxy::Ice::Object*)(&innermodelmanager_proxy);//Remote server proxy creation example
 
 
 	try
@@ -218,6 +201,23 @@ int ::socialOldAgent::run(int argc, char* argv[])
 	}
 	rInfo("OmniRobotProxy initialized Ok!");
 	mprx["OmniRobotProxy"] = (::IceProxy::Ice::Object*)(&omnirobot_proxy);//Remote server proxy creation example
+
+
+	try
+	{
+		if (not GenericMonitor::configGetString(communicator(), prefix, "InnerModelManagerProxy", proxy, ""))
+		{
+			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy InnerModelManagerProxy\n";
+		}
+		innermodelmanager_proxy = InnerModelManagerPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
+	}
+	catch(const Ice::Exception& ex)
+	{
+		cout << "[" << PROGRAM_NAME << "]: Exception: " << ex;
+		return EXIT_FAILURE;
+	}
+	rInfo("InnerModelManagerProxy initialized Ok!");
+	mprx["InnerModelManagerProxy"] = (::IceProxy::Ice::Object*)(&innermodelmanager_proxy);//Remote server proxy creation example
 
 
 	try
