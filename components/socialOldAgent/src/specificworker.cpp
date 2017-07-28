@@ -44,6 +44,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	//Dibujar gaussiana
 	connect(gaussiana,SIGNAL(clicked()),this, SLOT(gauss()));
 	connect(por,SIGNAL(clicked()),this, SLOT(gausspor()));
+	connect(objint,SIGNAL(clicked()),this, SLOT(objectInteraction()));
 	//Sacar la pose del robot
 	connect(datos,SIGNAL(clicked()),this, SLOT(grabarfichero()));
 	//trajReader.start(1000);
@@ -148,15 +149,6 @@ SNGPolylineSeq SpecificWorker::gauss(bool dibujar)
 
 	secuencia.clear();
 	secuencia = socialnavigationgaussian_proxy-> getPersonalSpace(persons, valorprox, dibujar);
-/*	
- *
-
-	//Si estan las dos personas en el modelo comprobamos si estan hablando con checkconversation()
-	if (p1 && p2)
-	conversation = checkconversation();
-	else
-	conversation = false;
-	*/
 
 	return secuencia;
 
@@ -202,12 +194,12 @@ void SpecificWorker::addObjects()
 		mesh.pose.x  = mesh.pose.y  = mesh.pose.z  = 0;
 		mesh.pose.rx = M_PIl/2;
 		mesh.pose.ry = 0;
-		mesh.pose.rz = M_PIl;
+		mesh.pose.rz = M_PIl/2;
 		
-		mesh.scaleX = mesh.scaleY = mesh.scaleZ = 20;
+		mesh.scaleX = mesh.scaleY = mesh.scaleZ = 120;
 		mesh.render = 0;
 		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
-		mesh.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/cafe.3ds";
+		mesh.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/cafe1.3DS";
 		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/basics/cube2.3ds";
 		innermodelmanager_proxy->addMesh("objectMesh", "cafetera", mesh);
 	}
@@ -218,6 +210,42 @@ void SpecificWorker::addObjects()
 
 	printf("includeInRCIS ends\n");
 	 
+  /////////////TABLON///////////
+	qDebug()<<"AAAAAAADDDD OOOOOOBBBJEEEECTTTSS";
+	try
+	{	
+		pose.x = 5360;
+		pose.y = 1200;
+		pose.z = -270;
+		pose.rx = 0;
+		pose.ry = M_PIl;
+		pose.rz = 0;
+		innermodelmanager_proxy->addTransform("board", "static", "root", pose);
+
+		RoboCompInnerModelManager::meshType mesh1;
+		mesh1.pose.x  = mesh1.pose.y  = mesh1.pose.z  = 0;
+		mesh1.pose.rx = M_PIl/2;
+		mesh1.pose.ry = 0;
+		mesh1.pose.rz = M_PIl;
+		
+		mesh1.scaleX = mesh1.scaleY = mesh1.scaleZ = 5;
+		mesh1.render = 0;
+		//mesh1.mesh1Path = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
+		mesh1.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/board.3DS";
+		//mesh1.mesh1Path = "/home/robocomp/robocomp/files/osgModels/basics/cube2.3ds";
+		innermodelmanager_proxy->addMesh("objectMesh1", "board", mesh1);
+	}
+	catch (...)
+	{
+		printf("Can't create object\n");
+	}
+
+	printf("includeInRCIS ends\n");
+
+
+	
+	
+	
 // 	static bool first = true;
 // 	if (not first) return;
 // 	first = false;
@@ -322,7 +350,7 @@ void SpecificWorker::addObjects()
 // 	printf("includeInAGM ends\n");
 }
 
-SNGPolylineSeq SpecificWorker::objectInteraction()
+SNGPolylineSeq SpecificWorker::objectInteraction(bool d)
 {
 	
  	qDebug()<<"---------1------------";
@@ -348,9 +376,23 @@ SNGPolylineSeq SpecificWorker::objectInteraction()
 
 	objects.push_back(object);
 	
+	object.x =3.210;
+	object.z =-3.720;
+	object.angle=0;
+	
+	objects.push_back(object);
+	
+	
+	object.x =5.360;
+	object.z =-0.270;
+	object.angle=3.1415926535;
+	
+	objects.push_back(object);
+	
+	
+
 	secuenciaObj.clear();
-	// secuenciaObj = socialnavigationgaussian_proxy-> getObjectInteraction(persons,objects,true);
-	secuenciaObj =socialnavigationgaussian_proxy->getObjectInteraction(persons,objects,true);
+	secuenciaObj =socialnavigationgaussian_proxy->getObjectInteraction(persons,objects,d);
 	
 	qDebug()<<"---------3----------";
 	
@@ -819,36 +861,50 @@ void SpecificWorker::compute( )
 
 	if (movperson){
 	qDebug ("se ha movido alguna pesona, se envia la polilinea");
-		try
-		{
+	try
+	{
 
-		  qDebug()<<"llamamos al trajectory";
-		 // SNGPolylineSeq secuencia=gauss(false);
+		qDebug()<<"llamamos al trajectory";
+		SNGPolylineSeq secuencia = gauss(false);
 		// SNGPolylineSeq secuencia2=gausspor(false);
-		  SNGPolylineSeq secuencia = objectInteraction();
+		SNGPolylineSeq secuenciaobj = objectInteraction(false);
 		 
 		 
 		 RoboCompTrajectoryRobot2D::PolyLineList lista;
 
-		  for(auto s: secuencia2)
-		  {
-		    RoboCompTrajectoryRobot2D::PolyLine poly;
+		 for(auto s: secuencia)
+		 {
+			RoboCompTrajectoryRobot2D::PolyLine poly;
 
-		    for(auto p: s)
+			for(auto p: s)
+			{
+				RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
+				poly.push_back(punto);
 
-		    {
-		      RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
-		      poly.push_back(punto);
-
-		    }
-		    lista.push_back(poly);
+			}
+			lista.push_back(poly);
 		  }
-		  qDebug()<<"llamamos al SetHumanSpace";
+		  
 
-		  trajectoryrobot2d_proxy->setHumanSpace(lista);
-		}
-		catch( const Ice::Exception &e)
-		{ std::cout << e << std::endl;}
+		   for(auto s: secuenciaobj)
+		 {
+			RoboCompTrajectoryRobot2D::PolyLine poly;
+
+			for(auto p: s)
+			{
+				RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
+				poly.push_back(punto);
+
+			}
+			lista.push_back(poly);
+		  }
+		 qDebug()<<"llamamos al SetHumanSpace";
+
+		 trajectoryrobot2d_proxy->setHumanSpace(lista);
+		// trajectoryrobot2d_proxy->setHumanSpace(lista2);
+	}
+	catch( const Ice::Exception &e)
+	{ std::cout << e << std::endl;}
 
 	movperson = false;
 	}

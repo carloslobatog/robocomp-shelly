@@ -229,7 +229,7 @@ class SpecificWorker(GenericWorker):
         self.timer.timeout.connect(self.compute)
         self.Period = 2000
         self.timer.start(self.Period)
-        plt.ion()
+       # plt.ion()
 
     def setParams(self, params):
         # try:
@@ -259,7 +259,7 @@ class SpecificWorker(GenericWorker):
     #
     def getPersonalSpace(self, persons, v, dibujar):
 
-        plt.close("all")
+        plt.close('all')
        ##DESCOMENTAR EL FIGUREEE
        # plt.figure()
 
@@ -351,12 +351,12 @@ class SpecificWorker(GenericWorker):
 
         """
         plt.show()
-        plt.pause(0.05)
+
         return polylines
 
     def getPassOnRight(self, persons, v, dibujar):
 
-        plt.close("all")
+        plt.close('all')
 
 
         lx_inf = -6
@@ -412,28 +412,47 @@ class SpecificWorker(GenericWorker):
     #
     def getObjectInteraction(self, persons, objects, d):
         print("getObjectInteration")
-        ret = []
-        plt.figure('caca')
+        plt.close('all')
 
+        polylines = []
         for o in objects:
+            print ("OBJETO")
 
             obj = Person(o.x, o.z, o.angle)
-            ##para dibujarlo
-            rect = plt.Rectangle((obj.x-0.25,obj.y-0.25),0.5,0.5,fill=False)
 
-            plt.gca().add_patch(rect)
-            x_aux = obj.x + 0.25 * cos(pi / 2 - obj.th);
-            y_aux = obj.y + 0.25 * sin(pi / 2 - obj.th);
-            heading = plt.Line2D((obj.x, x_aux), (obj.y, y_aux), lw=1, color='k')
-            plt.gca().add_line(heading)
+            ##para dibujarlo
+            if (d):
+                plt.figure('ObjectSpace')
+                rect = plt.Rectangle((obj.x-0.25,obj.y-0.25),0.5,0.5,fill=False)
+
+                plt.gca().add_patch(rect)
+                x_aux = obj.x + 0.25 * cos(pi / 2 - obj.th);
+                y_aux = obj.y + 0.25 * sin(pi / 2 - obj.th);
+                heading = plt.Line2D((obj.x, x_aux), (obj.y, y_aux), lw=1, color='k')
+                plt.gca().add_line(heading)
 
             w = 1.0
-            h = 2.0
+            h = 1.5
             print (obj.x,obj.y)
             ##para calcular el rectangulo
-            space = QRectF(QPointF(0, 0), QSize(w, h))
-            space = QPolygonF(space)
-            #space.moveCenter(QPointF(obj.x,obj.y))
+            s = QRectF(QPointF(0, 0), QSize(w, h))
+
+            # if (d):
+            #     plt.plot (s.bottomLeft().x(),s.bottomLeft().y(),"go")
+            #     plt.plot(s.bottomRight().x(), s.bottomRight().y(), "ro")
+            #     plt.plot(s.topRight().x(), s.topRight().y(), "yo")
+            #     plt.plot(s.topLeft().x(), s.topLeft().y(), "bo")
+
+            space = QPolygonF()
+            space.append(s.topLeft())
+            space.append(s.topRight())
+            space.append(QPointF(s.bottomRight().x()+ w/4, s.bottomRight().y()))
+            space.append(QPointF(s.bottomLeft().x()-w/4,s.bottomLeft().y()))
+
+
+            #space = QPolygonF(space.bottomLeft(),space.bottomRight(),space.topRight()+w/2,space.topLeft()+w/2)
+            #space = QPolygonF(space)
+             #space.moveCenter(QPointF(obj.x,obj.y))
 
 
             t = QTransform()
@@ -457,11 +476,12 @@ class SpecificWorker(GenericWorker):
 
             polyline = []
 
-            for x in xrange(space.count() - 1):
+            for x in xrange(space.count() ):
                 point = space.value(x)
                 print("valor", point)
 
-                plt.plot(point.x(), point.y(), "go")
+                if (d):
+                    plt.plot(point.x(), point.y(), "go")
 
                 p = SNGPoint2D()
                 p.x = point.x()
@@ -469,10 +489,8 @@ class SpecificWorker(GenericWorker):
                 polyline.append(p)
 
 
-            polylines = []
-
             for p in persons:
-
+                print("PERSONA")
                 pn = Person (p.x, p.z, p.angle)
                 print ("Pose persona", pn.x, pn.y)
                 if (d):
@@ -488,12 +506,24 @@ class SpecificWorker(GenericWorker):
                 if (space.containsPoint(QPointF(pn.x,pn.y),Qt.OddEvenFill)):
                     print("DENTROOOOO")
                     polylines.append(polyline)
+
                     break
 
                 else:
                     print("FUERAAAAAAA")
 
+
+        if (d):
+            for ps in polylines:
+                #  plt.figure()
+                for p in ps:
+                    plt.plot(p.x, p.z, "ro")
+                    plt.axis('equal')
+                    plt.xlabel('X')
+                    plt.ylabel('Y')
+            plt.show()
         plt.show()
-        plt.pause(0.05)
+
+
 
         return polylines
