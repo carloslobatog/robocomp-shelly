@@ -32,6 +32,9 @@ from scipy.spatial import ConvexHull
 from normal import Normal
 import GaussianMix as GM
 import checkboundaries as ck
+from PySide.QtCore import QRect, QRectF, Qt, QSize, QSizeF, QPointF
+from PySide.QtGui import QTransform, QPainter, QPolygonF
+
 
 import math
 
@@ -118,6 +121,7 @@ class Person(object):
         self.th = th
         self.vel = vel
 
+
     def draw(self, v,sigma_h,sigma_r,sigma_s,rot, drawPersonalSpace=False):
         #numero de curvas de contorno
         nc = 10
@@ -151,6 +155,7 @@ class Person(object):
             ##PROBLEMICA -> a partir de nc> 4 dibuja una linea de menos. Por eso en el caso de que v==100 he puesto que aprox=nc-2
 
             CS = plt.contour(X, Y, Z, nc)
+
 
             dat0 = CS.allsegs[aprox][0]
 
@@ -224,6 +229,7 @@ class SpecificWorker(GenericWorker):
         self.timer.timeout.connect(self.compute)
         self.Period = 2000
         self.timer.start(self.Period)
+        plt.ion()
 
     def setParams(self, params):
         # try:
@@ -345,6 +351,7 @@ class SpecificWorker(GenericWorker):
 
         """
         plt.show()
+        plt.pause(0.05)
         return polylines
 
     def getPassOnRight(self, persons, v, dibujar):
@@ -406,21 +413,68 @@ class SpecificWorker(GenericWorker):
     def getObjectInteraction(self, persons, objects, d):
         print("getObjectInteration")
         ret = []
-        print (objects)
-        plt.figure()
+        plt.figure('caca')
 
         for o in objects:
+
             obj = Person(o.x, o.z, o.angle)
+            ##para dibujarlo
             rect = plt.Rectangle((obj.x-0.25,obj.y-0.25),0.5,0.5,fill=False)
+
             plt.gca().add_patch(rect)
             x_aux = obj.x + 0.25 * cos(pi / 2 - obj.th);
             y_aux = obj.y + 0.25 * sin(pi / 2 - obj.th);
-            heading = plt.Line2D((obj.x, x_aux), (obj.y, y_aux), lw=1, color='b')
+            heading = plt.Line2D((obj.x, x_aux), (obj.y, y_aux), lw=1, color='k')
             plt.gca().add_line(heading)
+
+            w = 1.0
+            h = 2.0
+            print (obj.x,obj.y)
+            ##para calcular el rectangulo
+            space = QRectF(QPointF(0, 0), QSize(w, h))
+            space = QPolygonF(space)
+            #space.moveCenter(QPointF(obj.x,obj.y))
+
+
+            t = QTransform()
+            t.translate(-w/2, 0)
+            space = t.map(space)
+            t = QTransform()
+            t.rotateRadians(-obj.th)
+            space = t.map(space)
+
+            t = QTransform()
+            t.translate(obj.x,obj.y)
+            space = t.map(space)
+
+            # points = []
+            # for x in xrange(space.count()-1):
+            #     point = space.value(x)
+            #     print ("valor", point)
+            #     points.append([point.x(),point.y()])
+            #     plt.plot(point.x(),point.y(),"go")
+
+
+            polyline = []
+
+            for x in xrange(space.count() - 1):
+                point = space.value(x)
+                print("valor", point)
+
+                plt.plot(point.x(), point.y(), "go")
+
+                p = SNGPoint2D()
+                p.x = point.x()
+                p.z = point.y()
+                polyline.append(p)
+
+
+            polylines = []
 
             for p in persons:
 
                 pn = Person (p.x, p.z, p.angle)
+                print ("Pose persona", pn.x, pn.y)
                 if (d):
                     body = plt.Circle((pn.x, pn.y), radius=0.3, fill=False)
                     plt.gca().add_patch(body)
@@ -430,8 +484,16 @@ class SpecificWorker(GenericWorker):
                     heading = plt.Line2D((pn.x, x_aux), (pn.y, y_aux), lw=1, color='k')
                     plt.gca().add_line(heading)
                     plt.axis('equal')
-                    plt.show()
 
+                if (space.containsPoint(QPointF(pn.x,pn.y),Qt.OddEvenFill)):
+                    print("DENTROOOOO")
+                    polylines.append(polyline)
+                    break
 
-        return ret
+                else:
+                    print("FUERAAAAAAA")
 
+        plt.show()
+        plt.pause(0.05)
+
+        return polylines
