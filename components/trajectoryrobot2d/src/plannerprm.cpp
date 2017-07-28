@@ -324,7 +324,6 @@ bool PlannerPRM::updateGraph(LocalPolyLineList Polylines)
 	
 	for (auto poly:Polylines)
 	{
-		
 		QPolygonF qp;					
 		listtoremoveE.clear();
 		//listtoremoveV.clear();

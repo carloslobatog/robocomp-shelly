@@ -150,7 +150,7 @@ public slots:
 	void readTrajState();
 	SNGPolylineSeq gauss(bool dibujar=true);
 	SNGPolylineSeq gausspor(bool dibujar=true);
-	SNGPolylineSeq objectInteraction();
+	SNGPolylineSeq objectInteraction(bool dibujar = true);
 	void addObjects();
 	void cambiarvalor(int valor);
 	void grabarfichero();
