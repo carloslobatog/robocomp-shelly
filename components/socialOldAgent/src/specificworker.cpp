@@ -182,11 +182,12 @@ void SpecificWorker::addObjects()
   //////////cafetera//////////////
 	try
 	{	
-		pose.x = 3550;
+	   
+		pose.x = 450;
 		pose.y = 950;
-		pose.z = 3650;
+		pose.z = -2250;
 		pose.rx = 0;
-		pose.ry = M_PIl;
+		pose.ry = M_PIl/2;
 		pose.rz = 0;
 		innermodelmanager_proxy->addTransform("cafetera", "static", "root", pose);
 
@@ -241,7 +242,40 @@ void SpecificWorker::addObjects()
 	}
 
 	printf("includeInRCIS ends\n");
+	
+////////TELEFONO/////////////
+	qDebug()<<"AAAAAAADDDD OOOOOOBBBJEEEECTTTSS";
+	try
+	{	
+	  
 
+		pose.x = 3000;
+		pose.y = 750;
+		pose.z = 3650;
+		pose.rx = 0;
+		pose.ry = M_PIl;
+		pose.rz = 0;
+		innermodelmanager_proxy->addTransform("phone", "static", "root", pose);
+
+		RoboCompInnerModelManager::meshType mesh2;
+		mesh2.pose.x  = mesh2.pose.y  = mesh2.pose.z  = 0;
+		mesh2.pose.rx = M_PIl/2;
+		mesh2.pose.ry = 0;
+		mesh2.pose.rz = M_PIl;
+		
+		mesh2.scaleX = mesh2.scaleY = mesh2.scaleZ = 30;
+		mesh2.render = 0;
+		//mesh2.mesh2Path = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
+		mesh2.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/phone.3DS";
+		//mesh2.mesh2Path = "/home/robocomp/robocomp/files/osgModels/basics/cube2.3ds";
+		innermodelmanager_proxy->addMesh("objectMesh2", "phone", mesh2);
+	}
+	catch (...)
+	{
+		printf("Can't create object\n");
+	}
+
+	printf("includeInRCIS ends\n");
 
 	
 	
@@ -369,25 +403,33 @@ SNGPolylineSeq SpecificWorker::objectInteraction(bool d)
 	totalpersons=persons; 
 	qDebug()<<"---------2----------";
 	
-	object.x =3.550;
-	object.z =3.650;
-	object.angle=3.1415926535;
+	///cafetera
+	object.x =0.450;
+	object.z =-2.250;
+	object.angle=3.1415926535/2;
 	    
-
 	objects.push_back(object);
-	
+	///nevera
 	object.x =3.210;
 	object.z =-3.720;
 	object.angle=0;
 	
 	objects.push_back(object);
 	
-	
+	///tablon
 	object.x =5.360;
 	object.z =-0.270;
 	object.angle=3.1415926535;
 	
 	objects.push_back(object);
+	
+	///telefono
+	object.x =3.000;
+	object.z =3.650;
+	object.angle=3.1415926535;
+	
+	objects.push_back(object);
+	
 	
 	
 
