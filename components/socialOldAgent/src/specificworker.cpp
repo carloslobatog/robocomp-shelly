@@ -148,7 +148,7 @@ SNGPolylineSeq SpecificWorker::gauss(bool dibujar)
 
 	secuencia.clear();
 	secuencia = socialnavigationgaussian_proxy-> getPersonalSpace(persons, valorprox, dibujar);
-/*
+/*	
  *
 
 	//Si estan las dos personas en el modelo comprobamos si estan hablando con checkconversation()
@@ -157,7 +157,6 @@ SNGPolylineSeq SpecificWorker::gauss(bool dibujar)
 	else
 	conversation = false;
 	*/
-
 
 	return secuencia;
 
@@ -187,38 +186,38 @@ SNGPolylineSeq SpecificWorker::gausspor(bool dibujar)
 
 void SpecificWorker::addObjects()
 {
-//   qDebug()<<"AAAAAAADDDD OOOOOOBBBJEEEECTTTSS";
-//   //////////cafetera//////////////
-// 	try
-// 	{	
-// 		pose.x = 3550;
-// 		pose.y = 950;
-// 		pose.z = 3650;
-// 		pose.rx = 0;
-// 		pose.ry = M_PIl;
-// 		pose.rz = 0;
-// 		innermodelmanager_proxy->addTransform("cafetera", "static", "root", pose);
-// 
-// 		RoboCompInnerModelManager::meshType mesh;
-// 		mesh.pose.x  = mesh.pose.y  = mesh.pose.z  = 0;
-// 		mesh.pose.rx = M_PIl/2;
-// 		mesh.pose.ry = 0;
-// 		mesh.pose.rz = M_PIl;
-// 		
-// 		mesh.scaleX = mesh.scaleY = mesh.scaleZ = 20;
-// 		mesh.render = 0;
-// 		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
-// 		mesh.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/cafe.3ds";
-// 		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/basics/cube2.3ds";
-// 		innermodelmanager_proxy->addMesh("objectMesh", "cafetera", mesh);
-// 	}
-// 	catch (...)
-// 	{
-// 		printf("Can't create object\n");
-// 	}
-// 
-// 	printf("includeInRCIS ends\n");
-// 	 
+  qDebug()<<"AAAAAAADDDD OOOOOOBBBJEEEECTTTSS";
+  //////////cafetera//////////////
+	try
+	{	
+		pose.x = 3550;
+		pose.y = 950;
+		pose.z = 3650;
+		pose.rx = 0;
+		pose.ry = M_PIl;
+		pose.rz = 0;
+		innermodelmanager_proxy->addTransform("cafetera", "static", "root", pose);
+
+		RoboCompInnerModelManager::meshType mesh;
+		mesh.pose.x  = mesh.pose.y  = mesh.pose.z  = 0;
+		mesh.pose.rx = M_PIl/2;
+		mesh.pose.ry = 0;
+		mesh.pose.rz = M_PIl;
+		
+		mesh.scaleX = mesh.scaleY = mesh.scaleZ = 20;
+		mesh.render = 0;
+		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
+		mesh.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/cafe.3ds";
+		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/basics/cube2.3ds";
+		innermodelmanager_proxy->addMesh("objectMesh", "cafetera", mesh);
+	}
+	catch (...)
+	{
+		printf("Can't create object\n");
+	}
+
+	printf("includeInRCIS ends\n");
+	 
 // 	static bool first = true;
 // 	if (not first) return;
 // 	first = false;
@@ -400,7 +399,7 @@ SNGPolylineSeq SpecificWorker::objectInteraction()
 	}
 	
 	*/
-	return secuencia;
+	return secuenciaObj;
 	
 }
 
@@ -409,7 +408,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	Period = 200;
 
 
-	//ddObjects();
+	addObjects();
 	
 	timer.start(Period);
 	return true;
@@ -824,29 +823,29 @@ void SpecificWorker::compute( )
 		{
 
 		  qDebug()<<"llamamos al trajectory";
-		// SNGPolylineSeq secuencia=gauss(false);
+		 // SNGPolylineSeq secuencia=gauss(false);
 		// SNGPolylineSeq secuencia2=gausspor(false);
-		  objectInteraction();
+		  SNGPolylineSeq secuencia = objectInteraction();
 		 
 		 
-// 		 RoboCompTrajectoryRobot2D::PolyLineList lista;
-// 
-// 		  for(auto s: secuencia2)
-// 		  {
-// 		    RoboCompTrajectoryRobot2D::PolyLine poly;
-// 
-// 		    for(auto p: s)
-// 
-// 		    {
-// 		      RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
-// 		      poly.push_back(punto);
-// 
-// 		    }
-// 		    lista.push_back(poly);
-// 		  }
+		 RoboCompTrajectoryRobot2D::PolyLineList lista;
+
+		  for(auto s: secuencia2)
+		  {
+		    RoboCompTrajectoryRobot2D::PolyLine poly;
+
+		    for(auto p: s)
+
+		    {
+		      RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
+		      poly.push_back(punto);
+
+		    }
+		    lista.push_back(poly);
+		  }
 		  qDebug()<<"llamamos al SetHumanSpace";
 
-		  //trajectoryrobot2d_proxy->setHumanSpace(lista);
+		  trajectoryrobot2d_proxy->setHumanSpace(lista);
 		}
 		catch( const Ice::Exception &e)
 		{ std::cout << e << std::endl;}
