@@ -1789,5 +1789,3 @@ void SpecificWorker::sendModificationProposal(AGMModel::SPtr &newModel, AGMModel
 	}
 }
 
-
-
