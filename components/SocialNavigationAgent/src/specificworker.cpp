@@ -157,23 +157,11 @@ void SpecificWorker::savedata()
 
 SNGPolylineSeq SpecificWorker::gauss(bool draw)
 {
-	
-	SNGPersonSeq persons;
-	
-	if (p1) persons.push_back(person1);
-	if (p2)	persons.push_back(person2);
-	if (p3) persons.push_back(person3);
-	if (p4) persons.push_back(person4);
-	if (p5) persons.push_back(person5);
-	if (p6) persons.push_back(person6);
-	
-	totalpersons=persons;
-	
 	sequence.clear();
-	
-	sequence = socialnavigationgaussian_proxy->getPersonalSpace(persons, prox, draw);
-	
+	sequence = socialnavigationgaussian_proxy-> getPersonalSpace(totalp, prox, draw);
+
 	return sequence;
+	
 
 }
 
@@ -286,280 +274,79 @@ void SpecificWorker::compute( )
 	}
  	
 	//Check if the person is in the model
- 	if (p1==false)
+ 	int i = 0;
+	for (auto p:pn)
 	{
-	
- 	int idx=0;
+		if (p==false)
+		{	
 
-		while ((personSymbolIdp1 = worldModel->getIdentifierByType("person1", idx++)) != -1)
-		{
-			if (idx > 4) exit(0);
-			if (worldModel->getSymbolByIdentifier(personSymbolIdp1)->getAttribute("imName") == "fakeperson1")
-			{	
-				p1=true;
-				break;
+			std::string type = "person" + std::to_string(i+1);
+			std::string name = "fakeperson" + std::to_string(i+1);
+			
+			int idx=0;
+			while ((personSymbolId = worldModel->getIdentifierByType(type, idx++)) != -1)
+			{
+				if (idx > 4) exit(0);
+				if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
+				{
+					pSymbolId[i]=personSymbolId;
+					pn[i]=true;
+					
+					break;
+				}
+			  
 			}			
 		}
-	
+		
+		i++;  
 	}
 	
-	if (p2==false)
-	{
-		int idx=0;
-		while ((personSymbolIdp2 = worldModel->getIdentifierByType("person2", idx++)) != -1)
-		{
-
-			if (idx > 4) exit(0);
-			if (worldModel->getSymbolByIdentifier(personSymbolIdp2)->getAttribute("imName") == "fakeperson2")
-			{
-				p2=true;
-				break;
-			}
-		}
-	}
-	
-	if (p3==false)
-	{
-	  
-	int idx=0;		
-		while ((personSymbolIdp3 = worldModel->getIdentifierByType("person3", idx++)) != -1)
-		{
-
-			if (idx > 4) exit(0);
-			if (worldModel->getSymbolByIdentifier(personSymbolIdp3)->getAttribute("imName") == "fakeperson3")
-			{
-				p3=true;
-				break;
-			}
-		}
-	}
-	
-	if (p4==false)
-	{
-	int idx=0;		
-		while ((personSymbolIdp4 = worldModel->getIdentifierByType("person4", idx++)) != -1)
-		{
-
-			if (idx > 4) exit(0);
-			if (worldModel->getSymbolByIdentifier(personSymbolIdp4)->getAttribute("imName") == "fakeperson4")
-			{
-				p4=true;
-				break;
-			}
-		}
-	}
-	
-	if (p5==false)
-	{
-	int idx=0;		
-		while ((personSymbolIdp5 = worldModel->getIdentifierByType("person5", idx++)) != -1)
-		{
-
-			if (idx > 4) exit(0);
-			if (worldModel->getSymbolByIdentifier(personSymbolIdp5)->getAttribute("imName") == "fakeperson5")
-			{
-				p5=true;
-				break;
-			}
-		}
-	}
-	if (p6==false)
-	{
-	int idx=0;		
-		while ((personSymbolIdp6 = worldModel->getIdentifierByType("person6", idx++)) != -1)
-		{
-
-			if (idx > 4) exit(0);
-			if (worldModel->getSymbolByIdentifier(personSymbolIdp6)->getAttribute("imName") == "fakeperson6")
-			{
-				p6=true;
-				break;
-			}
-		}
-	}	
 	
 	//If a person has moved its pose it is updated reading it from the AGM again.
 	
-	if (changepos==true)
+	if (changepos)
 	{
-		
-		if (p1)
-		{			
-			AGMModelSymbol::SPtr personParentp1 = worldModel->getParentByLink(personSymbolIdp1, "RT");
-			AGMModelEdge &edgeRTp1  = worldModel->getEdgeByIdentifiers(personParentp1->identifier, personSymbolIdp1, "RT");
+	  totalp.clear();
+	  totalpersons.clear();
+	  int i = 0;
+	  for (auto p:pn)
+	  {
+		if (p)
+		{
+			AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(pSymbolId[i], "RT");
+			AGMModelEdge &edgeRT = worldModel->getEdgeByIdentifiers(personParent->identifier, pSymbolId[i], "RT");
+			person.x = str2float(edgeRT.attributes["tx"])/1000;
+			person.z = str2float(edgeRT.attributes["tz"])/1000;
+			person.angle = str2float(edgeRT.attributes["ry"]);
+// 			person.vel=str2float(edgeRT.attributes["velocity"]);			
+			totalpersons.push_back(person);		
 			
-			person1.x = str2float(edgeRTp1.attributes["tx"])/1000;
-			person1.z = str2float(edgeRTp1.attributes["tz"])/1000;
-			person1.angle = str2float(edgeRTp1.attributes["ry"]);
-			//person1.vel=str2float(edgeRTp1.attributes["velocity"]);
-			
-			//qDebug()<<"Velocity"<<person1.vel;
-			
-		
-			if (first)
-			{
-				personaux1=person1;
-				movperson=true;
-			}
-			
-			else
-			{
-				if  (movperson==false)
-				{
-					if ((personaux1.x!=person1.x)||(personaux1.z!=person1.z)||(personaux1.angle!=person1.angle))
-						movperson = true;
-				}
-				
-				personaux1=person1;
-			}		
-					
-	
+// 			if(person.vel>0)
+// 				ppn[i]=true;
+//				totalpmov.push_back(person);
+// 			else
+// 				ppn[i]=false;
+				totalp.push_back(person);		
 		}
 		
-		if (p2)
+		if (first)
 		{
-			AGMModelSymbol::SPtr personParentP2 = worldModel->getParentByLink(personSymbolIdp2, "RT");
-			AGMModelEdge &edgeRTp2  = worldModel->getEdgeByIdentifiers(personParentP2->identifier, personSymbolIdp2, "RT");
-			
-			person2.x=str2float(edgeRTp2.attributes["tx"])/1000;
-			person2.z=str2float(edgeRTp2.attributes["tz"])/1000;
-			person2.angle=str2float(edgeRTp2.attributes["ry"]);
-			
-	
-			if (first)
-			{
-				personaux2=person2;
-				movperson=true;
-			}
-			
+			totalaux.push_back(person);
+			movperson=true;
+		}
 			else
-			{
-				if  (movperson==false)
-				{
-					if ((personaux2.x!=person2.x)||(personaux2.z!=person2.z)||(personaux2.angle!=person2.angle))
-						movperson = true;
-				}
-				
-				personaux2=person2;
-			}	
+		{
+			if  (movperson==false){
+				if ((totalaux[i].x!=person.x)||(totalaux[i].z!=person.z)||(totalaux[i].angle!=person.angle))
+					movperson = true;
+			}
 
-		}	
-		
-		if (p3)
-		{
-			AGMModelSymbol::SPtr personParentP3 = worldModel->getParentByLink(personSymbolIdp3, "RT");
-			AGMModelEdge &edgeRTp3  = worldModel->getEdgeByIdentifiers(personParentP3->identifier, personSymbolIdp3, "RT");
-			
-			person3.x=str2float(edgeRTp3.attributes["tx"])/1000;
-			person3.z=str2float(edgeRTp3.attributes["tz"])/1000;
-			person3.angle=str2float(edgeRTp3.attributes["ry"]);
-			
-		
-			if (first)
-			{
-				personaux3=person3;
-				movperson=true;
-			}
-			
-			else
-			{
-				if  (movperson==false)
-				{
-					if ((personaux3.x!=person3.x)||(personaux3.z!=person3.z)||(personaux3.angle!=person3.angle))
-						movperson = true;
-				}
-				
-				personaux3=person3;
-			}
-			
-						
+			totalaux[i]=person;
 		}
-			
- 		if (p4)
-		{
-			AGMModelSymbol::SPtr personParentP4 = worldModel->getParentByLink(personSymbolIdp4, "RT");
-			AGMModelEdge &edgeRTp4  = worldModel->getEdgeByIdentifiers(personParentP4->identifier, personSymbolIdp4, "RT");
-			
-			person4.x=str2float(edgeRTp4.attributes["tx"])/1000;
-			person4.z=str2float(edgeRTp4.attributes["tz"])/1000;
-			person4.angle=str2float(edgeRTp4.attributes["ry"]);
-			
+		
+		i++;
+	  }
 	
-			if (first)
-			{
-				personaux4=person4;
-				movperson=true;
-			}
-			
-			else
-			{
-				if  (movperson==false)
-				{
-					if ((personaux4.x!=person4.x)||(personaux4.z!=person4.z)||(personaux4.angle!=person4.angle))
-						movperson = true;
-				}
-				
-				personaux4=person4;
-			}
-				
-		}
- 			
- 		if (p5)
-		{
-			AGMModelSymbol::SPtr personParentP5 = worldModel->getParentByLink(personSymbolIdp5, "RT");
-			AGMModelEdge &edgeRTp5  = worldModel->getEdgeByIdentifiers(personParentP5->identifier, personSymbolIdp5, "RT");
-			
-			person5.x=str2float(edgeRTp5.attributes["tx"])/1000;
-			person5.z=str2float(edgeRTp5.attributes["tz"])/1000;
-			person5.angle=str2float(edgeRTp5.attributes["ry"]);
-			
-			if (first)
-			{
-				personaux5=person5;
-				movperson=true;
-			}
-			
-			else
-			{
-				if  (movperson==false)
-				{
-					if ((personaux5.x!=person5.x)||(personaux5.z!=person5.z)||(personaux5.angle!=person5.angle))
-						movperson = true;
-				}
-				
-				personaux5=person5;
-			}
-		}	
-			
-		if (p6)
-		{
-			AGMModelSymbol::SPtr personParentP6 = worldModel->getParentByLink(personSymbolIdp6, "RT");
-			AGMModelEdge &edgeRTp6  = worldModel->getEdgeByIdentifiers(personParentP6->identifier, personSymbolIdp6, "RT");
-			
-			person6.x=str2float(edgeRTp6.attributes["tx"])/1000;
-			person6.z=str2float(edgeRTp6.attributes["tz"])/1000;
-			person6.angle=str2float(edgeRTp6.attributes["ry"]);
-		
-			if (first)
-			{
-				personaux6=person6;
-				movperson=true;
-			}
-			
-			else
-			{
-				if  (movperson==false)
-				{
-					if ((personaux6.x!=person6.x)||(personaux6.z!=person6.z)||(personaux6.angle!=person6.angle))
-						movperson = true;
-				}
-				
-				personaux6=person6;
-			}
-			
-		}
-			
-			
 			
 		robotSymbolId = worldModel->getIdentifierByType("robot");
 		AGMModelSymbol::SPtr robotparent = worldModel->getParentByLink(robotSymbolId, "RT");

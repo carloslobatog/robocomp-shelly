@@ -58,49 +58,35 @@ public:
 
 	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
 	SNGPersonSeq totalpersons; //este es para leer el fichero
-	SNGPerson person1;
-	SNGPerson person2;
-	SNGPerson person3;
-	SNGPerson person4;
-	SNGPerson person5;
-	SNGPerson person6;
+
 	SNGPerson robot;
 	
 	SNGPerson object;
 	//estas guardaran la posicion anterior de cada persona, para comprobar si se ha movido
-	SNGPerson personaux1;
-	SNGPerson personaux2;
-	SNGPerson personaux3;
-	SNGPerson personaux4;
-	SNGPerson personaux5;
-	SNGPerson personaux6;
+
 	//bool para saber si se ha movido alguna persona
 	bool movperson = false;
 
 	//PARA ALMACENAR EL SIMBOLO DE LA PERSONA AL LEERLA DEL MUNDO
-	int32_t personSymbolIdp1;
-	int32_t personSymbolIdp2;
-	int32_t personSymbolIdp3;
-	int32_t personSymbolIdp4;
-	int32_t personSymbolIdp5;
-	int32_t personSymbolIdp6;
+	
 	int32_t robotSymbolId;
+	
+	//chaaaanges
+	bool pn[6] = {false,false,false,false,false,false};
+	bool ppn[6] = {false,false,false,false,false,false};
+	int32_t personSymbolId;
+	int32_t pSymbolId[6];
+	SNGPerson person;
+	SNGPerson personaux;
+	SNGPersonSeq totalp;
+	SNGPersonSeq totalpmov;
+	SNGPersonSeq totalaux;
+	
 	
 	int32_t objectSymbolId;
 	int32_t objectSymbolId1;
 	//BOOL PARA COMPROBAR SI LA PERSONA ESTA EN EL MUNDO
-	bool p1=false;
-	bool p2=false;
-	bool p3=false;
-	bool p4=false;
-	bool p5=false;
-	bool p6=false;
-  bool pp1=false;
-	bool pp2=false;
-	bool pp3=false;
-	bool pp4=false;
-	bool pp5=false;
-	bool pp6=false;
+
 
 	//RoboCompInnerModelManager::Pose3D pose;
 	//PARA GUARDAR LOS DATOS EN UN ARCHIVO
