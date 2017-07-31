@@ -156,6 +156,54 @@ StateStruct SpecificWorker::getAgentState()
 	return s;
 }
 
+NavState SpecificWorker::getState()
+{
+//implementCODE
+
+}
+
+float SpecificWorker::goBackwards(const TargetPose &target)
+{
+//implementCODE
+
+}
+
+void SpecificWorker::stop()
+{
+//implementCODE
+
+}
+
+void SpecificWorker::setHumanSpace(const PolyLineList &polyList)
+{
+//implementCODE
+
+}
+
+float SpecificWorker::goReferenced(const TargetPose &target, const float xRef, const float zRef, const float threshold)
+{
+//implementCODE
+
+}
+
+float SpecificWorker::changeTarget(const TargetPose &target)
+{
+//implementCODE
+
+}
+
+float SpecificWorker::go(const TargetPose &target)
+{
+//implementCODE
+
+}
+
+void SpecificWorker::mapBasedTarget(const NavigationParameterMap &parameters)
+{
+//implementCODE
+
+}
+
 void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World &w)
 {
 //subscribesToCODE

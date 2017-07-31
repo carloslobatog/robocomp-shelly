@@ -25,14 +25,12 @@
 #include <stdio.h>
 #include <vector>
 #include <QFile>
-
-
+#include "pathfinder.h"
 
 
 //PROBLEMA: con python 3.5 da error al compilar
 
 #include <innermodel/innermodel.h>
-
 #include <boost/format.hpp>
 
 #define THRESHOLD 40
@@ -45,9 +43,8 @@
 class SpecificWorker : public GenericWorker
 {
 Q_OBJECT
-public:
-  
-    
+
+public:  
 	SpecificWorker(MapPrx& mprx);
 	~SpecificWorker();
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
@@ -115,9 +112,9 @@ public:
 
 	int i = 0;
 	
-	//////////////
+	///////////////////////////////////////////////////////////////////////////
 	/// SERVANTS
-	//////////////
+	//////////////////////////////////////////////////////////////////////////
 	bool activateAgent(const ParameterMap& prs);
 	bool deactivateAgent();
 	StateStruct getAgentState();
@@ -135,6 +132,16 @@ public:
 
 	//double agaussian(SNGPerson person, float x, float y);
 
+	NavState getState(){ return NavState(); };
+	float goBackwards(const TargetPose &target){};
+	void stop(){};
+	void setHumanSpace(const PolyLineList &polyList){};
+	float goReferenced(const TargetPose &target, const float xRef, const float zRef, const float threshold){ pathfinder.go(target.x, target.z); };
+	float changeTarget(const TargetPose &target){};
+	void mapBasedTarget(const NavigationParameterMap &parameters){};
+	float go(const TargetPose &target){ pathfinder.go(target.x, target.z); };
+
+	
 public slots:
  	void compute();
 	void readTrajState();
@@ -148,13 +155,8 @@ private:
 	bool active;
 	void sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel,std::string m);
 	void includeMovementInRobotSymbol(AGMModelSymbol::SPtr robot);
-
-	
-
-	
 	void go(float x, float z, float alpha=0, bool rot=false, float xRef=0, float zRef=0, float threshold=200);
-	void stop();
-
+	void stopL();
 	void actionExecution();
 	int32_t getIdentifierOfRobotsLocation(AGMModel::SPtr &worldModel);
 	void setIdentifierOfRobotsLocation(AGMModel::SPtr &worldModel, int32_t identifier);
@@ -166,19 +168,16 @@ private:
 	InnerModel *innerModel;
 	bool haveTarget;
 	QTimer trajReader;
-	
 	InnerModel *inner;
 	AGMModel::SPtr world;	
-
 	RoboCompTrajectoryRobot2D::NavState planningState;
-
-
 	// Target info
 	RoboCompTrajectoryRobot2D::TargetPose currentTarget;
+	Path::PathFinder pathfinder;
+	
 	
 	void manageReachedPose();
 	float distanceToNode(std::string reference_name, AGMModel::SPtr model, AGMModelSymbol::SPtr object);
-private:
 	void action_WaitingToAchieve();
 	void action_Stop(bool newAction = true);
 	void action_ReachPose(bool newAction = true);

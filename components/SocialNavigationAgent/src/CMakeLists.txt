@@ -27,6 +27,7 @@ SET ( SOURCES
   genericworker.cpp
   specificworker.cpp
   agmcommonbehaviorI.cpp
+  trajectoryrobot2dI.cpp
   agmexecutivetopicI.cpp
 )
 

@@ -47,6 +47,14 @@ public:
 	int uptimeAgent();
 	bool deactivateAgent();
 	StateStruct getAgentState();
+	NavState getState();
+	float goBackwards(const TargetPose &target);
+	void stop();
+	void setHumanSpace(const PolyLineList &polyList);
+	float goReferenced(const TargetPose &target, const float xRef, const float zRef, const float threshold);
+	float changeTarget(const TargetPose &target);
+	float go(const TargetPose &target);
+	void mapBasedTarget(const NavigationParameterMap &parameters);
 	void structuralChange(const RoboCompAGMWorldModel::World &w);
 	void edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &modifications);
 	void edgeUpdated(const RoboCompAGMWorldModel::Edge &modification);
