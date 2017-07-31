@@ -411,15 +411,15 @@ class SpecificWorker(GenericWorker):
     # getObjectInteraction
     #
     def getObjectInteraction(self, persons, objects, d):
+
         print("getObjectInteration")
         plt.close('all')
 
         polylines = []
+
         for o in objects:
-            print ("OBJETO")
-
             obj = Person(o.x, o.z, o.angle)
-
+            print("OBJETO")
             ##para dibujarlo
             if (d):
                 plt.figure('ObjectSpace')
@@ -450,11 +450,6 @@ class SpecificWorker(GenericWorker):
             space.append(QPointF(s.bottomLeft().x()-w/4,s.bottomLeft().y()))
 
 
-            #space = QPolygonF(space.bottomLeft(),space.bottomRight(),space.topRight()+w/2,space.topLeft()+w/2)
-            #space = QPolygonF(space)
-             #space.moveCenter(QPointF(obj.x,obj.y))
-
-
             t = QTransform()
             t.translate(-w/2, 0)
             space = t.map(space)
@@ -478,8 +473,6 @@ class SpecificWorker(GenericWorker):
 
             for x in xrange(space.count() ):
                 point = space.value(x)
-                print("valor", point)
-
                 if (d):
                     plt.plot(point.x(), point.y(), "go")
 
@@ -490,10 +483,9 @@ class SpecificWorker(GenericWorker):
 
 
             for p in persons:
+                pn = Person(p.x, p.z, p.angle)
                 print("PERSONA")
-                pn = Person (p.x, p.z, p.angle)
-                print ("Pose persona", pn.x, pn.y)
-                if (d):
+                if d:
                     body = plt.Circle((pn.x, pn.y), radius=0.3, fill=False)
                     plt.gca().add_patch(body)
 
@@ -503,14 +495,34 @@ class SpecificWorker(GenericWorker):
                     plt.gca().add_line(heading)
                     plt.axis('equal')
 
-                if (space.containsPoint(QPointF(pn.x,pn.y),Qt.OddEvenFill)):
-                    print("DENTROOOOO")
+
+                ##CHECKING THE ORIENTATION
+                a = abs(obj.th - abs(pn.th-math.pi))
+                if a < math.radians(45):
+                    checkangle = True
+                else:
+                    checkangle = False
+
+
+                # ang = abs(pn.th - math.pi)
+                # print(thrinf, thrsup, ang)
+                # if thrinf < ang and ang < thrsup:
+                #     checkangle = True
+                #     print ("MIRANDOOOOOO")
+
+                # else:
+                #     print ("NO MIRAAAAA")
+                #     checkangle = False
+
+                ##CHECKING IF THE PERSON IS INSIDE THE POLYGON
+                if space.containsPoint(QPointF(pn.x,pn.y),Qt.OddEvenFill) and checkangle:
+                    print("DENTROOOOO Y MIRANDO")
                     polylines.append(polyline)
 
                     break
 
                 else:
-                    print("FUERAAAAAAA")
+                    print("FUERA O NO MIRANDO")
 
 
         if (d):
