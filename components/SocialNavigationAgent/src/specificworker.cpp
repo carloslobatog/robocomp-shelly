@@ -70,8 +70,11 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	timer.start(Period);
 	//this->params = params;
 	
-	// WATCH OUT, innerModel not initialized yet!!!!!!!!!!!
 	pathfinder.initialize(innerModel, this->params, params);
+	
+	// WATCH OUT, innerModel not initialized yet!!!!!!!!!!!
+	// We need to block pathfinder requests until properly initialized
+	
 	
 	return true;
 }
@@ -1687,7 +1690,6 @@ void SpecificWorker::edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &mod
 {	//qDebug()<<"edgesUpdated";
 	changepos=true;
 	QMutexLocker lockIM(mutex);
-	
 	
 	for (auto modification : modifications)
 	{
