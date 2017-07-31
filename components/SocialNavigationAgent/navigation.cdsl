@@ -9,6 +9,7 @@ Component SocialNavigationAgent
 	{
 		requires TrajectoryRobot2D, OmniRobot, SocialNavigationGaussian;
 		publishes Logger;
+		implements TrajectoryRobot2D;
 	};
 	language Cpp;
 	gui Qt(QWidget);

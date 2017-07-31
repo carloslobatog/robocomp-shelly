@@ -83,9 +83,9 @@ public:
 
 
 	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;
-	LoggerPrx logger_proxy;
-	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
 	OmniRobotPrx omnirobot_proxy;
+	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
+	LoggerPrx logger_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 
 	virtual bool reloadConfigAgent() = 0;
@@ -96,6 +96,14 @@ public:
 	virtual int uptimeAgent() = 0;
 	virtual bool deactivateAgent() = 0;
 	virtual StateStruct getAgentState() = 0;
+	virtual NavState getState() = 0;
+	virtual float goBackwards(const TargetPose &target) = 0;
+	virtual void stop() = 0;
+	virtual void setHumanSpace(const PolyLineList &polyList) = 0;
+	virtual float goReferenced(const TargetPose &target, const float xRef, const float zRef, const float threshold) = 0;
+	virtual float changeTarget(const TargetPose &target) = 0;
+	virtual float go(const TargetPose &target) = 0;
+	virtual void mapBasedTarget(const NavigationParameterMap &parameters) = 0;
 	virtual void structuralChange(const RoboCompAGMWorldModel::World &w) = 0;
 	virtual void edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &modifications) = 0;
 	virtual void edgeUpdated(const RoboCompAGMWorldModel::Edge &modification) = 0;

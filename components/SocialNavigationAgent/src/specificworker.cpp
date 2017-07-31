@@ -17,32 +17,27 @@
  *    along with RoboComp.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- #include "specificworker.h"
+#include "specificworker.h"
 #include <../trajectoryrobot2d/src/innermodeldraw.h>
- #include <math.h> 
+#include <math.h> 
 
+#define PI 3.14159265
 
- #define PI 3.14159265
 
 /**
 * \brief Default constructor
 */
 
-
 SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 {
-	
 	active = false;
-	active = false;
-	
+	active = false;	
 	worldModel = AGMModel::SPtr(new AGMModel());
 	worldModel->name = "worldModel";
 	innerModel = new InnerModel();
 	haveTarget = false;
 
 // 	world = AGMModel::SPtr(new AGMModel());
-	
-	
 	
 	//Timed slot to read TrajectoryRobot2D state
 	connect(&trajReader, SIGNAL(timeout()), this, SLOT(readTrajState()));
@@ -55,7 +50,6 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	//SLIDER
 	connect (proximidad,SIGNAL(valueChanged(int)),this,SLOT(changevalue(int)));
 	//connect (proximidad,SIGNAL(sliderMoved()),this,SLOT(sliderM()));
-	
 	
 	proximidad->QSlider::setMinimum (0);
 	proximidad->QSlider::setMaximum (100);	
@@ -74,193 +68,19 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 {
 	Period = 200;
 	timer.start(Period);
+	//this->params = params;
+	
+	// WATCH OUT, innerModel not initialized yet!!!!!!!!!!!
+	pathfinder.initialize(innerModel, this->params, params);
 	
 	return true;
-	
 }
 
 /**
-* \brief Change the slider's value
+* \brief Check if persons are included in the AGM. 
+* Then, their pose is stored.
+* Everytime a person has moved, its position is updated
 */
-
-void SpecificWorker::changevalue(int value)
-{
-	prox=value;
-	qDebug()<<"Proximity"<<prox;
-	
-}
-
-/**
-* \brief This is for saving in txt files different informations (robotpose,personpose,polylines and dist)
-*/
-
-void SpecificWorker::savedata()
-{
-	
-	qDebug("Saving in robotpose.txt the robot's pose");
-  	ofstream file("robotpose.txt", ofstream::out);
-	for (auto p:poserobot)
-	{
-		file<< p.x << " " <<p.z<< endl;
-	}
-	file.close();
-	
-	qDebug("Saving in personpose.txt the human's poses");
-  	ofstream file2("personpose.txt", ofstream::out);
-	for (auto person:totalpersons)
-	{
-		file2<< person.x << " " <<person.z<<" "<<person.angle<< endl;
-	}
-	file2.close();	
-	poserobot.clear();
-	
-	
-	qDebug("Saving poly.txt la polilinea");
-  	ofstream file3("poly.txt", ofstream::out);
-	
-	for (auto s:sequence)
-	{
-		for (auto p: s)
-		{
-			file3<< p.x << " " <<p.z<<" "<< endl;
-		}
-	}
-	file3.close();	
-	
-	qDebug()<<"Saving in dist.txt the total distance"<<totaldist;
-  	ofstream file4("dist.txt", ofstream::out);
-	file4<< totaldist << endl;
-	totaldist = 0;
-	file4.close();
-
-	/////Guardar cada polilinea por separado
-	int i = 0;
-	for (auto s:sequence)
-	{
-		QString name = QString("polyline")+QString::number(i,10)+QString(".txt");
-		ofstream file5(name.toUtf8().constData(), ofstream::out);
-		for (auto p: s)
-		{
-			file5<< p.x << " " <<p.z<<" "<< endl;
-		}
-		i++;
-		file5.close();
-	}
-
-}
-
-/**
-* \brief If the person is in the model it is added to a vector of persons wich is sent to the socialnavigationGaussian
-* to model its personal space. 
-* The function returns a sequence of polylines.
-*/
-
-SNGPolylineSeq SpecificWorker::gauss(bool draw)
-{
-	
-	SNGPersonSeq persons;
-	
-	if (p1) persons.push_back(person1);
-	if (p2)	persons.push_back(person2);
-	if (p3) persons.push_back(person3);
-	if (p4) persons.push_back(person4);
-	if (p5) persons.push_back(person5);
-	if (p6) persons.push_back(person6);
-	
-	totalpersons=persons;
-	
-	sequence.clear();
-	
-	sequence = socialnavigationgaussian_proxy->getPersonalSpace(persons, prox, draw);
-	
-	return sequence;
-
-}
-
-/**
-* \brief The innerModel is extracted from the AGM and the polylines are inserted on it as a set of planes.
-*/
-
-void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq){
-    
-QMutexLocker locker(mutex);
-qDebug() << __FUNCTION__ << "UpdadeInnerModel";
-
-
-//EXTRACT INNERMODEL	
-	innerModel = AGMInner::extractInnerModel(worldModel, "world", false);
-		
-//INSERT POLYLINES
-	
-	int count = 0;
-	
-	for (auto s:seq)
-	{
-	
-		auto previousPoint = s[s.size()-1];
-		
-		for (auto currentPoint:s)
-		{
-			QString name = QString("polyline_obs_")+QString::number(count,10);
-			//qDebug() << __FUNCTION__ << "nombre"<<name;
-			QVec ppoint = QVec::vec3(previousPoint.x*1000, 1000, previousPoint.z*1000);
-			QVec cpoint = QVec::vec3(currentPoint.x*1000, 1000, currentPoint.z*1000);
-			QVec center = (cpoint + ppoint).operator*(0.5);
-			
-			QVec normal = (cpoint-ppoint);
-			float dist=normal.norm2();	
-			float temp = normal(2);
-			normal(2) = normal(0);
-			normal(0) = -temp;
-		
-			
-			if (innerModel->getNode(name))
-			{
-				try
-				{
-					innerModel->removeNode(name);
-				}
-				  
-				catch(QString es){ qDebug() << "EXCEPCION" << es;}
-			}
-			
-	
-			InnerModelNode *parent = innerModel->getNode(QString("world"));			
-			if (parent == NULL)
-				printf("%s: parent not exists\n", __FUNCTION__);
-			else
-			{			
-				InnerModelPlane *plane;
-				try
-				{
-					plane  = innerModel->newPlane(name, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
-					parent->addChild(plane); 
-		
-				}
-				catch(QString es)
-				{ qDebug() << "EXCEPCION" << es;}
-
-			}
-
-			count++;
-			previousPoint=currentPoint;
-		}
-	}
-	
-	if (i==3) innerModel->save("innerInicio.xml"); 
-	if (i==50) innerModel->save("innerfinal.xml"); 
-		
-	i++;
-}
-
-
-
-/**
-* \brief Check if persons are included in the AGM. Then, is stored its pose.
-* Everytime a person has moved its position is updated
-*/
-
-
 void SpecificWorker::compute( )
 {
 	static bool first=true;
@@ -268,29 +88,26 @@ void SpecificWorker::compute( )
 	{	
 		qLog::getInstance()->setProxy("both", logger_proxy);
 		rDebug2(("navigationAgent started"));
-		
 	}
 
 	if (worldModel->getIdentifierByType("robot") < 0)
 	{ 
 		try 
 		{
-			qDebug()<<"Leo el mundo";
+			//qDebug()<<"Leo el mundo";
 			agmexecutive_proxy->broadcastModel();		
 			return;
 		}
 		catch(...)
 		{
-			printf("The executive is probably not running, waiting for first AGM model publication...");
+			//printf("The executive is probably not running, waiting for first AGM model publication...");
 		}	
 	}
  	
 	//Check if the person is in the model
  	if (p1==false)
 	{
-	
- 	int idx=0;
-
+		int idx=0;
 		while ((personSymbolIdp1 = worldModel->getIdentifierByType("person1", idx++)) != -1)
 		{
 			if (idx > 4) exit(0);
@@ -300,7 +117,6 @@ void SpecificWorker::compute( )
 				break;
 			}			
 		}
-	
 	}
 	
 	if (p2==false)
@@ -308,7 +124,6 @@ void SpecificWorker::compute( )
 		int idx=0;
 		while ((personSymbolIdp2 = worldModel->getIdentifierByType("person2", idx++)) != -1)
 		{
-
 			if (idx > 4) exit(0);
 			if (worldModel->getSymbolByIdentifier(personSymbolIdp2)->getAttribute("imName") == "fakeperson2")
 			{
@@ -320,11 +135,9 @@ void SpecificWorker::compute( )
 	
 	if (p3==false)
 	{
-	  
-	int idx=0;		
+		int idx=0;		
 		while ((personSymbolIdp3 = worldModel->getIdentifierByType("person3", idx++)) != -1)
 		{
-
 			if (idx > 4) exit(0);
 			if (worldModel->getSymbolByIdentifier(personSymbolIdp3)->getAttribute("imName") == "fakeperson3")
 			{
@@ -336,7 +149,7 @@ void SpecificWorker::compute( )
 	
 	if (p4==false)
 	{
-	int idx=0;		
+		int idx=0;		
 		while ((personSymbolIdp4 = worldModel->getIdentifierByType("person4", idx++)) != -1)
 		{
 
@@ -378,11 +191,10 @@ void SpecificWorker::compute( )
 		}
 	}	
 	
-	//If a person has moved its pose it is updated reading it from the AGM again.
 	
+	//If a person has moved its pose it is updated reading it from the AGM again.
 	if (changepos==true)
 	{
-		
 		if (p1)
 		{			
 			AGMModelSymbol::SPtr personParentp1 = worldModel->getParentByLink(personSymbolIdp1, "RT");
@@ -392,10 +204,8 @@ void SpecificWorker::compute( )
 			person1.z = str2float(edgeRTp1.attributes["tz"])/1000;
 			person1.angle = str2float(edgeRTp1.attributes["ry"]);
 			//person1.vel=str2float(edgeRTp1.attributes["velocity"]);
-			
 			//qDebug()<<"Velocity"<<person1.vel;
 			
-		
 			if (first)
 			{
 				personaux1=person1;
@@ -409,11 +219,8 @@ void SpecificWorker::compute( )
 					if ((personaux1.x!=person1.x)||(personaux1.z!=person1.z)||(personaux1.angle!=person1.angle))
 						movperson = true;
 				}
-				
 				personaux1=person1;
 			}		
-					
-	
 		}
 		
 		if (p2)
@@ -559,8 +366,6 @@ void SpecificWorker::compute( )
 			
 		}
 			
-			
-			
 		robotSymbolId = worldModel->getIdentifierByType("robot");
 		AGMModelSymbol::SPtr robotparent = worldModel->getParentByLink(robotSymbolId, "RT");
 		AGMModelEdge &edgeRTrobot  = worldModel->getEdgeByIdentifiers(robotparent->identifier, robotSymbolId, "RT");
@@ -568,77 +373,231 @@ void SpecificWorker::compute( )
 		robot.x=str2float(edgeRTrobot.attributes["tx"])/1000;
 		robot.z=str2float(edgeRTrobot.attributes["tz"])/1000;
 		robot.angle=str2float(edgeRTrobot.attributes["ry"]);
-	
-		
+
 		point.x=robot.x;
 		point.z=robot.z;
 		 
 		if (poserobot.size()==0)
 			poserobot.push_back(point);
 	  
-		else if ((poserobot[poserobot.size()-1].x!=point.x)||(poserobot[poserobot.size()-1].z!=point.z))
-		  
-		  {  
-		    float  dist=sqrt((point.x - poserobot[poserobot.size()-1].x)*(point.x - poserobot[poserobot.size()-1].x)
-		    +(point.z - poserobot[poserobot.size()-1].z)*(point.z - poserobot[poserobot.size()-1].z));
+		else if ((poserobot[poserobot.size()-1].x!=point.x)||(poserobot[poserobot.size()-1].z!=point.z))		  
+		{  
+		  float  dist=sqrt((point.x - poserobot[poserobot.size()-1].x)*(point.x - poserobot[poserobot.size()-1].x)
+				+(point.z - poserobot[poserobot.size()-1].z)*(point.z - poserobot[poserobot.size()-1].z));
 		    
-		    totaldist=totaldist + dist;
+		  totaldist=totaldist + dist;
+		  qDebug()<<"Distancia calculada"<<dist<<"Distancia total"<<totaldist;
 		    
- 		    qDebug()<<"Distancia calculada"<<dist<<"Distancia total"<<totaldist;
-		    
-		    poserobot.push_back(point);
-		    
-		  }
-		  
-		 	    
+		  poserobot.push_back(point);  
+		}		 	    
 		first = false;
-		changepos=false;
-		
+		changepos=false;	
 	}
 	
-		  
-	
-	if (movperson){
-		qDebug ("A person has moved. Calling trajectory");
-		
+	if (movperson)
+	{
+		qDebug ("A person has moved. Calling trajectory");	
 		try
 		{ 
 		 SNGPolylineSeq seq = gauss(false);
 		 UpdateInnerModel(seq);
+		 RoboCompTrajectoryRobot2D::PolyLineList list;
 		  
-		
-		  RoboCompTrajectoryRobot2D::PolyLineList list;
-		  
-		  for(auto s: seq)
-		  {
-		    RoboCompTrajectoryRobot2D::PolyLine poly;
-		   
-		    for(auto p: s)
-		      
-		    {
-		      RoboCompTrajectoryRobot2D::PointL pointT = {p.x, p.z};
-		      poly.push_back(pointT);
-		
-		    }
-		    list.push_back(poly);
-		  }
-	
-
+		 for(auto s: seq)
+		 {
+		   RoboCompTrajectoryRobot2D::PolyLine poly; 
+		   for(auto p: s)   
+		   {
+		     RoboCompTrajectoryRobot2D::PointL pointT = {p.x, p.z};
+		     poly.push_back(pointT);
+		   }
+		   list.push_back(poly);
+		 }
 		//  trajectoryrobot2d_proxy->setHumanSpace(list);
 		}
 		catch( const Ice::Exception &e)
-		{ std::cout << e << std::endl;}
-		
+		{ std::cout << e << std::endl;}		
 	movperson = false;
 	}	
 				
-			
-
 	//actionExecution();
-		
 }	 	
 	
 
+/**
+* \brief Change the slider's value
+*/
+
+void SpecificWorker::changevalue(int value)
+{
+	prox=value;
+	qDebug()<<"Proximity"<<prox;
+	
+}
+
+/**
+* \brief This is for saving in txt files different informations (robotpose,personpose,polylines and dist)
+*/
+
+void SpecificWorker::savedata()
+{
+	
+	qDebug("Saving in robotpose.txt the robot's pose");
+  	ofstream file("robotpose.txt", ofstream::out);
+	for (auto p:poserobot)
+	{
+		file<< p.x << " " <<p.z<< endl;
+	}
+	file.close();
+	
+	qDebug("Saving in personpose.txt the human's poses");
+  	ofstream file2("personpose.txt", ofstream::out);
+	for (auto person:totalpersons)
+	{
+		file2<< person.x << " " <<person.z<<" "<<person.angle<< endl;
+	}
+	file2.close();	
+	poserobot.clear();
+	
+	
+	qDebug("Saving poly.txt la polilinea");
+  	ofstream file3("poly.txt", ofstream::out);
+	
+	for (auto s:sequence)
+	{
+		for (auto p: s)
+		{
+			file3<< p.x << " " <<p.z<<" "<< endl;
+		}
+	}
+	file3.close();	
+	
+	qDebug()<<"Saving in dist.txt the total distance"<<totaldist;
+  	ofstream file4("dist.txt", ofstream::out);
+	file4<< totaldist << endl;
+	totaldist = 0;
+	file4.close();
+
+	/////Guardar cada polilinea por separado
+	int i = 0;
+	for (auto s:sequence)
+	{
+		QString name = QString("polyline")+QString::number(i,10)+QString(".txt");
+		ofstream file5(name.toUtf8().constData(), ofstream::out);
+		for (auto p: s)
+		{
+			file5<< p.x << " " <<p.z<<" "<< endl;
+		}
+		i++;
+		file5.close();
+	}
+
+}
+
+/**
+* \brief If the person is in the model it is added to a vector of persons wich is sent to the socialnavigationGaussian
+* to model its personal space. 
+* The function returns a sequence of polylines.
+*/
+
+SNGPolylineSeq SpecificWorker::gauss(bool draw)
+{
+	
+	SNGPersonSeq persons;
+	
+	if (p1) persons.push_back(person1);
+	if (p2)	persons.push_back(person2);
+	if (p3) persons.push_back(person3);
+	if (p4) persons.push_back(person4);
+	if (p5) persons.push_back(person5);
+	if (p6) persons.push_back(person6);
+	
+	totalpersons=persons;
+	
+	sequence.clear();
+	
+	sequence = socialnavigationgaussian_proxy->getPersonalSpace(persons, prox, draw);
+	
+	return sequence;
+
+}
+
+/**
+* \brief The innerModel is extracted from the AGM and the polylines are inserted on it as a set of planes.
+*/
+
+void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq)
+{
+    
+QMutexLocker locker(mutex);
+qDebug() << __FUNCTION__ << "UpdadeInnerModel";
+
+
+//EXTRACT INNERMODEL	
+	innerModel = AGMInner::extractInnerModel(worldModel, "world", false);
+		
+//INSERT POLYLINES
+	
+	int count = 0;
+	
+	for (auto s:seq)
+	{
+	
+		auto previousPoint = s[s.size()-1];
+		
+		for (auto currentPoint:s)
+		{
+			QString name = QString("polyline_obs_")+QString::number(count,10);
+			//qDebug() << __FUNCTION__ << "nombre"<<name;
+			QVec ppoint = QVec::vec3(previousPoint.x*1000, 1000, previousPoint.z*1000);
+			QVec cpoint = QVec::vec3(currentPoint.x*1000, 1000, currentPoint.z*1000);
+			QVec center = (cpoint + ppoint).operator*(0.5);
+			
+			QVec normal = (cpoint-ppoint);
+			float dist=normal.norm2();	
+			float temp = normal(2);
+			normal(2) = normal(0);
+			normal(0) = -temp;
+		
+			
+			if (innerModel->getNode(name))
+			{
+				try
+				{
+					innerModel->removeNode(name);
+				}
+				  
+				catch(QString es){ qDebug() << "EXCEPCION" << es;}
+			}
+			
+	
+			InnerModelNode *parent = innerModel->getNode(QString("world"));			
+			if (parent == NULL)
+				printf("%s: parent not exists\n", __FUNCTION__);
+			else
+			{			
+				InnerModelPlane *plane;
+				try
+				{
+					plane  = innerModel->newPlane(name, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
+					parent->addChild(plane); 
+		
+				}
+				catch(QString es)
+				{ qDebug() << "EXCEPCION" << es;}
+
+			}
+
+			count++;
+			previousPoint=currentPoint;
+		}
+	}
+	
+	if (i==3) innerModel->save("innerInicio.xml"); 
+	if (i==50) innerModel->save("innerfinal.xml"); 
+		
+	i++;
+}	
 	
 
 /**
@@ -720,6 +679,7 @@ void SpecificWorker::action_HandObject_leave(bool newAction)
 		printf("Can't stop the robot!!\n");
 	}
 }
+
 void SpecificWorker::action_DetectPerson(bool newAction)
 {
 
@@ -740,9 +700,9 @@ void SpecificWorker::action_DetectPerson(bool newAction)
 
 }
 
-//////////
-// Slot
-//////////
+/////////////////////////////////////////////////////////////
+// Slots
+/////////////////////////////////////////////////////////////
 
 void SpecificWorker::readTrajState()
 {
@@ -942,7 +902,7 @@ void SpecificWorker::action_HandObject_Offer(bool newAction)
 						return;
 					}
 					printf("ask the platform to stop\n");
-					stop();
+					stopL();
 				}
 			}
 			catch(...)
@@ -1071,7 +1031,7 @@ void SpecificWorker::action_SetObjectReach(bool newAction)
 						return;
 					}
 					printf("ask the platform to stop\n");
-					stop();
+					stopL();
 				}
 			}
 			catch(...)
@@ -1359,7 +1319,7 @@ void SpecificWorker::action_ChangeRoom(bool newAction)
 		printf("trying to get _in_ edge from %d to %d\n", symbols["robot"]->identifier, symbols["r2"]->identifier);
 		AGMModelEdge e = worldModel->getEdge(symbols["robot"], symbols["r2"], "in");
 		printf("STOP! WE ALREADY GOT THERE!\n");
-		stop();
+		stopL();
 		return;
 	}
 	catch(...)
@@ -1409,7 +1369,7 @@ void SpecificWorker::action_ChangeRoom(bool newAction)
 
 void SpecificWorker::action_Stop(bool newAction)
 {
-	stop();
+	stopL();
 }
 
 void SpecificWorker::action_ReachPose(bool newAction)
@@ -1461,7 +1421,7 @@ void SpecificWorker::action_ReachPose(bool newAction)
 
 void SpecificWorker::action_FindObjectVisuallyInTable(bool newAction)
 {
-// 	stop();
+// 	stopL();
 
 
 	static float lastX = std::numeric_limits<float>::quiet_NaN();
@@ -1535,7 +1495,7 @@ void SpecificWorker::action_NoAction(bool newAction)
 		if (state != "IDLE")
 		{
 			printf("trajectoryrobot2d state : %s\n", state.c_str());
-			stop();
+			stopL();
 		}
 	}catch(...)
 	{
@@ -1592,7 +1552,7 @@ void SpecificWorker::go(float x, float z, float alpha, bool rot, float xRef, flo
 }
 
 
-void SpecificWorker::stop()
+void SpecificWorker::stopL()
 {
 	try
 	{
