@@ -60,9 +60,10 @@ public:
 	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
 	SNGPersonSeq totalpersons; //este es para leer el fichero
 	SNGPerson robot;
-	
-	bool pn[6] = {false,false,false,false,false,false}; // to check if the person is in the world 
-	bool ppn[6] = {false,false,false,false,false,false}; // if the person is moving
+	// to check if the person is in the world
+	vector <bool> pn = {false,false,false,false,false,false};  
+	// if the person is moving
+	vector <bool> ppn = {false,false,false,false,false,false};  
 	int32_t personSymbolId;
 	int32_t pSymbolId[6];
 	SNGPerson person;

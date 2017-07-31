@@ -274,10 +274,9 @@ void SpecificWorker::compute( )
 	}
  	
 	//Check if the person is in the model
- 	int i = 0;
-	for (auto p:pn)
+ 	for (int i=0;i<pn.size();i++)
 	{
-		if (p==false)
+		if (pn[i]==false)
 		{	
 
 			std::string type = "person" + std::to_string(i+1);
@@ -298,7 +297,7 @@ void SpecificWorker::compute( )
 			}			
 		}
 		
-		i++;  
+
 	}
 	
 	
@@ -307,14 +306,14 @@ void SpecificWorker::compute( )
 	if (changepos)
 	{
 	  totalp.clear();
+	  totalpmov.clear();
 	  totalpersons.clear();
-	  int i = 0;
-	  for (auto p:pn)
-	  {
-		if (p)
+	 for (int ind=0;ind<pn.size();ind++)
+	 {
+		if (pn[ind])
 		{
-			AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(pSymbolId[i], "RT");
-			AGMModelEdge &edgeRT = worldModel->getEdgeByIdentifiers(personParent->identifier, pSymbolId[i], "RT");
+			AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(pSymbolId[ind], "RT");
+			AGMModelEdge &edgeRT = worldModel->getEdgeByIdentifiers(personParent->identifier, pSymbolId[ind], "RT");
 			person.x = str2float(edgeRT.attributes["tx"])/1000;
 			person.z = str2float(edgeRT.attributes["tz"])/1000;
 			person.angle = str2float(edgeRT.attributes["ry"]);
@@ -322,10 +321,10 @@ void SpecificWorker::compute( )
 			totalpersons.push_back(person);		
 			
 // 			if(person.vel>0)
-// 				ppn[i]=true;
+// 				ppn[ind]=true;
 //				totalpmov.push_back(person);
 // 			else
-// 				ppn[i]=false;
+// 				ppn[ind]=false;
 				totalp.push_back(person);		
 		}
 		
@@ -343,8 +342,7 @@ void SpecificWorker::compute( )
 
 			totalaux[i]=person;
 		}
-		
-		i++;
+
 	  }
 	
 			
@@ -384,12 +382,12 @@ void SpecificWorker::compute( )
 	}
 	
 		  
-	
 	if (movperson){
 		qDebug ("A person has moved. Calling trajectory");
 		
 		try
 		{ 
+		 
 		 SNGPolylineSeq seq = gauss(false);
 		 UpdateInnerModel(seq);
 		  
@@ -1613,4 +1611,3 @@ void SpecificWorker::sendModificationProposal(AGMModel::SPtr &newModel, AGMModel
 		exit(1);
 	}
 }
-

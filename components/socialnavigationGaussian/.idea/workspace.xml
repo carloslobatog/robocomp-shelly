@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/src/specificworker.py" description="            # points = []&#10;            # for x in x..." line="471" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="fa36ea70-3279-405c-90f6-1bb252189711" name="Default" comment="" />
     <ignored path="socialnavigationGaussian.iws" />
@@ -44,7 +47,7 @@
         <entry file="file://$PROJECT_DIR$/src/specificworker.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="694">
-              <caret line="528" column="24" lean-forward="true" selection-start-line="528" selection-start-column="24" selection-end-line="528" selection-end-column="24" />
+              <caret line="509" column="39" lean-forward="true" selection-start-line="509" selection-start-column="39" selection-end-line="509" selection-end-column="39" />
               <folding>
                 <element signature="e#735#766#0" expanded="true" />
               </folding>
@@ -110,6 +113,7 @@
       <find>points</find>
       <find>plt.plot</find>
       <find>plt.figure</find>
+      <find>valor</find>
     </findStrings>
     <replaceStrings>
       <replace>pn</replace>
@@ -159,7 +163,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -202,6 +205,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -439,7 +443,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="4" />
+      <option name="time" value="6" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -700,7 +704,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="57" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -723,7 +726,7 @@
     <entry file="file://$PROJECT_DIR$/src/specificworker.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="694">
-          <caret line="528" column="24" lean-forward="true" selection-start-line="528" selection-start-column="24" selection-end-line="528" selection-end-column="24" />
+          <caret line="509" column="39" lean-forward="true" selection-start-line="509" selection-start-column="39" selection-end-line="509" selection-end-column="39" />
           <folding>
             <element signature="e#735#766#0" expanded="true" />
           </folding>

@@ -72,8 +72,11 @@ public:
 	int32_t robotSymbolId;
 	
 	//chaaaanges
-	bool pn[6] = {false,false,false,false,false,false};
-	bool ppn[6] = {false,false,false,false,false,false};
+	//bool pn[6] = {};
+	//bool ppn[6] = {};
+	vector <bool> pn = {false,false,false,false,false,false}; 
+	vector <bool> ppn = {false,false,false,false,false,false}; 
+	
 	int32_t personSymbolId;
 	int32_t pSymbolId[6];
 	SNGPerson person;

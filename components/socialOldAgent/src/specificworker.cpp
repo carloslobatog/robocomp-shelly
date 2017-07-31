@@ -652,10 +652,12 @@ void SpecificWorker::compute( )
 // 	}
 // 	}
 	
-	int i = 0;
-	for (auto p:pn)
+	
+	
+	for (int i=0;i<pn.size();i++)
 	{
-		if (p==false)
+		
+		if (pn[i]==false)
 		{	
 
 			std::string type = "person" + std::to_string(i+1);
@@ -669,28 +671,28 @@ void SpecificWorker::compute( )
 				{
 					pSymbolId[i]=personSymbolId;
 					pn[i]=true;
-					
+					cambiopos = true;
 					break;
 				}
 			  
 			}			
 		}
-		
-		i++;  
+		 
 	}
 	
 	
 	if (cambiopos)
 	{
 	  totalp.clear();
+	  totalpmov.clear();
 	  totalpersons.clear();
-	  int i = 0;
-	  for (auto p:pn)
+
+	  for (int ind=0;ind<pn.size();ind++)
 	  {
-		if (p)
+		if (pn[ind])
 		{
-			AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(pSymbolId[i], "RT");
-			AGMModelEdge &edgeRT = worldModel->getEdgeByIdentifiers(personParent->identifier, pSymbolId[i], "RT");
+			AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(pSymbolId[ind], "RT");
+			AGMModelEdge &edgeRT = worldModel->getEdgeByIdentifiers(personParent->identifier, pSymbolId[ind], "RT");
 			person.x = str2float(edgeRT.attributes["tx"])/1000;
 			person.z = str2float(edgeRT.attributes["tz"])/1000;
 			person.angle = str2float(edgeRT.attributes["ry"]);
@@ -704,9 +706,7 @@ void SpecificWorker::compute( )
 //				totalpmov.push_back(person);
 // 			else
 // 				ppn[i]=false;
-				totalp.push_back(person);
-				
-			
+				totalp.push_back(person);							
 		}
 		
 		if (first)
@@ -714,19 +714,14 @@ void SpecificWorker::compute( )
 			totalaux.push_back(person);
 			movperson=true;
 		}
-			else
+		else if  (movperson==false)
 		{
-			if  (movperson==false){
-				if ((totalaux[i].x!=person.x)||(totalaux[i].z!=person.z)||(totalaux[i].angle!=person.angle))
-					movperson = true;
-			}
-
-			totalaux[i]=person;
+			if ((totalaux[ind].x!=person.x)or(totalaux[ind].z!=person.z)or(totalaux[ind].angle!=person.angle))
+				movperson = true;
+			
+			totalaux[ind]=person;
 		}
-		
-		
-	
-		i++;
+
 	  }
 	
 	
@@ -2268,119 +2263,3 @@ void SpecificWorker::sendModificationProposal(AGMModel::SPtr &newModel, AGMModel
 }
 
 
-
-
-/* NOT BEING USED NOW CHECK TO ELIMINATE IN FUTURE
-void SpecificWorker::updateRobotsCognitiveLocation()
-{
-	// If the polygons are not set yet, there's nothing to do...
-	if (roomsPolygons.size()==0)
-		return;
-
-	// Get current location according to the model, if the location is not set yet, there's nothing to do either
-	const int32_t currentLocation = getIdentifierOfRobotsLocation(worldModel);
-	if (currentLocation == -1) return;
-
-	// Compute the robot's location according to the odometry and the set of polygons
-	// If we can't find the room where the robot is, we assume it didn't change, so there's nothing else to do
-	int32_t newLocation = -1;
-	for (auto &kv : roomsPolygons)
-	{
-		if (kv.second.containsPoint(QPointF(bState.x,  bState.z), Qt::OddEvenFill))
-		{
-			newLocation = kv.first;
-			break;
-		}
-	}
-	if (newLocation == -1) return;
-
-	// If everyting is ok AND the robot changed its location, update the new location in the model and
-	// propose the change to the executive
-	if (newLocation != currentLocation and newLocation != -1)
-	{
-		AGMModel::SPtr newModel(new AGMModel(worldModel));
-		setIdentifierOfRobotsLocation(newModel, newLocation);
-// 		AGMModelPrinter::printWorld(newModel);
-		rDebug2(("navigationAgent moved from room %d to room %d") % currentLocation % newLocation );
-		sendModificationProposal(worldModel, newModel);
-	}
-}
-
-
-std::map<int32_t, QPolygonF> SpecificWorker::extractPolygonsFromModel(AGMModel::SPtr &worldModel)
-{
-	std::map<int32_t, QPolygonF> ret;
-
-	for (AGMModel::iterator symbol_itRR=worldModel->begin(); symbol_itRR!=worldModel->end(); symbol_itRR++)
-	{
-		const AGMModelSymbol::SPtr &symbolRR = *symbol_itRR;
-		if (symbolRR->symbolType == "robot")
-		{
-			for (AGMModelSymbol::iterator edge_itRR=symbolRR->edgesBegin(worldModel); edge_itRR!=symbolRR->edgesEnd(worldModel); edge_itRR++)
-			{
-				AGMModelEdge edgeRR = *edge_itRR;
-				if (edgeRR.linking == "know")
-				{
-					const AGMModelSymbol::SPtr &symbol = worldModel->getSymbol(edgeRR.symbolPair.first);
-					if (symbol->symbolType == "object")
-					{
-						printf("object: %d\n", symbol->identifier);
-						for (AGMModelSymbol::iterator edge_it=symbol->edgesBegin(worldModel); edge_it!=symbol->edgesEnd(worldModel); edge_it++)
-						{
-							AGMModelEdge edge = *edge_it;
-							if (edge.linking == "room")
-							{
-								const QString polygonString = QString::fromStdString(symbol->getAttribute("polygon"));
-								const QStringList coords = polygonString.split(";");
-								printf("  it is a room\n");
-								qDebug() << " " << coords.size() << " ___ " << polygonString ;
-								if (coords.size() < 3)
-								{
-									qDebug() << coords.size() << " ___ " << polygonString ;
-									qDebug() << polygonString;
-									for (int32_t i=0; i<coords.size(); i++)
-										qDebug() << coords[i];
-									qFatal("ABORT %s %d", __FILE__, __LINE__);
-								}
-
-								QVector<QPointF> points;
-								for (int32_t ci=0; ci<coords.size(); ci++)
-								{
-									const QString &pointStr = coords[ci];
-									if (pointStr.size() < 5) qFatal("%s %d", __FILE__, __LINE__);
-									const QStringList coords2 = pointStr.split(",");
-									if (coords2.size() < 2) qFatal("%s %d", __FILE__, __LINE__);
-									QString a = coords2[0];
-									QString b = coords2[1];
-									a.remove(0,1);
-									b.remove(b.size()-1,1);
-									float x = a.toFloat();
-									float z = b.toFloat();
-									points.push_back(QPointF(x, z));
-								}
-								if (points.size() < 3) qFatal("%s %d", __FILE__, __LINE__);
-								ret[symbol->identifier] = QPolygonF(points);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	return ret;
-}*/
-
-
-
-/*
-
-void SpecificWorker::action_GraspObject(bool newAction)
-{
-	std::string state = trajectoryrobot2d_proxy->getState().state;
-	printf("action_GraspObject: %s\n", state.c_str());
-	if (state != "IDLE")
-		trajectoryrobot2d_proxy->stop();
-}
-
-*/
