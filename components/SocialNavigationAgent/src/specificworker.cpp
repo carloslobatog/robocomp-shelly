@@ -79,168 +79,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 
 }
 
-/**
-* \brief Change the slider's value
-*/
 
-void SpecificWorker::changevalue(int value)
-{
-	prox=value;
-	qDebug()<<"Proximity"<<prox;
-	
-}
-
-/**
-* \brief This is for saving in txt files different informations (robotpose,personpose,polylines and dist)
-*/
-
-void SpecificWorker::savedata()
-{
-	
-	qDebug("Saving in robotpose.txt the robot's pose");
-  	ofstream file("robotpose.txt", ofstream::out);
-	for (auto p:poserobot)
-	{
-		file<< p.x << " " <<p.z<< endl;
-	}
-	file.close();
-	
-	qDebug("Saving in personpose.txt the human's poses");
-  	ofstream file2("personpose.txt", ofstream::out);
-	for (auto person:totalpersons)
-	{
-		file2<< person.x << " " <<person.z<<" "<<person.angle<< endl;
-	}
-	file2.close();	
-	poserobot.clear();
-	
-	
-	qDebug("Saving poly.txt la polilinea");
-  	ofstream file3("poly.txt", ofstream::out);
-	
-	for (auto s:sequence)
-	{
-		for (auto p: s)
-		{
-			file3<< p.x << " " <<p.z<<" "<< endl;
-		}
-	}
-	file3.close();	
-	
-	qDebug()<<"Saving in dist.txt the total distance"<<totaldist;
-  	ofstream file4("dist.txt", ofstream::out);
-	file4<< totaldist << endl;
-	totaldist = 0;
-	file4.close();
-
-	/////Guardar cada polilinea por separado
-	int i = 0;
-	for (auto s:sequence)
-	{
-		QString name = QString("polyline")+QString::number(i,10)+QString(".txt");
-		ofstream file5(name.toUtf8().constData(), ofstream::out);
-		for (auto p: s)
-		{
-			file5<< p.x << " " <<p.z<<" "<< endl;
-		}
-		i++;
-		file5.close();
-	}
-
-}
-
-/**
-* \brief If the person is in the model it is added to a vector of persons wich is sent to the socialnavigationGaussian
-* to model its personal space. 
-* The function returns a sequence of polylines.
-*/
-
-SNGPolylineSeq SpecificWorker::gauss(bool draw)
-{
-	sequence.clear();
-	sequence = socialnavigationgaussian_proxy-> getPersonalSpace(totalp, prox, draw);
-
-	return sequence;
-	
-
-}
-
-/**
-* \brief The innerModel is extracted from the AGM and the polylines are inserted on it as a set of planes.
-*/
-
-void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq)
-{
-    
-	QMutexLocker locker(mutex);
-	qDebug() << __FUNCTION__ << "UpdadeInnerModel";
-
-
-//EXTRACT INNERMODEL	
-	innerModel = AGMInner::extractInnerModel(worldModel, "world", false);
-		
-//INSERT POLYLINES
-	
-	int count = 0;
-	
-	for (auto s:seq)
-	{
-	
-		auto previousPoint = s[s.size()-1];
-		
-		for (auto currentPoint:s)
-		{
-			QString name = QString("polyline_obs_")+QString::number(count,10);
-			//qDebug() << __FUNCTION__ << "nombre"<<name;
-			QVec ppoint = QVec::vec3(previousPoint.x*1000, 1000, previousPoint.z*1000);
-			QVec cpoint = QVec::vec3(currentPoint.x*1000, 1000, currentPoint.z*1000);
-			QVec center = (cpoint + ppoint).operator*(0.5);
-			
-			QVec normal = (cpoint-ppoint);
-			float dist=normal.norm2();	
-			float temp = normal(2);
-			normal(2) = normal(0);
-			normal(0) = -temp;
-		
-			
-			if (innerModel->getNode(name))
-			{
-				try
-				{
-					innerModel->removeNode(name);
-				}
-				  
-				catch(QString es){ qDebug() << "EXCEPCION" << es;}
-			}
-			
-	
-			InnerModelNode *parent = innerModel->getNode(QString("world"));			
-			if (parent == NULL)
-				printf("%s: parent not exists\n", __FUNCTION__);
-			else
-			{			
-				InnerModelPlane *plane;
-				try
-				{
-					plane  = innerModel->newPlane(name, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
-					parent->addChild(plane); 
-		
-				}
-				catch(QString es)
-				{ qDebug() << "EXCEPCION" << es;}
-
-			}
-
-			count++;
-			previousPoint=currentPoint;
-		}
-	}
-	
-	if (i==3) innerModel->save("innerInicio.xml"); 
-	if (i==50) innerModel->save("innerfinal.xml"); 
-		
-	i++;
-}
 
 /**
 * \brief Check if persons are included in the AGM. 
@@ -407,7 +246,6 @@ void SpecificWorker::changevalue(int value)
 	qDebug()<<"Proximity"<<prox;
 	
 }
-
 /**
 * \brief This is for saving in txt files different informations (robotpose,personpose,polylines and dist)
 */
@@ -467,6 +305,7 @@ void SpecificWorker::savedata()
 
 }
 
+
 /**
 * \brief If the person is in the model it is added to a vector of persons wich is sent to the socialnavigationGaussian
 * to model its personal space. 
@@ -475,25 +314,14 @@ void SpecificWorker::savedata()
 
 SNGPolylineSeq SpecificWorker::gauss(bool draw)
 {
-	
-	SNGPersonSeq persons;
-	
-	if (p1) persons.push_back(person1);
-	if (p2)	persons.push_back(person2);
-	if (p3) persons.push_back(person3);
-	if (p4) persons.push_back(person4);
-	if (p5) persons.push_back(person5);
-	if (p6) persons.push_back(person6);
-	
-	totalpersons=persons;
-	
 	sequence.clear();
-	
-	sequence = socialnavigationgaussian_proxy->getPersonalSpace(persons, prox, draw);
-	
+	sequence = socialnavigationgaussian_proxy-> getPersonalSpace(totalp, prox, draw);
+
 	return sequence;
+	
 
 }
+
 
 /**
 * \brief The innerModel is extracted from the AGM and the polylines are inserted on it as a set of planes.
