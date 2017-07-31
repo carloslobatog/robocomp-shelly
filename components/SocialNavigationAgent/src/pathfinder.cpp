@@ -17,7 +17,7 @@
 
 #include "pathfinder.h"
 
-using namespace Path;
+using namespace robocomp::pathfinder;
 
 PathFinder::PathFinder()
 {}
@@ -42,30 +42,31 @@ void PathFinder::initialize( InnerModel *innerModel, const RoboCompAGMCommonBeha
 //////////////////////////////////////
 	/// Initialize sampler of free space
 	/////////////////////////////////////
-	sampler.initialize(innerModel, localparams);
+	try
+	{ sampler.initialize(innerModel, localparams); } catch(const std::exception &ex) { throw ex;	}
 
-	///////////////////
-	/// Planner
-	///////////////////
+	////////////////////////////////////
+	/// Initialize the Planner
+	////////////////////////////////////
 	//plannerPRM.initialize(&sampler, params);  
 	
-	///////////////////
-	/// Initializes the elastic band structure "road"
-	///////////////////
+	////////////////////////////////////
+	/// Initialize the elastic road
+	////////////////////////////////////
 	road.initialize(innerModel, localparams);
 
-	///////////////////
-	/// This object creates and maintains the road (elastic band) adapting it to the real world using a laser device
-	///////////////////
+	/////////////////////////////////////
+	/// Initialize the Projector
+	////////////////////////////////////
 	//elasticband.initialize( params);
 
 	//////////////////////////////////////////////////////////////////////////
-	/// Low level controller that drives the robot on the road
+	/// Initialize the low level controller that drives the robot on the road
 	/// by computing VAdv and VRot from the relative position wrt to the local road
 	/////////////////////////////////////////////////////////////////////////////////
 	//controller = new Controller(innerModel, laserData, params, 2 );
 
-	qDebug() << __FUNCTION__ << "All objects initialized";
+	std::cout << __FUNCTION__ << "All objects initialized" << std::endl;
 	
 }
 

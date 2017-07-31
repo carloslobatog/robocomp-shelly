@@ -34,7 +34,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	active = false;	
 	worldModel = AGMModel::SPtr(new AGMModel());
 	worldModel->name = "worldModel";
-	innerModel = new InnerModel();
+	innerModel = nullptr;
 	haveTarget = false;
 
 // 	world = AGMModel::SPtr(new AGMModel());
@@ -70,13 +70,23 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	timer.start(Period);
 	//this->params = params;
 	
+	try
+	{
+		RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
+		structuralChange(w);
+		qDebug() << __FUNCTION__ << "Extracting InnerModel";	
+		innerModel = AGMInner::extractInnerModel(worldModel, "world", false);
+		}
+	catch(...)
+	{
+		printf("SetParams: The executive is probably not running, waiting for first AGM model publication...");
+	}
+	if( innerModel == nullptr)
+			qFatal("SetParams: InnerModel could not be read from Executive");
+	
 	pathfinder.initialize(innerModel, this->params, params);
-	
-	// WATCH OUT, innerModel not initialized yet!!!!!!!!!!!
-	// We need to block pathfinder requests until properly initialized
-	
-	return true;
 
+	return true;
 }
 
 
@@ -95,6 +105,7 @@ void SpecificWorker::compute( )
 		rDebug2(("navigationAgent started"));
 	}
 
+	qDebug() << "compute";
 	if (worldModel->getIdentifierByType("robot") < 0)
 	{ 
 		try 
@@ -104,9 +115,9 @@ void SpecificWorker::compute( )
 			return;
 		}
 		catch(...)
-		{
-			//printf("The executive is probably not running, waiting for first AGM model publication...");
-		}	
+		{	
+			//printf("The executive is probably not running, waiting for first AGM model publication...");	}	
+		}
 	}
  	
 	//Check if the person is in the model
@@ -115,7 +126,6 @@ void SpecificWorker::compute( )
 
 		if (pn[i]==false)
 		{	
-
 			std::string type = "person" + std::to_string(i+1);
 			std::string name = "fakeperson" + std::to_string(i+1);
 			
@@ -209,26 +219,26 @@ void SpecificWorker::compute( )
 	{
 		qDebug ("A person has moved. Calling trajectory");		
 		try
-		{ 
-		 
-		 SNGPolylineSeq seq = gauss(false);
-		 UpdateInnerModel(seq);
-		 RoboCompTrajectoryRobot2D::PolyLineList list;
-		  
-		 for(auto s: seq)
-		 {
-		   RoboCompTrajectoryRobot2D::PolyLine poly; 
-		   for(auto p: s)   
-		   {
-		     RoboCompTrajectoryRobot2D::PointL pointT = {p.x, p.z};
-		     poly.push_back(pointT);
-		   }
-		   list.push_back(poly);
-		 }
-		//  trajectoryrobot2d_proxy->setHumanSpace(list);
+		{  
+			SNGPolylineSeq seq = gauss(false);
+			UpdateInnerModel(seq);
+			RoboCompTrajectoryRobot2D::PolyLineList list;
+			for(auto s: seq)
+			{
+				RoboCompTrajectoryRobot2D::PolyLine poly; 
+				for(auto p: s)   
+				{
+					RoboCompTrajectoryRobot2D::PointL pointT = {p.x, p.z};
+					poly.push_back(pointT);
+				}
+				list.push_back(poly);
+			}
+			//  trajectoryrobot2d_proxy->setHumanSpace(list);
 		}
 		catch( const Ice::Exception &e)
-		{ std::cout << e << std::endl;}		
+		{ 
+			std::cout << e << std::endl;
+		}		
 	movperson = false;
 	}	
 				
@@ -244,7 +254,6 @@ void SpecificWorker::changevalue(int value)
 {
 	prox=value;
 	qDebug()<<"Proximity"<<prox;
-	
 }
 /**
 * \brief This is for saving in txt files different informations (robotpose,personpose,polylines and dist)
@@ -315,11 +324,8 @@ void SpecificWorker::savedata()
 SNGPolylineSeq SpecificWorker::gauss(bool draw)
 {
 	sequence.clear();
-	sequence = socialnavigationgaussian_proxy-> getPersonalSpace(totalp, prox, draw);
-
+	//sequence = socialnavigationgaussian_proxy-> getPersonalSpace(totalp, prox, draw);
 	return sequence;
-	
-
 }
 
 
@@ -329,10 +335,8 @@ SNGPolylineSeq SpecificWorker::gauss(bool draw)
 
 void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq)
 {
-    
-QMutexLocker locker(mutex);
-qDebug() << __FUNCTION__ << "UpdadeInnerModel";
-
+  QMutexLocker locker(mutex);
+	qDebug() << __FUNCTION__ << "UpdadeInnerModel";
 
 //EXTRACT INNERMODEL	
 	innerModel = AGMInner::extractInnerModel(worldModel, "world", false);
@@ -343,9 +347,7 @@ qDebug() << __FUNCTION__ << "UpdadeInnerModel";
 	
 	for (auto s:seq)
 	{
-	
-		auto previousPoint = s[s.size()-1];
-		
+		auto previousPoint = s[s.size()-1];	
 		for (auto currentPoint:s)
 		{
 			QString name = QString("polyline_obs_")+QString::number(count,10);
@@ -360,7 +362,6 @@ qDebug() << __FUNCTION__ << "UpdadeInnerModel";
 			normal(2) = normal(0);
 			normal(0) = -temp;
 		
-			
 			if (innerModel->getNode(name))
 			{
 				try
@@ -371,10 +372,9 @@ qDebug() << __FUNCTION__ << "UpdadeInnerModel";
 				catch(QString es){ qDebug() << "EXCEPCION" << es;}
 			}
 			
-	
 			InnerModelNode *parent = innerModel->getNode(QString("world"));			
 			if (parent == NULL)
-				printf("%s: parent not exists\n", __FUNCTION__);
+				printf("%s: parent does not exist\n", __FUNCTION__);
 			else
 			{			
 				InnerModelPlane *plane;
@@ -382,13 +382,11 @@ qDebug() << __FUNCTION__ << "UpdadeInnerModel";
 				{
 					plane  = innerModel->newPlane(name, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
 					parent->addChild(plane); 
-		
 				}
 				catch(QString es)
-				{ qDebug() << "EXCEPCION" << es;}
-
-			}
-
+				{ 
+					qDebug() << "EXCEPCION" << es;}
+				}
 			count++;
 			previousPoint=currentPoint;
 		}
@@ -472,8 +470,8 @@ void SpecificWorker::action_HandObject_leave(bool newAction)
 {
 	try
 	{	
-		trajectoryrobot2d_proxy->stop();
-		omnirobot_proxy->setSpeedBase(0.,0.,0.0);
+		//trajectoryrobot2d_proxy->stop();
+		//omnirobot_proxy->setSpeedBase(0.,0.,0.0);
 	}
 	catch(...)
 	{
@@ -487,7 +485,7 @@ void SpecificWorker::action_DetectPerson(bool newAction)
 	static bool b=false;
 	if (b==false)
         {
-		trajectoryrobot2d_proxy->stop();
+		//trajectoryrobot2d_proxy->stop();
 		b=true;
 	}
 	try
@@ -509,7 +507,7 @@ void SpecificWorker::readTrajState()
 {
 	try
 	{
-		planningState = trajectoryrobot2d_proxy->getState();
+		//planningState = trajectoryrobot2d_proxy->getState();
 		std::cout << "State:" + planningState.state + ". Description: " + planningState.description << std::endl;
 	}
 	catch(const Ice::Exception &ex)
@@ -625,7 +623,7 @@ void SpecificWorker::action_HandObject(bool newAction)
 		string state;
 		try
 		{
-			state = trajectoryrobot2d_proxy->getState().state;
+			//state = trajectoryrobot2d_proxy->getState().state;
 		}
 		catch(const Ice::Exception &ex)
 		{
@@ -931,7 +929,7 @@ void SpecificWorker::action_SetObjectReach(bool newAction)
 		string state;
 		try
 		{
-			state = trajectoryrobot2d_proxy->getState().state;
+			//state = trajectoryrobot2d_proxy->getState().state;
 		}
 		catch(const Ice::Exception &ex)
 		{
@@ -1292,7 +1290,8 @@ void SpecificWorker::action_FindObjectVisuallyInTable(bool newAction)
 void SpecificWorker::action_NoAction(bool newAction)
 {
 	try{
-		std::string state = trajectoryrobot2d_proxy->getState().state;
+		std::string state;
+		//state = trajectoryrobot2d_proxy->getState().state;
 		if (state != "IDLE")
 		{
 			printf("trajectoryrobot2d state : %s\n", state.c_str());
@@ -1336,7 +1335,7 @@ void SpecificWorker::go(float x, float z, float alpha, bool rot, float xRef, flo
 	try
 	{
 		std::cout<< "ENVIANDO A trajectoryrobot2d->go(" << currentTarget.x << ", " << currentTarget.z << ", " << currentTarget.ry << ", " << xRef << ", " << zRef << threshold << " )" <<std::endl;
-		trajectoryrobot2d_proxy->goReferenced(currentTarget, xRef, zRef, threshold);
+		//trajectoryrobot2d_proxy->goReferenced(currentTarget, xRef, zRef, threshold);
 	}
 	catch(const RoboCompTrajectoryRobot2D::RoboCompException &ex)
 	{
@@ -1357,7 +1356,7 @@ void SpecificWorker::stopL()
 {
 	try
 	{
-		trajectoryrobot2d_proxy->stop();
+		//trajectoryrobot2d_proxy->stop();
 	}
 	catch(const Ice::Exception &ex)
 	{

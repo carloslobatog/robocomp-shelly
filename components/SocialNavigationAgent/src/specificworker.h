@@ -147,8 +147,6 @@ private:
 	void actionExecution();
 	int32_t getIdentifierOfRobotsLocation(AGMModel::SPtr &worldModel);
 	void setIdentifierOfRobotsLocation(AGMModel::SPtr &worldModel, int32_t identifier);
-
-private:
 	std::string action;
 	ParameterMap params;
 	AGMModel::SPtr worldModel;
@@ -160,7 +158,7 @@ private:
 	RoboCompTrajectoryRobot2D::NavState planningState;
 	// Target info
 	RoboCompTrajectoryRobot2D::TargetPose currentTarget;
-	Path::PathFinder pathfinder;
+	robocomp::pathfinder::PathFinder pathfinder;
 	
 	
 	void manageReachedPose();
@@ -227,6 +225,8 @@ private:
 	float maxMSec;
 	QList<TimedDatum> data;
 };
+
+
 
 #endif
 

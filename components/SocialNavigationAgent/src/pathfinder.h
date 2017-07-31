@@ -27,35 +27,34 @@
 
 using namespace std;
 
-namespace Path
+namespace robocomp
 {
-	typedef map<string, string> ParameterMap;		
-	
-	class PathFinder
+	namespace pathfinder
 	{
-		public:
-			PathFinder();
-			~PathFinder();
-			void initialize(InnerModel *innerModel, const RoboCompAGMCommonBehavior::ParameterMap &params, const RoboCompCommonBehavior::ParameterList &localparams);
+		typedef map<string, string> ParameterMap;		
+		
+		class PathFinder
+		{
+			public:
+				PathFinder();
+				~PathFinder();
+				void initialize(InnerModel *innerModel, const RoboCompAGMCommonBehavior::ParameterMap &params, const RoboCompCommonBehavior::ParameterList &localparams);
 
-	  /////////////////////////////
-		/// Interface
-		////////////////////////////
-		void go(float x, float z, const ParameterMap &parameters = ParameterMap());
-		
-		///////////////////////////
-		
-		private:
-	
-			Road road;
-			Sampler sampler;
+			/////////////////////////////
+			/// Interface
+			////////////////////////////
+			void go(float x, float z, const ParameterMap &parameters = ParameterMap());
 			
+			///////////////////////////
 			
-	};
-
-	
+			private:
 		
-		
-} //namespace
+				Road road;
+				Sampler sampler;
+				
+				
+		};	
+	} //path
+} //robocomp
 
 #endif // PATHFINDER_H
