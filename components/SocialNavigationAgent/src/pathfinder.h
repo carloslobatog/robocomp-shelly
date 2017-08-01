@@ -21,9 +21,12 @@
 #include <AGMCommonBehavior.h>
 #include <CommonBehavior.h>
 #include <thread>
+#include <mutex>
+#include <functional>
 #include "currenttarget.h"
 #include "road.h"
 #include "sampler.h"
+#include "pathplanner.h"
 
 using namespace std;
 
@@ -36,10 +39,12 @@ namespace robocomp
 		class PathFinder
 		{
 			public:
-				PathFinder();
-				~PathFinder();
+				PathFinder() = default;
+				virtual ~PathFinder(){};
 				void initialize(InnerModel *innerModel, const RoboCompAGMCommonBehavior::ParameterMap &params, const RoboCompCommonBehavior::ParameterList &localparams);
-
+				void releaseRoad();
+				Road& getRoad();
+				
 			/////////////////////////////
 			/// Interface
 			////////////////////////////
@@ -49,9 +54,10 @@ namespace robocomp
 			
 			private:
 		
+				mutable std::mutex mymutex;
 				Road road;
 				Sampler sampler;
-				
+				PathPlanner pathplanner;
 				
 		};	
 	} //path

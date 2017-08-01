@@ -19,12 +19,6 @@
 
 using namespace robocomp::pathfinder;
 
-PathFinder::PathFinder()
-{}
-
-PathFinder::~PathFinder()
-{}
-
 ///////////////////////////////////////////////////////////////////
 ///  Public Interface
 //////////////////////////////////////////////////////////////////
@@ -39,36 +33,45 @@ void PathFinder::go(float x, float z, const ParameterMap &parameters)
 
 void PathFinder::initialize( InnerModel *innerModel, const RoboCompAGMCommonBehavior::ParameterMap &params, const 		RoboCompCommonBehavior::ParameterList &localparams)
 {
-//////////////////////////////////////
+	/// Initialize the elastic road
+	road.initialize(innerModel, localparams);
+
 	/// Initialize sampler of free space
-	/////////////////////////////////////
 	try
 	{ sampler.initialize(innerModel, localparams); } catch(const std::exception &ex) { throw ex;	}
 
-	////////////////////////////////////
 	/// Initialize the Planner
-	////////////////////////////////////
 	//plannerPRM.initialize(&sampler, params);  
+	pathplanner.initialize();
 	
-	////////////////////////////////////
-	/// Initialize the elastic road
-	////////////////////////////////////
-	road.initialize(innerModel, localparams);
-
-	/////////////////////////////////////
 	/// Initialize the Projector
-	////////////////////////////////////
 	//elasticband.initialize( params);
 
-	//////////////////////////////////////////////////////////////////////////
-	/// Initialize the low level controller that drives the robot on the road
-	/// by computing VAdv and VRot from the relative position wrt to the local road
-	/////////////////////////////////////////////////////////////////////////////////
+	/// Initialize the low level controller that drives the robot on the road	
 	//controller = new Controller(innerModel, laserData, params, 2 );
 
 	std::cout << __FUNCTION__ << "All objects initialized" << std::endl;
 	
+	//std::thread thread_planner(&PathPlanner::run, &pathplanner, std::bind(&PathFinder::getRoad, this), std::bind(&PathFinder::releaseRoad, this));
+	//thread_planner.join();
 }
+
+Road& PathFinder::getRoad()
+{
+	mymutex.lock();
+	std::cout << "mutex locked" << std::endl;
+	return road;	
+}
+
+void PathFinder::releaseRoad()
+{
+	mymutex.unlock();
+	std::cout << "mutex released" << std::endl;
+}
+
+
+//////////////////////////////////////////////////
+
 
 
 

@@ -8,6 +8,7 @@ SET ( SOURCES
   currenttarget.cpp
   road.cpp
   sampler.cpp
+  pathplanner.cpp
 )
 
 ADD_DEFINITIONS( -std=c++14 )

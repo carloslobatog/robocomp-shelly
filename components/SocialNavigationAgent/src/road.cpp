@@ -29,7 +29,7 @@ void Road::initialize(InnerModel* inner, const RoboCompCommonBehavior::Parameter
 	threshold =  QString::fromStdString(params.at("ArrivalTolerance").value).toFloat();
 	MINIMUM_SAFETY_DISTANCE =  QString::fromStdString(params.at("MinimumSafetyDistance").value).toFloat(); 
 	ROBOT_RADIUS =  QString::fromStdString(params.at("RobotRadius").value).toFloat(); 
-	
+	std::cout << __FUNCTION__ << "Road initialized correclty" << std::endl;
 }
 
 //////////////////
@@ -38,61 +38,41 @@ void Road::initialize(InnerModel* inner, const RoboCompCommonBehavior::Parameter
 void Road::update()
 {
 static QTime reloj = QTime::currentTime();
-	//////////////////////////////////////////////////////
-	//Get robot's position in world and create robot's nose
-	//////////////////////////////////////////////////////
+	/// Get robot's position in world and create robot's nose
 	QVec robot3DPos = innerModel->transform("world", "robot");
 	QVec noseInRobot = innerModel->transform("world", QVec::vec3(0, 0, 1000), "robot");
 	QLine2D nose = QLine2D(QVec::vec2(robot3DPos.x(), robot3DPos.z()), QVec::vec2(noseInRobot.x(), noseInRobot.z()));
 
-	////////////////////////////////////////////////////
-	//Compute closest point in road to robot. If closer than 1000mm it will use the virtual point (tip) instead of the center of the robot.
-	///////////////////////////////////////////////////
- 	Road::iterator closestPoint = computeClosestPointToRobot(robot3DPos);
+	/// Compute closest point in road to robot. If closer than 1000mm it will use the virtual point (tip) instead of the center of the robot.
+	Road::iterator closestPoint = computeClosestPointToRobot(robot3DPos);
 
-	///////////////////////////////////////
-	//Compute roadTangent at closestPoint
-	///////////////////////////////////////
+	/// Compute roadTangent at closestPoint
 	QLine2D tangent = computeTangentAt(closestPoint);
 	setTangentAtClosestPoint(tangent);
 
-	//////////////////////////////////////////////////////////////////////////////
-	//Compute signed perpenduicular distance from robot to tangent at closest point
-	///////////////////////////////////////////////////////////////////////////////
+	/// Compute signed perpenduicular distance from robot to tangent at closest point
 	setRobotPerpendicularDistanceToRoad(tangent.perpendicularDistanceToPoint(robot3DPos));
 
-	////////////////////////////////////////////////////
-	//Compute signed angle between nose and tangent at closest point
-	////////////////////////////////////////////////////
+	/// Compute signed angle between nose and tangent at closest point
 	float ang = nose.signedAngleWithLine2D(tangent);
 	if (std::isnan(ang))
 		ang = 0;
 	setAngleWithTangentAtClosestPoint(ang);
 
-	/////////////////////////////////////////////
-	//Compute distance to target along trajectory
-	/////////////////////////////////////////////
+	/// Compute distance to target along trajectory
 	setRobotDistanceToTarget(computeDistanceToTarget(closestPoint, robot3DPos));  //computes robotDistanceVariationToTarget
 	setRobotDistanceVariationToTarget(robotDistanceVariationToTarget);
 
-	//////////////////////////////////
-	//Update estimated time of arrival
-	//////////////////////////////////
+	/// Update estimated time of arrival
 	setETA();
 
-	////////////////////////////////////////////////////////////
-	//Compute curvature of trajectory at closest point to robot
-	////////////////////////////////////////////////////////////
+	/// Compute curvature of trajectory at closest point to robot
 	setRoadCurvatureAtClosestPoint(computeRoadCurvature(closestPoint, 3));
 
-	////////////////////////////////////////////////////////////
-	//Compute distance to last road point visible with laser field
-	////////////////////////////////////////////////////////////
+	/// Compute distance to last road point visible with laser field
 	setRobotDistanceToLastVisible(computeDistanceToLastVisible(closestPoint, robot3DPos));
 
-	////////////////////////////////////////////////////////////
-	// Compute robot angle in each point
-	// //////////////////////////////////////////////////////////
+	/// Compute robot angle in each point
 	for( Road::iterator it = this->begin(); it != this->end(); ++it )
 	{
 		QLine2D l = computeTangentAt(it);
@@ -103,9 +83,7 @@ static QTime reloj = QTime::currentTime();
 		it->rot = QVec::vec3(0, ang, 0);
 	}
 
-	//////////////////////////////////////////////////////////
-	//Check for arrival to target (translation)  TOO SIMPLE
-	/////////////////////////////////////////////////////////
+	/// Check for arrival to target (translation)  TOO SIMPLE
 	//qDebug() << __FUNCTION__ << "Arrived:" << getRobotDistanceToTarget() <<  this->threshold << getRobotDistanceVariationToTarget();
 
 	//	print();
