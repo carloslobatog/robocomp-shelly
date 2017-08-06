@@ -26,14 +26,7 @@
 #include <vector>
 #include <QFile>
 #include <innermodel/innermodel.h>
-
-
-//PROBLEMA: con python 3.5 da error al compilar
-
-#include <innermodel/innermodel.h>
-
 #include <boost/format.hpp>
-
 #define THRESHOLD 40
 
 /**
@@ -61,7 +54,8 @@ public:
 
 	SNGPerson robot;
 	
-	SNGPerson object;
+	SNGObject object;
+	SNGObjectSeq objects;
 	//estas guardaran la posicion anterior de cada persona, para comprobar si se ha movido
 
 	//bool para saber si se ha movido alguna persona
@@ -88,7 +82,9 @@ public:
 	
 	int32_t objectSymbolId;
 	int32_t objectSymbolId1;
-	//BOOL PARA COMPROBAR SI LA PERSONA ESTA EN EL MUNDO
+	
+	bool staticperson = false;
+	bool movingperson = false;
 
 
 	//RoboCompInnerModelManager::Pose3D pose;

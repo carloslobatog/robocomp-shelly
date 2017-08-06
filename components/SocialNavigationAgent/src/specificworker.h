@@ -26,6 +26,7 @@
 #include <vector>
 #include <QFile>
 #include "pathfinder.h"
+#include <actionexecution.h>
 
 
 //PROBLEMA: con python 3.5 da error al compilar
@@ -53,16 +54,14 @@ public:
 	bool changepos=false;
 	
 	SNGPolylineSeq sequence;
-	
 	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
 	SNGPersonSeq totalpersons; //este es para leer el fichero
-	SNGPerson robot;
-	// to check if the person is in the world
-	vector <bool> pn = {false,false,false,false,false,false};  
-	// if the person is moving
-	vector <bool> ppn = {false,false,false,false,false,false};  
+	SNGPerson robot;	
+	vector <bool> pn = {false,false,false,false,false,false};  // to check if the person is in the world	
+	vector <bool> ppn = {false,false,false,false,false,false};  // if the person is moving
 	int32_t personSymbolId;
 	int32_t pSymbolId[6];
+	
 	SNGPerson person;
 	SNGPerson personaux;
 	SNGPersonSeq totalp; // quiet person
@@ -71,15 +70,9 @@ public:
 	
 	//bool para saber si se ha movido alguna persona
 	bool movperson = false;
-	
-	
-	int32_t robotSymbolId;
-	
+	int32_t robotSymbolId;	
 
-
-	//PARA GUARDAR LOS DATOS EN UN ARCHIVO
-
-	struct Point {
+	struct Point { //PARA GUARDAR LOS DATOS EN UN ARCHIVO
 	  float x;
 	  float z;
 	};
@@ -89,7 +82,6 @@ public:
 	//PARA LEER EL VALOR DEL SLIDER
 	int prox = 0;
 
-	
 	//PARA GUARDAR LA DISTANCIA RECORRIDA
 	float totaldist=0;
 	
@@ -98,6 +90,9 @@ public:
 	bool checkconversation();
 
 	int i = 0;
+	
+	//Class ActionExecution
+	ActionExecution aE;
 	
 	///////////////////////////////////////////////////////////////////////////
 	/// SERVANTS
@@ -131,7 +126,7 @@ public:
 	
 public slots:
  	void compute();
-	void readTrajState();
+	//void readTrajState();
 	SNGPolylineSeq gauss(bool dibujar=true);
 	void changevalue(int valor);
 	void savedata();
@@ -182,50 +177,6 @@ private:
 //	RoboCompOmniRobot::TBaseState bState;
 	
 };
-
-
-class TimedList
-{
-	class TimedDatum
-	{
-	public:
-		 TimedDatum(float d)
-		{
-			datum = d;
-			datum_time = QTime::currentTime();
-		}
-		float datum;
-		QTime datum_time;
-	};
-
-public:
-	TimedList(float msecs)
-	{
-		maxMSec = msecs;
-	}
-	void add(float datum)
-	{
-		data.push_back(TimedDatum(datum));
-	}
-	float getSum()
-	{
-		while (data.size()>0)
-		{
-			if (data[0].datum_time.elapsed() > maxMSec)
-				data.pop_front();
-			else
-				break;
-		}
-		float acc = 0.;
-		for (int i=0; i<data.size(); i++)
-			acc += data[i].datum;
-		return acc;
-	}
-private:
-	float maxMSec;
-	QList<TimedDatum> data;
-};
-
 
 
 #endif

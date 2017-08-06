@@ -11,9 +11,9 @@ AGMExecutiveTopicTopic.Endpoints=tcp -p 0
 
 
 # Proxies for required interfaces
-TrajectoryRobot2DProxy = trajectoryrobot2d:tcp -h localhost -p 0
-OmniRobotProxy = omnirobot:tcp -h localhost -p 0
 SocialNavigationGaussianProxy = socialnavigationgaussian:tcp -h localhost -p 0
+OmniRobotProxy = omnirobot:tcp -h localhost -p 0
+TrajectoryRobot2DProxy = trajectoryrobot2d:tcp -h localhost -p 0
 AGMExecutiveProxy = agmexecutive:tcp -h localhost -p 0
 
 

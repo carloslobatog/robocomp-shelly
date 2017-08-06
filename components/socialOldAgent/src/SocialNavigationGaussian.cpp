@@ -228,7 +228,7 @@ IceProxy::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::end_getPas
 }
 
 ::RoboCompSocialNavigationGaussian::SNGPolylineSeq
-IceProxy::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& objects, bool d, const ::Ice::Context* __ctx)
+IceProxy::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::Context* __ctx)
 {
     ::IceInternal::InvocationObserver __observer(this, __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getObjectInteraction_name, __ctx);
     int __cnt = 0;
@@ -254,7 +254,7 @@ IceProxy::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getObjectI
 }
 
 ::Ice::AsyncResultPtr
-IceProxy::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& objects, bool d, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+IceProxy::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
 {
     __checkAsyncTwowayOnly(__RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getObjectInteraction_name);
     ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getObjectInteraction_name, __del, __cookie);
@@ -417,7 +417,7 @@ IceDelegateM::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getPas
 }
 
 ::RoboCompSocialNavigationGaussian::SNGPolylineSeq
-IceDelegateM::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& objects, bool d, const ::Ice::Context* __context, ::IceInternal::InvocationObserver& __observer)
+IceDelegateM::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::Context* __context, ::IceInternal::InvocationObserver& __observer)
 {
     ::IceInternal::Outgoing __og(__handler.get(), __RoboCompSocialNavigationGaussian__SocialNavigationGaussian__getObjectInteraction_name, ::Ice::Normal, __context, __observer);
     try
@@ -604,13 +604,13 @@ IceDelegateD::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getPas
 }
 
 ::RoboCompSocialNavigationGaussian::SNGPolylineSeq
-IceDelegateD::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& objects, bool d, const ::Ice::Context* __context, ::IceInternal::InvocationObserver&)
+IceDelegateD::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::Context* __context, ::IceInternal::InvocationObserver&)
 {
     class _DirectI : public ::IceInternal::Direct
     {
     public:
 
-        _DirectI(::RoboCompSocialNavigationGaussian::SNGPolylineSeq& __result, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& __p_persons, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& __p_objects, bool __p_d, const ::Ice::Current& __current) : 
+        _DirectI(::RoboCompSocialNavigationGaussian::SNGPolylineSeq& __result, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& __p_persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& __p_objects, bool __p_d, const ::Ice::Current& __current) : 
             ::IceInternal::Direct(__current),
             _result(__result),
             _m_persons(__p_persons),
@@ -635,7 +635,7 @@ IceDelegateD::RoboCompSocialNavigationGaussian::SocialNavigationGaussian::getObj
         
         ::RoboCompSocialNavigationGaussian::SNGPolylineSeq& _result;
         const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& _m_persons;
-        const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& _m_objects;
+        const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& _m_objects;
         bool _m_d;
     };
     
@@ -755,7 +755,7 @@ RoboCompSocialNavigationGaussian::SocialNavigationGaussian::___getObjectInteract
     __checkMode(::Ice::Normal, __current.mode);
     ::IceInternal::BasicStream* __is = __inS.startReadParams();
     ::RoboCompSocialNavigationGaussian::SNGPersonSeq persons;
-    ::RoboCompSocialNavigationGaussian::SNGPersonSeq objects;
+    ::RoboCompSocialNavigationGaussian::SNGObjectSeq objects;
     bool d;
     __is->read(persons);
     __is->read(objects);

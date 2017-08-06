@@ -1,787 +1,48 @@
 /*
- *    Copyright (C) 2006-2010 by RoboLab - University of Extremadura
- *
- *    This file is part of RoboComp
- *
- *    RoboComp is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
- *
- *    RoboComp is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
- *
- *    You should have received a copy of the GNU General Public License
- *    along with RoboComp.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright 2017 <copyright holder> <email>
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
  */
 
- #include "specificworker.h"
- #include <math.h>
+#include "actionexecution.h"
 
-
- #define PI 3.14159265
-
-/**
-* \brief Default constructor
-*/
-
-
-SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
+ActionExecution::ActionExecution()
 {
 
-	active = false;
-	active = false;
-
-	worldModel = AGMModel::SPtr(new AGMModel());
+  	worldModel = AGMModel::SPtr(new AGMModel());
 	worldModel->name = "worldModel";
 	innerModel = new InnerModel();
 	haveTarget = false;
-
-	//Timed slot to read TrajectoryRobot2D state
 	connect(&trajReader, SIGNAL(timeout()), this, SLOT(readTrajState()));
-	//Dibujar gaussiana
-	connect(gaussiana,SIGNAL(clicked()),this, SLOT(gauss()));
-	connect(por,SIGNAL(clicked()),this, SLOT(gausspor()));
-	connect(objint,SIGNAL(clicked()),this, SLOT(objectInteraction()));
-	//Sacar la pose del robot
-	connect(datos,SIGNAL(clicked()),this, SLOT(grabarfichero()));
-	//trajReader.start(1000);
 
-	//SLIDER
-	connect (proximidad,SIGNAL(valueChanged(int)),this,SLOT(cambiarvalor(int)));
-	//connect (proximidad,SIGNAL(sliderMoved()),this,SLOT(sliderM()));
-
-
-	proximidad->QSlider::setMinimum (0);
-	proximidad->QSlider::setMaximum (100);
-	proximidad->QSlider::setTracking (false);
-	proximidad->QSlider::setValue (50);
 }
+ActionExecution::~ActionExecution() {}
 
-/**
-* \brief Default destructor
-*/
-SpecificWorker::~SpecificWorker()
+void ActionExecution::Update(InnerModel *inner,AGMModel::SPtr w,std::string a)
 {
-}
-
-void SpecificWorker::cambiarvalor(int value)
-{
-	valorprox=value;
-	qDebug()<<"Proximidad"<<valorprox;
+  /*
+	worldModel = w;
+	innerModel = inner;*/
+	action = a;
+	actionExecution();
 
 }
 
-void SpecificWorker::grabarfichero()
+
+void ActionExecution::actionExecution()
 {
-
-  qDebug("escribimos en el fichero robotpose.txt la pose del robot");
-  	ofstream fichero("robotpose.txt", ofstream::out);
-	for (auto p:poserobot)
-	{
-		fichero<< p.x << " " <<p.z<< endl;
-	}
-	fichero.close();
-
-qDebug("escribimos en el fichero personpose.txt la pose de las personas");
-  	ofstream fichero2("personpose.txt", ofstream::out);
-	for (auto person:totalpersons)
-	{
-		fichero2<< person.x << " " <<person.z<<" "<<person.angle<< endl;
-	}
-	fichero2.close();
-	poserobot.clear();
-
-
-	qDebug("escribimos en el fichero poly.txt la polilinea");
-  	ofstream fichero3("poly.txt", ofstream::out);
-
-	for (auto s:secuencia)
-	{
-		for (auto p: s){
-			fichero3<< p.x << " " <<p.z<<" "<< endl;
-		}
-	}
-	fichero3.close();
-
-	qDebug()<<"escribimos en el fichero la distancia recorrida"<<totaldist;
-  	ofstream fichero4("dist.txt", ofstream::out);
-	fichero4<< totaldist << endl;
-	totaldist = 0;
-	fichero4.close();
-
-	/////Guardar cada polilinea por separado
-	int i = 0;
-	for (auto s:secuencia){
-		QString name = QString("polyline")+QString::number(i,10)+QString(".txt");
-		ofstream fichero5(name.toUtf8().constData(), ofstream::out);
-			for (auto p: s)
-			{
-				fichero5<< p.x << " " <<p.z<<" "<< endl;
-			}
-			i++;
-			fichero5.close();
-		}
-
-}
-SNGPolylineSeq SpecificWorker::gauss(bool dibujar)
-{
-
-/*	SNGPersonSeq persons;
-
-	//push back es para incluir a la persona en el vector de personas
-	if (p1)
-	persons.push_back(person1);
-	if (p2)
-	persons.push_back(person2);
-	if (p3)
-	persons.push_back(person3);
-	if (p4)
-	persons.push_back(person4);
-	if (p5)
-	persons.push_back(person5);
-	if (p6)
-	persons.push_back(person6)*/;
-
-	if (staticperson)
-	{  
-		secuencia.clear();
-		secuencia = socialnavigationgaussian_proxy-> getPersonalSpace(totalp, valorprox, dibujar);
-	}
-	return secuencia;
-
-}
-SNGPolylineSeq SpecificWorker::gausspor(bool dibujar)
-{
-
-// 	SNGPersonSeq persons;
-// 
-// 	//push back es para incluir a la persona en el vector de personas
-// 	if (pp1)	persons.push_back(person1);
-// 	if (pp2)	persons.push_back(person2);
-// 	if (pp3)	persons.push_back(person3);
-// 	if (pp4)	persons.push_back(person4);
-// 	if (pp5)	persons.push_back(person5);
-// 	if (pp6)	persons.push_back(person6);
-
-	if (movingperson)
-	{
-		secuencia2.clear();
-		secuencia2 = socialnavigationgaussian_proxy-> getPassOnRight(totalpmov, valorprox, dibujar);
-	}	    
-	return secuencia2;
-
-	
-}
-
-void SpecificWorker::addObjects()
-{
-  qDebug()<<"AAAAAAADDDD OOOOOOBBBJEEEECTTTSS";
-  //////////cafetera//////////////
-	try
-	{	
-	   
-		pose.x = 450;
-		pose.y = 950;
-		pose.z = -2250;
-		pose.rx = 0;
-		pose.ry = M_PIl/2;
-		pose.rz = 0;
-		innermodelmanager_proxy->addTransform("cafetera", "static", "root", pose);
-
-		RoboCompInnerModelManager::meshType mesh;
-		mesh.pose.x  = mesh.pose.y  = mesh.pose.z  = 0;
-		mesh.pose.rx = M_PIl/2;
-		mesh.pose.ry = 0;
-		mesh.pose.rz = M_PIl/2;
-		
-		mesh.scaleX = mesh.scaleY = mesh.scaleZ = 120;
-		mesh.render = 0;
-		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
-		mesh.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/cafe1.3DS";
-		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/basics/cube2.3ds";
-		innermodelmanager_proxy->addMesh("objectMesh", "cafetera", mesh);
-	}
-	catch (...)
-	{
-		printf("Can't create object\n");
-	}
-
-	printf("includeInRCIS ends\n");
-	 
-  /////////////TABLON///////////
-	qDebug()<<"AAAAAAADDDD OOOOOOBBBJEEEECTTTSS";
-	try
-	{	
-		pose.x = 5360;
-		pose.y = 1200;
-		pose.z = -270;
-		pose.rx = 0;
-		pose.ry = M_PIl;
-		pose.rz = 0;
-		innermodelmanager_proxy->addTransform("board", "static", "root", pose);
-
-		RoboCompInnerModelManager::meshType mesh1;
-		mesh1.pose.x  = mesh1.pose.y  = mesh1.pose.z  = 0;
-		mesh1.pose.rx = M_PIl/2;
-		mesh1.pose.ry = 0;
-		mesh1.pose.rz = M_PIl;
-		
-		mesh1.scaleX = mesh1.scaleY = mesh1.scaleZ = 5;
-		mesh1.render = 0;
-		//mesh1.mesh1Path = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
-		mesh1.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/board.3DS";
-		//mesh1.mesh1Path = "/home/robocomp/robocomp/files/osgModels/basics/cube2.3ds";
-		innermodelmanager_proxy->addMesh("objectMesh1", "board", mesh1);
-	}
-	catch (...)
-	{
-		printf("Can't create object\n");
-	}
-
-	printf("includeInRCIS ends\n");
-	
-////////TELEFONO/////////////
-	qDebug()<<"AAAAAAADDDD OOOOOOBBBJEEEECTTTSS";
-	try
-	{	
-	  
-
-		pose.x = 3000;
-		pose.y = 750;
-		pose.z = 3650;
-		pose.rx = 0;
-		pose.ry = M_PIl;
-		pose.rz = 0;
-		innermodelmanager_proxy->addTransform("phone", "static", "root", pose);
-
-		RoboCompInnerModelManager::meshType mesh2;
-		mesh2.pose.x  = mesh2.pose.y  = mesh2.pose.z  = 0;
-		mesh2.pose.rx = M_PIl/2;
-		mesh2.pose.ry = 0;
-		mesh2.pose.rz = M_PIl;
-		
-		mesh2.scaleX = mesh2.scaleY = mesh2.scaleZ = 30;
-		mesh2.render = 0;
-		//mesh2.mesh2Path = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
-		mesh2.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/phone.3DS";
-		//mesh2.mesh2Path = "/home/robocomp/robocomp/files/osgModels/basics/cube2.3ds";
-		innermodelmanager_proxy->addMesh("objectMesh2", "phone", mesh2);
-	}
-	catch (...)
-	{
-		printf("Can't create object\n");
-	}
-
-	printf("includeInRCIS ends\n");
-
-	
-	
-	
-// 	static bool first = true;
-// 	if (not first) return;
-// 	first = false;
-// 
-// 	std::string m ="  ";
-// 	int idx=0;
-// 	while ((objectSymbolId = worldModel->getIdentifierByType("objectI", idx++)) != -1)
-// 	{
-// 		printf("%d %d\n", idx, objectSymbolId);
-// 		if (idx > 4) exit(0);
-// 		if (worldModel->getSymbolByIdentifier(objectSymbolId)->getAttribute("imName") == "cafetera")
-// 		{
-// 			printf("found %d!!\n", objectSymbolId);
-// 			break;
-// 		}
-// 	}
-// 	if (objectSymbolId != -1)
-// 	{
-// 		printf("Object already in the AGM model\n");
-// 		return;
-// 	}
-// 
-// 	AGMModel::SPtr newModel(new AGMModel(worldModel));
-// 
-// 	// Symbolic part
-// 	AGMModelSymbol::SPtr cafetera =   newModel->newSymbol("objectI");
-// 	objectSymbolId = cafetera->identifier;
-// 	printf("Got objectSymbolId: %d\n", objectSymbolId);
-// 	cafetera->setAttribute("imName", "cafetera");
-// 	cafetera->setAttribute("imType", "transform");
-// 	AGMModelSymbol::SPtr cafeteraSt = newModel->newSymbol("objectSt");
-// 	printf("object %d status %d\n", cafetera->identifier, cafeteraSt->identifier);
-// 
-// 	newModel->addEdge(cafetera, cafeteraSt, "hasStatus");
-// 	newModel->addEdge(cafetera, cafeteraSt, "noReach");
-// 	newModel->addEdge(cafetera, cafeteraSt, "objectI");
-// 	try
-// 	{
-// 	newModel->addEdgeByIdentifiers(cafetera->identifier, 3, "in");
-// 	}
-// 	catch(...)
-// 	{
-// 	  printf("PROOOOOBLEMA...\n");
-// 	}
-// 	
-// 
-// 
-// 	// Geometric part
-// 	std::map<std::string, std::string> edgeRTAtrs;
-// 	edgeRTAtrs["tx"] = "3550";
-// 	edgeRTAtrs["ty"] = "950";
-// 	edgeRTAtrs["tz"] = "3650";
-// 	edgeRTAtrs["rx"] = "0";
-// 	edgeRTAtrs["ry"] = "3.1415926535";
-// 	edgeRTAtrs["rz"] = "0";
-// 	newModel->addEdgeByIdentifiers(100, cafetera ->identifier, "RT", edgeRTAtrs);
-// 
-// 
-// 	AGMModelSymbol::SPtr cafeteraMesh = newModel->newSymbol("mesh");
-// 	printf("cafeteraMesh %d\n", cafeteraMesh->identifier);
-// 	cafeteraMesh->setAttribute("collidable", "false");
-// 	cafeteraMesh->setAttribute("imName", "cafeteraMesh");
-// 	cafeteraMesh->setAttribute("imType", "mesh");
-// 	cafeteraMesh->setAttribute("path", "/home/robocomp/robocomp/components/robocomp-araceli/models/cafe.3ds");
-// 	cafeteraMesh->setAttribute("render", "NormalRendering");
-// 	cafeteraMesh->setAttribute("scalex", "20");
-// 	cafeteraMesh->setAttribute("scaley", "20");
-// 	cafeteraMesh->setAttribute("scalez", "20");
-// 
-// 	edgeRTAtrs["tx"] = "0";
-// 	edgeRTAtrs["ty"] = "0";
-// 	edgeRTAtrs["tz"] = "0";
-// 	edgeRTAtrs["rx"] = "1.570796326794";
-// 	edgeRTAtrs["ry"] = "0";
-// 	edgeRTAtrs["rz"] = "3.1415926535";
-// 	newModel->addEdge(cafetera, cafeteraMesh, "RT", edgeRTAtrs);
-// 
-// 
-// 
-// 	while (true)
-// 	{
-// 		try
-// 		{
-// 			sendModificationProposal(worldModel, newModel,m);
-// 			break;
-// 		}
-// 		catch(const RoboCompAGMExecutive::Locked &e)
-// 		{
-// 			printf("agmexecutive locked...\n");
-// 		}
-// 		catch(const RoboCompAGMExecutive::OldModel &e)
-// 		{
-// 			return;
-// 		}
-// 		catch(const RoboCompAGMExecutive::InvalidChange &e)
-// 		{ 
-// 			exit(1);
-// 		}
-// 		sleep(1);
-// 	}
-// 
-// 	printf("includeInAGM ends\n");
-}
-
-SNGPolylineSeq SpecificWorker::objectInteraction(bool d)
-{
-	
- 	qDebug()<<"---------1------------";
-	
-	//SNGPersonSeq persons;
-	objects.clear();
-	
-	//push back es para incluir a la persona en el vector de personas
-// 	if (p1) 	persons.push_back(person1); 
-// 	if (p2) 	persons.push_back(person2);
-// 	if (p3) 	persons.push_back(person3);
-// 	if (p4) 	persons.push_back(person4);
-// 	if (p5) 	persons.push_back(person5);
-// 	if (p6) 	persons.push_back(person6);
-
-//	totalpersons=totalpersons; 
-	qDebug()<<"---------2----------";
-	
-	///cafetera
-	object.x =0.450;
-	object.z =-2.250;
-	object.angle=3.1415926535/2;
-	object.space =0.75;
-	    
-	objects.push_back(object);
-	///nevera
-	object.x =3.210;
-	object.z =-3.700;
-	object.angle=0;
-	object.space=1.0;
-	
-	objects.push_back(object);
-	
-	///tablon
-	object.x =5.360;
-	object.z =-0.270;
-	object.angle=3.1415926535;
-	object.space=1.5;
-	
-	objects.push_back(object);
-	
-	///telefono
-	object.x =3.000;
-	object.z =3.650;
-	object.angle=3.1415926535;
-	object.space = 0.75;
-	
-	objects.push_back(object);
-	
-	
-	
-
-	secuenciaObj.clear();
-	secuenciaObj =socialnavigationgaussian_proxy->getObjectInteraction(totalp,objects,d);
-	
-	qDebug()<<"---------3----------";
-	
-// 	AGMModelSymbol::SPtr objectP = worldModel->getParentByLink(objectSymbolId, "RT");
-// 	AGMModelEdge &edgeRT  = worldModel->getEdgeByIdentifiers(objectP->identifier,objectSymbolId, "RT");
-// 	object.x = str2float(edgeRT.attributes["tx"])/1000;
-// 	object.z = str2float(edgeRT.attributes["tz"])/1000;
-// 			
-// 		
-// 	
-// 
-// 	qDebug()<<"Objeto"<<"Pose x"<<object.x<<"Pose z"<<object.z;
-
-	
-	
-	/*
-	for (auto p: persons)
-	{
-//  	float angleinf= (p.angle - 10)*0.0175;  
-// 	float anglesup= (p.angle + 10)*0.0175;
-// 	qDebug()<<"angleinf"<<angleinf<<"anglesup"<<anglesup;
- 	float distancethr = 1500;
-	
-	int i=1;
-	//problema.. puede estar la persona 1 y la 3 sin estar la dos entonces no iria bien
-	QString name = QString("fakeperson") + QString::number(i,10);
-	qDebug()<<"Persona"<<name;
-	QVec pInperson = innerModel->transform(name, QVec::vec3(object.x, 0, object.z), "world");  
-	
-	qDebug()<<"pose x"<<pInperson.x()<<"pose z"<< pInperson.z();
-	
-	float distobj  = sqrt(pInperson.x()*pInperson.x() + pInperson.z()*pInperson.z());
-	float angleobj = atan2(pInperson.x(),pInperson.z());
-	
-	
-	
-	qDebug()<<"dist al frigorifico"<<distobj<<"angle al frigorifico"<<angleobj;
-	
-	if (distobj<distancethr and abs(angleobj)<M_PIl/180.*20)
-	{
-	  qDebug()<<"YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEESSSSSS";
-	}
-	else qDebug()<<"NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOSS";
-	
-	i++;  
-	}
-	
-	*/
-	return secuenciaObj;
-	
-}
-
-bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
-{
-	Period = 200;
-
-
-	addObjects();
-	
-	timer.start(Period);
-	return true;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-void SpecificWorker::compute( )
-{
-	static bool first=true;
-	if (first)
-	{
-		qLog::getInstance()->setProxy("both", logger_proxy);
-		rDebug2(("navigationAgent started"));
-
-	}
-
-	if (worldModel->getIdentifierByType("robot") < 0)
-	{
-		try {
-
-			qDebug()<<"Leo el mundo";
-			agmexecutive_proxy->broadcastModel();
-
-			return;
-		}
-		catch(...)
-		{
-			printf("The executive is probably not running, waiting for first AGM model publication...");
-		}
-	}
-
-	
-	
-	for (int i=0;i<pn.size();i++)
-	{
-		if (pn[i]==false)
-		{	
-			std::string type = "person" + std::to_string(i+1);
-			std::string name = "fakeperson" + std::to_string(i+1);
-			
-			int idx=0;
-			while ((personSymbolId = worldModel->getIdentifierByType(type, idx++)) != -1)
-			{
-				if (idx > 4) exit(0);
-				if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
-				{
-					pSymbolId[i]=personSymbolId;
-					pn[i]=true;
-					cambiopos = true;
-					break;
-				}
-			}			
-		}
-		 
-	}
-	
-	
-	if (cambiopos)
-	{
-	  totalp.clear();
-	  totalpmov.clear();
-	  totalpersons.clear();
-
-	  for (int ind=0;ind<pn.size();ind++)
-	  {
-		if (pn[ind]==true)
-		{
-			AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(pSymbolId[ind], "RT");
-			AGMModelEdge &edgeRT = worldModel->getEdgeByIdentifiers(personParent->identifier, pSymbolId[ind], "RT");
-			person.x = str2float(edgeRT.attributes["tx"])/1000;
-			person.z = str2float(edgeRT.attributes["tz"])/1000;
-			person.angle = str2float(edgeRT.attributes["ry"]);
- 			person.vel=str2float(edgeRT.attributes["velocity"]);
-			qDebug() <<"PERSONA 1\n" <<"Coordenada x"<< person.x << "Coordenada z"<< person.z << "Rotacion "<< person.angle;
-			totalpersons.push_back(person);
-			
-			
-			if(person.vel>0)
-			{
-				ppn[ind]=true;
-				pn [ind]=false;
-				totalpmov.push_back(person);
-			}
-			else
-			{  
-				ppn[ind]=false;
-				totalp.push_back(person);							
-
-			}
-		
-		if (first)
-		{
-			totalaux.push_back(person);
-			movperson=true;
-		}
-		else if  (movperson==false)
-		{
-			if ((totalaux[ind].x!=person.x)or(totalaux[ind].z!=person.z)or(totalaux[ind].angle!=person.angle))
-				movperson = true;
-			
-			totalaux[ind]=person;
-		}
-
-	  }
-	
- }	
-	
-
-
-	///////////////////////////OBTENER LA POSE DEL ROBOT /////////////////////////////////////
-	///PARA QUE SE ACTUALICE TIENE QUE ESTAR ARRANCADO EL LOCALIZATION en el manager///
-
-		robotSymbolId = worldModel->getIdentifierByType("robot");
-		AGMModelSymbol::SPtr robotparent = worldModel->getParentByLink(robotSymbolId, "RT");
-		AGMModelEdge &edgeRTrobot  = worldModel->getEdgeByIdentifiers(robotparent->identifier, robotSymbolId, "RT");
-
-		robot.x=str2float(edgeRTrobot.attributes["tx"])/1000;
-		robot.z=str2float(edgeRTrobot.attributes["tz"])/1000;
-		robot.angle=str2float(edgeRTrobot.attributes["ry"]);
-		/*
-		qDebug() << "------------------------------------------------------------";
-		qDebug() <<"ROBOT\n" <<"Coordenada x"<< robot.x << "Coordenada z"<< robot.z << "Rotacion "<< robot.angle;
-		*/
-
-		punto.x=robot.x;
-		punto.z=robot.z;
-
-// 		qDebug("Guardamos la pose del robot en el vector");
-// 		qDebug("------------------------------------------");
-
-		//Si el ultimo punto es igual que el actual no lo guardo
-		if (poserobot.size()==0)
-		  poserobot.push_back(punto);
-
-		else
-		  if ((poserobot[poserobot.size()-1].x!=punto.x)||(poserobot[poserobot.size()-1].z!=punto.z))
-		  {
-
-		    float  dist=sqrt((punto.x - poserobot[poserobot.size()-1].x)*(punto.x - poserobot[poserobot.size()-1].x)
-		    +(punto.z - poserobot[poserobot.size()-1].z)*(punto.z - poserobot[poserobot.size()-1].z));
-
-		    totaldist=totaldist + dist;
-
- 		    qDebug()<<"Distancia calculada"<<dist<<"Distancia total"<<totaldist;
-
-		    poserobot.push_back(punto);
-
-		  }
-
-		first = false;
-		cambiopos=false;
-	}
-
-
-
-
-	//////LLAMAR AL TRAJECTORY////////// Solo se llama si la poscion de una perosna cambia
-
-	if (movperson)
-	{	
-	
-	qDebug ("se ha movido alguna pesona, se envia la polilinea");
-	try
-	{
-
-		RoboCompTrajectoryRobot2D::PolyLineList lista;
-	
-		
-		for (int st=0; st<pn.size();st++)
-		{	
-			if (pn[st]==  true)
-			{	
-				staticperson = true;			
-				break;
-			}
-		}
-		
-		if (staticperson)
-		{
-			SNGPolylineSeq secuencia = gauss(false);
-			 for(auto s: secuencia)
-			{
-				RoboCompTrajectoryRobot2D::PolyLine poly;
-
-				for(auto p: s)
-				{
-					RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
-					poly.push_back(punto);
-
-				}
-				lista.push_back(poly);
-			}
-		  
-		}
-		
-		
-		
-		for (int mv=0; mv<ppn.size();mv++)
-		{	
-			if (ppn[mv]==true)
-			{
-				movingperson = true;
-				break;
-				
-			}
-		}
-		
-		if (movingperson)
-		{
-			SNGPolylineSeq secuencia2 = gausspor(false);
-			 for(auto s: secuencia2)
-			{
-				RoboCompTrajectoryRobot2D::PolyLine poly;
-
-				for(auto p: s)
-				{
-					RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
-					poly.push_back(punto);
-
-				}
-				lista.push_back(poly);
-			}
-		  
-		}
-		
-			
-		if (!objects.empty())	
-		{  
-			SNGPolylineSeq secuenciaobj = objectInteraction(false);
-			for(auto s: secuenciaobj)
-			{
-				RoboCompTrajectoryRobot2D::PolyLine poly;
-
-				for(auto p: s)
-				{
-					RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
-					poly.push_back(punto);
-
-				}
-				lista.push_back(poly);
-			}
-			
-		 } 
-		 
-	  
-		   for(auto s: secuencia2)
-		 {
-			RoboCompTrajectoryRobot2D::PolyLine poly;
-
-			for(auto p: s)
-			{
-				RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
-				poly.push_back(punto);
-
-			}
-			lista.push_back(poly);
-		  }
-		  
-	  
-		 qDebug()<<"llamamos al SetHumanSpace";
-
-		 trajectoryrobot2d_proxy->setHumanSpace(lista);
-	
-	}
-	catch( const Ice::Exception &e)
-	{ std::cout << e << std::endl;}
-
-	movperson = false;
-	}
-
-
-	//actionExecution();
-
-}
-	
-
-
-/**
- * \brief ESTE ES EL VERDADERO COMPUTE
- */
-void SpecificWorker::actionExecution()
-{
-	QMutexLocker locker(mutex);
+//	QMutexLocker locker(mutex);
 	qDebug() << "---------------------------------------------------";
 	qDebug() <<__FUNCTION__ <<"Checking ACTION: " << QString::fromStdString(action);
 
@@ -839,11 +100,11 @@ void SpecificWorker::actionExecution()
 		previousAction = action;
 		printf("New action: %s\n", action.c_str());
 	}
-	manageReachedPose();
+	// manageReachedPose();
 // 	printf("actionExecution>>\n");
 }
 
-void SpecificWorker::action_HandObject_leave(bool newAction)
+void ActionExecution::action_HandObject_leave(bool newAction)
 {
 	try
 	{
@@ -855,7 +116,7 @@ void SpecificWorker::action_HandObject_leave(bool newAction)
 		printf("Can't stop the robot!!\n");
 	}
 }
-void SpecificWorker::action_DetectPerson(bool newAction)
+void ActionExecution::action_DetectPerson(bool newAction)
 {
 
 	static bool b=false;
@@ -878,8 +139,7 @@ void SpecificWorker::action_DetectPerson(bool newAction)
 //////////
 // Slot
 //////////
-
-void SpecificWorker::readTrajState()
+void ActionExecution::readTrajState()
 {
 	try
 	{
@@ -896,7 +156,7 @@ void SpecificWorker::readTrajState()
 	}
 }
 
-void SpecificWorker::action_HandObject(bool newAction)
+void ActionExecution::action_HandObject(bool newAction)
 {
 	// Get symbols' map
 	std::map<std::string, AGMModelSymbol::SPtr> symbols;
@@ -1037,7 +297,7 @@ void SpecificWorker::action_HandObject(bool newAction)
 /**
 *  \brief Called when the robot is sent close to a person to offer the object
 */
-void SpecificWorker::action_HandObject_Offer(bool newAction)
+void ActionExecution::action_HandObject_Offer(bool newAction)
 {
 	// Get symbols' map
 	std::map<std::string, AGMModelSymbol::SPtr> symbols;
@@ -1168,7 +428,7 @@ void SpecificWorker::action_HandObject_Offer(bool newAction)
 /**
 *  \brief Called when the robot is sent close to an object's location
 */
-void SpecificWorker::action_SetObjectReach(bool newAction)
+void ActionExecution::action_SetObjectReach(bool newAction)
 {	// Get symbols' map
 	std::map<std::string, AGMModelSymbol::SPtr> symbols;
 	try
@@ -1267,7 +527,8 @@ void SpecificWorker::action_SetObjectReach(bool newAction)
 		tgt.y = 0;
 		tgt.z = poseInRoom.z();
 		tgt.rx = 0;
-		tgt.ry = poseInRoom.ry();
+		//tgt.ry = 0;
+		tgt.ry = poseInRoom.ry(); //needed to reach tables
 		tgt.rz = 0;
 		tgt.doRotation = true;
 	}
@@ -1287,7 +548,9 @@ void SpecificWorker::action_SetObjectReach(bool newAction)
 				//O.print("	O pose relativa");
 				//qDebug() << __FUNCTION__ << "O norm:" << O.norm2();
 				QVec graspRef = innerModel->transform("robot", "shellyArm_grasp_pose");
+        graspRef.print("graspRef");
 				float th=20;
+        tgt.ry = -3.1415926535/2.;
 				go(tgt.x, tgt.z, tgt.ry, tgt.doRotation, graspRef.x(), graspRef.z(), th);
 				qDebug() << __FUNCTION__ << "trajectoryrobot2d->go(" << tgt.x << ", " << tgt.z << ", " << tgt.ry << ", " << graspRef.x() << ", " << graspRef.z() << " )\n";
 				haveTarget = true;
@@ -1338,7 +601,7 @@ void SpecificWorker::action_SetObjectReach(bool newAction)
 	}
 }
 
-void SpecificWorker::manageReachedPose()
+void ActionExecution::manageReachedPose()
 {
 	float schmittTriggerThreshold = 20;
 	float THRESHOLD_POSE = 100;
@@ -1361,10 +624,10 @@ void SpecificWorker::manageReachedPose()
 			{
 				QVec arm = innerModel->transformS("world", "robot");
 				QVec obj = innerModel->transformS("world", node->getAttribute("imName"));
-				(arm-obj).print("error");
+				(arm-obj);//.print("error");
 
 				d2n = distanceToNode("robot", newModel, node);
-qDebug()<<"distance "<<d2n;
+//qDebug()<<"distance "<<d2n;
 			}
 			catch(...)
 			{
@@ -1377,6 +640,51 @@ qDebug()<<"distance "<<d2n;
 			for (AGMModelSymbol::iterator edge_itr=node->edgesBegin(newModel); edge_itr!=node->edgesEnd(newModel); edge_itr++)
 			{
 				AGMModelEdge &edge = *edge_itr;
+
+
+//*********** FIX
+				if (edge->getLabel() == "reach")
+				{
+					//TODO: FIX ==> Update wasIn mug status
+						AGMModelSymbol::SPtr mug = newModel->getSymbolByIdentifier(50); //50 ==> bluemug
+						int32_t inTableID = -1;
+						int32_t wasInTableID = -1;
+						for (auto edgeMug = mug->edgesBegin(newModel); edgeMug != mug->edgesEnd(newModel); edgeMug++)
+						{
+							if(newModel->getSymbolByIdentifier(edgeMug->getSymbolPair().second)->symboltype() == "object")
+							{
+								printf("symbol: %d\n", edgeMug->getSymbolPair().second);
+								bool doChange = false;
+								AGMModelSymbol::SPtr container = newModel->getSymbolByIdentifier(edgeMug->getSymbolPair().second);
+								for (auto edgeMug2 = container->edgesBegin(newModel); edgeMug2 != container->edgesEnd(newModel); edgeMug2++)
+								{
+									if (edgeMug2->getLabel() == "table")
+										doChange = true;
+								}
+								if (doChange)
+								{
+									printf("doChange\n");
+									if (edgeMug->getLabel() == "wasIn")
+									{
+										wasInTableID = edgeMug->getSymbolPair().second;
+									}
+									else if (edgeMug->getLabel() == "in")
+									{
+										inTableID = edgeMug->getSymbolPair().second;
+									}
+								}
+							}
+						}
+qDebug()<<"inTable"<<inTableID<<"was"<<wasInTableID;
+						if(inTableID != -1 and wasInTableID != -1 and inTableID != wasInTableID)
+						{
+							changed = true;
+							newModel->removeEdgeByIdentifiers(mug->identifier, wasInTableID, "wasIn");
+							newModel->addEdgeByIdentifiers( mug->identifier, inTableID, "wasIn");
+						}
+				}
+//***************
+
 				if (edge->getLabel() == "reach" and d2n > THRESHOLD_POSE+schmittTriggerThreshold )
 				{
 					edge->setLabel("noReach");
@@ -1407,7 +715,7 @@ qDebug()<<"distance "<<d2n;
 }
 
 
-float SpecificWorker::distanceToNode(std::string reference_name, AGMModel::SPtr model, AGMModelSymbol::SPtr object)
+float ActionExecution::distanceToNode(std::string reference_name, AGMModel::SPtr model, AGMModelSymbol::SPtr object)
 {
 	QMutexLocker locker(mutex);
 
@@ -1419,7 +727,7 @@ float SpecificWorker::distanceToNode(std::string reference_name, AGMModel::SPtr 
 
 }
 
-int32_t SpecificWorker::getIdentifierOfRobotsLocation(AGMModel::SPtr &worldModel)
+int32_t ActionExecution::getIdentifierOfRobotsLocation(AGMModel::SPtr &worldModel)
 {
 	for (AGMModel::iterator symbol_it=worldModel->begin(); symbol_it!=worldModel->end(); symbol_it++)
 	{
@@ -1441,7 +749,7 @@ int32_t SpecificWorker::getIdentifierOfRobotsLocation(AGMModel::SPtr &worldModel
 	return -1;
 }
 
-void SpecificWorker::setIdentifierOfRobotsLocation(AGMModel::SPtr &model, int32_t identifier)
+void ActionExecution::setIdentifierOfRobotsLocation(AGMModel::SPtr &model, int32_t identifier)
 {
 	bool didSomethin = false;
 	for (AGMModel::iterator symbol_it=worldModel->begin(); symbol_it!=worldModel->end(); symbol_it++)
@@ -1481,7 +789,7 @@ void SpecificWorker::setIdentifierOfRobotsLocation(AGMModel::SPtr &model, int32_
 		qFatal("couldn't update robot's room in the cog graph");
 }
 
-void SpecificWorker::action_ChangeRoom(bool newAction)
+void ActionExecution::action_ChangeRoom(bool newAction)
 {
 	static float lastX = std::numeric_limits<float>::quiet_NaN();
 	static float lastZ = std::numeric_limits<float>::quiet_NaN();
@@ -1542,12 +850,12 @@ void SpecificWorker::action_ChangeRoom(bool newAction)
 	}
 }
 
-void SpecificWorker::action_Stop(bool newAction)
+void ActionExecution::action_Stop(bool newAction)
 {
 	stop();
 }
 
-void SpecificWorker::action_ReachPose(bool newAction)
+void ActionExecution::action_ReachPose(bool newAction)
 {
 	printf("action_ReachPose,%d: %d\n", __LINE__, newAction);
 	static float lastX = std::numeric_limits<float>::quiet_NaN();
@@ -1594,7 +902,7 @@ void SpecificWorker::action_ReachPose(bool newAction)
 	}
 }
 
-void SpecificWorker::action_FindObjectVisuallyInTable(bool newAction)
+void ActionExecution::action_FindObjectVisuallyInTable(bool newAction)
 {
 // 	stop();
 
@@ -1663,7 +971,7 @@ void SpecificWorker::action_FindObjectVisuallyInTable(bool newAction)
 	}
 }
 
-void SpecificWorker::action_NoAction(bool newAction)
+void ActionExecution::action_NoAction(bool newAction)
 {
 	try{
 		std::string state = trajectoryrobot2d_proxy->getState().state;
@@ -1680,7 +988,7 @@ void SpecificWorker::action_NoAction(bool newAction)
 
 
 // Send target to trajectory
-void SpecificWorker::go(float x, float z, float alpha, bool rot, float xRef, float zRef, float threshold)
+void ActionExecution::go(float x, float z, float alpha, bool rot, float xRef, float zRef, float threshold)
 {
 	static bool first = true;
 
@@ -1709,7 +1017,7 @@ void SpecificWorker::go(float x, float z, float alpha, bool rot, float xRef, flo
 
 	try
 	{
-		std::cout<< "ENVIANDO A trajectoryrobot2d->go(" << currentTarget.x << ", " << currentTarget.z << ", " << currentTarget.ry << ", " << xRef << ", " << zRef << threshold << " )" <<std::endl;
+		std::cout<< "ENVIANDO A trajectoryrobot2d->go(" << currentTarget.x << ", " << currentTarget.z << ", " << currentTarget.ry << ", " << xRef << ", " << zRef << ", " << threshold << " )" <<std::endl;
 		trajectoryrobot2d_proxy->goReferenced(currentTarget, xRef, zRef, threshold);
 	}
 	catch(const RoboCompTrajectoryRobot2D::RoboCompException &ex)
@@ -1727,7 +1035,7 @@ void SpecificWorker::go(float x, float z, float alpha, bool rot, float xRef, flo
 }
 
 
-void SpecificWorker::stop()
+void ActionExecution::stop()
 {
 	try
 	{
@@ -1745,84 +1053,12 @@ void SpecificWorker::stop()
 
 
 
-
-// *****************************************************************************************++
-// AGENT RELATED
-// **********************************************************************************************
-
-bool SpecificWorker::activateAgent(const ParameterMap& prs)
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void ActionExecution::structuralChange(const RoboCompAGMWorldModel::World& modification)
 {
-	bool activated = false;
-	printf("<<activateAgent\n");
-	if (setParametersAndPossibleActivation(prs, activated))
-	{
-			if (not activated)
-			{
-				printf("activateAgent 0 >>\n");
-				return activate(p);
-			}
-	}
-	else
-	{
-		printf("activateAgent 1 >>\n");
-		return false;
-	}
-	printf("activateAgent 2 >>\n");
-	return true;
-}
-
-bool SpecificWorker::deactivateAgent()
-{
-		return deactivate();
-}
-
-StateStruct SpecificWorker::getAgentState()
-{
-	StateStruct s;
-	if (isActive())
-	{
-		s.state = Running;
-	}
-	else
-	{
-		s.state = Stopped;
-	}
-	s.info = p.action.name;
-	return s;
-}
-
-ParameterMap SpecificWorker::getAgentParameters()
-{
-	return params;
-}
-
-bool SpecificWorker::setAgentParameters(const ParameterMap& prs)
-{
-	bool activated = false;
-	return setParametersAndPossibleActivation(prs, activated);
-}
-
-void SpecificWorker::killAgent()
-{
-}
-
-Ice::Int SpecificWorker::uptimeAgent()
-{
-	return 0;
-}
-
-bool SpecificWorker::reloadConfigAgent()
-{
-	return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modification)
-{	qDebug()<<"StructuralChange";
 	printf("pre <<structuralChange\n");
-	QMutexLocker l(mutex);
+	//QMutexLocker l(mutex);
 	printf("<<structuralChange\n");
 
 	AGMModelConverter::fromIceToInternal(modification, worldModel);
@@ -1831,115 +1067,10 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 
 	if (innerModel) delete innerModel;
 	innerModel = AGMInner::extractInnerModel(worldModel, "world", true);
-
-	cambiopos=true;
-	movperson = true;
-
 	printf("structuralChange>>\n");
 }
 
-void SpecificWorker::symbolUpdated(const RoboCompAGMWorldModel::Node& modification)
-{
-  //qDebug()<<"symbolUpdated";
-
-	QMutexLocker l(mutex);
-
-	AGMModelConverter::includeIceModificationInInternalModel(modification, worldModel);
-}
-
-void SpecificWorker::symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence &modifications)
-{
-
-  //qDebug()<<"symbolsUpdated";
-	QMutexLocker l(mutex);
-
-	for (auto modification : modifications)
-		AGMModelConverter::includeIceModificationInInternalModel(modification, worldModel);
-}
-
-
-void SpecificWorker::edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &modifications)
-{	//qDebug()<<"edgesUpdated";
-	cambiopos=true;
-	QMutexLocker lockIM(mutex);
-
-
-	for (auto modification : modifications)
-	{
-
-		AGMModelConverter::includeIceModificationInInternalModel(modification, worldModel);
-		AGMModelEdge dst;
-		AGMModelConverter::fromIceToInternal(modification,dst);
-		AGMInner::updateImNodeFromEdge(worldModel, dst, innerModel);
-	}
-}
-
-
-/**
- * \brief ACTUALIZACION DEL ENLACE EN INNERMODEL
- */
-void SpecificWorker::edgeUpdated(const RoboCompAGMWorldModel::Edge& modification)
-{
-	cambiopos=true;
-
-	//qDebug()<<"edgeUpdated";
-	QMutexLocker lockIM(mutex);
-	AGMModelConverter::includeIceModificationInInternalModel(modification, worldModel);
-	AGMModelEdge dst;
-	AGMModelConverter::fromIceToInternal(modification,dst);
-	AGMInner::updateImNodeFromEdge(worldModel, dst, innerModel);
-}
-
-
-bool SpecificWorker::setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated)
-{
-	printf("<<< setParametersAndPossibleActivation\n");
-	// We didn't reactivate the component
-	reactivated = false;
-
-	// Update parameters
-	params.clear();
-	for (ParameterMap::const_iterator it=prs.begin(); it!=prs.end(); it++)
-	{
-		printf("param:%s   value:%s\n", it->first.c_str(), it->second.value.c_str());
-		params[it->first] = it->second;
-	}
-	printf("----\n");
-
-	try
-	{
-		action = params["action"].value;
-		std::transform(action.begin(), action.end(), action.begin(), ::tolower);
-
-		if (action == "graspobject")
-		{
-			active = true;
-		}
-		else
-		{
-			active = true;
-		}
-	}
-	catch (...)
-	{
-		printf("exception in setParametersAndPossibleActivation %d\n", __LINE__);
-		return false;
-	}
-
-	// Check if we should reactivate the component
-	if (active)
-	{
-		active = true;
-		reactivated = true;
-	}
-
-	printf("setParametersAndPossibleActivation >>>\n");
-
-	return true;
-}
-
-
-void SpecificWorker::sendModificationProposal(AGMModel::SPtr &newModel, AGMModel::SPtr &worldModel, string m)
+void ActionExecution::sendModificationProposal(AGMModel::SPtr &newModel, AGMModel::SPtr &worldModel, string m)
 {
 	QMutexLocker locker(mutex);
 
@@ -1961,5 +1092,4 @@ void SpecificWorker::sendModificationProposal(AGMModel::SPtr &newModel, AGMModel
 		exit(1);
 	}
 }
-
 

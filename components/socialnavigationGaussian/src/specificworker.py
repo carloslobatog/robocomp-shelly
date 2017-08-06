@@ -107,15 +107,14 @@ class Person(object):
     x = 0
     y = 0
     th = 0
-    polyline = []
-    xdot = 0
-    ydot = 0
-    vel=0
+    vel = 0
+
 
     _radius = 0.30
+
     """ Public Methods """
 
-    def __init__(self, x=0, y=0, th=0,vel=0):
+    def __init__(self, x=0, y=0, th=0, vel=0):
         self.x = x
         self.y = y
         self.th = th
@@ -201,9 +200,6 @@ class Person(object):
         """
         ##he cambiado el valor de las sigmas porque la gaussiana que dibujaba con las anteriores era muy grande
 
-
-
-
         alpha = np.arctan2(y - self.y, x - self.x) - rot - pi / 2
         nalpha = np.arctan2(np.sin(alpha), np.cos(alpha))  # Normalizando no intervalo [-pi, pi)
 
@@ -221,6 +217,12 @@ class Person(object):
         return z
 
 
+class Object():
+    def __init__(self, x=0, y=0, th=0, sp=0):
+        self.x = x
+        self.y = y
+        self.th = th
+        self.sp = sp
 
 
 class SpecificWorker(GenericWorker):
@@ -356,7 +358,7 @@ class SpecificWorker(GenericWorker):
 
     def getPassOnRight(self, persons, v, dibujar):
 
-        plt.close('all')
+        plt.close("all")
 
 
         lx_inf = -6
@@ -418,7 +420,7 @@ class SpecificWorker(GenericWorker):
         polylines = []
 
         for o in objects:
-            obj = Person(o.x, o.z, o.angle)
+            obj = Object(o.x, o.z, o.angle, o.space)
             print("OBJETO")
             ##para dibujarlo
             if (d):
@@ -432,10 +434,10 @@ class SpecificWorker(GenericWorker):
                 plt.gca().add_line(heading)
 
             w = 1.0
-            h = 1.5
+
             print (obj.x,obj.y)
             ##para calcular el rectangulo
-            s = QRectF(QPointF(0, 0), QSize(w, h))
+            s = QRectF(QPointF(0, 0), QSizeF(w, obj.sp))
 
             # if (d):
             #     plt.plot (s.bottomLeft().x(),s.bottomLeft().y(),"go")
@@ -446,8 +448,8 @@ class SpecificWorker(GenericWorker):
             space = QPolygonF()
             space.append(s.topLeft())
             space.append(s.topRight())
-            space.append(QPointF(s.bottomRight().x()+ w/4, s.bottomRight().y()))
-            space.append(QPointF(s.bottomLeft().x()-w/4,s.bottomLeft().y()))
+            space.append(QPointF(s.bottomRight().x()+ obj.sp/6, s.bottomRight().y()))
+            space.append(QPointF(s.bottomLeft().x()-obj.sp/6,s.bottomLeft().y()))
 
 
             t = QTransform()
