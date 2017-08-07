@@ -40,7 +40,7 @@ public:
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
 	RoboCompCommonBehavior::ParameterList getWorkerParams();	
 	
-	QMutex *mutex;
+	QMutex *mx;
 	
 	LoggerPrx logger_proxy;
 	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;

@@ -71,7 +71,7 @@ public:
 	//bool para saber si se ha movido alguna persona
 	bool movperson = false;
 	int32_t robotSymbolId;	
-
+    
 	struct Point { //PARA GUARDAR LOS DATOS EN UN ARCHIVO
 	  float x;
 	  float z;
@@ -81,7 +81,6 @@ public:
 	
 	//PARA LEER EL VALOR DEL SLIDER
 	int prox = 0;
-
 	//PARA GUARDAR LA DISTANCIA RECORRIDA
 	float totaldist=0;
 	
@@ -93,7 +92,9 @@ public:
 	
 	//Class ActionExecution
 	ActionExecution aE;
-
+	
+	
+	bool staticperson = false;
 	///////////////////////////////////////////////////////////////////////////
 	/// SERVANTS
 	//////////////////////////////////////////////////////////////////////////

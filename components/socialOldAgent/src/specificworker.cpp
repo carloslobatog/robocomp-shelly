@@ -743,19 +743,6 @@ void SpecificWorker::compute( )
 			
 		 } 
 		 
-	  
-		   for(auto s: secuencia2)
-		 {
-			RoboCompTrajectoryRobot2D::PolyLine poly;
-
-			for(auto p: s)
-			{
-				RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
-				poly.push_back(punto);
-
-			}
-			lista.push_back(poly);
-		  }
 		  
 	  
 		 qDebug()<<"llamamos al SetHumanSpace";

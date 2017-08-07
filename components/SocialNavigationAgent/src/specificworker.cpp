@@ -150,45 +150,54 @@ void SpecificWorker::compute( )
 
 	if (changepos)
 	{
-	  totalp.clear();
-	  totalpmov.clear();
-	  totalpersons.clear();
-	 for (int ind=0;ind<pn.size();ind++)
-	 {
-		if (pn[ind])
+		totalp.clear();
+		totalpmov.clear();
+		totalpersons.clear();
+	
+		for (int ind=0;ind<pn.size();ind++)
+	
 		{
-			AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(pSymbolId[ind], "RT");
-			AGMModelEdge &edgeRT = worldModel->getEdgeByIdentifiers(personParent->identifier, pSymbolId[ind], "RT");
-			person.x = str2float(edgeRT.attributes["tx"])/1000;
-			person.z = str2float(edgeRT.attributes["tz"])/1000;
-			person.angle = str2float(edgeRT.attributes["ry"]);
-// 			person.vel=str2float(edgeRT.attributes["velocity"]);			
-			totalpersons.push_back(person);		
-			
-// 			if(person.vel>0)
-// 				ppn[ind]=true;
-//				totalpmov.push_back(person);
-// 			else
-// 				ppn[ind]=false;
-				totalp.push_back(person);		
+			if (pn[ind])
+			{
+				AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(pSymbolId[ind], "RT");
+				AGMModelEdge &edgeRT = worldModel->getEdgeByIdentifiers(personParent->identifier, pSymbolId[ind], "RT");
+				person.x = str2float(edgeRT.attributes["tx"])/1000;
+				person.z = str2float(edgeRT.attributes["tz"])/1000;
+				person.angle = str2float(edgeRT.attributes["ry"]);
+	// 			person.vel=str2float(edgeRT.attributes["velocity"]);			
+				person.vel=0;
+				totalpersons.push_back(person);		
+				
+				if(person.vel>0)
+				{
+					ppn[ind]=true;
+					pn[ind]=false;
+					totalpmov.push_back(person);
+				}
+				else
+				{  
+					ppn[ind]=false;
+					totalp.push_back(person);							
+
+				}
+			}
+		
+			if (first)
+			{
+				totalaux.push_back(person);
+				movperson=true;
+			}
+			else if  (movperson==false)
+				{
+					if ((totalaux[i].x!=person.x)||(totalaux[i].z!=person.z)||(totalaux[i].angle!=person.angle))
+						movperson = true;
+				
+
+				totalaux[i]=person;
+			}
 		}
 		
-		if (first)
-		{
-			totalaux.push_back(person);
-			movperson=true;
-		}
-			else
-		{
-			if  (movperson==false){
-				if ((totalaux[i].x!=person.x)||(totalaux[i].z!=person.z)||(totalaux[i].angle!=person.angle))
-					movperson = true;
-			}
-
-			totalaux[i]=person;
-		}
-  }
-				
+		
 		robotSymbolId = worldModel->getIdentifierByType("robot");
 		AGMModelSymbol::SPtr robotparent = worldModel->getParentByLink(robotSymbolId, "RT");
 		AGMModelEdge &edgeRTrobot  = worldModel->getEdgeByIdentifiers(robotparent->identifier, robotSymbolId, "RT");
@@ -222,25 +231,44 @@ void SpecificWorker::compute( )
 		qDebug ("A person has moved. Calling trajectory");		
 		try
 		{  
-			SNGPolylineSeq seq = gauss(false);
-			UpdateInnerModel(seq);
-			RoboCompTrajectoryRobot2D::PolyLineList list;
-			for(auto s: seq)
-			{
-				RoboCompTrajectoryRobot2D::PolyLine poly; 
-				for(auto p: s)   
-				{
-					RoboCompTrajectoryRobot2D::PointL pointT = {p.x, p.z};
-					poly.push_back(pointT);
+			RoboCompTrajectoryRobot2D::PolyLineList lista;
+	
+		
+			for (int st=0; st<pn.size();st++)
+			{	
+				if (pn[st]==  true)
+				{	
+					staticperson = true;			
+					break;
 				}
-				list.push_back(poly);
 			}
-			  trajectoryrobot2d_proxy->setHumanSpace(list);
+			
+			if (staticperson)
+			{
+				SNGPolylineSeq secuencia = gauss(false);
+				for(auto s: secuencia)
+				{
+					RoboCompTrajectoryRobot2D::PolyLine poly;
+
+					for(auto p: s)
+					{
+						RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
+						poly.push_back(punto);
+					}
+					lista.push_back(poly);
+				}			  
+			}
 		}
+		
 		catch( const Ice::Exception &e)
 		{ 
 			std::cout << e << std::endl;
-		}		
+		}
+		
+		
+		
+		
+		
 	movperson = false;
 	}	
 	
@@ -327,8 +355,11 @@ void SpecificWorker::savedata()
 
 SNGPolylineSeq SpecificWorker::gauss(bool draw)
 {
-	sequence.clear();
-	sequence = socialnavigationgaussian_proxy-> getPersonalSpace(totalp, prox, draw);
+	if (staticperson)
+	{  
+		sequence.clear();
+		sequence = socialnavigationgaussian_proxy-> getPersonalSpace(totalp, prox, draw);
+	}
 	return sequence;
 }
 

@@ -66,7 +66,7 @@ void ActionExecution::Update(std::string a,ParameterMap prs)
 
 void ActionExecution::actionExecution()
 {
-//	QMutexLocker locker(mutex);
+//	QMutexLocker locker(mx);
 	qDebug() << "---------------------------------------------------";
 	qDebug() <<__FUNCTION__ <<"Checking ACTION: " << QString::fromStdString(action);
 
@@ -633,7 +633,7 @@ void ActionExecution::manageReachedPose()
 
 	bool changed = false;
 
-	QMutexLocker locker(mutex);
+	QMutexLocker locker(mx);
 
 	AGMModel::SPtr newModel(new AGMModel(worldModel));
 
@@ -741,7 +741,7 @@ qDebug()<<"inTable"<<inTableID<<"was"<<wasInTableID;
 
 float ActionExecution::distanceToNode(std::string reference_name, AGMModel::SPtr model, AGMModelSymbol::SPtr object)
 {
-	QMutexLocker locker(mutex);
+	QMutexLocker locker(mx);
 
 	QVec arm = innerModel->transformS("world", reference_name);
 	arm(1) = 0;
@@ -1083,7 +1083,7 @@ void ActionExecution::stop()
 void ActionExecution::structuralChange(const RoboCompAGMWorldModel::World& modification)
 {
 	printf("pre <<structuralChange\n");
-	//QMutexLocker l(mutex);
+	//QMutexLocker l(mx);
 	printf("<<structuralChange\n");
 
 	AGMModelConverter::fromIceToInternal(modification, worldModel);
@@ -1097,7 +1097,7 @@ void ActionExecution::structuralChange(const RoboCompAGMWorldModel::World& modif
 
 void ActionExecution::sendModificationProposal(AGMModel::SPtr &newModel, AGMModel::SPtr &worldModel, string m)
 {
-	QMutexLocker locker(mutex);
+	QMutexLocker locker(mx);
 
 	try
 	{
