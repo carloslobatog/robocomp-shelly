@@ -24,7 +24,6 @@ ActionExecution::ActionExecution()
 	worldModel->name = "worldModel";
 	innerModel = new InnerModel();
 	haveTarget = false;
-	connect(&trajReader, SIGNAL(timeout()), this, SLOT(readTrajState()));
 	
 }
 

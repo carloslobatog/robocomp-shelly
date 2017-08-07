@@ -148,7 +148,7 @@ SNGPolylineSeq SpecificWorker::gauss(bool dibujar)
 	if (staticperson)
 	{  
 		secuencia.clear();
-		secuencia = socialnavigationgaussian_proxy-> getPersonalSpace(totalp, valorprox, dibujar);
+		secuencia = socialnavigationgaussian_proxy-> getPersonalSpace(totalp, valorprox, dibujar);	  
 	}
 	return secuencia;
 
@@ -571,7 +571,8 @@ void SpecificWorker::compute( )
 			person.x = str2float(edgeRT.attributes["tx"])/1000;
 			person.z = str2float(edgeRT.attributes["tz"])/1000;
 			person.angle = str2float(edgeRT.attributes["ry"]);
- 			person.vel=str2float(edgeRT.attributes["velocity"]);
+			person.vel=0;
+// 			person.vel=str2float(edgeRT.attributes["velocity"]);
 			qDebug() <<"PERSONA 1\n" <<"Coordenada x"<< person.x << "Coordenada z"<< person.z << "Rotacion "<< person.angle;
 			totalpersons.push_back(person);
 			
@@ -586,7 +587,6 @@ void SpecificWorker::compute( )
 			{  
 				ppn[ind]=false;
 				totalp.push_back(person);							
-
 			}
 		
 		if (first)
@@ -660,100 +660,100 @@ void SpecificWorker::compute( )
 	if (movperson)
 	{	
 	
-	qDebug ("se ha movido alguna pesona, se envia la polilinea");
-	try
-	{
+		qDebug ("se ha movido alguna pesona, se envia la polilinea");
+		try
+		{
 
-		RoboCompTrajectoryRobot2D::PolyLineList lista;
-	
+			RoboCompTrajectoryRobot2D::PolyLineList lista;
 		
-		for (int st=0; st<pn.size();st++)
-		{	
-			if (pn[st]==  true)
+			
+			for (int st=0; st<pn.size();st++)
 			{	
-				staticperson = true;			
-				break;
-			}
-		}
-		
-		if (staticperson)
-		{
-			SNGPolylineSeq secuencia = gauss(false);
-			 for(auto s: secuencia)
-			{
-				RoboCompTrajectoryRobot2D::PolyLine poly;
-
-				for(auto p: s)
-				{
-					RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
-					poly.push_back(punto);
-
+				if (pn[st]==  true)
+				{	
+					staticperson = true;			
+					break;
 				}
-				lista.push_back(poly);
 			}
-		  
-		}
-		
-		
-		
-		for (int mv=0; mv<ppn.size();mv++)
-		{	
-			if (ppn[mv]==true)
+			
+			if (staticperson)
 			{
-				movingperson = true;
-				break;
+				SNGPolylineSeq secuencia = gauss(false);
+				for(auto s: secuencia)
+				{
+					RoboCompTrajectoryRobot2D::PolyLine poly;
+
+					for(auto p: s)
+					{
+						RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
+						poly.push_back(punto);
+
+					}
+					lista.push_back(poly);
+				}
+			  
+			}
+			
+			
+			
+			for (int mv=0; mv<ppn.size();mv++)
+			{	
+				if (ppn[mv]==true)
+				{
+					movingperson = true;
+					break;
+					
+				}
+			}
+			
+			if (movingperson)
+			{
+				SNGPolylineSeq secuencia2 = gausspor(false);
+				for(auto s: secuencia2)
+				{
+					RoboCompTrajectoryRobot2D::PolyLine poly;
+
+					for(auto p: s)
+					{
+						RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
+						poly.push_back(punto);
+
+					}
+					lista.push_back(poly);
+				}
+			  
+			}
+			
 				
-			}
-		}
-		
-		if (movingperson)
-		{
-			SNGPolylineSeq secuencia2 = gausspor(false);
-			 for(auto s: secuencia2)
-			{
-				RoboCompTrajectoryRobot2D::PolyLine poly;
-
-				for(auto p: s)
+			if (!objects.empty())	
+			{  
+				SNGPolylineSeq secuenciaobj = objectInteraction(false);
+				for(auto s: secuenciaobj)
 				{
-					RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
-					poly.push_back(punto);
+					RoboCompTrajectoryRobot2D::PolyLine poly;
 
+					for(auto p: s)
+					{
+						RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
+						poly.push_back(punto);
+
+					}
+					lista.push_back(poly);
 				}
-				lista.push_back(poly);
-			}
+				
+			} 
+			
+			  
 		  
-		}
+			qDebug()<<"llamamos al SetHumanSpace";
+
+			trajectoryrobot2d_proxy->setHumanSpace(lista);
 		
-			
-		if (!objects.empty())	
-		{  
-			SNGPolylineSeq secuenciaobj = objectInteraction(false);
-			for(auto s: secuenciaobj)
-			{
-				RoboCompTrajectoryRobot2D::PolyLine poly;
+		}
+		catch( const Ice::Exception &e)
+		{ std::cout << e << std::endl;}
 
-				for(auto p: s)
-				{
-					RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
-					poly.push_back(punto);
-
-				}
-				lista.push_back(poly);
-			}
-			
-		 } 
-		 
-		  
-	  
-		 qDebug()<<"llamamos al SetHumanSpace";
-
-		 trajectoryrobot2d_proxy->setHumanSpace(lista);
-	
-	}
-	catch( const Ice::Exception &e)
-	{ std::cout << e << std::endl;}
-
-	movperson = false;
+		movperson = false;
 	}
 
 
@@ -1820,7 +1820,6 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 	innerModel = AGMInner::extractInnerModel(worldModel, "world", true);
 
 	cambiopos=true;
-	movperson = true;
 
 	printf("structuralChange>>\n");
 }

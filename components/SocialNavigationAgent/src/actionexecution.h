@@ -30,6 +30,7 @@
 
 class ActionExecution :
 public QObject
+
 {
 
 public:
@@ -54,6 +55,7 @@ public slots:
 	void readTrajState();
 
 private:
+	
 	bool setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated);
 	bool active;
 	void sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel,std::string m);

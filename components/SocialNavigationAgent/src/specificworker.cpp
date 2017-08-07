@@ -38,7 +38,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 // 	world = AGMModel::SPtr(new AGMModel());
 	
 	//Timed slot to read TrajectoryRobot2D state
-	//connect(&trajReader, SIGNAL(timeout()), this, SLOT(readTrajState()));
+	connect(&trajReader, SIGNAL(timeout()), &aE, SLOT(readTrajState()));
 	//Dibujar gaussiana
 	connect(gaussiana,SIGNAL(clicked()),this, SLOT(gauss()));
 	//Sacar la pose del robot
