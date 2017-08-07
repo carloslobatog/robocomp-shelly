@@ -16,13 +16,11 @@
  *    You should have received a copy of the GNU General Public License
  *    along with RoboComp.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #include "specificworker.h"
 #include <../trajectoryrobot2d/src/innermodeldraw.h>
 #include <math.h> 
 
 #define PI 3.14159265
-
 
 /**
 * \brief Default constructor
@@ -85,11 +83,16 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 			qFatal("SetParams: InnerModel could not be read from Executive");
 	
 	pathfinder.initialize(innerModel, this->params, params);
-
+	
+	//Proxies for actionExecution
+	aE.logger_proxy = logger_proxy;
+	aE.agmexecutive_proxy = agmexecutive_proxy;
+	aE.omnirobot_proxy = omnirobot_proxy;
+	aE.trajectoryrobot2d_proxy = trajectoryrobot2d_proxy;
+	
+	
 	return true;
 }
-
-
 
 /**
 * \brief Check if persons are included in the AGM. 
@@ -102,7 +105,7 @@ void SpecificWorker::compute( )
 	if (first)
 	{	
 		qLog::getInstance()->setProxy("both", logger_proxy);
-		rDebug2(("navigationAgent started"));
+		rDebug2(("SocialnavigationAgent started"));
 	}
 
 	if (worldModel->getIdentifierByType("robot") < 0)
@@ -242,7 +245,7 @@ void SpecificWorker::compute( )
 	}	
 	
 	//qDebug()<<"Update actionEx";
-	aE.Update(innerModel,worldModel,action);
+	aE.Update(action,params);
 
 }	 	
 	
@@ -490,8 +493,8 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 
 	changepos=true;
 	
-	qDebug()<<"StructuralChange en actionExecution";
-	aE.structuralChange(modification);
+//	qDebug()<<"StructuralChange en actionExecution";
+//	aE.structuralChange(modification);
 	
 	printf("structuralChange>>\n");
 	

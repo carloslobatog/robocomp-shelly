@@ -93,7 +93,7 @@ public:
 	
 	//Class ActionExecution
 	ActionExecution aE;
-	
+
 	///////////////////////////////////////////////////////////////////////////
 	/// SERVANTS
 	//////////////////////////////////////////////////////////////////////////
@@ -127,8 +127,8 @@ public:
 public slots:
  	void compute();
 	//void readTrajState();
-	SNGPolylineSeq gauss(bool dibujar=true);
-	void changevalue(int valor);
+	SNGPolylineSeq gauss(bool draw=true);
+	void changevalue(int value);
 	void savedata();
 	void UpdateInnerModel(SNGPolylineSeq seq);
 
@@ -136,12 +136,8 @@ private:
 	bool setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated);
 	bool active;
 	void sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel,std::string m);
-	void includeMovementInRobotSymbol(AGMModelSymbol::SPtr robot);
-	void go(float x, float z, float alpha=0, bool rot=false, float xRef=0, float zRef=0, float threshold=200);
-	void stopL();
-	void actionExecution();
-	int32_t getIdentifierOfRobotsLocation(AGMModel::SPtr &worldModel);
-	void setIdentifierOfRobotsLocation(AGMModel::SPtr &worldModel, int32_t identifier);
+	
+private:
 	std::string action;
 	ParameterMap params;
 	AGMModel::SPtr worldModel;
@@ -156,20 +152,6 @@ private:
 	robocomp::pathfinder::PathFinder pathfinder;
 	
 	
-	void manageReachedPose();
-	float distanceToNode(std::string reference_name, AGMModel::SPtr model, AGMModelSymbol::SPtr object);
-	void action_WaitingToAchieve();
-	void action_Stop(bool newAction = true);
-	void action_ReachPose(bool newAction = true);
-	void action_ChangeRoom(bool newAction = true);
-	void action_FindObjectVisuallyInTable(bool newAction = true);
-	void action_SetObjectReach(bool newAction = true);
-//	void action_GraspObject(bool newAction = true);
-	void action_DetectPerson (bool newAction = true);
-	void action_HandObject(bool newAction = true);
-	void action_NoAction(bool newAction = true);
-	void action_HandObject_Offer(bool newAction = true);
-	void action_HandObject_leave(bool newAction = true);
 //CHECK
 	//void updateRobotsCognitiveLocation();
 //	std::map<int32_t, QPolygonF> roomsPolygons;

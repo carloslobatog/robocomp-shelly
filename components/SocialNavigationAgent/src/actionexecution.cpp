@@ -25,16 +25,40 @@ ActionExecution::ActionExecution()
 	innerModel = new InnerModel();
 	haveTarget = false;
 	connect(&trajReader, SIGNAL(timeout()), this, SLOT(readTrajState()));
-
+	
 }
-ActionExecution::~ActionExecution() {}
 
-void ActionExecution::Update(InnerModel *inner,AGMModel::SPtr w,std::string a)
+ActionExecution::~ActionExecution() 
 {
-  /*
-	worldModel = w;
-	innerModel = inner;*/
+  
+}
+
+void ActionExecution::Update(std::string a,ParameterMap prs)
+{
+	static bool first=true;
+
+	if (first)
+	{
+		qLog::getInstance()->setProxy("both", logger_proxy);
+		rDebug2(("ACTION EXECUTION started"));
+		first = false;
+	}
+
+	if (worldModel->getIdentifierByType("robot") < 0)
+	{
+		try
+		{
+			RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
+			structuralChange(w);
+		}
+		catch(...)
+		{
+			printf("The executive is probably not running, waiting for first AGM model publication...");
+		}
+	}
+	
 	action = a;
+	params = prs;
 	actionExecution();
 
 }
@@ -1053,7 +1077,8 @@ void ActionExecution::stop()
 
 
 
-// ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////////4
+
 // ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ActionExecution::structuralChange(const RoboCompAGMWorldModel::World& modification)
 {

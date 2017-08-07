@@ -35,13 +35,14 @@ public QObject
 public:
 	 ActionExecution();
 	~ActionExecution();
-	 void Update(InnerModel *inner,AGMModel::SPtr w, std::string a);
+	 void Update(std::string a, ParameterMap prs);
 	
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
 	RoboCompCommonBehavior::ParameterList getWorkerParams();	
 	
 	QMutex *mutex;
-
+	
+	LoggerPrx logger_proxy;
 	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;
 	OmniRobotPrx omnirobot_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
