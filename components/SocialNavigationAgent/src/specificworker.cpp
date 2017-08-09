@@ -39,14 +39,14 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	
 	//Timed slot to read TrajectoryRobot2D state
 	connect(&trajReader, SIGNAL(timeout()), &aE, SLOT(readTrajState()));
-	//Dibujar gaussiana
-	connect(gaussiana,SIGNAL(clicked()),this, SLOT(gauss()));
-	//Sacar la pose del robot
+
+	connect(gaussiana,SIGNAL(clicked()),&sr, SLOT(gauss()));
+
 	connect(datos,SIGNAL(clicked()),this, SLOT(savedata()));
 	//trajReader.start(1000);
 	
 	//SLIDER
-	connect (proximidad,SIGNAL(valueChanged(int)),this,SLOT(changevalue(int)));
+	connect (proximidad,SIGNAL(valueChanged(int)),&sr,SLOT(changevalue(int)));
 	//connect (proximidad,SIGNAL(sliderMoved()),this,SLOT(sliderM()));
 	
 	proximidad->QSlider::setMinimum (0);
@@ -189,11 +189,11 @@ void SpecificWorker::compute( )
 			}
 			else if  (movperson==false)
 				{
-					if ((totalaux[i].x!=person.x)||(totalaux[i].z!=person.z)||(totalaux[i].angle!=person.angle))
+					if ((totalaux[ind].x!=person.x)or(totalaux[ind].z!=person.z)or(totalaux[ind].angle!=person.angle))
 						movperson = true;
 				
 
-				totalaux[i]=person;
+				totalaux[ind]=person;
 			}
 		}
 		
@@ -212,7 +212,7 @@ void SpecificWorker::compute( )
 		if (poserobot.size()==0)
 			poserobot.push_back(point);
 	  
-		else if ((poserobot[poserobot.size()-1].x!=point.x)||(poserobot[poserobot.size()-1].z!=point.z))		  
+		else if ((poserobot[poserobot.size()-1].x!=point.x)or(poserobot[poserobot.size()-1].z!=point.z))		  
 		{  
 		  float  dist=sqrt((point.x - poserobot[poserobot.size()-1].x)*(point.x - poserobot[poserobot.size()-1].x)
 				+(point.z - poserobot[poserobot.size()-1].z)*(point.z - poserobot[poserobot.size()-1].z));
@@ -231,7 +231,7 @@ void SpecificWorker::compute( )
 		qDebug ("A person has moved. Calling trajectory");		
 		try
 		{  
-			RoboCompTrajectoryRobot2D::PolyLineList lista;
+			RoboCompTrajectoryRobot2D::PolyLineList list;
 	
 		
 			for (int st=0; st<pn.size();st++)
@@ -255,9 +255,12 @@ void SpecificWorker::compute( )
 						RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
 						poly.push_back(punto);
 					}
-					lista.push_back(poly);
+					list.push_back(poly);
 				}			  
 			}
+			
+			qDebug()<<"Calling SetHumanSpace";
+			trajectoryrobot2d_proxy->setHumanSpace(list);
 		}
 		
 		catch( const Ice::Exception &e)
@@ -345,14 +348,6 @@ void SpecificWorker::savedata()
 	}
 
 }
-
-
-/**
-* \brief If the person is in the model it is added to a vector of persons wich is sent to the socialnavigationGaussian
-* to model its personal space. 
-* The function returns a sequence of polylines.
-*/
-
 SNGPolylineSeq SpecificWorker::gauss(bool draw)
 {
 	if (staticperson)
@@ -427,10 +422,6 @@ void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq)
 		}
 	}
 	
-	if (i==3) innerModel->save("innerInicio.xml"); 
-	if (i==50) innerModel->save("innerfinal.xml"); 
-		
-	i++;
 }	
 
 

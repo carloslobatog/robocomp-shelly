@@ -253,10 +253,14 @@ void SpecificWorker::compute()
 		qDebug()<<"Llamamos a Sampler.initialize";
 		sampler.initialize(innerModel, params);
 		qDebug()<<"Salimos de Sampler.initialize";
+		
+		qDebug()<<"Llamamos a myRoad.initialize";
+		road.initialize(innerModel, params);
+		qDebug()<<"Salimos de myRoad.initialize";
+		
+		
 		newPolyline = false;
 	
-		////SE CIERRA CADA VEZ QUE LLAMAMOS AL SAMPLER.INITIALIZE UNA VEZ QUE SE HA AÑADIDO LA POLILINEA EN EL INNERMODEL
-		//printf("%p %p\n", innerModel, sampler.innerModelSampler);
 	
 		
 	}
@@ -378,7 +382,7 @@ bool SpecificWorker::stopCommand(CurrentTarget &target, WayPoints &myRoad, Traje
  * @return bool
  */
 bool SpecificWorker::changeTargetCommand(InnerModel *innerModel, CurrentTarget &target, TrajectoryState &state,
-                                         WayPoints &myRoad)
+                                         WayPoints &)
 {
 	//DEPRECATED
 	qDebug() << __FUNCTION__ << "DEPRECATED";
@@ -495,13 +499,15 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 	///////////////////////////////////
 	// compute all measures relating the robot to the road
 	/////////////////////////////////
+	qDebug()<<"llamaamos a myroad.update";
 	myRoad.update();
-
+	qDebug()<<"salimos de myroad.update";
 	//myRoad.printRobotState(innerModel, target);
 
 	/////////////////////////////////////////////////////
 	//move the robot according to the current force field
 	//////////////////////////////////////////////////////
+	qDebug()<<"llamamos a controller";
 	controller->update(innerModel, lData, omnirobot_proxy, myRoad, true);
 
 	

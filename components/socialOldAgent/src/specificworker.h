@@ -44,7 +44,7 @@ public:
 	~SpecificWorker();
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
 
-//bool para indicar si se ha movido la persona, lo utilizare para imprimir la coordenada de la persona cada vez que se mueva
+	//bool para indicar si se ha movido la persona, lo utilizare para imprimir la coordenada de la persona cada vez que se mueva
 	bool cambiopos=false;
 
 	SNGPolylineSeq secuencia,secuencia2,secuenciaObj;
@@ -62,12 +62,8 @@ public:
 	bool movperson = false;
 
 	//PARA ALMACENAR EL SIMBOLO DE LA PERSONA AL LEERLA DEL MUNDO
-	
 	int32_t robotSymbolId;
 	
-	//chaaaanges
-	//bool pn[6] = {};
-	//bool ppn[6] = {};
 	vector <bool> pn = {false,false,false,false,false,false}; 
 	vector <bool> ppn = {false,false,false,false,false,false}; 
 	

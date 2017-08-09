@@ -496,7 +496,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	Period = 200;
 
 
-	addObjects();
+	//addObjects();
 	
 	timer.start(Period);
 	return true;

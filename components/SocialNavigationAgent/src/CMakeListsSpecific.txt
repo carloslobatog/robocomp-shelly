@@ -10,6 +10,7 @@ SET ( SOURCES
   sampler.cpp
   pathplanner.cpp
   actionexecution.cpp
+  socialrules.cpp
 )
 
 ADD_DEFINITIONS( -std=c++14 )
