@@ -41,7 +41,9 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	connect(&trajReader, SIGNAL(timeout()), &aE, SLOT(readTrajState()));
 
 	connect(gaussiana,SIGNAL(clicked()),&sr, SLOT(gauss()));
-
+	connect(por,SIGNAL(clicked()),&sr, SLOT(PassOnRight()));
+	connect(objint,SIGNAL(clicked()),&sr, SLOT(objectInteraction()));
+	
 	connect(datos,SIGNAL(clicked()),this, SLOT(savedata()));
 	//trajReader.start(1000);
 	
@@ -89,7 +91,8 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	aE.agmexecutive_proxy = agmexecutive_proxy;
 	aE.omnirobot_proxy = omnirobot_proxy;
 	aE.trajectoryrobot2d_proxy = trajectoryrobot2d_proxy;
-	
+	//Proxies for SocialRules
+	sr.socialnavigationgaussian_proxy=socialnavigationgaussian_proxy;
 	
 	return true;
 }
@@ -138,6 +141,7 @@ void SpecificWorker::compute( )
 				if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
 				{
 					pSymbolId[i]=personSymbolId;
+					changepos=true;
 					pn[i]=true;
 					
 					break;
@@ -150,10 +154,8 @@ void SpecificWorker::compute( )
 
 	if (changepos)
 	{
-		totalp.clear();
-		totalpmov.clear();
 		totalpersons.clear();
-	
+		
 		for (int ind=0;ind<pn.size();ind++)
 	
 		{
@@ -164,36 +166,27 @@ void SpecificWorker::compute( )
 				person.x = str2float(edgeRT.attributes["tx"])/1000;
 				person.z = str2float(edgeRT.attributes["tz"])/1000;
 				person.angle = str2float(edgeRT.attributes["ry"]);
-	// 			person.vel=str2float(edgeRT.attributes["velocity"]);			
-				person.vel=0;
+	 			person.vel=str2float(edgeRT.attributes["velocity"]);			
+				//person.vel=0;
 				totalpersons.push_back(person);		
-				
-				if(person.vel>0)
+				qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << "Rotacion "<< person.angle;
+			
+				if (first)
 				{
-					ppn[ind]=true;
-					pn[ind]=false;
-					totalpmov.push_back(person);
+					//This must be changed. If the first human to be inserted is human2 it would be wrong
+					totalaux.push_back(person);
+					movperson=true;
 				}
-				else
-				{  
-					ppn[ind]=false;
-					totalp.push_back(person);							
-
-				}
-			}
-		
-			if (first)
-			{
-				totalaux.push_back(person);
-				movperson=true;
-			}
-			else if  (movperson==false)
+				else if  (movperson==false)
 				{
 					if ((totalaux[ind].x!=person.x)or(totalaux[ind].z!=person.z)or(totalaux[ind].angle!=person.angle))
 						movperson = true;
 				
 
-				totalaux[ind]=person;
+				totalaux[ind]=person;  	  
+			  
+				}
+			
 			}
 		}
 		
@@ -221,45 +214,18 @@ void SpecificWorker::compute( )
 		  qDebug()<<"Distancia calculada"<<dist<<"Distancia total"<<totaldist;
 		    
 		  poserobot.push_back(point);  
-		}		 	    
+		}		 	
+		
 		first = false;
 		changepos=false;	
 	}
 		  
 	if (movperson)
 	{
-		qDebug ("A person has moved. Calling trajectory");		
-		try
-		{  
-			RoboCompTrajectoryRobot2D::PolyLineList list;
 	
-		
-			for (int st=0; st<pn.size();st++)
-			{	
-				if (pn[st]==  true)
-				{	
-					staticperson = true;			
-					break;
-				}
-			}
-			
-			if (staticperson)
-			{
-				SNGPolylineSeq secuencia = gauss(false);
-				for(auto s: secuencia)
-				{
-					RoboCompTrajectoryRobot2D::PolyLine poly;
-
-					for(auto p: s)
-					{
-						RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
-						poly.push_back(punto);
-					}
-					list.push_back(poly);
-				}			  
-			}
-			
-			qDebug()<<"Calling SetHumanSpace";
+		try
+		{
+			RoboCompTrajectoryRobot2D::PolyLineList list = sr.ApplySocialRules(totalpersons);
 			trajectoryrobot2d_proxy->setHumanSpace(list);
 		}
 		
@@ -268,31 +234,16 @@ void SpecificWorker::compute( )
 			std::cout << e << std::endl;
 		}
 		
-		
-		
-		
-		
-	movperson = false;
 	}	
 	
-	//qDebug()<<"Update actionEx";
-	aE.Update(action,params);
-
-}	 	
 	
-
-/**
-* \brief Change the slider's value
-*/
-
-void SpecificWorker::changevalue(int value)
-{
-	prox=value;
-	qDebug()<<"Proximity"<<prox;
+	movperson=false;
+	
+	//qDebug()<<"Update actionEx";
+	//aE.Update(action,params);
+	
 }
-/**
-* \brief This is for saving in txt files different informations (robotpose,personpose,polylines and dist)
-*/
+	 	
 
 void SpecificWorker::savedata()
 {
@@ -348,16 +299,6 @@ void SpecificWorker::savedata()
 	}
 
 }
-SNGPolylineSeq SpecificWorker::gauss(bool draw)
-{
-	if (staticperson)
-	{  
-		sequence.clear();
-		sequence = socialnavigationgaussian_proxy-> getPersonalSpace(totalp, prox, draw);
-	}
-	return sequence;
-}
-
 
 /**
 * \brief The innerModel is extracted from the AGM and the polylines are inserted on it as a set of planes.
@@ -514,9 +455,6 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 	innerModel = AGMInner::extractInnerModel(worldModel, "world", false);
 
 	changepos=true;
-	
-//	qDebug()<<"StructuralChange en actionExecution";
-//	aE.structuralChange(modification);
 	
 	printf("structuralChange>>\n");
 	

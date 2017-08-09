@@ -43,10 +43,10 @@ void SocialRules::changevalue(int value)
 
 SNGPolylineSeq SocialRules::gauss(bool draw)
 {
-	if (staticperson)
+	if (!quietperson.empty())
 	{  
 		sequence.clear();
-		sequence = socialnavigationgaussian_proxy-> getPersonalSpace(totalp, prox, draw);
+		sequence = socialnavigationgaussian_proxy-> getPersonalSpace(quietperson, prox, draw);
 	}
 	return sequence;
 }
@@ -55,11 +55,10 @@ SNGPolylineSeq SocialRules::gauss(bool draw)
 SNGPolylineSeq SocialRules::PassOnRight(bool draw)
 {
 
-
-	if (movingperson)
+	if (!movperson.empty())
 	{
 		sequence2.clear();
-		sequence2 = socialnavigationgaussian_proxy-> getPassOnRight(totalpmov, prox, draw);
+		sequence2 = socialnavigationgaussian_proxy-> getPassOnRight(movperson, prox, draw);
 	}	    
 	return sequence2;
 
@@ -111,11 +110,81 @@ SNGPolylineSeq SocialRules::objectInteraction(bool d)
 	
 }
 
+
+
+
 RoboCompTrajectoryRobot2D::PolyLineList SocialRules::ApplySocialRules(SNGPersonSeq tperson)
 {
 	totalperson=tperson;
+	movperson.clear();
+	quietperson.clear();
 	//for each person check if the velocity is 0, if it is add to totalp, if not add to totalpmov
-  
+	
+	for (auto p: totalperson)
+	{
+		if (p.vel>0)
+			movperson.push_back(p);
+		else
+			quietperson.push_back(p);
+		
+	}
+	
+	
+	RoboCompTrajectoryRobot2D::PolyLineList list;
+	
+	if (!quietperson.empty())
+	{
+		SNGPolylineSeq secuencia = gauss(false);
+		for(auto s: secuencia)
+		{
+			RoboCompTrajectoryRobot2D::PolyLine poly;
 
+			for(auto p: s)
+			{
+				RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
+				poly.push_back(punto);
+			}
+			list.push_back(poly);
+		}			    
+	}
+	
+	if (!movperson.empty())
+	{
+		SNGPolylineSeq secuencia2 = PassOnRight(false);
+		for(auto s: secuencia2)
+		{
+			RoboCompTrajectoryRobot2D::PolyLine poly;
+
+			for(auto p: s)
+			{
+				RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
+				poly.push_back(punto);
+
+			}
+			list.push_back(poly);
+		}
+		  
+		}
+
+	if (!objects.empty())	
+	{  
+		SNGPolylineSeq secuenciaobj = objectInteraction(false);
+		for(auto s: secuenciaobj)
+		{
+			RoboCompTrajectoryRobot2D::PolyLine poly;
+
+			for(auto p: s)
+			{
+				RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
+				poly.push_back(punto);
+
+			}
+			list.push_back(poly);
+		}
+		
+	} 
+	
+
+	return list;
 }
 

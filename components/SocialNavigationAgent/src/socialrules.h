@@ -26,6 +26,7 @@
 
 class SocialRules :public QObject
 {
+Q_OBJECT
 public:
 	SocialRules();
 	~SocialRules();
@@ -34,11 +35,9 @@ public:
 	
 	int prox = 0; //reading the slider
 	
-	bool staticperson = false; //If there are static persons
-	bool movingperson = false; //If there are moving persons
 
-	SNGPersonSeq totalp; // quiet person
-	SNGPersonSeq totalpmov; //moving person
+	SNGPersonSeq quietperson; // quiet person
+	SNGPersonSeq movperson; //moving person
 	SNGPersonSeq totalperson;
 	
 	SNGPolylineSeq sequence, sequence2, sequenceObj;
@@ -52,13 +51,10 @@ public:
 public slots:
   	void changevalue(int value);
 	SNGPolylineSeq gauss(bool draw=true);
-	SNGPolylineSeq PassOnRight(bool draw);
-	SNGPolylineSeq objectInteraction(bool d);
+	SNGPolylineSeq PassOnRight(bool draw=true);
+	SNGPolylineSeq objectInteraction(bool d = true);
 
 };
-
-
-
 
 
 #endif // SOCIALRULES_H

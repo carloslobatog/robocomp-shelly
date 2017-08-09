@@ -58,14 +58,14 @@ public:
 	SNGPersonSeq totalpersons; //este es para leer el fichero
 	SNGPerson robot;	
 	vector <bool> pn = {false,false,false,false,false,false};  // to check if the person is in the world	
-	vector <bool> ppn = {false,false,false,false,false,false};  // if the person is moving
+	//vector <bool> ppn = {false,false,false,false,false,false};  // if the person is moving
 	int32_t personSymbolId;
 	int32_t pSymbolId[6];
 	
 	SNGPerson person;
 	SNGPerson personaux;
-	SNGPersonSeq totalp; // quiet person
-	SNGPersonSeq totalpmov; //moving person
+// 	SNGPersonSeq totalp; // quiet person
+// 	SNGPersonSeq totalpmov; //moving person
 	SNGPersonSeq totalaux; //to check if the person has changed its position
 	
 	//bool para saber si se ha movido alguna persona
@@ -79,15 +79,11 @@ public:
 	Point point;
 	vector <Point> poserobot;
 	
-	//PARA LEER EL VALOR DEL SLIDER
-	int prox = 0;
 	//PARA GUARDAR LA DISTANCIA RECORRIDA
 	float totaldist=0;
 	
-	//Class ActionExecution
-	ActionExecution aE;
-	//Class SocialRules
-	SocialRules sr;
+	ActionExecution aE; //Class ActionExecution
+	SocialRules sr; //Class SocialRules
 	
 	bool staticperson = false;
 	///////////////////////////////////////////////////////////////////////////
@@ -123,8 +119,8 @@ public:
 public slots:
  	void compute();
 	//void readTrajState();
-	SNGPolylineSeq gauss(bool draw=true);
-	void changevalue(int value);
+// 	SNGPolylineSeq gauss(bool draw=true);
+// 	void changevalue(int value);
 	void savedata();
 	void UpdateInnerModel(SNGPolylineSeq seq);
 
