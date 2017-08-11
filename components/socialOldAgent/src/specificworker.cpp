@@ -129,22 +129,6 @@ qDebug("escribimos en el fichero personpose.txt la pose de las personas");
 SNGPolylineSeq SpecificWorker::gauss(bool dibujar)
 {
 
-/*	SNGPersonSeq persons;
-
-	//push back es para incluir a la persona en el vector de personas
-	if (p1)
-	persons.push_back(person1);
-	if (p2)
-	persons.push_back(person2);
-	if (p3)
-	persons.push_back(person3);
-	if (p4)
-	persons.push_back(person4);
-	if (p5)
-	persons.push_back(person5);
-	if (p6)
-	persons.push_back(person6)*/;
-
 	if (staticperson)
 	{  
 		secuencia.clear();
@@ -156,16 +140,6 @@ SNGPolylineSeq SpecificWorker::gauss(bool dibujar)
 SNGPolylineSeq SpecificWorker::gausspor(bool dibujar)
 {
 
-// 	SNGPersonSeq persons;
-// 
-// 	//push back es para incluir a la persona en el vector de personas
-// 	if (pp1)	persons.push_back(person1);
-// 	if (pp2)	persons.push_back(person2);
-// 	if (pp3)	persons.push_back(person3);
-// 	if (pp4)	persons.push_back(person4);
-// 	if (pp5)	persons.push_back(person5);
-// 	if (pp6)	persons.push_back(person6);
-
 	if (movingperson)
 	{
 		secuencia2.clear();
@@ -176,317 +150,30 @@ SNGPolylineSeq SpecificWorker::gausspor(bool dibujar)
 	
 }
 
-void SpecificWorker::addObjects()
-{
-  qDebug()<<"AAAAAAADDDD OOOOOOBBBJEEEECTTTSS";
-  //////////cafetera//////////////
-	try
-	{	
-	   
-		pose.x = 450;
-		pose.y = 950;
-		pose.z = -2250;
-		pose.rx = 0;
-		pose.ry = M_PIl/2;
-		pose.rz = 0;
-		innermodelmanager_proxy->addTransform("cafetera", "static", "root", pose);
-
-		RoboCompInnerModelManager::meshType mesh;
-		mesh.pose.x  = mesh.pose.y  = mesh.pose.z  = 0;
-		mesh.pose.rx = M_PIl/2;
-		mesh.pose.ry = 0;
-		mesh.pose.rz = M_PIl/2;
-		
-		mesh.scaleX = mesh.scaleY = mesh.scaleZ = 120;
-		mesh.render = 0;
-		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
-		mesh.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/cafe1.3DS";
-		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/basics/cube2.3ds";
-		innermodelmanager_proxy->addMesh("objectMesh", "cafetera", mesh);
-	}
-	catch (...)
-	{
-		printf("Can't create object\n");
-	}
-
-	printf("includeInRCIS ends\n");
-	 
-  /////////////TABLON///////////
-	qDebug()<<"AAAAAAADDDD OOOOOOBBBJEEEECTTTSS";
-	try
-	{	
-		pose.x = 5360;
-		pose.y = 1200;
-		pose.z = -270;
-		pose.rx = 0;
-		pose.ry = M_PIl;
-		pose.rz = 0;
-		innermodelmanager_proxy->addTransform("board", "static", "root", pose);
-
-		RoboCompInnerModelManager::meshType mesh1;
-		mesh1.pose.x  = mesh1.pose.y  = mesh1.pose.z  = 0;
-		mesh1.pose.rx = M_PIl/2;
-		mesh1.pose.ry = 0;
-		mesh1.pose.rz = M_PIl;
-		
-		mesh1.scaleX = mesh1.scaleY = mesh1.scaleZ = 5;
-		mesh1.render = 0;
-		//mesh1.mesh1Path = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
-		mesh1.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/board.3DS";
-		//mesh1.mesh1Path = "/home/robocomp/robocomp/files/osgModels/basics/cube2.3ds";
-		innermodelmanager_proxy->addMesh("objectMesh1", "board", mesh1);
-	}
-	catch (...)
-	{
-		printf("Can't create object\n");
-	}
-
-	printf("includeInRCIS ends\n");
-	
-////////TELEFONO/////////////
-	qDebug()<<"AAAAAAADDDD OOOOOOBBBJEEEECTTTSS";
-	try
-	{	
-	  
-
-		pose.x = 3000;
-		pose.y = 750;
-		pose.z = 3650;
-		pose.rx = 0;
-		pose.ry = M_PIl;
-		pose.rz = 0;
-		innermodelmanager_proxy->addTransform("phone", "static", "root", pose);
-
-		RoboCompInnerModelManager::meshType mesh2;
-		mesh2.pose.x  = mesh2.pose.y  = mesh2.pose.z  = 0;
-		mesh2.pose.rx = M_PIl/2;
-		mesh2.pose.ry = 0;
-		mesh2.pose.rz = M_PIl;
-		
-		mesh2.scaleX = mesh2.scaleY = mesh2.scaleZ = 30;
-		mesh2.render = 0;
-		//mesh2.mesh2Path = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
-		mesh2.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/phone.3DS";
-		//mesh2.mesh2Path = "/home/robocomp/robocomp/files/osgModels/basics/cube2.3ds";
-		innermodelmanager_proxy->addMesh("objectMesh2", "phone", mesh2);
-	}
-	catch (...)
-	{
-		printf("Can't create object\n");
-	}
-
-	printf("includeInRCIS ends\n");
-
-	
-	
-	
-// 	static bool first = true;
-// 	if (not first) return;
-// 	first = false;
-// 
-// 	std::string m ="  ";
-// 	int idx=0;
-// 	while ((objectSymbolId = worldModel->getIdentifierByType("objectI", idx++)) != -1)
-// 	{
-// 		printf("%d %d\n", idx, objectSymbolId);
-// 		if (idx > 4) exit(0);
-// 		if (worldModel->getSymbolByIdentifier(objectSymbolId)->getAttribute("imName") == "cafetera")
-// 		{
-// 			printf("found %d!!\n", objectSymbolId);
-// 			break;
-// 		}
-// 	}
-// 	if (objectSymbolId != -1)
-// 	{
-// 		printf("Object already in the AGM model\n");
-// 		return;
-// 	}
-// 
-// 	AGMModel::SPtr newModel(new AGMModel(worldModel));
-// 
-// 	// Symbolic part
-// 	AGMModelSymbol::SPtr cafetera =   newModel->newSymbol("objectI");
-// 	objectSymbolId = cafetera->identifier;
-// 	printf("Got objectSymbolId: %d\n", objectSymbolId);
-// 	cafetera->setAttribute("imName", "cafetera");
-// 	cafetera->setAttribute("imType", "transform");
-// 	AGMModelSymbol::SPtr cafeteraSt = newModel->newSymbol("objectSt");
-// 	printf("object %d status %d\n", cafetera->identifier, cafeteraSt->identifier);
-// 
-// 	newModel->addEdge(cafetera, cafeteraSt, "hasStatus");
-// 	newModel->addEdge(cafetera, cafeteraSt, "noReach");
-// 	newModel->addEdge(cafetera, cafeteraSt, "objectI");
-// 	try
-// 	{
-// 	newModel->addEdgeByIdentifiers(cafetera->identifier, 3, "in");
-// 	}
-// 	catch(...)
-// 	{
-// 	  printf("PROOOOOBLEMA...\n");
-// 	}
-// 	
-// 
-// 
-// 	// Geometric part
-// 	std::map<std::string, std::string> edgeRTAtrs;
-// 	edgeRTAtrs["tx"] = "3550";
-// 	edgeRTAtrs["ty"] = "950";
-// 	edgeRTAtrs["tz"] = "3650";
-// 	edgeRTAtrs["rx"] = "0";
-// 	edgeRTAtrs["ry"] = "3.1415926535";
-// 	edgeRTAtrs["rz"] = "0";
-// 	newModel->addEdgeByIdentifiers(100, cafetera ->identifier, "RT", edgeRTAtrs);
-// 
-// 
-// 	AGMModelSymbol::SPtr cafeteraMesh = newModel->newSymbol("mesh");
-// 	printf("cafeteraMesh %d\n", cafeteraMesh->identifier);
-// 	cafeteraMesh->setAttribute("collidable", "false");
-// 	cafeteraMesh->setAttribute("imName", "cafeteraMesh");
-// 	cafeteraMesh->setAttribute("imType", "mesh");
-// 	cafeteraMesh->setAttribute("path", "/home/robocomp/robocomp/components/robocomp-araceli/models/cafe.3ds");
-// 	cafeteraMesh->setAttribute("render", "NormalRendering");
-// 	cafeteraMesh->setAttribute("scalex", "20");
-// 	cafeteraMesh->setAttribute("scaley", "20");
-// 	cafeteraMesh->setAttribute("scalez", "20");
-// 
-// 	edgeRTAtrs["tx"] = "0";
-// 	edgeRTAtrs["ty"] = "0";
-// 	edgeRTAtrs["tz"] = "0";
-// 	edgeRTAtrs["rx"] = "1.570796326794";
-// 	edgeRTAtrs["ry"] = "0";
-// 	edgeRTAtrs["rz"] = "3.1415926535";
-// 	newModel->addEdge(cafetera, cafeteraMesh, "RT", edgeRTAtrs);
-// 
-// 
-// 
-// 	while (true)
-// 	{
-// 		try
-// 		{
-// 			sendModificationProposal(worldModel, newModel,m);
-// 			break;
-// 		}
-// 		catch(const RoboCompAGMExecutive::Locked &e)
-// 		{
-// 			printf("agmexecutive locked...\n");
-// 		}
-// 		catch(const RoboCompAGMExecutive::OldModel &e)
-// 		{
-// 			return;
-// 		}
-// 		catch(const RoboCompAGMExecutive::InvalidChange &e)
-// 		{ 
-// 			exit(1);
-// 		}
-// 		sleep(1);
-// 	}
-// 
-// 	printf("includeInAGM ends\n");
-}
-
 SNGPolylineSeq SpecificWorker::objectInteraction(bool d)
 {
-	
- 	qDebug()<<"---------1------------";
-	
-	//SNGPersonSeq persons;
 	objects.clear();
-	
-	//push back es para incluir a la persona en el vector de personas
-// 	if (p1) 	persons.push_back(person1); 
-// 	if (p2) 	persons.push_back(person2);
-// 	if (p3) 	persons.push_back(person3);
-// 	if (p4) 	persons.push_back(person4);
-// 	if (p5) 	persons.push_back(person5);
-// 	if (p6) 	persons.push_back(person6);
 
-//	totalpersons=totalpersons; 
-	qDebug()<<"---------2----------";
+	int idx=0;
+	while ((objectSymbolId = worldModel->getIdentifierByType("object_interaction", idx++)) != -1)
+	{	
+		
+	  	AGMModelSymbol::SPtr objectP = worldModel->getParentByLink(objectSymbolId, "RT");
+		AGMModelEdge &edgeRT  = worldModel->getEdgeByIdentifiers(objectP->identifier,objectSymbolId, "RT");
+		object.x = str2float(edgeRT.attributes["tx"])/1000;
+		object.z = str2float(edgeRT.attributes["tz"])/1000;
+		object.angle=str2float(edgeRT.attributes["ry"]);
+		object.space=str2float(worldModel->getSymbolByIdentifier(objectSymbolId)->getAttribute("interaction"));
 	
-	///cafetera
-	object.x =0.450;
-	object.z =-2.250;
-	object.angle=3.1415926535/2;
-	object.space =0.75;
-	    
-	objects.push_back(object);
-	///nevera
-	object.x =3.210;
-	object.z =-3.700;
-	object.angle=0;
-	object.space=1.0;
-	
-	objects.push_back(object);
-	
-	///tablon
-	object.x =5.360;
-	object.z =-0.270;
-	object.angle=3.1415926535;
-	object.space=1.5;
-	
-	objects.push_back(object);
-	
-	///telefono
-	object.x =3.000;
-	object.z =3.650;
-	object.angle=3.1415926535;
-	object.space = 0.75;
-	
-	objects.push_back(object);
-	
-	
+		objects.push_back(object);
+		
+		qDebug()<<"Object"<<"Pose x"<<object.x<<"Pose z"<<object.z<<"Angle"<<object.angle<<"Space"<<object.space;
+	}
 	
 
 	secuenciaObj.clear();
 	secuenciaObj =socialnavigationgaussian_proxy->getObjectInteraction(totalp,objects,d);
-	
-	qDebug()<<"---------3----------";
-	
-// 	AGMModelSymbol::SPtr objectP = worldModel->getParentByLink(objectSymbolId, "RT");
-// 	AGMModelEdge &edgeRT  = worldModel->getEdgeByIdentifiers(objectP->identifier,objectSymbolId, "RT");
-// 	object.x = str2float(edgeRT.attributes["tx"])/1000;
-// 	object.z = str2float(edgeRT.attributes["tz"])/1000;
-// 			
-// 		
-// 	
-// 
-// 	qDebug()<<"Objeto"<<"Pose x"<<object.x<<"Pose z"<<object.z;
 
-	
-	
-	/*
-	for (auto p: persons)
-	{
-//  	float angleinf= (p.angle - 10)*0.0175;  
-// 	float anglesup= (p.angle + 10)*0.0175;
-// 	qDebug()<<"angleinf"<<angleinf<<"anglesup"<<anglesup;
- 	float distancethr = 1500;
-	
-	int i=1;
-	//problema.. puede estar la persona 1 y la 3 sin estar la dos entonces no iria bien
-	QString name = QString("fakeperson") + QString::number(i,10);
-	qDebug()<<"Persona"<<name;
-	QVec pInperson = innerModel->transform(name, QVec::vec3(object.x, 0, object.z), "world");  
-	
-	qDebug()<<"pose x"<<pInperson.x()<<"pose z"<< pInperson.z();
-	
-	float distobj  = sqrt(pInperson.x()*pInperson.x() + pInperson.z()*pInperson.z());
-	float angleobj = atan2(pInperson.x(),pInperson.z());
-	
-	
-	
-	qDebug()<<"dist al frigorifico"<<distobj<<"angle al frigorifico"<<angleobj;
-	
-	if (distobj<distancethr and abs(angleobj)<M_PIl/180.*20)
-	{
-	  qDebug()<<"YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEESSSSSS";
-	}
-	else qDebug()<<"NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOSS";
-	
-	i++;  
-	}
-	
-	*/
 	return secuenciaObj;
 	
 }
@@ -512,7 +199,7 @@ void SpecificWorker::compute( )
 	{
 		qLog::getInstance()->setProxy("both", logger_proxy);
 		rDebug2(("navigationAgent started"));
-
+		first = false;
 	}
 
 	if (worldModel->getIdentifierByType("robot") < 0)
@@ -520,8 +207,8 @@ void SpecificWorker::compute( )
 		try {
 
 			qDebug()<<"Leo el mundo";
-			agmexecutive_proxy->broadcastModel();
-
+			RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
+			structuralChange(w);
 			return;
 		}
 		catch(...)
@@ -575,7 +262,7 @@ void SpecificWorker::compute( )
 // 			person.vel=str2float(edgeRT.attributes["velocity"]);
 			qDebug() <<"PERSONA 1\n" <<"Coordenada x"<< person.x << "Coordenada z"<< person.z << "Rotacion "<< person.angle;
 			totalpersons.push_back(person);
-			
+		
 			
 			if(person.vel>0)
 			{
@@ -588,21 +275,24 @@ void SpecificWorker::compute( )
 				ppn[ind]=false;
 				totalp.push_back(person);							
 			}
-		
-		if (first)
-		{
+			
+
+			if (totalaux.empty())
+			{	
 			totalaux.push_back(person);
 			movperson=true;
-		}
-		else if  (movperson==false)
-		{
-			if ((totalaux[ind].x!=person.x)or(totalaux[ind].z!=person.z)or(totalaux[ind].angle!=person.angle))
-				movperson = true;
-			
-			totalaux[ind]=person;
-		}
 
-	  }
+			}
+			else if  (movperson==false)
+			{
+				if ((totalaux[ind].x!=person.x)or(totalaux[ind].z!=person.z)or(totalaux[ind].angle!=person.angle))
+					movperson = true;
+				
+				totalaux[ind]=person;
+			}
+			
+
+		}	
 	
  }	
 	
@@ -648,7 +338,7 @@ void SpecificWorker::compute( )
 
 		  }
 
-		first = false;
+		
 		cambiopos=false;
 	}
 
@@ -661,93 +351,79 @@ void SpecificWorker::compute( )
 	{	
 	
 		qDebug ("se ha movido alguna pesona, se envia la polilinea");
-		try
-		{
+		
 
-			RoboCompTrajectoryRobot2D::PolyLineList lista;
+		RoboCompTrajectoryRobot2D::PolyLineList lista;
+	
+		
+		for (int st=0; st<pn.size();st++)
+		{	
+			if (pn[st]==  true) staticperson = true;
+			if (ppn[st]==true) movingperson = true;
+	
+		}
+		
+		if (staticperson)
+		{
+			SNGPolylineSeq secuencia = gauss(false);
+			for(auto s: secuencia)
+			{
+				RoboCompTrajectoryRobot2D::PolyLine poly;
+
+				for(auto p: s)
+				{
+					RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
+					poly.push_back(punto);
+
+				}
+				lista.push_back(poly);
+			}
+		  
+		}
+		
+		if (movingperson)
+		{
+			SNGPolylineSeq secuencia2 = gausspor(false);
+			for(auto s: secuencia2)
+			{
+				RoboCompTrajectoryRobot2D::PolyLine poly;
+
+				for(auto p: s)
+				{
+					RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
+					poly.push_back(punto);
+
+				}
+				lista.push_back(poly);
+			}
+		  
+		}
 		
 			
-			for (int st=0; st<pn.size();st++)
-			{	
-				if (pn[st]==  true)
-				{	
-					staticperson = true;			
-					break;
-				}
-			}
-			
-			if (staticperson)
+		if (!objects.empty())	
+		{  
+			SNGPolylineSeq secuenciaobj = objectInteraction(false);
+			for(auto s: secuenciaobj)
 			{
-				SNGPolylineSeq secuencia = gauss(false);
-				for(auto s: secuencia)
+				RoboCompTrajectoryRobot2D::PolyLine poly;
+
+				for(auto p: s)
 				{
-					RoboCompTrajectoryRobot2D::PolyLine poly;
+					RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
+					poly.push_back(punto);
 
-					for(auto p: s)
-					{
-						RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
-						poly.push_back(punto);
-
-					}
-					lista.push_back(poly);
 				}
-			  
+				lista.push_back(poly);
 			}
 			
-			
-			
-			for (int mv=0; mv<ppn.size();mv++)
-			{	
-				if (ppn[mv]==true)
-				{
-					movingperson = true;
-					break;
-					
-				}
-			}
-			
-			if (movingperson)
-			{
-				SNGPolylineSeq secuencia2 = gausspor(false);
-				for(auto s: secuencia2)
-				{
-					RoboCompTrajectoryRobot2D::PolyLine poly;
-
-					for(auto p: s)
-					{
-						RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
-						poly.push_back(punto);
-
-					}
-					lista.push_back(poly);
-				}
-			  
-			}
-			
-				
-			if (!objects.empty())	
-			{  
-				SNGPolylineSeq secuenciaobj = objectInteraction(false);
-				for(auto s: secuenciaobj)
-				{
-					RoboCompTrajectoryRobot2D::PolyLine poly;
-
-					for(auto p: s)
-					{
-						RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
-						poly.push_back(punto);
-
-					}
-					lista.push_back(poly);
-				}
-				
-			} 
-			
-			  
+		} 
+		
 		  
-			qDebug()<<"llamamos al SetHumanSpace";
-
-			trajectoryrobot2d_proxy->setHumanSpace(lista);
+	  
+		qDebug()<<"llamamos al SetHumanSpace";
+		try
+		{	if (!lista.empty())
+				trajectoryrobot2d_proxy->setHumanSpace(lista);
 		
 		}
 		catch( const Ice::Exception &e)

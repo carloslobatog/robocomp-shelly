@@ -19,6 +19,9 @@
 
 SocialRules::SocialRules()
 {
+	worldModel = AGMModel::SPtr(new AGMModel());
+	worldModel->name = "worldModel";
+	innerModel = new InnerModel();
 
 }
 
@@ -65,46 +68,34 @@ SNGPolylineSeq SocialRules::PassOnRight(bool draw)
 	
 }
 
+
 SNGPolylineSeq SocialRules::objectInteraction(bool d)
 {
-	//This function has to change, I want to insert the objects in the AGM and read them here
+  
+	RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
+	structuralChange(w);
+	
 	objects.clear();
 	
-	///cafetera
-	object.x =0.450;
-	object.z =-2.250;
-	object.angle=3.1415926535/2;
-	object.space =0.75;
-	    
-	objects.push_back(object);
-	///nevera
-	object.x =3.210;
-	object.z =-3.700;
-	object.angle=0;
-	object.space=1.0;
+	int idx=0;
+	while ((objectSymbolId = worldModel->getIdentifierByType("object_interaction", idx++)) != -1)
+	{	
+		
+	  	AGMModelSymbol::SPtr objectP = worldModel->getParentByLink(objectSymbolId, "RT");
+		AGMModelEdge &edgeRT  = worldModel->getEdgeByIdentifiers(objectP->identifier,objectSymbolId, "RT");
+		object.x = str2float(edgeRT.attributes["tx"])/1000;
+		object.z = str2float(edgeRT.attributes["tz"])/1000;
+		object.angle=str2float(edgeRT.attributes["ry"]);
+		object.space=str2float(worldModel->getSymbolByIdentifier(objectSymbolId)->getAttribute("interaction"));
 	
-	objects.push_back(object);
-	
-	///tablon
-	object.x =5.360;
-	object.z =-0.270;
-	object.angle=3.1415926535;
-	object.space=1.5;
-	
-	objects.push_back(object);
-	
-	///telefono
-	object.x =3.000;
-	object.z =3.650;
-	object.angle=3.1415926535;
-	object.space = 0.75;
-	
-	objects.push_back(object);
+		objects.push_back(object);
+		
+		qDebug()<<"Object"<<"Pose x"<<object.x<<"Pose z"<<object.z<<"Angle"<<object.angle<<"Space"<<object.space;
+	}
 	
 
 	sequenceObj.clear();
 	sequenceObj =socialnavigationgaussian_proxy->getObjectInteraction(totalperson,objects,d);
-	
 
 	return sequenceObj;
 	
@@ -188,3 +179,18 @@ RoboCompTrajectoryRobot2D::PolyLineList SocialRules::ApplySocialRules(SNGPersonS
 	return list;
 }
 
+void SocialRules::structuralChange(const World& modification)
+{
+
+	printf("pre <<structuralChange\n");
+	//QMutexLocker l(mx);
+	printf("<<structuralChange\n");
+
+	AGMModelConverter::fromIceToInternal(modification, worldModel);
+	//if (roomsPolygons.size()==0 and worldModel->numberOfSymbols()>0)
+		//roomsPolygons = extractPolygonsFromModel(worldModel);
+
+	if (innerModel) delete innerModel;
+	innerModel = AGMInner::extractInnerModel(worldModel, "world", true);
+	printf("structuralChange>>\n");
+}

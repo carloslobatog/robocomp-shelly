@@ -119,6 +119,12 @@
 				<plane id="muro29" nx="-39.213379" nz="787.782715" size="788.758071366,760,9"  texture="#998811" />
 			</transform>
 
+
+			<!-- PHONE -->
+			<transform id="phone" tx="3000" tz="3650" ty="750" ry="3.141516"> 
+				<mesh id="phone_mesh" file="/home/robocomp/robocomp/components/robocomp-araceli/models/phone.3DS" 					scale="30,30,30" rx="1.57" rz="3.141516" collide="1" />
+			</transform>			
+
 		</transform>
 
 
@@ -238,11 +244,21 @@
 			</transform>
 
 			<!-- FRIDGE -->
-			<transform id="fridge" tx="3210" tz="-3720" ty="925" ry="-0.075" > -->
+			<transform id="fridge" tx="3210" tz="-3720" ty="925" ry="0" > 
 				<mesh id="fridge_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cube2.3ds" scale="600,1850,600" collide="1" />
 			</transform>
 
+			<!-- COFFEE MACHINE -->
+			<transform id="coffee" tx="450" tz="-2250" ty="925" ry="1.57"> 
+				<mesh id="coffee_mesh" file="/home/robocomp/robocomp/components/robocomp-araceli/models/cafe1.3DS" 					scale="120,120,120" rx="1.57" rz="1.57" collide="1" />
+			</transform>
+			
+			<!-- PIN BOARD -->
+			<transform id="board" tx="5360" tz="-270" ty="1200" ry="3.141516"> 
+				<mesh id="board_mesh" file="/home/robocomp/robocomp/components/robocomp-araceli/models/board.3DS" 					scale="5,5,5" rx="1.57" rz="3.141516" collide="1" />
+			</transform>			
 
+	
 		</transform>
 
 	</transform>

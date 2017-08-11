@@ -32,6 +32,7 @@ public:
 	~SocialRules();
 	
 	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
+	AGMExecutivePrx agmexecutive_proxy;
 	
 	int prox = 0; //reading the slider
 	
@@ -44,15 +45,20 @@ public:
 	
 	SNGObject object;
 	SNGObjectSeq objects;
+	int32_t objectSymbolId;
 
 	RoboCompTrajectoryRobot2D::PolyLineList ApplySocialRules(SNGPersonSeq tperson);
-	
+	void  structuralChange(const RoboCompAGMWorldModel::World & modification);
 	
 public slots:
   	void changevalue(int value);
 	SNGPolylineSeq gauss(bool draw=true);
 	SNGPolylineSeq PassOnRight(bool draw=true);
 	SNGPolylineSeq objectInteraction(bool d = true);
+	
+private:
+	AGMModel::SPtr worldModel;
+	InnerModel *innerModel;
 
 };
 

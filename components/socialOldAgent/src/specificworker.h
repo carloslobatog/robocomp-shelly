@@ -77,7 +77,7 @@ public:
 	
 	
 	int32_t objectSymbolId;
-	int32_t objectSymbolId1;
+
 	
 	bool staticperson = false;
 	bool movingperson = false;
@@ -132,7 +132,6 @@ public slots:
 	SNGPolylineSeq gauss(bool dibujar=true);
 	SNGPolylineSeq gausspor(bool dibujar=true);
 	SNGPolylineSeq objectInteraction(bool dibujar = true);
-	void addObjects();
 	void cambiarvalor(int valor);
 	void grabarfichero();
 

@@ -1,5 +1,5 @@
 <innermodel>
-	<transform id="robot" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+	<transform id="robot" tx="1950.089844" ty="0" tz="2380.286865"  rx="0" ry="-1.286582708" rz="0">
 		<transform id="laserPose" tx="0" ty="370" tz="230"  rx="0" ry="0" rz="0">
 			<laser id="laser" port="10003" min="100" max="30000" measures="100" angle="4.199999809" ifconfig="" />
 		</transform>
@@ -124,17 +124,18 @@
 				</transform>
 			</transform>
 		</transform>
-		<plane id="polyline_obs_0" texture="#FFFF00" size="424.2640686,2000,90" repeat="1" nx="-300" ny="0" nz="-300" px="5150" py="1000" pz="6850" collide="1" />
-		<plane id="polyline_obs_1" texture="#FFFF00" size="500,2000,90" repeat="1" nx="0" ny="0" nz="-500" px="4750" py="1000" pz="7000" collide="1" />
-		<plane id="polyline_obs_2" texture="#FFFF00" size="424.2640686,2000,90" repeat="1" nx="300" ny="0" nz="-300" px="4350" py="1000" pz="6850" collide="1" />
-		<plane id="polyline_obs_3" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="200" ny="0" nz="-100" px="4150" py="1000" pz="6600" collide="1" />
-		<plane id="polyline_obs_4" texture="#FFFF00" size="200,2000,90" repeat="1" nx="200" ny="0" nz="0" px="4100" py="1000" pz="6400" collide="1" />
-		<plane id="polyline_obs_5" texture="#FFFF00" size="141.4213562,2000,90" repeat="1" nx="100" ny="0" nz="100" px="4150" py="1000" pz="6250" collide="1" />
-		<plane id="polyline_obs_6" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="100" ny="0" nz="200" px="4300" py="1000" pz="6150" collide="1" />
-		<plane id="polyline_obs_7" texture="#FFFF00" size="700,2000,90" repeat="1" nx="0" ny="0" nz="700" px="4750" py="1000" pz="6100" collide="1" />
-		<plane id="polyline_obs_8" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="-100" ny="0" nz="200" px="5200" py="1000" pz="6150" collide="1" />
-		<plane id="polyline_obs_9" texture="#FFFF00" size="141.4213562,2000,90" repeat="1" nx="-100" ny="0" nz="100" px="5350" py="1000" pz="6250" collide="1" />
-		<plane id="polyline_obs_10" texture="#FFFF00" size="200,2000,90" repeat="1" nx="-200" ny="0" nz="0" px="5400" py="1000" pz="6400" collide="1" />
-		<plane id="polyline_obs_11" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="-200" ny="0" nz="-100" px="5350" py="1000" pz="6600" collide="1" />
+		<plane id="polyline_obs_0" texture="#FFFF00" size="141.4213562,2000,90" repeat="1" nx="-100" ny="0" nz="100" px="6350" py="1000" pz="2450" collide="1" />
+		<plane id="polyline_obs_1" texture="#FFFF00" size="400,2000,90" repeat="1" nx="-400" ny="0" nz="0" px="6400" py="1000" pz="2700" collide="1" />
+		<plane id="polyline_obs_2" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="-200" ny="0" nz="-100" px="6350" py="1000" pz="3000" collide="1" />
+		<plane id="polyline_obs_3" texture="#FFFF00" size="141.4213562,2000,90" repeat="1" nx="-100" ny="0" nz="-100" px="6250" py="1000" pz="3150" collide="1" />
+		<plane id="polyline_obs_4" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="-100" ny="0" nz="-200" px="6100" py="1000" pz="3250" collide="1" />
+		<plane id="polyline_obs_5" texture="#FFFF00" size="400,2000,90" repeat="1" nx="0" ny="0" nz="-400" px="5800" py="1000" pz="3300" collide="1" />
+		<plane id="polyline_obs_6" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="100" ny="0" nz="-200" px="5500" py="1000" pz="3250" collide="1" />
+		<plane id="polyline_obs_7" texture="#FFFF00" size="141.4213562,2000,90" repeat="1" nx="100" ny="0" nz="-100" px="5350" py="1000" pz="3150" collide="1" />
+		<plane id="polyline_obs_8" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="200" ny="0" nz="-100" px="5250" py="1000" pz="3000" collide="1" />
+		<plane id="polyline_obs_9" texture="#FFFF00" size="200,2000,90" repeat="1" nx="200" ny="0" nz="0" px="5200" py="1000" pz="2800" collide="1" />
+		<plane id="polyline_obs_10" texture="#FFFF00" size="282.8427124,2000,90" repeat="1" nx="200" ny="0" nz="200" px="5300" py="1000" pz="2600" collide="1" />
+		<plane id="polyline_obs_11" texture="#FFFF00" size="223.6067963,2000,90" repeat="1" nx="100" ny="0" nz="200" px="5500" py="1000" pz="2450" collide="1" />
+		<plane id="polyline_obs_12" texture="#FFFF00" size="700,2000,90" repeat="1" nx="0" ny="0" nz="700" px="5950" py="1000" pz="2400" collide="1" />
 	</transform>
 </innermodel>

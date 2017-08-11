@@ -102,31 +102,35 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 
 void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 {	
- 	if (innerModel) delete innerModel;
- 	innerModel= new InnerModel(params.at("InnerModel").value);
+//  	if (innerModel) delete innerModel;
+//  	innerModel= new InnerModel(params.at("InnerModel").value);
 	
+	innerModel->save("innerantesdeborrar.xml");
+  
 	qDebug() << __FUNCTION__ << "updateObstacles";
 	//Borrar todos los newpolyline_obs_X que existan del innermodel y del innermodel viewer
 	
-	//Crear obs por cada polinenaf
+	///////////////////////////////removing/////////////////////////
 	for (int i=0; i<100; i++)
 	{
 		QString cadena = QString("polyline_obs_") + QString::number(i,10);
 		//printf("puntero a %s: %p\n", cadena.toStdString().c_str(), viewer->innerModel->getNode(cadena));
-
-		//qDebug() << __FUNCTION__ <<"intentamos borrar "<<cadena;
-// 		if (innerModel->getNode(cadena))
-// 				innerModel->removeNode(cadena);
 		
+		//qDebug() << __FUNCTION__ <<"intentamos borrar "<<cadena;
+		if (innerModel->getNode(cadena))
+				innerModel->removeNode(cadena);
+		else break;
+		  
 		if (not InnerModelDraw::removeObject(viewer->innerViewer, cadena) )
 		{
 		//	printf("removeObject devuelve falso\n");
 			break;
- 		}
- 		
+ 		}	
 	}
-
-		
+	
+	innerModel->save("innerdespuesdeborrar.xml");
+	///////////////////////////////adding/////////////////////////
+	
 	int count = 0;
 	
 	for (auto poly:polylines)
@@ -152,18 +156,7 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
  			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,90));
 		
 // 			////////////////////////////////////////////////////////////////
-			
-			
-			//qDebug()<<"INCLUIMOS EN INNERMODEL";
-			if (innerModel->getNode(cadena)!= NULL)
-			{		
-			qDebug()<<"Eliminamos "<<cadena;  
-			
-			innerModel->removeNode(cadena);
-
-							
-			}
-			
+		
 	
 			InnerModelNode *parent = innerModel->getNode(QString("world"));			
 			if (parent == NULL)
@@ -180,9 +173,8 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 					{
 					plane  = innerModel->newPlane(cadena, parent, QString("#FFFF00"), dist, 2000, 90, 1,
 							normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
-					qDebug()<<"Nueva"<<cadena; 
+					//qDebug()<<"Nueva"<<cadena; 
 					
-		
 					parent->addChild(plane); 
 					}
 					
@@ -199,8 +191,9 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 		}
 	}
 	
-	innerModel->save("guardoinner.xml");
-
+	innerModel->save("innerdespuesdeinsertar.xml");
+	indice++;
+	
 }
 		
 
@@ -248,7 +241,6 @@ void SpecificWorker::compute()
 		qDebug()<<"LLamamos a updateObstacles";
 		updateObstacles(safePolyList.read());
 		qDebug()<<"Salimos e UpdateObstacles";
-	
 		
 		qDebug()<<"Llamamos a Sampler.initialize";
 		sampler.initialize(innerModel, params);
@@ -499,7 +491,7 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 	///////////////////////////////////
 	// compute all measures relating the robot to the road
 	/////////////////////////////////
-	qDebug()<<"llamaamos a myroad.update";
+	qDebug()<<"llamamos a myroad.update";
 	myRoad.update();
 	qDebug()<<"salimos de myroad.update";
 	//myRoad.printRobotState(innerModel, target);

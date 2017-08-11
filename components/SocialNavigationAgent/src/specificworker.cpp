@@ -28,6 +28,7 @@
 
 SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 {
+	
 	active = false;
 	active = false;	
 	worldModel = AGMModel::SPtr(new AGMModel());
@@ -93,6 +94,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	aE.trajectoryrobot2d_proxy = trajectoryrobot2d_proxy;
 	//Proxies for SocialRules
 	sr.socialnavigationgaussian_proxy=socialnavigationgaussian_proxy;
+	sr.agmexecutive_proxy=agmexecutive_proxy;
 	
 	return true;
 }
@@ -104,13 +106,14 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 */
 void SpecificWorker::compute( )
 {
+  
 	static bool first=true;
 	if (first)
 	{	
 		qLog::getInstance()->setProxy("both", logger_proxy);
 		rDebug2(("SocialnavigationAgent started"));
 	}
-
+	
 	if (worldModel->getIdentifierByType("robot") < 0)
 	{ 
 		try 
@@ -124,7 +127,7 @@ void SpecificWorker::compute( )
 			//printf("The executive is probably not running, waiting for first AGM model publication...");	}	
 		}
 	}
- 	
+
 	//Check if the person is in the model
  	for (int i=0;i<pn.size();i++)
 	{
@@ -149,7 +152,7 @@ void SpecificWorker::compute( )
 			}			
 		}
 	}
-	
+
 //If a person has moved its pose it is updated reading it from the AGM again.
 
 	if (changepos)
@@ -166,12 +169,12 @@ void SpecificWorker::compute( )
 				person.x = str2float(edgeRT.attributes["tx"])/1000;
 				person.z = str2float(edgeRT.attributes["tz"])/1000;
 				person.angle = str2float(edgeRT.attributes["ry"]);
-	 			person.vel=str2float(edgeRT.attributes["velocity"]);			
-				//person.vel=0;
+	 			//person.vel=str2float(edgeRT.attributes["velocity"]);			
+				person.vel=0;
 				totalpersons.push_back(person);		
 				qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << "Rotacion "<< person.angle;
 			
-				if (first)
+				if (totalaux.empty())
 				{
 					//This must be changed. If the first human to be inserted is human2 it would be wrong
 					totalaux.push_back(person);
