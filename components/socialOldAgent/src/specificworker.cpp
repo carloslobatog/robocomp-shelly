@@ -153,7 +153,7 @@ SNGPolylineSeq SpecificWorker::gausspor(bool dibujar)
 SNGPolylineSeq SpecificWorker::objectInteraction(bool d)
 {
 	objects.clear();
-
+	try{
 	int idx=0;
 	while ((objectSymbolId = worldModel->getIdentifierByType("object_interaction", idx++)) != -1)
 	{	
@@ -169,21 +169,116 @@ SNGPolylineSeq SpecificWorker::objectInteraction(bool d)
 		
 		qDebug()<<"Object"<<"Pose x"<<object.x<<"Pose z"<<object.z<<"Angle"<<object.angle<<"Space"<<object.space;
 	}
-	
-
+	}
+	catch(...){}
 	secuenciaObj.clear();
 	secuenciaObj =socialnavigationgaussian_proxy->getObjectInteraction(totalp,objects,d);
 
 	return secuenciaObj;
 	
 }
+/*
+void SpecificWorker::addObjects()
+{
+	printf("includeInRCIS phone begins\n");
+        try
+          {
+                  pose.x = 3000;
+                  pose.y = 750;
+                  pose.z = 3650;
+                  pose.rx = 0;
+		  pose.ry = 3.141516;
+		  pose.rz = 0;
+
+                  innermodelmanager_proxy->addTransform("phone", "static", "root", pose);
+
+                  RoboCompInnerModelManager::meshType mesh;
+                  mesh.pose.x  = mesh.pose.y  = mesh.pose.z  = 0;
+                  mesh.pose.rx = 1.57079632679;
+                  mesh.pose.ry = 0;
+                  mesh.pose.rz = 3.1415926535;
+                  mesh.scaleX = mesh.scaleY = mesh.scaleZ = 30;
+                  mesh.render = 0;
+                  mesh.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/phone.3DS";
+                  innermodelmanager_proxy->addMesh("phone_mesh", "phone", mesh);  
+          }
+          catch (...)
+          {
+                  printf("Can't create\n");
+          }
+
+        printf("includeInRCIS phone ends\n");
+	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	printf("includeInRCIS coffee begins\n");
+        try
+          {
+                  pose.x = 450;
+                  pose.y = 925;
+                  pose.z = -2250;
+                  pose.rx = 0;
+		  pose.ry = 1.57079632679;
+		  pose.rz = 0;
+
+                  innermodelmanager_proxy->addTransform("coffee", "static", "root", pose);
+
+                  RoboCompInnerModelManager::meshType mesh;
+                  mesh.pose.x  = mesh.pose.y  = mesh.pose.z  = 0;
+                  mesh.pose.rx = 1.57079632679;
+                  mesh.pose.ry = 0;
+                  mesh.pose.rz =  1.57079632679;
+                  mesh.scaleX = mesh.scaleY = mesh.scaleZ = 120;
+                  mesh.render = 0;
+                  mesh.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/cafe1.3DS";
+                  innermodelmanager_proxy->addMesh("coffee_mesh", "coffee", mesh);  
+ 	  
+	  }
+          catch (...)
+          {
+                  printf("Can't create\n");
+          }
+
+        printf("includeInRCIS coffee ends\n");
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	printf("includeInRCIS board begins\n");
+        try
+          {
+                  pose.x = 5360;
+                  pose.y = 1200;
+                  pose.z = -270;
+                  pose.rx = 0;
+		  pose.ry = 3.1415926535;
+		  pose.rz = 0;
+
+                  innermodelmanager_proxy->addTransform("board", "static", "root", pose);
+
+                  RoboCompInnerModelManager::meshType mesh;
+                  mesh.pose.x  = mesh.pose.y  = mesh.pose.z  = 0;
+                  mesh.pose.rx = 1.57079632679;
+                  mesh.pose.ry = 0;
+                  mesh.pose.rz = 3.1415926535;
+                  mesh.scaleX = mesh.scaleY = mesh.scaleZ = 5;
+                  mesh.render = 0;
+                  mesh.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/board.3DS";
+                  innermodelmanager_proxy->addMesh("board_mesh", "board", mesh);  
+ 	  
+	  }
+          catch (...)
+          {
+                  printf("Can't create\n");
+          }
+
+        printf("includeInRCIS board ends\n");
+	
+}*/
 
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 {
 	Period = 200;
 
 
-	//addObjects();
+// 	addObjects();
 	
 	timer.start(Period);
 	return true;

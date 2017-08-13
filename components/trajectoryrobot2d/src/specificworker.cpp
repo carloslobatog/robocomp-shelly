@@ -102,10 +102,8 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 
 void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 {	
-//  	if (innerModel) delete innerModel;
-//  	innerModel= new InnerModel(params.at("InnerModel").value);
-	
-	innerModel->save("innerantesdeborrar.xml");
+  	if (innerModel) delete innerModel;
+  	innerModel= new InnerModel(params.at("InnerModel").value);
   
 	qDebug() << __FUNCTION__ << "updateObstacles";
 	//Borrar todos los newpolyline_obs_X que existan del innermodel y del innermodel viewer
@@ -119,7 +117,7 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 		//qDebug() << __FUNCTION__ <<"intentamos borrar "<<cadena;
 		if (innerModel->getNode(cadena))
 				innerModel->removeNode(cadena);
-		else break;
+		
 		  
 		if (not InnerModelDraw::removeObject(viewer->innerViewer, cadena) )
 		{
@@ -128,7 +126,6 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
  		}	
 	}
 	
-	innerModel->save("innerdespuesdeborrar.xml");
 	///////////////////////////////adding/////////////////////////
 	
 	int count = 0;
@@ -191,8 +188,6 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 		}
 	}
 	
-	innerModel->save("innerdespuesdeinsertar.xml");
-	indice++;
 	
 }
 		

@@ -77,21 +77,25 @@ SNGPolylineSeq SocialRules::objectInteraction(bool d)
 	
 	objects.clear();
 	
-	int idx=0;
-	while ((objectSymbolId = worldModel->getIdentifierByType("object_interaction", idx++)) != -1)
-	{	
+	try
+	{
+		int idx=0;
+		while ((objectSymbolId = worldModel->getIdentifierByType("object_interaction", idx++)) != -1)
+		{	
+			
+			AGMModelSymbol::SPtr objectP = worldModel->getParentByLink(objectSymbolId, "RT");
+			AGMModelEdge &edgeRT  = worldModel->getEdgeByIdentifiers(objectP->identifier,objectSymbolId, "RT");
+			object.x = str2float(edgeRT.attributes["tx"])/1000;
+			object.z = str2float(edgeRT.attributes["tz"])/1000;
+			object.angle=str2float(edgeRT.attributes["ry"]);
+			object.space=str2float(worldModel->getSymbolByIdentifier(objectSymbolId)->getAttribute("interaction"));
 		
-	  	AGMModelSymbol::SPtr objectP = worldModel->getParentByLink(objectSymbolId, "RT");
-		AGMModelEdge &edgeRT  = worldModel->getEdgeByIdentifiers(objectP->identifier,objectSymbolId, "RT");
-		object.x = str2float(edgeRT.attributes["tx"])/1000;
-		object.z = str2float(edgeRT.attributes["tz"])/1000;
-		object.angle=str2float(edgeRT.attributes["ry"]);
-		object.space=str2float(worldModel->getSymbolByIdentifier(objectSymbolId)->getAttribute("interaction"));
-	
-		objects.push_back(object);
-		
-		qDebug()<<"Object"<<"Pose x"<<object.x<<"Pose z"<<object.z<<"Angle"<<object.angle<<"Space"<<object.space;
+			objects.push_back(object);
+			
+			qDebug()<<"Object"<<"Pose x"<<object.x<<"Pose z"<<object.z<<"Angle"<<object.angle<<"Space"<<object.space;
+		}
 	}
+	catch(...){}
 	
 
 	sequenceObj.clear();

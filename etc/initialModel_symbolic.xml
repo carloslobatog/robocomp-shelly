@@ -242,8 +242,9 @@
 	</link>
 
 	<!--OBJECT INTERACTION-->
+
 	
-	<!--fridge-->
+
 	<symbol id="1000" type="object_interaction">
 		<attribute key="imType" value="transform" />
 		<attribute key="imName" value="fridge" />
@@ -266,7 +267,7 @@
 	<link src="1" dst="1000" label="know" > </link>
 	<link src="1000" dst="1001" label="fridge" > </link>
 	
-	<!--coffee machine-->
+
 	<symbol id="2000" type="object_interaction">
 		<attribute key="imType" value="transform" />
 		<attribute key="imName" value="coffee" />
@@ -289,7 +290,7 @@
 	<link src="1" dst="2000" label="know" > </link>
 	<link src="2000" dst="2001" label="coffee" > </link>
 	
-	<!--coffee machine-->
+
 	<symbol id="3000" type="object_interaction">
 		<attribute key="imType" value="transform" />
 		<attribute key="imName" value="board" />
@@ -311,9 +312,9 @@
 
 	<link src="1" dst="3000" label="know" > </link>
 	<link src="3000" dst="3001" label="board" > </link>
-	
-	<!--phone-->
-	<symbol id="4000" type="object_interaction">
+
+
+	<!-- <symbol id="4000" type="object_interaction">
 		<attribute key="imType" value="transform" />
 		<attribute key="imName" value="phone" />
 		<attribute key="interaction" value="0.75" />
@@ -333,9 +334,7 @@
 	<link src="4000" dst="4001" label="interacting" > </link>
 
 	<link src="1" dst="4000" label="know" > </link>
-	<link src="4000" dst="4001" label="phone" > </link>
-
-
+	<link src="4000" dst="4001" label="phone" > </link>--> 
 
 
 

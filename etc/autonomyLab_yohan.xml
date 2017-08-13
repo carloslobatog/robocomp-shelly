@@ -120,10 +120,10 @@
 			</transform>
 
 
-			<!-- PHONE -->
+			<!-- PHONE 
 			<transform id="phone" tx="3000" tz="3650" ty="750" ry="3.141516"> 
 				<mesh id="phone_mesh" file="/home/robocomp/robocomp/components/robocomp-araceli/models/phone.3DS" 					scale="30,30,30" rx="1.57" rz="3.141516" collide="1" />
-			</transform>			
+			</transform>	-->		
 
 		</transform>
 
@@ -244,7 +244,7 @@
 			</transform>
 
 			<!-- FRIDGE -->
-			<transform id="fridge" tx="3210" tz="-3720" ty="925" ry="0" > 
+			<transform id="fridge" tx="3210" tz="-3720" ty="925" ry="-0.075" > 
 				<mesh id="fridge_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cube2.3ds" scale="600,1850,600" collide="1" />
 			</transform>
 

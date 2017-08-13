@@ -184,15 +184,13 @@ void SpecificWorker::compute( )
 				{
 					if ((totalaux[ind].x!=person.x)or(totalaux[ind].z!=person.z)or(totalaux[ind].angle!=person.angle))
 						movperson = true;
-				
-
-				totalaux[ind]=person;  	  
+			
+					totalaux[ind]=person;  	  
 			  
 				}
 			
 			}
 		}
-		
 		
 		robotSymbolId = worldModel->getIdentifierByType("robot");
 		AGMModelSymbol::SPtr robotparent = worldModel->getParentByLink(robotSymbolId, "RT");

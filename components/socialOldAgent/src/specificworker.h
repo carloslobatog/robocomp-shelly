@@ -100,10 +100,8 @@ public:
 	//PARA GUARDAR LA DISTANCIA RECORRIDA
 	float totaldist=0;
 
-	//PARA COMPROBAR SI DOS PERSONAS ESTAN HABLANDO. ya no se usa
-	bool conversation = false;
-	bool checkconversation();
-
+	void addObjects();
+      
 
 
 	//////////////

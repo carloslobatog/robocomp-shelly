@@ -23,8 +23,7 @@ ActionExecution::ActionExecution()
   	worldModel = AGMModel::SPtr(new AGMModel());
 	worldModel->name = "worldModel";
 	innerModel = new InnerModel();
-	haveTarget = false;
-	
+	haveTarget = false;	
 }
 
 ActionExecution::~ActionExecution() 

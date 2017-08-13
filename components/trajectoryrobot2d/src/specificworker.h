@@ -101,7 +101,7 @@ class SpecificWorker : public GenericWorker
 {
 	Q_OBJECT
 	public:
-		int indice=0;
+	
 		SpecificWorker(MapPrx& mprx, QWidget *parent = 0);
 		~SpecificWorker();
 		bool setParams(RoboCompCommonBehavior::ParameterList params);
