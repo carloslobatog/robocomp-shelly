@@ -16,32 +16,32 @@
  *    You should have received a copy of the GNU General Public License
  *    along with RoboComp.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef AGMCOMMONBEHAVIOR_H
-#define AGMCOMMONBEHAVIOR_H
+#ifndef TRAJECTORYROBOT2D_H
+#define TRAJECTORYROBOT2D_H
 
 // Ice includes
 #include <Ice/Ice.h>
-#include <AGMCommonBehavior.h>
+#include <TrajectoryRobot2D.h>
 
 #include <config.h>
 #include "genericworker.h"
 
-using namespace RoboCompAGMCommonBehavior;
+using namespace RoboCompTrajectoryRobot2D;
 
-class AGMCommonBehaviorI : public virtual RoboCompAGMCommonBehavior::AGMCommonBehavior
+class TrajectoryRobot2DI : public virtual RoboCompTrajectoryRobot2D::TrajectoryRobot2D
 {
 public:
-AGMCommonBehaviorI(GenericWorker *_worker);
-	~AGMCommonBehaviorI();
+TrajectoryRobot2DI(GenericWorker *_worker);
+	~TrajectoryRobot2DI();
 
-	bool reloadConfigAgent(const Ice::Current&);
-	bool activateAgent(const ParameterMap  &prs, const Ice::Current&);
-	bool setAgentParameters(const ParameterMap  &prs, const Ice::Current&);
-	ParameterMap getAgentParameters(const Ice::Current&);
-	void killAgent(const Ice::Current&);
-	int uptimeAgent(const Ice::Current&);
-	bool deactivateAgent(const Ice::Current&);
-	StateStruct getAgentState(const Ice::Current&);
+	NavState getState(const Ice::Current&);
+	float goBackwards(const TargetPose  &target, const Ice::Current&);
+	void stop(const Ice::Current&);
+	void setHumanSpace(const PolyLineList  &polyList, const Ice::Current&);
+	float goReferenced(const TargetPose  &target, const float  xRef, const float  zRef, const float  threshold, const Ice::Current&);
+	float changeTarget(const TargetPose  &target, const Ice::Current&);
+	float go(const TargetPose  &target, const Ice::Current&);
+	void mapBasedTarget(const NavigationParameterMap  &parameters, const Ice::Current&);
 
 private:
 

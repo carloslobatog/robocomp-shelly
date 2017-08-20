@@ -100,8 +100,23 @@ struct SNGPerson
     ::Ice::Float vel;
 };
 
+<<<<<<< HEAD
 typedef ::std::vector< ::RoboCompSocialNavigationGaussian::SNGPerson> SNGPersonSeq;
 
+=======
+struct SNGObject
+{
+    ::Ice::Float x;
+    ::Ice::Float z;
+    ::Ice::Float angle;
+    ::Ice::Float space;
+};
+
+typedef ::std::vector< ::RoboCompSocialNavigationGaussian::SNGPerson> SNGPersonSeq;
+
+typedef ::std::vector< ::RoboCompSocialNavigationGaussian::SNGObject> SNGObjectSeq;
+
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 typedef ::std::vector< ::RoboCompSocialNavigationGaussian::SNGPoint2D> SNGPolyline;
 
 typedef ::std::vector< ::RoboCompSocialNavigationGaussian::SNGPolyline> SNGPolylineSeq;
@@ -200,6 +215,41 @@ struct StreamReader< ::RoboCompSocialNavigationGaussian::SNGPerson, S>
     }
 };
 
+<<<<<<< HEAD
+=======
+template<>
+struct StreamableTraits< ::RoboCompSocialNavigationGaussian::SNGObject>
+{
+    static const StreamHelperCategory helper = StreamHelperCategoryStruct;
+    static const int minWireSize = 16;
+    static const bool fixedLength = true;
+};
+
+template<class S>
+struct StreamWriter< ::RoboCompSocialNavigationGaussian::SNGObject, S>
+{
+    static void write(S* __os, const ::RoboCompSocialNavigationGaussian::SNGObject& v)
+    {
+        __os->write(v.x);
+        __os->write(v.z);
+        __os->write(v.angle);
+        __os->write(v.space);
+    }
+};
+
+template<class S>
+struct StreamReader< ::RoboCompSocialNavigationGaussian::SNGObject, S>
+{
+    static void read(S* __is, ::RoboCompSocialNavigationGaussian::SNGObject& v)
+    {
+        __is->read(v.x);
+        __is->read(v.z);
+        __is->read(v.angle);
+        __is->read(v.space);
+    }
+};
+
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 }
 
 namespace RoboCompSocialNavigationGaussian
@@ -452,39 +502,67 @@ private:
     
 public:
 
+<<<<<<< HEAD
     ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& objects, bool d)
     {
         return getObjectInteraction(persons, objects, d, 0);
     }
     ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& objects, bool d, const ::Ice::Context& __ctx)
+=======
+    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d)
+    {
+        return getObjectInteraction(persons, objects, d, 0);
+    }
+    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::Context& __ctx)
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
     {
         return getObjectInteraction(persons, objects, d, &__ctx);
     }
 #ifdef ICE_CPP11
     ::Ice::AsyncResultPtr
+<<<<<<< HEAD
     begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& objects, bool d, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+=======
+    begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
     {
         return __begin_getObjectInteraction(persons, objects, d, 0, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
+<<<<<<< HEAD
     begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& objects, bool d, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+=======
+    begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
     {
         return begin_getObjectInteraction(persons, objects, d, 0, ::Ice::newCallback(__completed, __sent), 0);
     }
     ::Ice::AsyncResultPtr
+<<<<<<< HEAD
     begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& objects, bool d, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+=======
+    begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
     {
         return __begin_getObjectInteraction(persons, objects, d, &__ctx, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
+<<<<<<< HEAD
     begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& objects, bool d, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+=======
+    begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
     {
         return begin_getObjectInteraction(persons, objects, d, &__ctx, ::Ice::newCallback(__completed, __sent));
     }
     
 private:
 
+<<<<<<< HEAD
     ::Ice::AsyncResultPtr __begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& objects, bool d, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+=======
+    ::Ice::AsyncResultPtr __begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
     {
         class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
         {
@@ -526,32 +604,56 @@ private:
 public:
 #endif
 
+<<<<<<< HEAD
     ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& objects, bool d)
+=======
+    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d)
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
     {
         return begin_getObjectInteraction(persons, objects, d, 0, ::IceInternal::__dummyCallback, 0);
     }
 
+<<<<<<< HEAD
     ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& objects, bool d, const ::Ice::Context& __ctx)
+=======
+    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::Context& __ctx)
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
     {
         return begin_getObjectInteraction(persons, objects, d, &__ctx, ::IceInternal::__dummyCallback, 0);
     }
 
+<<<<<<< HEAD
     ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& objects, bool d, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+=======
+    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
     {
         return begin_getObjectInteraction(persons, objects, d, 0, __del, __cookie);
     }
 
+<<<<<<< HEAD
     ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& objects, bool d, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+=======
+    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
     {
         return begin_getObjectInteraction(persons, objects, d, &__ctx, __del, __cookie);
     }
 
+<<<<<<< HEAD
     ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& objects, bool d, const ::RoboCompSocialNavigationGaussian::Callback_SocialNavigationGaussian_getObjectInteractionPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+=======
+    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::RoboCompSocialNavigationGaussian::Callback_SocialNavigationGaussian_getObjectInteractionPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
     {
         return begin_getObjectInteraction(persons, objects, d, 0, __del, __cookie);
     }
 
+<<<<<<< HEAD
     ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& objects, bool d, const ::Ice::Context& __ctx, const ::RoboCompSocialNavigationGaussian::Callback_SocialNavigationGaussian_getObjectInteractionPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+=======
+    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::Context& __ctx, const ::RoboCompSocialNavigationGaussian::Callback_SocialNavigationGaussian_getObjectInteractionPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
     {
         return begin_getObjectInteraction(persons, objects, d, &__ctx, __del, __cookie);
     }
@@ -560,8 +662,13 @@ public:
     
 private:
 
+<<<<<<< HEAD
     ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, bool, const ::Ice::Context*);
     ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, bool, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+=======
+    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq&, bool, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq&, bool, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
     
 public:
     
@@ -692,7 +799,11 @@ public:
 
     virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&) = 0;
 
+<<<<<<< HEAD
     virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&) = 0;
+=======
+    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq&, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&) = 0;
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 };
 
 }
@@ -714,7 +825,11 @@ public:
 
     virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
 
+<<<<<<< HEAD
     virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
+=======
+    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq&, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 };
 
 }
@@ -736,7 +851,11 @@ public:
 
     virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
 
+<<<<<<< HEAD
     virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
+=======
+    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq&, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 };
 
 }
@@ -764,7 +883,11 @@ public:
     virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___getPassOnRight(::IceInternal::Incoming&, const ::Ice::Current&);
 
+<<<<<<< HEAD
     virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, bool, const ::Ice::Current& = ::Ice::Current()) = 0;
+=======
+    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq&, bool, const ::Ice::Current& = ::Ice::Current()) = 0;
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
     ::Ice::DispatchStatus ___getObjectInteraction(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Ice::DispatchStatus __dispatch(::IceInternal::Incoming&, const ::Ice::Current&);

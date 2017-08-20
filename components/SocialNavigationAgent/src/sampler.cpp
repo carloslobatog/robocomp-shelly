@@ -22,7 +22,11 @@ Sampler::Sampler()
 
 /**
  * @brief Initializes the Sampler with the limits of robot's workspace and a point to innermodel.
+<<<<<<< HEAD
  * The method uses that pointer to create a copy of innermodel, so the Sampler can use to test valid 
+=======
+ * The method uses that pointer to create a copy of innermodel, so the Sampler can use it to test valid 
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
  * robot configurations without interfering with the original one
  * 
  * @param inner pointer to innerModel object
@@ -34,6 +38,7 @@ void Sampler::initialize(InnerModel *inner, const RoboCompCommonBehavior::Parame
 {
   
 	qDebug() << __FUNCTION__ << "Sampler: Copying InnerModel...";
+<<<<<<< HEAD
  	qDebug()<< __FUNCTION__ << "----------------1---------------";
 	//innerModelSampler = inner->copy();
 	
@@ -42,10 +47,19 @@ void Sampler::initialize(InnerModel *inner, const RoboCompCommonBehavior::Parame
 	qDebug()<< __FUNCTION__ << "-----------------2----------------";
 	try
 	{	qDebug()<< __FUNCTION__ << "-----------------3----------------";
+=======
+	//innerModelSampler = inner->copy();
+	innerModelSampler = inner;
+	
+	/// Processing configuration parameters
+	try
+	{	
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 		outerRegion.setLeft(std::stof(params.at("OuterRegionLeft").value));
 		outerRegion.setRight(std::stof(params.at("OuterRegionRight").value));
 		outerRegion.setBottom(std::stof(params.at("OuterRegionBottom").value));
 		outerRegion.setTop(std::stof(params.at("OuterRegionTop").value));
+<<<<<<< HEAD
 		qDebug() << __FUNCTION__ << "OuterRegion from config: " << outerRegion;
 	}
 	catch(...)
@@ -72,6 +86,40 @@ void Sampler::initialize(InnerModel *inner, const RoboCompCommonBehavior::Parame
 	recursiveIncludeMeshes(innerModelSampler->getRoot(), "robot", false, robotNodes, restNodes, excludedNodes);
 
 	qDebug()<< __FUNCTION__ << "-----------------------5------------------";///AQUI ESTA EL ERROR
+=======
+	}
+	catch(const std::exception &e)
+	{ 
+		std::cout << "Exception " << e.what() << " at Sampler::initialize(). OuterRegion parameters not found in config file" << std::endl; 
+		//robocomp::exception ex("OuterRegion parameters not found in config file");
+		throw e;
+	}
+	
+// 	innerRegions = innerRegions_;
+// 	foreach(QRectF ir,  innerRegions_)
+// 		if( ir.isNull() == false)
+// 		{
+// 			robocomp::exception ex("Sampler::initialize() An InnerRegion is not a valid rectangle");
+// 			throw ex;
+// 		}
+
+	if(outerRegion.isNull())
+	{
+		robocomp::exception ex("Sampler::initialize() OuterRegion is not properly initialized");
+		throw ex;
+	}
+		
+	QStringList ls = QString::fromStdString(params.at("ExcludedObjectsInCollisionCheck").value).replace(" ", "" ).split(',');
+	qDebug() << __FUNCTION__ << ls.size() << "objects read for exclusion list";
+	
+	foreach(const QString &s, ls)
+		excludedNodes.insert(s);
+	
+	// Compute the list of meshes that correspond to robot, world and possibly some additionally excluded ones
+	robotNodes.clear(); restNodes.clear(); 
+	recursiveIncludeMeshes(innerModelSampler->getRoot(), "robot", false, robotNodes, restNodes, excludedNodes);
+
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 	//Init random sequence generator
 	qsrand( QTime::currentTime().msec() );
 }

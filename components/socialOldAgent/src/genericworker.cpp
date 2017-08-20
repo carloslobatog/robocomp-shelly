@@ -28,9 +28,15 @@ QObject()
 #endif
 
 {
+<<<<<<< HEAD:components/socialOldAgent/src/genericworker.cpp
 	innermodelmanager_proxy = (*(InnerModelManagerPrx*)mprx["InnerModelManagerProxy"]);
 	omnirobot_proxy = (*(OmniRobotPrx*)mprx["OmniRobotProxy"]);
 	trajectoryrobot2d_proxy = (*(TrajectoryRobot2DPrx*)mprx["TrajectoryRobot2DProxy"]);
+=======
+	trajectoryrobot2d_proxy = (*(TrajectoryRobot2DPrx*)mprx["TrajectoryRobot2DProxy"]);
+	innermodelmanager_proxy = (*(InnerModelManagerPrx*)mprx["InnerModelManagerProxy"]);
+	omnirobot_proxy = (*(OmniRobotPrx*)mprx["OmniRobotProxy"]);
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/socialOldAgent/src/genericworker.cpp
 	socialnavigationgaussian_proxy = (*(SocialNavigationGaussianPrx*)mprx["SocialNavigationGaussianProxy"]);
 	agmexecutive_proxy = (*(AGMExecutivePrx*)mprx["AGMExecutiveProxy"]);
 	logger_proxy = (*(LoggerPrx*)mprx["LoggerPub"]);

@@ -8,6 +8,12 @@ SET ( SOURCES
   currenttarget.cpp
   road.cpp
   sampler.cpp
+<<<<<<< HEAD
+=======
+  pathplanner.cpp
+  actionexecution.cpp
+  socialrules.cpp
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 )
 
 ADD_DEFINITIONS( -std=c++14 )

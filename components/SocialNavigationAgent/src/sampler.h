@@ -26,6 +26,10 @@
 #include "qmat/qline2d.h"
 #include <assert.h>
 #include <stdio.h>    
+<<<<<<< HEAD
+=======
+#include "robocompexception.h"
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 
 class Sampler
 {

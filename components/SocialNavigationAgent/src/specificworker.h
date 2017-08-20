@@ -26,10 +26,18 @@
 #include <vector>
 #include <QFile>
 #include "pathfinder.h"
+<<<<<<< HEAD:components/SocialNavigationAgent/src/specificworker.h
 
 
 //PROBLEMA: con python 3.5 da error al compilar
 
+=======
+#include <actionexecution.h>
+#include <socialrules.h>
+
+//PROBLEMA: con python 3.5 da error al compilar
+
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/SocialNavigationAgent/src/specificworker.h
 #include <innermodel/innermodel.h>
 #include <boost/format.hpp>
 
@@ -53,6 +61,7 @@ public:
 	bool changepos=false;
 	
 	SNGPolylineSeq sequence;
+<<<<<<< HEAD:components/SocialNavigationAgent/src/specificworker.h
 	
 	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
 	SNGPersonSeq totalpersons; //este es para leer el fichero
@@ -93,12 +102,34 @@ public:
 	//PARA GUARDAR LOS DATOS EN UN ARCHIVO
 
 	struct Point {
+=======
+	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
+	SNGPersonSeq totalpersons; //este es para leer el fichero
+	SNGPerson robot;	
+	vector <bool> pn = {false,false,false,false,false,false};  // to check if the person is in the world	
+	//vector <bool> ppn = {false,false,false,false,false,false};  // if the person is moving
+	int32_t personSymbolId;
+	int32_t pSymbolId[6];
+	
+	SNGPerson person;
+	SNGPerson personaux;
+// 	SNGPersonSeq totalp; // quiet person
+// 	SNGPersonSeq totalpmov; //moving person
+	SNGPersonSeq totalaux; //to check if the person has changed its position
+	
+	//bool para saber si se ha movido alguna persona
+	bool movperson = false;
+	int32_t robotSymbolId;	
+    
+	struct Point { //PARA GUARDAR LOS DATOS EN UN ARCHIVO
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/SocialNavigationAgent/src/specificworker.h
 	  float x;
 	  float z;
 	};
 	Point point;
 	vector <Point> poserobot;
 	
+<<<<<<< HEAD:components/SocialNavigationAgent/src/specificworker.h
 	//PARA LEER EL VALOR DEL SLIDER
 	int prox = 0;
 
@@ -112,6 +143,15 @@ public:
 
 	int i = 0;
 	
+=======
+	//PARA GUARDAR LA DISTANCIA RECORRIDA
+	float totaldist=0;
+	
+	ActionExecution aE; //Class ActionExecution
+	SocialRules sr; //Class SocialRules
+	
+	bool staticperson = false;
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/SocialNavigationAgent/src/specificworker.h
 	///////////////////////////////////////////////////////////////////////////
 	/// SERVANTS
 	//////////////////////////////////////////////////////////////////////////
@@ -131,6 +171,7 @@ public:
 	void edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &modifications);
 
 	//double agaussian(SNGPerson person, float x, float y);
+<<<<<<< HEAD:components/SocialNavigationAgent/src/specificworker.h
 
 	NavState getState(){ return NavState(); };
 	float goBackwards(const TargetPose &target){};
@@ -147,6 +188,24 @@ public slots:
 	void readTrajState();
 	SNGPolylineSeq gauss(bool dibujar=true);
 	void changevalue(int valor);
+=======
+
+	NavState getState(){ return NavState(); };
+	float goBackwards(const TargetPose &target){};
+	void stop(){};
+	void setHumanSpace(const PolyLineList &polyList){};
+	float goReferenced(const TargetPose &target, const float xRef, const float zRef, const float threshold){ pathfinder.go(target.x, target.z); };
+	float changeTarget(const TargetPose &target){};
+	void mapBasedTarget(const NavigationParameterMap &parameters){};
+	float go(const TargetPose &target){ pathfinder.go(target.x, target.z); };
+
+	
+public slots:
+ 	void compute();
+	//void readTrajState();
+// 	SNGPolylineSeq gauss(bool draw=true);
+// 	void changevalue(int value);
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/SocialNavigationAgent/src/specificworker.h
 	void savedata();
 	void UpdateInnerModel(SNGPolylineSeq seq);
 
@@ -154,6 +213,7 @@ private:
 	bool setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated);
 	bool active;
 	void sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel,std::string m);
+<<<<<<< HEAD:components/SocialNavigationAgent/src/specificworker.h
 	void includeMovementInRobotSymbol(AGMModelSymbol::SPtr robot);
 	void go(float x, float z, float alpha=0, bool rot=false, float xRef=0, float zRef=0, float threshold=200);
 	void stopL();
@@ -161,6 +221,9 @@ private:
 	int32_t getIdentifierOfRobotsLocation(AGMModel::SPtr &worldModel);
 	void setIdentifierOfRobotsLocation(AGMModel::SPtr &worldModel, int32_t identifier);
 
+=======
+	
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/SocialNavigationAgent/src/specificworker.h
 private:
 	std::string action;
 	ParameterMap params;
@@ -173,6 +236,7 @@ private:
 	RoboCompTrajectoryRobot2D::NavState planningState;
 	// Target info
 	RoboCompTrajectoryRobot2D::TargetPose currentTarget;
+<<<<<<< HEAD:components/SocialNavigationAgent/src/specificworker.h
 	Path::PathFinder pathfinder;
 	
 	
@@ -190,6 +254,11 @@ private:
 	void action_NoAction(bool newAction = true);
 	void action_HandObject_Offer(bool newAction = true);
 	void action_HandObject_leave(bool newAction = true);
+=======
+	robocomp::pathfinder::PathFinder pathfinder;
+	
+	
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/SocialNavigationAgent/src/specificworker.h
 //CHECK
 	//void updateRobotsCognitiveLocation();
 //	std::map<int32_t, QPolygonF> roomsPolygons;
@@ -199,6 +268,7 @@ private:
 };
 
 
+<<<<<<< HEAD:components/SocialNavigationAgent/src/specificworker.h
 class TimedList
 {
 	class TimedDatum
@@ -241,6 +311,8 @@ private:
 	QList<TimedDatum> data;
 };
 
+=======
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/SocialNavigationAgent/src/specificworker.h
 #endif
 
 

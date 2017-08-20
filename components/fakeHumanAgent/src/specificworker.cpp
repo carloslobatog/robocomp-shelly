@@ -20,8 +20,6 @@
 #include "specificworker.h"
 #include <qt4/QtGui/qdial.h>
 
-
-
 /**
 * \brief Default constructor
 */

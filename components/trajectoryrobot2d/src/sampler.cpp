@@ -34,12 +34,20 @@ void Sampler::initialize(InnerModel *inner, const RoboCompCommonBehavior::Parame
 {
   
 	qDebug() << __FUNCTION__ << "Sampler: Copying InnerModel...";
+<<<<<<< HEAD
  	qDebug()<< __FUNCTION__ << "----------------1---------------";
 	//innerModelSampler = inner->copy();
 	
 	innerModelSampler = inner;
 	
 	qDebug()<< __FUNCTION__ << "-----------------2----------------";
+=======
+
+	innerModelSampler = inner->copy();
+	
+	//innerModelSampler = inner;
+
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 	try
 	{	qDebug()<< __FUNCTION__ << "-----------------3----------------";
 		outerRegion.setLeft(std::stof(params.at("OuterRegionLeft").value));
@@ -67,11 +75,16 @@ void Sampler::initialize(InnerModel *inner, const RoboCompCommonBehavior::Parame
 		excludedNodes.insert(s);
 	
 	// Compute the list of meshes that correspond to robot, world and possibly some additionally excluded ones
+<<<<<<< HEAD
 	qDebug()<< __FUNCTION__ << "-------------------4------------------";
 	
 	recursiveIncludeMeshes(innerModelSampler->getRoot(), "robot", false, robotNodes, restNodes, excludedNodes);
 
 	qDebug()<< __FUNCTION__ << "-----------------------5------------------";///AQUI ESTA EL ERROR
+=======
+	
+	recursiveIncludeMeshes(innerModelSampler->getRoot(), "robot", false, robotNodes, restNodes, excludedNodes);
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 	//Init random sequence generator
 	qsrand( QTime::currentTime().msec() );
 }

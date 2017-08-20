@@ -29,7 +29,11 @@ void Road::initialize(InnerModel* inner, const RoboCompCommonBehavior::Parameter
 	threshold =  QString::fromStdString(params.at("ArrivalTolerance").value).toFloat();
 	MINIMUM_SAFETY_DISTANCE =  QString::fromStdString(params.at("MinimumSafetyDistance").value).toFloat(); 
 	ROBOT_RADIUS =  QString::fromStdString(params.at("RobotRadius").value).toFloat(); 
+<<<<<<< HEAD
 	
+=======
+	std::cout << __FUNCTION__ << "Road initialized correclty" << std::endl;
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 }
 
 //////////////////
@@ -38,13 +42,18 @@ void Road::initialize(InnerModel* inner, const RoboCompCommonBehavior::Parameter
 void Road::update()
 {
 static QTime reloj = QTime::currentTime();
+<<<<<<< HEAD
 	//////////////////////////////////////////////////////
 	//Get robot's position in world and create robot's nose
 	//////////////////////////////////////////////////////
+=======
+	/// Get robot's position in world and create robot's nose
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 	QVec robot3DPos = innerModel->transform("world", "robot");
 	QVec noseInRobot = innerModel->transform("world", QVec::vec3(0, 0, 1000), "robot");
 	QLine2D nose = QLine2D(QVec::vec2(robot3DPos.x(), robot3DPos.z()), QVec::vec2(noseInRobot.x(), noseInRobot.z()));
 
+<<<<<<< HEAD
 	////////////////////////////////////////////////////
 	//Compute closest point in road to robot. If closer than 1000mm it will use the virtual point (tip) instead of the center of the robot.
 	///////////////////////////////////////////////////
@@ -64,11 +73,25 @@ static QTime reloj = QTime::currentTime();
 	////////////////////////////////////////////////////
 	//Compute signed angle between nose and tangent at closest point
 	////////////////////////////////////////////////////
+=======
+	/// Compute closest point in road to robot. If closer than 1000mm it will use the virtual point (tip) instead of the center of the robot.
+	Road::iterator closestPoint = computeClosestPointToRobot(robot3DPos);
+
+	/// Compute roadTangent at closestPoint
+	QLine2D tangent = computeTangentAt(closestPoint);
+	setTangentAtClosestPoint(tangent);
+
+	/// Compute signed perpenduicular distance from robot to tangent at closest point
+	setRobotPerpendicularDistanceToRoad(tangent.perpendicularDistanceToPoint(robot3DPos));
+
+	/// Compute signed angle between nose and tangent at closest point
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 	float ang = nose.signedAngleWithLine2D(tangent);
 	if (std::isnan(ang))
 		ang = 0;
 	setAngleWithTangentAtClosestPoint(ang);
 
+<<<<<<< HEAD
 	/////////////////////////////////////////////
 	//Compute distance to target along trajectory
 	/////////////////////////////////////////////
@@ -93,6 +116,22 @@ static QTime reloj = QTime::currentTime();
 	////////////////////////////////////////////////////////////
 	// Compute robot angle in each point
 	// //////////////////////////////////////////////////////////
+=======
+	/// Compute distance to target along trajectory
+	setRobotDistanceToTarget(computeDistanceToTarget(closestPoint, robot3DPos));  //computes robotDistanceVariationToTarget
+	setRobotDistanceVariationToTarget(robotDistanceVariationToTarget);
+
+	/// Update estimated time of arrival
+	setETA();
+
+	/// Compute curvature of trajectory at closest point to robot
+	setRoadCurvatureAtClosestPoint(computeRoadCurvature(closestPoint, 3));
+
+	/// Compute distance to last road point visible with laser field
+	setRobotDistanceToLastVisible(computeDistanceToLastVisible(closestPoint, robot3DPos));
+
+	/// Compute robot angle in each point
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 	for( Road::iterator it = this->begin(); it != this->end(); ++it )
 	{
 		QLine2D l = computeTangentAt(it);
@@ -103,9 +142,13 @@ static QTime reloj = QTime::currentTime();
 		it->rot = QVec::vec3(0, ang, 0);
 	}
 
+<<<<<<< HEAD
 	//////////////////////////////////////////////////////////
 	//Check for arrival to target (translation)  TOO SIMPLE
 	/////////////////////////////////////////////////////////
+=======
+	/// Check for arrival to target (translation)  TOO SIMPLE
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 	//qDebug() << __FUNCTION__ << "Arrived:" << getRobotDistanceToTarget() <<  this->threshold << getRobotDistanceVariationToTarget();
 
 	//	print();

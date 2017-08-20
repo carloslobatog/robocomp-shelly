@@ -80,11 +80,20 @@ public:
 	bool activate(const BehaviorParameters& parameters);
 	bool deactivate();
 	bool isActive() { return active; }
+<<<<<<< HEAD:components/SocialNavigationAgent/src/genericworker.h
+
+=======
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/SocialNavigationAgent/src/genericworker.h
 
 
+	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
+	OmniRobotPrx omnirobot_proxy;
 	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;
+<<<<<<< HEAD:components/SocialNavigationAgent/src/genericworker.h
 	OmniRobotPrx omnirobot_proxy;
 	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
+=======
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/SocialNavigationAgent/src/genericworker.h
 	LoggerPrx logger_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 

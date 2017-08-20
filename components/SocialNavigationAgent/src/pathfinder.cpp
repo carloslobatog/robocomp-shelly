@@ -17,6 +17,7 @@
 
 #include "pathfinder.h"
 
+<<<<<<< HEAD
 using namespace Path;
 
 PathFinder::PathFinder()
@@ -24,6 +25,9 @@ PathFinder::PathFinder()
 
 PathFinder::~PathFinder()
 {}
+=======
+using namespace robocomp::pathfinder;
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 
 ///////////////////////////////////////////////////////////////////
 ///  Public Interface
@@ -39,6 +43,7 @@ void PathFinder::go(float x, float z, const ParameterMap &parameters)
 
 void PathFinder::initialize( InnerModel *innerModel, const RoboCompAGMCommonBehavior::ParameterMap &params, const 		RoboCompCommonBehavior::ParameterList &localparams)
 {
+<<<<<<< HEAD
 //////////////////////////////////////
 	/// Initialize sampler of free space
 	/////////////////////////////////////
@@ -69,6 +74,48 @@ void PathFinder::initialize( InnerModel *innerModel, const RoboCompAGMCommonBeha
 	
 }
 
+=======
+	/// Initialize the elastic road
+	road.initialize(innerModel, localparams);
+
+	/// Initialize sampler of free space
+	try
+	{ sampler.initialize(innerModel, localparams); } catch(const std::exception &ex) { throw ex;	}
+
+	/// Initialize the Planner
+	//plannerPRM.initialize(&sampler, params);  
+	pathplanner.initialize();
+	
+	/// Initialize the Projector
+	//elasticband.initialize( params);
+
+	/// Initialize the low level controller that drives the robot on the road	
+	//controller = new Controller(innerModel, laserData, params, 2 );
+
+	std::cout << __FUNCTION__ << "All objects initialized" << std::endl;
+	
+	//std::thread thread_planner(&PathPlanner::run, &pathplanner, std::bind(&PathFinder::getRoad, this), std::bind(&PathFinder::releaseRoad, this));
+	//thread_planner.join();
+}
+
+Road& PathFinder::getRoad()
+{
+	mymutex.lock();
+	std::cout << "mutex locked" << std::endl;
+	return road;	
+}
+
+void PathFinder::releaseRoad()
+{
+	mymutex.unlock();
+	std::cout << "mutex released" << std::endl;
+}
+
+
+//////////////////////////////////////////////////
+
+
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 
 
 

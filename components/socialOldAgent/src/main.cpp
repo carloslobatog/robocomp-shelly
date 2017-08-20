@@ -141,49 +141,22 @@ int ::socialOldAgent::run(int argc, char* argv[])
 
 	int status=EXIT_SUCCESS;
 
+<<<<<<< HEAD:components/socialOldAgent/src/main.cpp
 	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
 	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;
 	OmniRobotPrx omnirobot_proxy;
 	LoggerPrx logger_proxy;
+=======
+	OmniRobotPrx omnirobot_proxy;
+	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;
+	LoggerPrx logger_proxy;
+	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/socialOldAgent/src/main.cpp
 	InnerModelManagerPrx innermodelmanager_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 
 	string proxy, tmp;
 	initialize();
-
-
-	try
-	{
-		if (not GenericMonitor::configGetString(communicator(), prefix, "SocialNavigationGaussianProxy", proxy, ""))
-		{
-			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy SocialNavigationGaussianProxy\n";
-		}
-		socialnavigationgaussian_proxy = SocialNavigationGaussianPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
-	}
-	catch(const Ice::Exception& ex)
-	{
-		cout << "[" << PROGRAM_NAME << "]: Exception: " << ex;
-		return EXIT_FAILURE;
-	}
-	rInfo("SocialNavigationGaussianProxy initialized Ok!");
-	mprx["SocialNavigationGaussianProxy"] = (::IceProxy::Ice::Object*)(&socialnavigationgaussian_proxy);//Remote server proxy creation example
-
-
-	try
-	{
-		if (not GenericMonitor::configGetString(communicator(), prefix, "TrajectoryRobot2DProxy", proxy, ""))
-		{
-			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy TrajectoryRobot2DProxy\n";
-		}
-		trajectoryrobot2d_proxy = TrajectoryRobot2DPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
-	}
-	catch(const Ice::Exception& ex)
-	{
-		cout << "[" << PROGRAM_NAME << "]: Exception: " << ex;
-		return EXIT_FAILURE;
-	}
-	rInfo("TrajectoryRobot2DProxy initialized Ok!");
-	mprx["TrajectoryRobot2DProxy"] = (::IceProxy::Ice::Object*)(&trajectoryrobot2d_proxy);//Remote server proxy creation example
 
 
 	try
@@ -205,6 +178,70 @@ int ::socialOldAgent::run(int argc, char* argv[])
 
 	try
 	{
+		if (not GenericMonitor::configGetString(communicator(), prefix, "TrajectoryRobot2DProxy", proxy, ""))
+<<<<<<< HEAD:components/socialOldAgent/src/main.cpp
+		{
+			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy TrajectoryRobot2DProxy\n";
+		}
+		trajectoryrobot2d_proxy = TrajectoryRobot2DPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
+	}
+	catch(const Ice::Exception& ex)
+	{
+		cout << "[" << PROGRAM_NAME << "]: Exception: " << ex;
+		return EXIT_FAILURE;
+	}
+	rInfo("TrajectoryRobot2DProxy initialized Ok!");
+	mprx["TrajectoryRobot2DProxy"] = (::IceProxy::Ice::Object*)(&trajectoryrobot2d_proxy);//Remote server proxy creation example
+
+
+	try
+	{
+		if (not GenericMonitor::configGetString(communicator(), prefix, "OmniRobotProxy", proxy, ""))
+=======
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/socialOldAgent/src/main.cpp
+		{
+			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy TrajectoryRobot2DProxy\n";
+		}
+		trajectoryrobot2d_proxy = TrajectoryRobot2DPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
+	}
+	catch(const Ice::Exception& ex)
+	{
+		cout << "[" << PROGRAM_NAME << "]: Exception: " << ex;
+		return EXIT_FAILURE;
+	}
+	rInfo("TrajectoryRobot2DProxy initialized Ok!");
+	mprx["TrajectoryRobot2DProxy"] = (::IceProxy::Ice::Object*)(&trajectoryrobot2d_proxy);//Remote server proxy creation example
+
+
+	try
+	{
+<<<<<<< HEAD:components/socialOldAgent/src/main.cpp
+		if (not GenericMonitor::configGetString(communicator(), prefix, "InnerModelManagerProxy", proxy, ""))
+		{
+			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy InnerModelManagerProxy\n";
+		}
+		innermodelmanager_proxy = InnerModelManagerPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
+=======
+		if (not GenericMonitor::configGetString(communicator(), prefix, "SocialNavigationGaussianProxy", proxy, ""))
+		{
+			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy SocialNavigationGaussianProxy\n";
+		}
+		socialnavigationgaussian_proxy = SocialNavigationGaussianPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/socialOldAgent/src/main.cpp
+	}
+	catch(const Ice::Exception& ex)
+	{
+		cout << "[" << PROGRAM_NAME << "]: Exception: " << ex;
+		return EXIT_FAILURE;
+	}
+<<<<<<< HEAD:components/socialOldAgent/src/main.cpp
+=======
+	rInfo("SocialNavigationGaussianProxy initialized Ok!");
+	mprx["SocialNavigationGaussianProxy"] = (::IceProxy::Ice::Object*)(&socialnavigationgaussian_proxy);//Remote server proxy creation example
+
+
+	try
+	{
 		if (not GenericMonitor::configGetString(communicator(), prefix, "InnerModelManagerProxy", proxy, ""))
 		{
 			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy InnerModelManagerProxy\n";
@@ -216,6 +253,7 @@ int ::socialOldAgent::run(int argc, char* argv[])
 		cout << "[" << PROGRAM_NAME << "]: Exception: " << ex;
 		return EXIT_FAILURE;
 	}
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/socialOldAgent/src/main.cpp
 	rInfo("InnerModelManagerProxy initialized Ok!");
 	mprx["InnerModelManagerProxy"] = (::IceProxy::Ice::Object*)(&innermodelmanager_proxy);//Remote server proxy creation example
 

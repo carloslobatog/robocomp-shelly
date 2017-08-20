@@ -107,15 +107,25 @@ class Person(object):
     x = 0
     y = 0
     th = 0
+<<<<<<< HEAD
     polyline = []
     xdot = 0
     ydot = 0
     vel=0
+=======
+    vel = 0
+
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 
     _radius = 0.30
+
     """ Public Methods """
 
+<<<<<<< HEAD
     def __init__(self, x=0, y=0, th=0,vel=0):
+=======
+    def __init__(self, x=0, y=0, th=0, vel=0):
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
         self.x = x
         self.y = y
         self.th = th
@@ -201,9 +211,12 @@ class Person(object):
         """
         ##he cambiado el valor de las sigmas porque la gaussiana que dibujaba con las anteriores era muy grande
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
         alpha = np.arctan2(y - self.y, x - self.x) - rot - pi / 2
         nalpha = np.arctan2(np.sin(alpha), np.cos(alpha))  # Normalizando no intervalo [-pi, pi)
 
@@ -221,6 +234,12 @@ class Person(object):
         return z
 
 
+class Object():
+    def __init__(self, x=0, y=0, th=0, sp=0):
+        self.x = x
+        self.y = y
+        self.th = th
+        self.sp = sp
 
 
 class SpecificWorker(GenericWorker):
@@ -356,7 +375,11 @@ class SpecificWorker(GenericWorker):
 
     def getPassOnRight(self, persons, v, dibujar):
 
+<<<<<<< HEAD
         plt.close('all')
+=======
+        plt.close("all")
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 
 
         lx_inf = -6
@@ -411,15 +434,26 @@ class SpecificWorker(GenericWorker):
     # getObjectInteraction
     #
     def getObjectInteraction(self, persons, objects, d):
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
         print("getObjectInteration")
         plt.close('all')
 
         polylines = []
+<<<<<<< HEAD
         for o in objects:
             print ("OBJETO")
 
             obj = Person(o.x, o.z, o.angle)
 
+=======
+
+        for o in objects:
+            obj = Object(o.x, o.z, o.angle, o.space)
+            print("OBJETO")
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
             ##para dibujarlo
             if (d):
                 plt.figure('ObjectSpace')
@@ -432,10 +466,17 @@ class SpecificWorker(GenericWorker):
                 plt.gca().add_line(heading)
 
             w = 1.0
+<<<<<<< HEAD
             h = 1.5
             print (obj.x,obj.y)
             ##para calcular el rectangulo
             s = QRectF(QPointF(0, 0), QSize(w, h))
+=======
+
+            print (obj.x,obj.y)
+            ##para calcular el rectangulo
+            s = QRectF(QPointF(0, 0), QSizeF(w, obj.sp))
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 
             # if (d):
             #     plt.plot (s.bottomLeft().x(),s.bottomLeft().y(),"go")
@@ -446,6 +487,7 @@ class SpecificWorker(GenericWorker):
             space = QPolygonF()
             space.append(s.topLeft())
             space.append(s.topRight())
+<<<<<<< HEAD
             space.append(QPointF(s.bottomRight().x()+ w/4, s.bottomRight().y()))
             space.append(QPointF(s.bottomLeft().x()-w/4,s.bottomLeft().y()))
 
@@ -453,6 +495,10 @@ class SpecificWorker(GenericWorker):
             #space = QPolygonF(space.bottomLeft(),space.bottomRight(),space.topRight()+w/2,space.topLeft()+w/2)
             #space = QPolygonF(space)
              #space.moveCenter(QPointF(obj.x,obj.y))
+=======
+            space.append(QPointF(s.bottomRight().x()+ obj.sp/6, s.bottomRight().y()))
+            space.append(QPointF(s.bottomLeft().x()-obj.sp/6,s.bottomLeft().y()))
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 
 
             t = QTransform()
@@ -478,8 +524,11 @@ class SpecificWorker(GenericWorker):
 
             for x in xrange(space.count() ):
                 point = space.value(x)
+<<<<<<< HEAD
                 print("valor", point)
 
+=======
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
                 if (d):
                     plt.plot(point.x(), point.y(), "go")
 
@@ -490,10 +539,16 @@ class SpecificWorker(GenericWorker):
 
 
             for p in persons:
+<<<<<<< HEAD
                 print("PERSONA")
                 pn = Person (p.x, p.z, p.angle)
                 print ("Pose persona", pn.x, pn.y)
                 if (d):
+=======
+                pn = Person(p.x, p.z, p.angle)
+                print("PERSONA")
+                if d:
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
                     body = plt.Circle((pn.x, pn.y), radius=0.3, fill=False)
                     plt.gca().add_patch(body)
 
@@ -503,14 +558,43 @@ class SpecificWorker(GenericWorker):
                     plt.gca().add_line(heading)
                     plt.axis('equal')
 
+<<<<<<< HEAD
                 if (space.containsPoint(QPointF(pn.x,pn.y),Qt.OddEvenFill)):
                     print("DENTROOOOO")
+=======
+
+                ##CHECKING THE ORIENTATION
+                a = abs(obj.th - abs(pn.th-math.pi))
+                if a < math.radians(45):
+                    checkangle = True
+                else:
+                    checkangle = False
+
+
+                # ang = abs(pn.th - math.pi)
+                # print(thrinf, thrsup, ang)
+                # if thrinf < ang and ang < thrsup:
+                #     checkangle = True
+                #     print ("MIRANDOOOOOO")
+
+                # else:
+                #     print ("NO MIRAAAAA")
+                #     checkangle = False
+
+                ##CHECKING IF THE PERSON IS INSIDE THE POLYGON
+                if space.containsPoint(QPointF(pn.x,pn.y),Qt.OddEvenFill) and checkangle:
+                    print("DENTROOOOO Y MIRANDO")
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
                     polylines.append(polyline)
 
                     break
 
                 else:
+<<<<<<< HEAD
                     print("FUERAAAAAAA")
+=======
+                    print("FUERA O NO MIRANDO")
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 
 
         if (d):

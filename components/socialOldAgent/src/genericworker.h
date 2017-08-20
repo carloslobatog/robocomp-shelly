@@ -87,8 +87,12 @@ public:
 	InnerModelManagerPrx innermodelmanager_proxy;
 	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
 	OmniRobotPrx omnirobot_proxy;
+<<<<<<< HEAD:components/socialOldAgent/src/genericworker.h
 	LoggerPrx logger_proxy;
+=======
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/socialOldAgent/src/genericworker.h
 	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;
+	LoggerPrx logger_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 
 	virtual bool reloadConfigAgent() = 0;

@@ -25,15 +25,16 @@
 #include <stdio.h>
 #include <vector>
 #include <QFile>
+<<<<<<< HEAD:components/socialOldAgent/src/specificworker.h
 #include <innermodel/innermodel.h>
 
 
 //PROBLEMA: con python 3.5 da error al compilar
 
+=======
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/socialOldAgent/src/specificworker.h
 #include <innermodel/innermodel.h>
-
 #include <boost/format.hpp>
-
 #define THRESHOLD 40
 
 /**
@@ -51,21 +52,21 @@ public:
 	~SpecificWorker();
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
 
+<<<<<<< HEAD:components/socialOldAgent/src/specificworker.h
 //bool para indicar si se ha movido la persona, lo utilizare para imprimir la coordenada de la persona cada vez que se mueva
+=======
+	//bool para indicar si se ha movido la persona, lo utilizare para imprimir la coordenada de la persona cada vez que se mueva
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/socialOldAgent/src/specificworker.h
 	bool cambiopos=false;
 
 	SNGPolylineSeq secuencia,secuencia2,secuenciaObj;
 
 	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
 	SNGPersonSeq totalpersons; //este es para leer el fichero
-	SNGPerson person1;
-	SNGPerson person2;
-	SNGPerson person3;
-	SNGPerson person4;
-	SNGPerson person5;
-	SNGPerson person6;
+
 	SNGPerson robot;
 	
+<<<<<<< HEAD:components/socialOldAgent/src/specificworker.h
 	SNGPerson object;
 	//estas guardaran la posicion anterior de cada persona, para comprobar si se ha movido
 	SNGPerson personaux1;
@@ -74,18 +75,18 @@ public:
 	SNGPerson personaux4;
 	SNGPerson personaux5;
 	SNGPerson personaux6;
+=======
+	SNGObject object;
+	SNGObjectSeq objects;
+
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/socialOldAgent/src/specificworker.h
 	//bool para saber si se ha movido alguna persona
 	bool movperson = false;
 
 	//PARA ALMACENAR EL SIMBOLO DE LA PERSONA AL LEERLA DEL MUNDO
-	int32_t personSymbolIdp1;
-	int32_t personSymbolIdp2;
-	int32_t personSymbolIdp3;
-	int32_t personSymbolIdp4;
-	int32_t personSymbolIdp5;
-	int32_t personSymbolIdp6;
 	int32_t robotSymbolId;
 	
+<<<<<<< HEAD:components/socialOldAgent/src/specificworker.h
 	int32_t objectSymbolId;
 	int32_t objectSymbolId1;
 	//BOOL PARA COMPROBAR SI LA PERSONA ESTA EN EL MUNDO
@@ -102,6 +103,27 @@ public:
 	bool pp5=false;
 	bool pp6=false;
 
+=======
+	vector <bool> pn = {false,false,false,false,false,false}; 
+	vector <bool> ppn = {false,false,false,false,false,false}; 
+	
+	int32_t personSymbolId;
+	int32_t pSymbolId[6];
+	SNGPerson person;
+	SNGPerson personaux;
+	SNGPersonSeq totalp;
+	SNGPersonSeq totalpmov;
+	SNGPersonSeq totalaux;
+	
+	
+	int32_t objectSymbolId;
+
+	
+	bool staticperson = false;
+	bool movingperson = false;
+
+
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/socialOldAgent/src/specificworker.h
 	//RoboCompInnerModelManager::Pose3D pose;
 	//PARA GUARDAR LOS DATOS EN UN ARCHIVO
 
@@ -118,11 +140,17 @@ public:
 
 	//PARA GUARDAR LA DISTANCIA RECORRIDA
 	float totaldist=0;
+<<<<<<< HEAD:components/socialOldAgent/src/specificworker.h
 
 	//PARA COMPROBAR SI DOS PERSONAS ESTAN HABLANDO. ya no se usa
 	bool conversation = false;
 	bool checkconversation();
 
+=======
+
+	void addObjects();
+      
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/socialOldAgent/src/specificworker.h
 
 
 	//////////////
@@ -151,7 +179,10 @@ public slots:
 	SNGPolylineSeq gauss(bool dibujar=true);
 	SNGPolylineSeq gausspor(bool dibujar=true);
 	SNGPolylineSeq objectInteraction(bool dibujar = true);
+<<<<<<< HEAD:components/socialOldAgent/src/specificworker.h
 	void addObjects();
+=======
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033:components/socialOldAgent/src/specificworker.h
 	void cambiarvalor(int valor);
 	void grabarfichero();
 
