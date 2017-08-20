@@ -20,7 +20,7 @@
 #include <../trajectoryrobot2d/src/innermodeldraw.h>
 #include <math.h> 
 
-#define PI 3.14159265
+
 
 /**
 * \brief Default constructor
@@ -162,6 +162,7 @@ void SpecificWorker::compute( )
 		for (int ind=0;ind<pn.size();ind++)
 	
 		{
+		  
 			if (pn[ind])
 			{
 				AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(pSymbolId[ind], "RT");
@@ -172,7 +173,7 @@ void SpecificWorker::compute( )
 	 			//person.vel=str2float(edgeRT.attributes["velocity"]);			
 				person.vel=0;
 				totalpersons.push_back(person);		
-				qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << "Rotacion "<< person.angle;
+				qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << "Rotacion "<< person.angle/0.0175;
 			
 				if (totalaux.empty())
 				{
@@ -187,6 +188,15 @@ void SpecificWorker::compute( )
 			
 					totalaux[ind]=person;  	  
 			  
+				}
+				
+				if (sr.checkHRI(person,"fakeperson" + std::to_string(ind+1),innerModel))
+				{
+					//add edge interrupting
+				}
+				else 
+				{
+					//remove edge
 				}
 			
 			}
@@ -344,7 +354,7 @@ void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq)
 				catch(QString es){ qDebug() << "EXCEPCION" << es;}
 			}
 			
-			InnerModelNode *parent = innerModel->getNode(QString("world"));			
+			InnerModelNode *parent = innerModel->getNode(QString("world"));
 			if (parent == NULL)
 				printf("%s: parent does not exist\n", __FUNCTION__);
 			else

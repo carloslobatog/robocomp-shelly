@@ -56,7 +56,6 @@ public:
 	
 	SNGObject object;
 	SNGObjectSeq objects;
-	//estas guardaran la posicion anterior de cada persona, para comprobar si se ha movido
 
 	//bool para saber si se ha movido alguna persona
 	bool movperson = false;

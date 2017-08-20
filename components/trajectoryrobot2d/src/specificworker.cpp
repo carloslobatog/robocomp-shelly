@@ -42,8 +42,8 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	try
 	{
 		innerModel = new InnerModel(params.at("InnerModel").value);
-		innerModel->getNode<InnerModelJoint>("armX1")->setAngle(-1);
-		innerModel->getNode<InnerModelJoint>("armX2")->setAngle(2.5);
+		innerModel->getNode<InnerModelJoint>("armX1")->setAngle(0);//setAngle(-1)
+		innerModel->getNode<InnerModelJoint>("armX2")->setAngle(0);//setAngle(2.5)
 #ifdef USE_QTGUI
 		viewer = new InnerViewer(innerModel);  // makes a copy of innermodel for internal use
 #endif

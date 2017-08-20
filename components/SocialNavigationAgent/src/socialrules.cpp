@@ -55,6 +55,7 @@ SNGPolylineSeq SocialRules::gauss(bool draw)
 }
 
 
+
 SNGPolylineSeq SocialRules::PassOnRight(bool draw)
 {
 
@@ -99,13 +100,58 @@ SNGPolylineSeq SocialRules::objectInteraction(bool d)
 	
 
 	sequenceObj.clear();
-	sequenceObj =socialnavigationgaussian_proxy->getObjectInteraction(totalperson,objects,d);
+	sequenceObj = socialnavigationgaussian_proxy->getObjectInteraction(totalperson,objects,d);
 
 	return sequenceObj;
 	
 }
 
+/**
+* \brief Check if the human is close and looking at the robot.
+*/
 
+bool SocialRules::checkHRI(SNGPerson p,std::string name, InnerModel *i)
+{	
+	
+	bool looking = false;
+	bool close = false;
+		
+// 	i->transform(QString::fromStdString("world"), "robot").print("R");
+// 	i->transform(QString::fromStdString("world"), QString::fromStdString(name)).print("P");
+// 	i->transform(QString::fromStdString(name), "robot").print("x");
+
+	QVec pose = i->transform(QString::fromStdString(name), "robot");
+	
+	qDebug()<<pose.x()<<pose.z();
+	
+	float dist  = sqrt(pose.x()*pose.x() + pose.z()*pose.z());	
+	if (dist < 2000)	 
+	  close = true;
+	
+	//angulo que forma la persona con el robot
+	float ang = atan2(pose.z(),pose.x());
+	
+	qDebug()<<"angle"<<ang/0.0175;
+	
+	if (false)
+	{
+		looking = true;
+		qDebug()<<"MIRANDOOOOOOOOOOOO";
+	}
+	  
+	
+// 	if (close and looking)
+// 	{
+// 		qDebug()<<"CLOSE AND LOOKING";
+// 		return true;
+// 		
+// 	}
+	
+// 	else
+// 	   return false;
+
+	return false;
+}
 
 
 RoboCompTrajectoryRobot2D::PolyLineList SocialRules::ApplySocialRules(SNGPersonSeq tperson)

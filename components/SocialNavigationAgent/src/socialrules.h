@@ -21,7 +21,7 @@
 #include <innermodel/innermodel.h>
 #include <boost/format.hpp>
 #include <QObject>
-
+#include <math.h> 
 
 
 class SocialRules :public QObject
@@ -46,9 +46,14 @@ public:
 	SNGObject object;
 	SNGObjectSeq objects;
 	int32_t objectSymbolId;
-
+	
+	SNGPerson robot;
+	int32_t robotSymbolId;
+	
 	RoboCompTrajectoryRobot2D::PolyLineList ApplySocialRules(SNGPersonSeq tperson);
 	void  structuralChange(const RoboCompAGMWorldModel::World & modification);
+	bool checkHRI(SNGPerson p,std::string name, InnerModel *i);
+	
 	
 public slots:
   	void changevalue(int value);

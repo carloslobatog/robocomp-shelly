@@ -172,7 +172,7 @@ SNGPolylineSeq SpecificWorker::objectInteraction(bool d)
 	}
 	catch(...){}
 	secuenciaObj.clear();
-	secuenciaObj =socialnavigationgaussian_proxy->getObjectInteraction(totalp,objects,d);
+	secuenciaObj = socialnavigationgaussian_proxy->getObjectInteraction(totalp,objects,d);
 
 	return secuenciaObj;
 	
