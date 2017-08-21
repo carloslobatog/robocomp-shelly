@@ -172,8 +172,7 @@ void SpecificWorker::compute( )
 	 			//person.vel=str2float(edgeRT.attributes["velocity"]);			
 				person.vel=0;
 				totalpersons.push_back(person);		
-				qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << "Rotacion "<< person.angle;
-			
+				qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << "Rotacion "<< person.angle/0.0175;			
 				if (totalaux.empty())
 				{
 					//This must be changed. If the first human to be inserted is human2 it would be wrong
@@ -186,9 +185,11 @@ void SpecificWorker::compute( )
 						movperson = true;
 			
 					totalaux[ind]=person;  	  
-			  
+					
 				}
 			
+				sr.checkHRI(person,ind+1,innerModel);
+				
 			}
 		}
 		
@@ -232,7 +233,7 @@ void SpecificWorker::compute( )
 		
 		catch( const Ice::Exception &e)
 		{ 
-			std::cout << e << std::endl;
+// 			std::cout << e << std::endl;
 		}
 		
 	}	

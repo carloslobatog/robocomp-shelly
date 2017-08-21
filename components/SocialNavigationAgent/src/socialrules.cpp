@@ -106,6 +106,33 @@ SNGPolylineSeq SocialRules::objectInteraction(bool d)
 }
 
 
+void SocialRules::checkHRI(SNGPerson p, int ind, InnerModel *i)
+{
+	std::string name = "fakeperson" + std::to_string(ind);
+	bool looking = false;
+	bool close = false;
+	
+	QVec pose = i->transform(QString::fromStdString(name),"robot");
+	
+	float dist = sqrt(pose.x()*pose.x()+pose.z()*pose.z());
+	float angle = atan2(pose.x(),pose.z());
+
+	qDebug()<<"dist"<<dist<<"angle"<<angle/0.0175;
+	
+	if (abs(angle)<30*0.0175)
+		looking = true;
+	if (dist<20000)
+		close = true;
+	
+	if (looking and close)
+	{
+		qDebug()<<"CERCA Y MIRANDO";
+	}
+	
+	
+
+	
+}
 
 
 RoboCompTrajectoryRobot2D::PolyLineList SocialRules::ApplySocialRules(SNGPersonSeq tperson)

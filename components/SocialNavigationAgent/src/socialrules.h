@@ -49,6 +49,7 @@ public:
 
 	RoboCompTrajectoryRobot2D::PolyLineList ApplySocialRules(SNGPersonSeq tperson);
 	void  structuralChange(const RoboCompAGMWorldModel::World & modification);
+	void checkHRI(SNGPerson p, int ind, InnerModel *i);
 	
 public slots:
   	void changevalue(int value);
