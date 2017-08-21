@@ -1,0 +1,79 @@
+<innerModel>
+	<transform id="world">
+
+		<!-- FLOOR -->
+		<transform id="floor" tx="3000">
+			<plane id="floor_plane" ny="1" size="10000,10000,10" texture="#eebb77" />
+		</transform>
+
+
+
+
+
+		<transform id="room_5">
+			<!-- habitacion inferior -->
+			
+			<!-- "parte inferior" -->
+			<transform id="pared0" tx="3000" tz="-4750" ty="950" >
+				<plane id="muro0"  size="7000,1900,50"  texture="#a3e4d7" /> <!--azul claro-->
+			</transform>
+
+			<!-- "lateral izquierdo habitacion inferior" -->
+			<transform id="pared1" tx="-500" tz="-2750" ty="950" ry="0">
+				<plane id="muro1" nx="3000"  size="4000,1900,50"  texture="#00FFFF" />
+			</transform>
+
+			<!-- "lateral derecho habitacion inferior" -->
+			<transform id="pared2" tx="6500" tz="-2750" ty="950" ry="0">
+				<plane id="muro2" nx="3000"  size="4000,1900,50"  texture="#00FFFF" />
+			</transform>
+
+				<!-- "parte superior" -->
+			<transform id="pared3" tx="3000" tz="4750" ty="950" >
+				<plane id="muro3"  size="7000,1900"  texture="#a3e4d7" /> <!--azul claro-->
+			</transform>
+
+			<!-- "lateral izquierdo habitacion superior" -->
+			<transform id="pared4" tx="-500" tz="2750" ty="950" ry="0">
+				<plane id="muro4" nx="3000"  size="4000,1900,50"  texture="#00FFFF" />
+			</transform>
+			<!-- "lateral derecho habitacion superior" -->
+			<transform id="pared5" tx="6500" tz="2750" ty="950" ry="0">
+				<plane id="muro5" nx="3000"  size="4000,1900,50"  texture="#00FFFF" />
+			</transform>
+			
+			
+
+
+
+			<!-- pasillo -->
+			<transform id="pared6"  tx="2000" tz="-750" ty="950" >
+				<plane id="muro6"  size="5000,1900,100"  texture="#5b2c6f"/><!--lila oscuro-->
+			</transform>
+			
+			<transform id="pared7"  tx="6125" tz="-750" ty="950" >
+				<plane id="muro7"  size="875,1900,100"  texture="#5b2c6f"/><!--lila oscuro-->
+			</transform>
+
+
+
+			<transform id="pared8" tx="4000" tz="750" ty="950" ry="0" >
+				<plane id="muro8"  size="5000,1900,100"  texture="#d2b4de"  /> <!--lila claro-->
+			</transform>
+
+			<transform id="pared9"  tx="-125" tz="750" ty="950" >
+				<plane id="muro9"  size="875,1900,100"  texture="#d2b4de" /><!--lila claro-->
+			</transform>
+
+
+			<!-- laterales -->
+			<transform id="pared10" tx="-500" tz="0" ty="950" >
+				<plane id="muro10" nx="-1500"  size="1500,1900,50"  texture="#8e44ad" /> 
+			</transform> 
+			<transform id="pared11" tx="6500" tz="0" ty="950" >
+				<plane id="muro11" nx="-1500" size="1500,1900,50"  texture="#8e44ad" />
+			</transform> 
+		</transform>
+
+	</transform>
+</innerModel>
