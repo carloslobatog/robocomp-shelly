@@ -282,26 +282,66 @@ bool PlannerPRM::planWithRRT(const QVec &origin, const QVec &target, QList<QVec>
  */
 
 bool PlannerPRM::updateGraph(LocalPolyLineList Polylines)
-{
+{	
+	static bool f = true;
 	bool modified = false;
+	Graph oldgraph;
+	
+	if (f) oldgraph = graph;
+	
+  
+	else if (listtotalE.empty()==false)
+	{
+		qDebug("dentro");
+
+		for (auto e:listtotalE)
+		{	
+
+		Vertex origen= NULL;
+		Vertex fin = NULL;
+
+		BGL_FORALL_VERTICES(v, graph, Graph)
+		{
+			if (graph[e.m_source].pose == graph[v].pose) origen = v;	  
+			if (graph[e.m_target].pose == graph[v].pose) fin = v;
+		}
+	
+		if (origen!=NULL and fin!=NULL)
+		{
+			EdgePayload edge;
+			edge.dist = (QVec(graph[origen].pose) - QVec(graph[fin].pose)).norm2();
+			boost::add_edge(origen, fin, edge, graph);
+	  }
+	  
+	      //	qDebug()<<"listo";
+		}
+		    
+		  listtotalE.clear();
+		}
+		
+	//VA MAS LENTO
+	//connectCloseElements();
+	
 	for (auto poly:Polylines)
 	{
-		std::vector<Edge> listtoremoveE;
-		std::vector<Vertex> listtoremoveV;
-		QPolygonF qp;
+		QPolygonF qp;					
+		listtoremoveE.clear();
+		//listtoremoveV.clear();
+		
 		for (auto p:poly)
 		{
 			qp << QPointF(p.x,p.z);
 		}
 		
 		//recorrer grafo
-		BGL_FORALL_VERTICES(v, graph, Graph)
-		{
-			if (qp.containsPoint(QPointF(graph[v].pose[0],graph[v].pose[2]),Qt::OddEvenFill))
-			{
-				listtoremoveV.push_back(v);
-			}	
-		}
+// 		BGL_FORALL_VERTICES(v, graph, Graph)
+// 		{
+// 			if (qp.containsPoint(QPointF(graph[v].pose[0],graph[v].pose[2]),Qt::OddEvenFill))
+// 			{	
+// 				listtoremoveV.push_back(v);
+// 			}	
+// 		}
+		
 		BGL_FORALL_EDGES(e, graph, Graph)
 		{
 			QPointF s(graph[e.m_source].pose[0],graph[e.m_source].pose[2]);
@@ -323,17 +363,35 @@ bool PlannerPRM::updateGraph(LocalPolyLineList Polylines)
 // 		qDebug() <<  "Quedan" <<  boost::num_vertices(graph) << "vertices en el grafo";
 		for (auto e:listtoremoveE)
 		{	
+			listtotalE.push_back(e);
 			boost::remove_edge(e, graph);	
 			modified = true;
-		//	qDebug()<<"listo";
+<<<<<<< HEAD
+// 		//	qDebug()<<"listo";
+=======
+			qDebug()<<"listo";
 		}
 		for (auto v:listtoremoveV)
 		{
 			boost::clear_vertex(v, graph);
 			boost::remove_vertex(v, graph);
 			modified = true;
+>>>>>>> parent of 22b88f9... changes in trajectory de mierda
 		}
+		
+// 		for (auto v:listtoremoveV)
+// 		{
+// 			
+// 			boost::clear_vertex(v, graph);
+// 			boost::remove_vertex(v, graph);
+// 			modified = true;
+// 		}
+		
 	}
+	
+	
+	
+	f=false;
 	return modified;
 }
 
@@ -391,10 +449,9 @@ bool PlannerPRM::searchGraph(const Vertex &originVertex, const Vertex &targetVer
 	auto distanceMap = boost::make_iterator_property_map(&distances[0], propmapIndex);
 
 	boost::dijkstra_shortest_paths(graph, originVertex, boost::weight_map(boost::get(&EdgePayload::dist, graph))
-															.vertex_index_map(propmapIndex)
-															.predecessor_map(predecessorMap)
- 															.distance_map(distanceMap));
-
+								.vertex_index_map(propmapIndex)
+								.predecessor_map(predecessorMap)
+ 								.distance_map(distanceMap));
 	//////////////////////////
 	// Extract a shortest path
 	//////////////////////////

@@ -42,8 +42,8 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	try
 	{
 		innerModel = new InnerModel(params.at("InnerModel").value);
-		innerModel->getNode<InnerModelJoint>("armX1")->setAngle(-1);
-		innerModel->getNode<InnerModelJoint>("armX2")->setAngle(2.5);
+		innerModel->getNode<InnerModelJoint>("armX1")->setAngle(0);//setAngle(-1)
+		innerModel->getNode<InnerModelJoint>("armX2")->setAngle(0);//setAngle(2.5)
 #ifdef USE_QTGUI
 		viewer = new InnerViewer(innerModel);  // makes a copy of innermodel for internal use
 #endif
@@ -99,40 +99,91 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	return true;
 };
 
-
+///////////////NOS QUEDAMOS AQUI/////////////////////
 void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
-{
+<<<<<<< HEAD
+{	
+<<<<<<< HEAD
+ 	if (innerModel) delete innerModel;
+ 	innerModel= new InnerModel(params.at("InnerModel").value);
+	
+=======
+  	if (innerModel) delete innerModel;
+  	innerModel= new InnerModel(params.at("InnerModel").value);
+  
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 	qDebug() << __FUNCTION__ << "updateObstacles";
 	//Borrar todos los newpolyline_obs_X que existan del innermodel y del innermodel viewer
 	
-	//Crear obs por cada polinenaf
+	///////////////////////////////removing/////////////////////////
 	for (int i=0; i<100; i++)
 	{
 		QString cadena = QString("polyline_obs_") + QString::number(i,10);
 		//printf("puntero a %s: %p\n", cadena.toStdString().c_str(), viewer->innerModel->getNode(cadena));
+<<<<<<< HEAD
 
-		qDebug() << __FUNCTION__ <<"intentamos borrar "<<cadena;
+		//qDebug() << __FUNCTION__ <<"intentamos borrar "<<cadena;
+// 		if (innerModel->getNode(cadena))
+// 				innerModel->removeNode(cadena);
+=======
+		
+		//qDebug() << __FUNCTION__ <<"intentamos borrar "<<cadena;
 		if (innerModel->getNode(cadena))
 				innerModel->removeNode(cadena);
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 		
+		  
 		if (not InnerModelDraw::removeObject(viewer->innerViewer, cadena) )
 		{
-			printf("removeObject devuelve falso\n");
+		//	printf("removeObject devuelve falso\n");
 			break;
+<<<<<<< HEAD
  		}
+ 		
+=======
+ 		}	
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 	}
+	
+	///////////////////////////////adding/////////////////////////
+	
+=======
+{
+	printf("updateObstacles\n");
+	//Borrar todos los newpolyline_obs_X que existan del innermodel y del innermodel viewer
+	
+	//Crear obs por cada polinenaf
+// 	for (int i=0; i<100; i++)
+// 	{
+// 		QString cadena = QString("polyline_obs_") + QString::number(i,10);
+// 		printf("puntero a %s: %p\n", cadena.toStdString().c_str(), viewer->innerModel->getNode(cadena));
+// 
+// 		qDebug()<<"intentamos borrar "<<cadena;
+// 		if (not InnerModelDraw::removeObject(viewer->innerViewer, cadena) )
+// 		{
+// 			printf("removeObject devuelve falso\n");
+// 			break;
+// 		}
+// 	}
 
-		
+
+>>>>>>> parent of 22b88f9... changes in trajectory de mierda
 	int count = 0;
+	
 	for (auto poly:polylines)
 	{
+	  
 		auto previousPoint = poly[poly.size()-1];
 		
 		for (auto currentPoint:poly)
 		{
-			
+			//qDebug()<<"INCLUIMOS EN INNERDRAW";
 			QString cadena = QString("polyline_obs_")+QString::number(count,10);
-			qDebug() << __FUNCTION__ << "nombre"<<cadena;
+<<<<<<< HEAD
+			//qDebug() << __FUNCTION__ << "nombre"<<cadena;
+=======
+			qDebug()<<"nombre"<<cadena;
+>>>>>>> parent of 22b88f9... changes in trajectory de mierda
 			QVec ppoint = QVec::vec3(previousPoint.x, 1000, previousPoint.z);
 			QVec cpoint = QVec::vec3(currentPoint.x, 1000, currentPoint.z);
 			QVec center = (cpoint + ppoint).operator*(0.5);
@@ -143,15 +194,26 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 			normal(2) = normal(0);
 			normal(0) = -temp;
 			
+<<<<<<< HEAD
  			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,90));
 		
-			//////////////////////////////////////SE METE LA PARED EN EL INNER///////////////////////////////////
-			if (innerModel->getNode(cadena))
-			{
-				innerModel->removeNode(cadena);
-			//	qDebug() << __FUNCTION__ << "borrado " << cadena;
+// 			////////////////////////////////////////////////////////////////
+<<<<<<< HEAD
+			
+			
+			//qDebug()<<"INCLUIMOS EN INNERMODEL";
+			if (innerModel->getNode(cadena)!= NULL)
+			{		
+			qDebug()<<"Eliminamos "<<cadena;  
+			
+			innerModel->removeNode(cadena);
+
+							
 			}
 			
+=======
+		
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 	
 			InnerModelNode *parent = innerModel->getNode(QString("world"));			
 			if (parent == NULL)
@@ -161,11 +223,24 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 				InnerModelPlane *plane;
 				try
 				{
-					if (innerModel->getNode(cadena))
-						qDebug() << "SHIT!!!!!!!!!!!!!!!!!!!!!!!!";
-					plane  = innerModel->newPlane(cadena, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
-
+// 					if (innerModel->getNode(cadena))
+// 						qDebug() << "SHIT!!!!!!!!!!!!!!!!!!!!!!!!";
+					
+					if(innerModel->getNode(cadena)== NULL)
+					{
+					plane  = innerModel->newPlane(cadena, parent, QString("#FFFF00"), dist, 2000, 90, 1,
+							normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
+<<<<<<< HEAD
+					qDebug()<<"Nueva"<<cadena; 
+					
+		
+=======
+					//qDebug()<<"Nueva"<<cadena; 
+					
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 					parent->addChild(plane); 
+					}
+					
 				}
 				catch(QString es)
 				{ qDebug() << "EXCEPCION" << es;}
@@ -174,10 +249,25 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 			
 	
 			////////////////////////////////////////////////////////////////////////////////////
+=======
+			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("root"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,70));
+>>>>>>> parent of 22b88f9... changes in trajectory de mierda
 			count++;
 			previousPoint=currentPoint;
 		}
+		
+		
 	}
+	
+<<<<<<< HEAD
+<<<<<<< HEAD
+	innerModel->save("guardoinner.xml");
+
+=======
+	
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
+=======
+>>>>>>> parent of 22b88f9... changes in trajectory de mierda
 }
 		
 
@@ -203,26 +293,61 @@ void SpecificWorker::compute()
 	}
 	
 	if (newPolyline)
+	
 	{
-		qDebug()<<"Nueva polilinea. Actualizamos grafo";
-		if ( plannerPRM.updateGraph(safePolyList.read()) == true)
-		{
-			updateObstacles(safePolyList.read());
-			qDebug()<<"Se ha modificado el grafo";
-			#ifdef USE_QTGUI
-				graphdraw.draw(plannerPRM, viewer);
-			#endif
+		qDebug()<<"Nueva polilinea. llamamos a UpdateGraph";
 		
-			sampler.initialize(innerModel, params);
+		if ( plannerPRM.updateGraph(safePolyList.read()) == true)
+		{	
+			qDebug()<<"El grafo ha cambiado";
+			#ifdef USE_QTGUI
+			qDebug()<<"Entramos en Graphdraw.draw";
+			graphdraw.draw(plannerPRM, viewer);
+			qDebug()<<"Salimos de GraphDraw";
+			#endif		
 		}
 		
-		newPolyline = false;
+		else
+		{
+			qDebug()<<"El grafo no ha cambiado";
+		}
 		
-	//	printf("%p %p\n", innerModel, sampler.innerModelSampler);
+		qDebug()<<"LLamamos a updateObstacles";
+		updateObstacles(safePolyList.read());
+		qDebug()<<"Salimos e UpdateObstacles";
+<<<<<<< HEAD
+	
+=======
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
+		
+		qDebug()<<"Llamamos a Sampler.initialize";
+		sampler.initialize(innerModel, params);
+		qDebug()<<"Salimos de Sampler.initialize";
+<<<<<<< HEAD
+		newPolyline = false;
+	
+		////SE CIERRA CADA VEZ QUE LLAMAMOS AL SAMPLER.INITIALIZE UNA VEZ QUE SE HA AÑADIDO LA POLILINEA EN EL INNERMODEL
+		//printf("%p %p\n", innerModel, sampler.innerModelSampler);
+=======
+		
+		qDebug()<<"Llamamos a myRoad.initialize";
+		road.initialize(innerModel, params);
+		qDebug()<<"Salimos de myRoad.initialize";
+		
+		
+		newPolyline = false;
+	
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
+	
+		
 	}
-	//	printf("%p %p\n", innerModel, sampler.innerModelSampler);
+	
+<<<<<<< HEAD
 	
 
+=======
+	//if (innerModel->getNode("polyline_obs_0") == NULL ) qFatal("");
+>>>>>>> parent of 22b88f9... changes in trajectory de mierda
 	
 	if (road.isBlocked()) currentTarget.setState(CurrentTarget::State::BLOCKED);
 	
@@ -244,7 +369,7 @@ void SpecificWorker::compute()
 			break;		
 		case CurrentTarget::State::BLOCKED:
 			
-		//	controller->stopTheRobot(omnirobot_proxy);
+			controller->stopTheRobot(omnirobot_proxy);
 			road.update();		
 			elasticband.update(innerModel, road, laserData, currentTarget, safePolyList);	
 			if( road.isBlocked() == true)
@@ -338,7 +463,7 @@ bool SpecificWorker::stopCommand(CurrentTarget &target, WayPoints &myRoad, Traje
  * @return bool
  */
 bool SpecificWorker::changeTargetCommand(InnerModel *innerModel, CurrentTarget &target, TrajectoryState &state,
-                                         WayPoints &myRoad)
+                                         WayPoints &)
 {
 	//DEPRECATED
 	qDebug() << __FUNCTION__ << "DEPRECATED";
@@ -404,6 +529,7 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 		
 	qDebug() << __FUNCTION__ << "GOTO:" << "Robot at:" << innerModel->transform6D("world", "robot") << "Target:" << currentTarget.getFullPose();
 	// Get here when robot is stuck
+<<<<<<< HEAD
 	
 	
 	if (myRoad.getRequiresReplanning() == true)
@@ -413,6 +539,13 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 // 		plannerPRM.computePath(localT, innerModel);
 		target.setWithoutPlan(true);
 	}
+=======
+// 	if(myRoad.requiresReplanning == true)
+// 	{
+// 	 		//qDebug() << __FUNCTION__ << "STUCK, PLANNING REQUIRED";
+// 	 		//computePlan(innerModel);
+// 	}
+>>>>>>> parent of 22b88f9... changes in trajectory de mierda
 	
 	//////////////////////////////////////////
 	// Check if there is a plan for the target
@@ -448,20 +581,22 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 	///////////////////////////////////
 	// Update the band
 	/////////////////////////////////
-	
+	qDebug()<<"Llamamos a elasticband";
 	elasticband.update(innerModel, myRoad, laserData, target, safePolyList);
-
+	qDebug()<<"Salimos de elasticband";
 	//qFatal("aqui");
 	///////////////////////////////////
 	// compute all measures relating the robot to the road
 	/////////////////////////////////
+	qDebug()<<"llamamos a myroad.update";
 	myRoad.update();
-
+	qDebug()<<"salimos de myroad.update";
 	//myRoad.printRobotState(innerModel, target);
 
 	/////////////////////////////////////////////////////
 	//move the robot according to the current force field
 	//////////////////////////////////////////////////////
+	qDebug()<<"llamamos a controller";
 	controller->update(innerModel, lData, omnirobot_proxy, myRoad, true);
 
 	
@@ -796,6 +931,7 @@ void SpecificWorker::setHumanSpace(const PolyLineList& polyList)
   
 	qDebug()<<"La polilinea ha llegado";
 	safePolyList.write(polyList);
+	
 	newPolyline=true;
   
 }
@@ -942,19 +1078,37 @@ bool SpecificWorker::updateInnerModel(InnerModel *inner, TrajectoryState &state)
 		return false;
 	}
 	
+<<<<<<< HEAD
+=======
+	printf("a\n");
+	try
+	{
+		printf("1\n");
+		inner->save("caca.xml");
+		printf("colisiona: %d\n", inner->collide("base_mesh", "polyline_obs_1"));
+		printf("2\n");
+	}
+	catch(...)
+	{
+		printf("3\n");
+	}
+	printf("b\n");
+
+	
+>>>>>>> parent of 22b88f9... changes in trajectory de mierda
 	
 	try
 	{
 	//	printf("Escribiendo a laserantes\n");
 		laserData = laser_proxy->getLaserData();
- 	//	fichero(laserData,"laserantes.txt");
+ 		fichero(laserData,"laserantes.txt");
 	
 	//	QTime tiempo = QTime::currentTime();
 		laserData = elasticband.unionpoligonos(laserData, safePolyList, inner);
 	//	cout << "tardamos (ms) " << tiempo.elapsed() << endl;
 	//	
- 	//	fichero(laserData,"laserdespues.txt");
-	//	ficheroP(safePolyList.read(),"poly.txt", inner); 
+ 		fichero(laserData,"laserdespues.txt");
+		ficheroP(safePolyList.read(),"poly.txt", inner); 
 	//	printf("Escribiendo a laserdespues\n");
  	}
 	catch (const Ice::Exception &ex)

@@ -19,8 +19,6 @@
 #include "specificworker.h"
 #include <qt4/QtGui/qdial.h>
 
-
-
 /**
 * \brief Default constructor
 */
@@ -33,7 +31,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 
 	humanAdvVel = 50;
 	humanRot = 0;
-	setWindowTitle("Humanfake 5");
+	setWindowTitle("5");
 	
 //	lastJoystickEvent = QTime::currentTime();
 }
@@ -70,7 +68,7 @@ void SpecificWorker::includeInRCIS()
 		mesh.scaleX = mesh.scaleY = mesh.scaleZ = 800;
 		mesh.render = 0;
 		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
-		mesh.meshPath = "/home/robocomp/mirobocomp/robocomp-shelly/models/human05.3ds";
+		mesh.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/human05.3ds";
 		innermodelmanager_proxy->addMesh("fakeperson_mesh5", "fakeperson5", mesh);
 	}
 	catch (...)
@@ -136,7 +134,7 @@ void SpecificWorker::includeInAGM()
 	personMesh->setAttribute("collidable", "false");
 	personMesh->setAttribute("imName", "fakepersonMesh5");
 	personMesh->setAttribute("imType", "mesh");
-	personMesh->setAttribute("path", "/home/araceli/tfg/models/human05.3ds");
+	personMesh->setAttribute("path", "/home/robocomp/robocomp/components/robocomp-araceli/models/human05.3ds");
 	personMesh->setAttribute("render", "NormalRendering");
 	personMesh->setAttribute("scalex", "800");
 	personMesh->setAttribute("scaley", "800");
@@ -260,6 +258,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	//giro->setNotchesVisible(true);
 	giro->QAbstractSlider::setMinimum (0);
 	giro->QAbstractSlider::setMaximum (360);	
+	giro->QAbstractSlider::setSliderPosition(pose.ry);
 	return true;
 }
 
@@ -309,7 +308,7 @@ void SpecificWorker::giroR(){
 //MOVE
 
 void SpecificWorker::move (){
-  
+  humanRot=pose.ry;
   RoboCompInnerModelManager::coord3D coordInItem;
   RoboCompInnerModelManager::coord3D coordInBase;
   
@@ -385,11 +384,16 @@ void SpecificWorker::compute()
 	QMutexLocker locker(mutex);
 	//static QTime lastCompute = QTime::currentTime();
 	
-	
-	if ((tbutton.up==true)||(tbutton.down==true)||(tbutton.right==true)||(tbutton.left==true)||(tbutton.rotacion==true)){
-	  move();
-	}
-	
+	try
+		{
+		
+		    if ((tbutton.up==true)||(tbutton.down==true)||(tbutton.right==true)||(tbutton.left==true)||(tbutton.rotacion==true))
+		    {
+		      move();
+		    }
+	    
+		}		
+		catch(...){}
 	
 	
 

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2016 by YOUR NAME HERE
+# Copyright (C) 2017 by YOUR NAME HERE
 #
 #    This file is part of RoboComp
 #
@@ -30,8 +30,31 @@ preStr = "-I/opt/robocomp/interfaces/ -I"+ROBOCOMP+"/interfaces/ --all /opt/robo
 Ice.loadSlice(preStr+"CommonBehavior.ice")
 import RoboCompCommonBehavior
 
-preStr = "-I/opt/robocomp/interfaces/ -I"+ROBOCOMP+"/interfaces/ --all /opt/robocomp/interfaces/"
-Ice.loadSlice(preStr+"SocialNavigationGaussian.ice")
+additionalPathStr = ''
+icePaths = []
+try:
+	SLICE_PATH = os.environ['SLICE_PATH'].split(':')
+	for p in SLICE_PATH:
+		icePaths.append(p)
+		additionalPathStr += ' -I' + p + ' '
+	icePaths.append('/opt/robocomp/interfaces')
+except:
+	print 'SLICE_PATH environment variable was not exported. Using only the default paths'
+	pass
+
+ice_SocialNavigationGaussian = False
+for p in icePaths:
+	print 'Trying', p, 'to load SocialNavigationGaussian.ice'
+	if os.path.isfile(p+'/SocialNavigationGaussian.ice'):
+		print 'Using', p, 'to load SocialNavigationGaussian.ice'
+		preStr = "-I/opt/robocomp/interfaces/ -I"+ROBOCOMP+"/interfaces/ " + additionalPathStr + " --all "+p+'/'
+		wholeStr = preStr+"SocialNavigationGaussian.ice"
+		Ice.loadSlice(wholeStr)
+		ice_SocialNavigationGaussian = True
+		break
+if not ice_SocialNavigationGaussian:
+	print 'Couln\'t load SocialNavigationGaussian'
+	sys.exit(-1)
 from RoboCompSocialNavigationGaussian import *
 
 
@@ -46,8 +69,8 @@ class GenericWorker(QtCore.QObject):
 		super(GenericWorker, self).__init__()
 
 
-		
-		
+
+
 		self.mutex = QtCore.QMutex(QtCore.QMutex.Recursive)
 		self.Period = 30
 		self.timer = QtCore.QTimer(self)

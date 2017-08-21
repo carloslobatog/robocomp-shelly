@@ -19,8 +19,6 @@
 #include "specificworker.h"
 #include <qt4/QtGui/qdial.h>
 
-
-
 /**
 * \brief Default constructor
 */
@@ -33,7 +31,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 
 	humanAdvVel = 50;
 	humanRot = 0;
-	setWindowTitle("Humanfake 2");
+	setWindowTitle("2");
 	
 //	lastJoystickEvent = QTime::currentTime();
 }
@@ -52,9 +50,9 @@ void SpecificWorker::includeInRCIS()
 
 	try
 	{	
-		pose.x = 4000;
+		pose.x = 5000;
 		pose.y = 0;
-		pose.z = 2000;
+		pose.z = 1500;
 		pose.rx = 0;
 		pose.ry = 0; 
 		pose.rz = 0;
@@ -68,7 +66,7 @@ void SpecificWorker::includeInRCIS()
 		mesh.scaleX = mesh.scaleY = mesh.scaleZ = 1.12;
 		mesh.render = 0;
 		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
-		mesh.meshPath = "/home/robocomp/mirobocomp/robocomp-shelly/models/human02.3ds";
+		mesh.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/human02.3ds";
 		innermodelmanager_proxy->addMesh("fakeperson_mesh2", "fakeperson2", mesh);
 	}
 	catch (...)
@@ -81,6 +79,10 @@ void SpecificWorker::includeInRCIS()
 
 void SpecificWorker::includeInAGM()
 {
+	static bool first = true;
+	if (not first) return;
+	first = false;
+	
 	printf("includeInAGM begins\n");
 
 	int idx=0;
@@ -103,7 +105,7 @@ void SpecificWorker::includeInAGM()
 	AGMModel::SPtr newModel(new AGMModel(worldModel));
 
 	// Symbolic part
-	AGMModelSymbol::SPtr person2=   newModel->newSymbol("person2");
+	AGMModelSymbol::SPtr person2 =   newModel->newSymbol("person2");
 	personSymbolId = person2->identifier;
 	printf("Got personSymbolId: %d\n", personSymbolId);
 	person2->setAttribute("imName", "fakeperson2");
@@ -115,14 +117,16 @@ void SpecificWorker::includeInAGM()
 	newModel->addEdge(person2, personSt, "noReach");
 	newModel->addEdge(person2, personSt, "person");
 	
+	
 	newModel->addEdgeByIdentifiers(person2->identifier, 3, "in");
-
+	
+	
 
 	// Geometric part
 	std::map<std::string, std::string> edgeRTAtrs;
-	edgeRTAtrs["tx"] = "4000";
+	edgeRTAtrs["tx"] = "5000";
 	edgeRTAtrs["ty"] = "0";
-	edgeRTAtrs["tz"] = "2000";
+	edgeRTAtrs["tz"] = "1500";
 	edgeRTAtrs["rx"] = "0";
 	edgeRTAtrs["ry"] = "0";
 	edgeRTAtrs["rz"] = "0";
@@ -134,7 +138,7 @@ void SpecificWorker::includeInAGM()
 	personMesh->setAttribute("collidable", "false");
 	personMesh->setAttribute("imName", "fakepersonMesh2");
 	personMesh->setAttribute("imType", "mesh");
-	personMesh->setAttribute("path", "/home/araceli/tfg/models/human02.3ds");
+	personMesh->setAttribute("path", "/home/robocomp/robocomp/components/robocomp-araceli/models/human02.3ds");
 	personMesh->setAttribute("render", "NormalRendering");
 	personMesh->setAttribute("scalex", "1.12");
 	personMesh->setAttribute("scaley", "1.12");
@@ -257,7 +261,8 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	
 	//giro->setNotchesVisible(true);
 	giro->QAbstractSlider::setMinimum (0);
-	giro->QAbstractSlider::setMaximum (360);	
+	giro->QAbstractSlider::setMaximum (360);
+	giro->QAbstractSlider::setSliderPosition(pose.ry);		
 	return true;
 }
 
@@ -307,7 +312,7 @@ void SpecificWorker::giroR(){
 //MOVE
 
 void SpecificWorker::move (){
-  
+  humanRot=pose.ry;
   RoboCompInnerModelManager::coord3D coordInItem;
   RoboCompInnerModelManager::coord3D coordInBase;
   
@@ -384,9 +389,16 @@ void SpecificWorker::compute()
 	//static QTime lastCompute = QTime::currentTime();
 	
 	
-	if ((tbutton.up==true)||(tbutton.down==true)||(tbutton.right==true)||(tbutton.left==true)||(tbutton.rotacion==true)){
-	  move();
-	}
+		try
+		{
+		
+		    if ((tbutton.up==true)||(tbutton.down==true)||(tbutton.right==true)||(tbutton.left==true)||(tbutton.rotacion==true))
+		    {
+		      move();
+		    }
+	    
+		}		
+		catch(...){}
 	
 	
 	

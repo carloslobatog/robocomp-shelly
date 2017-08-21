@@ -82,6 +82,7 @@ class TrajectoryState
 			n.distanceToTarget = road.getRobotDistanceToTarget();
 			return n;
 		};
+		
 	private:
 		QMutex m;
 		long elapsedTime = 0;
@@ -100,6 +101,7 @@ class SpecificWorker : public GenericWorker
 {
 	Q_OBJECT
 	public:
+	
 		SpecificWorker(MapPrx& mprx, QWidget *parent = 0);
 		~SpecificWorker();
 		bool setParams(RoboCompCommonBehavior::ParameterList params);
@@ -117,7 +119,8 @@ class SpecificWorker : public GenericWorker
 		TLaserData getLaserData();
 		LaserConfData getLaserConfData();
 		TLaserData getLaserAndBStateData(RoboCompGenericBase::TBaseState &bState);
-
+		
+		int vamosave = 0;
 		/**
 	   * @brief Sends the robot to a new target position. 
 		 * There can be only one active target
@@ -139,6 +142,10 @@ class SpecificWorker : public GenericWorker
 		CurrentTarget currentTarget;
 		CurrentTarget currentTargetAnt, currentTargetBack;
 		InnerModel *innerModel;
+
+		//probando      
+		InnerModel *inner= new InnerModel();
+		
 		RoboCompCommonBehavior::ParameterList worker_params;
 		QMutex *worker_params_mutex;
 		/**
@@ -210,7 +217,6 @@ class SpecificWorker : public GenericWorker
 		 */
 		QTime relojForInputRateControl;  //used to limit input frequency
 		QTime taskReloj;  //Measures duration of commands
-
 
 		////////////////////////////////////////////////////////////////////////
 		//Commands corresponding to servant methods, but running on local thread

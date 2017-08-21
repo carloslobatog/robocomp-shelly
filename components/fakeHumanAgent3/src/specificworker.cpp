@@ -20,7 +20,6 @@
 #include <qt4/QtGui/qdial.h>
 
 
-
 /**
 * \brief Default constructor
 */
@@ -33,7 +32,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 
 	humanAdvVel = 50;
 	humanRot = 0;
-	setWindowTitle("Humanfake 3");
+	setWindowTitle("3");
 	
 //	lastJoystickEvent = QTime::currentTime();
 }
@@ -52,11 +51,11 @@ void SpecificWorker::includeInRCIS()
 
 	try
 	{	
-		pose.x = 3000;
+		pose.x = 6000;
 		pose.y = 0;
-		pose.z = -3000;
+		pose.z = 1500;
 		pose.rx =0;
-		pose.ry =4.73;
+		pose.ry =3.14;
 		pose.rz = 0;
 		innermodelmanager_proxy->addTransform("fakeperson3", "static", "root", pose);
 
@@ -71,7 +70,7 @@ void SpecificWorker::includeInRCIS()
 		mesh.scaleX = mesh.scaleY = mesh.scaleZ = 8;
 		mesh.render = 0;
 		//mesh.meshPath = "/home/robocomp/robocomp/files/osgModels/Gualzru/Gualzru.osg";
-		mesh.meshPath = "/home/robocomp/mirobocomp/robocomp-shelly/models/human03.3ds";
+		mesh.meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/human03.3ds";
 		innermodelmanager_proxy->addMesh("fakeperson_mesh3", "fakeperson3", mesh);
 	}
 	catch (...)
@@ -123,11 +122,11 @@ void SpecificWorker::includeInAGM()
 
 	// Geometric part
 	std::map<std::string, std::string> edgeRTAtrs;
-	edgeRTAtrs["tx"] = "3000";
+	edgeRTAtrs["tx"] = "6000";
 	edgeRTAtrs["ty"] = "0";
-	edgeRTAtrs["tz"] = "-3000";
+	edgeRTAtrs["tz"] = "1500";
 	edgeRTAtrs["rx"] = "0";
-	edgeRTAtrs["ry"] = "4.73";
+	edgeRTAtrs["ry"] = "3.14";
 	edgeRTAtrs["rz"] = "0";
 	newModel->addEdgeByIdentifiers(100, person3->identifier, "RT", edgeRTAtrs);
 
@@ -137,7 +136,7 @@ void SpecificWorker::includeInAGM()
 	personMesh->setAttribute("collidable", "false");
 	personMesh->setAttribute("imName", "fakepersonMesh3");
 	personMesh->setAttribute("imType", "mesh");
-	personMesh->setAttribute("path", "/home/araceli/tfg/models/human03.3ds");
+	personMesh->setAttribute("path", "/home/robocomp/robocomp/components/robocomp-araceli/models/human03.3ds");
 	personMesh->setAttribute("render", "NormalRendering");
 	personMesh->setAttribute("scalex", "8");
 	personMesh->setAttribute("scaley", "8");
@@ -260,7 +259,8 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	
 	//giro->setNotchesVisible(true);
 	giro->QAbstractSlider::setMinimum (0);
-	giro->QAbstractSlider::setMaximum (360);	
+	giro->QAbstractSlider::setMaximum (360);
+giro->QAbstractSlider::setSliderPosition(pose.ry);	
 	return true;
 }
 
@@ -310,7 +310,7 @@ void SpecificWorker::giroR(){
 //MOVE
 
 void SpecificWorker::move (){
-  
+  humanRot=pose.ry;
   RoboCompInnerModelManager::coord3D coordInItem;
   RoboCompInnerModelManager::coord3D coordInBase;
   
@@ -386,10 +386,18 @@ void SpecificWorker::compute()
 	QMutexLocker locker(mutex);
 	//static QTime lastCompute = QTime::currentTime();
 	
+		try
+		{
+		
+		    if ((tbutton.up==true)||(tbutton.down==true)||(tbutton.right==true)||(tbutton.left==true)||(tbutton.rotacion==true))
+		    {
+		      move();
+		    }
+	    
+		}		
+		catch(...){}
 	
-	if ((tbutton.up==true)||(tbutton.down==true)||(tbutton.right==true)||(tbutton.left==true)||(tbutton.rotacion==true)){
-	  move();
-	}
+	
 	
 	
 	

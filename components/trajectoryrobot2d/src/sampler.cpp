@@ -32,12 +32,24 @@ Sampler::Sampler()
  */
 void Sampler::initialize(InnerModel *inner, const RoboCompCommonBehavior::ParameterList &params)
 {
+  
 	qDebug() << __FUNCTION__ << "Sampler: Copying InnerModel...";
- 	//innerModelSampler = inner->copy();
+<<<<<<< HEAD
+ 	qDebug()<< __FUNCTION__ << "----------------1---------------";
+	//innerModelSampler = inner->copy();
+	
 	innerModelSampler = inner;
 	
+	qDebug()<< __FUNCTION__ << "-----------------2----------------";
+=======
+
+	innerModelSampler = inner->copy();
+	
+	//innerModelSampler = inner;
+
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 	try
-	{
+	{	qDebug()<< __FUNCTION__ << "-----------------3----------------";
 		outerRegion.setLeft(std::stof(params.at("OuterRegionLeft").value));
 		outerRegion.setRight(std::stof(params.at("OuterRegionRight").value));
 		outerRegion.setBottom(std::stof(params.at("OuterRegionBottom").value));
@@ -55,7 +67,7 @@ void Sampler::initialize(InnerModel *inner, const RoboCompCommonBehavior::Parame
 
 	if(outerRegion.isNull())  
 		qFatal("Sampler-Initialize. Aborting. OuterRegion is not properly initialized");    //CHANGE TO THROW
-
+	
 	robotNodes.clear(); restNodes.clear(); 
 	QStringList ls = QString::fromStdString(params.at("ExcludedObjectsInCollisionCheck").value).replace(" ", "" ).split(',');
 	qDebug() << __FUNCTION__ << ls.size() << "objects read for exclusion list";
@@ -63,8 +75,16 @@ void Sampler::initialize(InnerModel *inner, const RoboCompCommonBehavior::Parame
 		excludedNodes.insert(s);
 	
 	// Compute the list of meshes that correspond to robot, world and possibly some additionally excluded ones
-	recursiveIncludeMeshes(innerModelSampler->getRoot(), "robot", false, robotNodes, restNodes, excludedNodes);
+<<<<<<< HEAD
+	qDebug()<< __FUNCTION__ << "-------------------4------------------";
 	
+	recursiveIncludeMeshes(innerModelSampler->getRoot(), "robot", false, robotNodes, restNodes, excludedNodes);
+
+	qDebug()<< __FUNCTION__ << "-----------------------5------------------";///AQUI ESTA EL ERROR
+=======
+	
+	recursiveIncludeMeshes(innerModelSampler->getRoot(), "robot", false, robotNodes, restNodes, excludedNodes);
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 	//Init random sequence generator
 	qsrand( QTime::currentTime().msec() );
 }
@@ -329,23 +349,27 @@ bool Sampler::checkRobotValidDirectionToTarget(const QVec & origin , const QVec 
  * @return void
  */
 void Sampler::recursiveIncludeMeshes(InnerModelNode *node, QString robotId, bool inside, std::vector<QString> &in, std::vector<QString> &out, std::set<QString> &excluded)
-{
+{	
+	
 	if (node->id == robotId)
 	{
 		inside = true;
 	}
-	
+
 	InnerModelMesh *mesh;
 	InnerModelPlane *plane;
 	InnerModelTransform *transformation;
-
+	
 	if ((transformation = dynamic_cast<InnerModelTransform *>(node)))  
 	{
 		for (int i=0; i<node->children.size(); i++)
 		{
-			recursiveIncludeMeshes(node->children[i], robotId, inside, in, out, excluded);
+		recursiveIncludeMeshes(node->children[i], robotId, inside, in, out, excluded);
+			
 		}
+		
 	}
+	
 	else if ((mesh = dynamic_cast<InnerModelMesh *>(node)) or (plane = dynamic_cast<InnerModelPlane *>(node)))
 	{
 		if( std::find(excluded.begin(), excluded.end(), node->id) == excluded.end() )			
@@ -359,6 +383,7 @@ void Sampler::recursiveIncludeMeshes(InnerModelNode *node, QString robotId, bool
 					out.push_back(node->id);
 		}
 	}
+	
 }
 
 //NOT WORKING WELL

@@ -19,6 +19,8 @@
 
 import sys, os, traceback, time
 import pickle
+
+import matplotlib.patches as patches
 from PySide import *
 from genericworker import *
 import matplotlib.pyplot as plt
@@ -30,6 +32,10 @@ from scipy.spatial import ConvexHull
 from normal import Normal
 import GaussianMix as GM
 import checkboundaries as ck
+from PySide.QtCore import QRect, QRectF, Qt, QSize, QSizeF, QPointF
+from PySide.QtGui import QTransform, QPainter, QPolygonF
+
+
 import math
 
 
@@ -101,20 +107,36 @@ class Person(object):
     x = 0
     y = 0
     th = 0
+<<<<<<< HEAD
     polyline = []
     xdot = 0
     ydot = 0
+    vel=0
+=======
+    vel = 0
 
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
+
+<<<<<<< HEAD
     _radius = 0.30
+
+=======
+    _radius = 0.35
+>>>>>>> parent of 22b88f9... changes in trajectory de mierda
     """ Public Methods """
 
-    def __init__(self, x=0, y=0, th=0):
+<<<<<<< HEAD
+    def __init__(self, x=0, y=0, th=0,vel=0):
+=======
+    def __init__(self, x=0, y=0, th=0, vel=0):
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
         self.x = x
         self.y = y
         self.th = th
+        self.vel = vel
 
 
-    def draw(self, v, drawPersonalSpace=False):
+    def draw(self, v,sigma_h,sigma_r,sigma_s,rot, drawPersonalSpace=False):
         #numero de curvas de contorno
         nc = 10
         if v <= 20:
@@ -136,7 +158,7 @@ class Person(object):
         X, Y = np.meshgrid(x, y)
         # plt.plot(X, Y, '*')
 
-        Z = self._calculatePersonalSpace(X, Y)
+        Z = self._calculatePersonalSpace(X, Y,sigma_h,sigma_r,sigma_s,rot)
 
         if (drawPersonalSpace):
             # print(Z)
@@ -144,10 +166,10 @@ class Person(object):
             # https://es.mathworks.com/matlabcentral/answers/230934-how-to-extract-x-and-y-position-of-contour-line
             #surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
 
-
             ##PROBLEMICA -> a partir de nc> 4 dibuja una linea de menos. Por eso en el caso de que v==100 he puesto que aprox=nc-2
 
             CS = plt.contour(X, Y, Z, nc)
+
 
             dat0 = CS.allsegs[aprox][0]
 
@@ -185,22 +207,20 @@ class Person(object):
 
     """ Private Methods """
 
-    def _calculatePersonalSpace(self, x, y):
-        """""
+    def _calculatePersonalSpace(self, x, y,sigma_h,sigma_r,sigma_s,rot):
+        """"",sigma_h
         sigma_h = 2.0
         sigma_r = 1.0
         sigma_s = 4/3
         """
         ##he cambiado el valor de las sigmas porque la gaussiana que dibujaba con las anteriores era muy grande
 
-        sigma_h = 4
-        sigma_r = 2
-        sigma_s = 2*4/3
+<<<<<<< HEAD
 
 
-        rot = pi/2 - self.th
 
-
+=======
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
         alpha = np.arctan2(y - self.y, x - self.x) - rot - pi / 2
         nalpha = np.arctan2(np.sin(alpha), np.cos(alpha))  # Normalizando no intervalo [-pi, pi)
 
@@ -218,6 +238,12 @@ class Person(object):
         return z
 
 
+class Object():
+    def __init__(self, x=0, y=0, th=0, sp=0):
+        self.x = x
+        self.y = y
+        self.th = th
+        self.sp = sp
 
 
 class SpecificWorker(GenericWorker):
@@ -226,6 +252,7 @@ class SpecificWorker(GenericWorker):
         self.timer.timeout.connect(self.compute)
         self.Period = 2000
         self.timer.start(self.Period)
+       # plt.ion()
 
     def setParams(self, params):
         # try:
@@ -253,9 +280,9 @@ class SpecificWorker(GenericWorker):
     #
     # getPolyline
     #
-    def getPolylines(self, persons, v, dibujar):
+    def getPersonalSpace(self, persons, v, dibujar):
 
-        plt.close("all")
+        plt.close('all')
        ##DESCOMENTAR EL FIGUREEE
        # plt.figure()
 
@@ -268,18 +295,18 @@ class SpecificWorker(GenericWorker):
 
 
         ##Limites de la representacion
-        """""
+
         lx_inf = -6
         lx_sup = 8
         ly_inf = -6
         ly_sup = 8
-         """""
+        """""
         ##cambio los limites para los otros valores de sigma
         lx_inf = 0
         lx_sup = 10
         ly_inf = 0
         ly_sup = 10
-
+        """""
         # zs = np.array([fun(x,y) for x,y in zip(np.ravel(X), np.ravel(Y))])
         # Z = zs.reshape(X.shape)
 
@@ -292,12 +319,12 @@ class SpecificWorker(GenericWorker):
         for p in persons:
             pn = Person(p.x, p.z, p.angle)
             #print('Pose x', pn.x, 'Pose z', pn.y, 'Rotacion', pn.th)
-            pn.draw(v, drawPersonalSpace=dibujar)
+            pn.draw(v,4,2,2*4/3,pi/2 - pn.th, drawPersonalSpace=dibujar)
             #normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 2.0, 2.0, 2.0], elliptical=True))
             normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 4, 2, 2*4/3], elliptical=True))
         #print ("numero de gaussianas",len(normals))
 
-        h = 0.4
+        h = 0.9
         resolution = 0.1
         limits = [[lx_inf, lx_sup], [ly_inf, ly_sup]]
         _, z = Normal.makeGrid(normals, h, 2, limits=limits, resolution=resolution)
@@ -311,7 +338,7 @@ class SpecificWorker(GenericWorker):
         #plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
         if (dibujar):
-            plt.figure()
+           # plt.figure()
             plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
             plt.xlabel('X')
             plt.ylabel('Y')
@@ -347,4 +374,244 @@ class SpecificWorker(GenericWorker):
 
         """
         plt.show()
+
+        return polylines
+
+    def getPassOnRight(self, persons, v, dibujar):
+
+<<<<<<< HEAD
+        plt.close('all')
+=======
+        plt.close("all")
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
+
+
+        lx_inf = -6
+        lx_sup = 8
+        ly_inf = -6
+        ly_sup = 8
+
+        normals = []
+
+        for p in persons:
+            pn = Person(p.x, p.z, p.angle, p.vel)
+
+            pn.draw(v,(50/((7*pn.vel/50)+43)*4), (50/((7*pn.vel/50)+43)*4)/2, 2*(50/((7*pn.vel/50)+43)*4)/3,pi/2-pn.th, drawPersonalSpace=dibujar)
+            pn.draw(v,4, 1.5, 10/3, pi - pn.th, drawPersonalSpace=dibujar)
+
+            normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, (50/((7*pn.vel/50)+43)*4), (50/((7*pn.vel/50)+43)*4)/2, 2*(50/((7*pn.vel/50)+43)*4)/3], elliptical=True))
+            normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th , 4, 1.5, 10/3], elliptical=True))
+
+
+        h = 0.4
+        resolution = 0.1
+        limits = [[lx_inf, lx_sup], [ly_inf, ly_sup]]
+        _, z = Normal.makeGrid(normals, h, 2, limits=limits, resolution=resolution)
+        grid = GM.filterEdges(z, h)
+
+        if (dibujar):
+            plt.figure()
+            plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+            plt.xlabel('X')
+            plt.ylabel('Y')
+            plt.axis('equal')
+
+        np.savetxt('log.txt', grid, fmt='%i')
+
+        polylines = []
+        totalpuntosorden = getPolyline(grid, resolution, lx_inf, ly_inf)
+
+        for pol in totalpuntosorden:
+            polyline = []
+            for pnt in pol:
+                punto = SNGPoint2D()
+                punto.x = pnt[0]
+                punto.z = pnt[1]
+                polyline.append(punto)
+            polylines.append(polyline)
+        plt.show()
+        return polylines
+
+
+
+    #
+    # getObjectInteraction
+    #
+    def getObjectInteraction(self, persons, objects, d):
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
+        print("getObjectInteration")
+        plt.close('all')
+
+        polylines = []
+<<<<<<< HEAD
+        for o in objects:
+            print ("OBJETO")
+
+            obj = Person(o.x, o.z, o.angle)
+
+=======
+
+        for o in objects:
+            obj = Object(o.x, o.z, o.angle, o.space)
+            print("OBJETO")
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
+            ##para dibujarlo
+            if (d):
+                plt.figure('ObjectSpace')
+                rect = plt.Rectangle((obj.x-0.25,obj.y-0.25),0.5,0.5,fill=False)
+
+                plt.gca().add_patch(rect)
+                x_aux = obj.x + 0.25 * cos(pi / 2 - obj.th);
+                y_aux = obj.y + 0.25 * sin(pi / 2 - obj.th);
+                heading = plt.Line2D((obj.x, x_aux), (obj.y, y_aux), lw=1, color='k')
+                plt.gca().add_line(heading)
+
+            w = 1.0
+<<<<<<< HEAD
+            h = 1.5
+            print (obj.x,obj.y)
+            ##para calcular el rectangulo
+            s = QRectF(QPointF(0, 0), QSize(w, h))
+=======
+
+            print (obj.x,obj.y)
+            ##para calcular el rectangulo
+            s = QRectF(QPointF(0, 0), QSizeF(w, obj.sp))
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
+
+            # if (d):
+            #     plt.plot (s.bottomLeft().x(),s.bottomLeft().y(),"go")
+            #     plt.plot(s.bottomRight().x(), s.bottomRight().y(), "ro")
+            #     plt.plot(s.topRight().x(), s.topRight().y(), "yo")
+            #     plt.plot(s.topLeft().x(), s.topLeft().y(), "bo")
+
+            space = QPolygonF()
+            space.append(s.topLeft())
+            space.append(s.topRight())
+<<<<<<< HEAD
+            space.append(QPointF(s.bottomRight().x()+ w/4, s.bottomRight().y()))
+            space.append(QPointF(s.bottomLeft().x()-w/4,s.bottomLeft().y()))
+
+
+            #space = QPolygonF(space.bottomLeft(),space.bottomRight(),space.topRight()+w/2,space.topLeft()+w/2)
+            #space = QPolygonF(space)
+             #space.moveCenter(QPointF(obj.x,obj.y))
+=======
+            space.append(QPointF(s.bottomRight().x()+ obj.sp/6, s.bottomRight().y()))
+            space.append(QPointF(s.bottomLeft().x()-obj.sp/6,s.bottomLeft().y()))
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
+
+
+            t = QTransform()
+            t.translate(-w/2, 0)
+            space = t.map(space)
+            t = QTransform()
+            t.rotateRadians(-obj.th)
+            space = t.map(space)
+
+            t = QTransform()
+            t.translate(obj.x,obj.y)
+            space = t.map(space)
+
+            # points = []
+            # for x in xrange(space.count()-1):
+            #     point = space.value(x)
+            #     print ("valor", point)
+            #     points.append([point.x(),point.y()])
+            #     plt.plot(point.x(),point.y(),"go")
+
+
+            polyline = []
+
+            for x in xrange(space.count() ):
+                point = space.value(x)
+<<<<<<< HEAD
+                print("valor", point)
+
+=======
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
+                if (d):
+                    plt.plot(point.x(), point.y(), "go")
+
+                p = SNGPoint2D()
+                p.x = point.x()
+                p.z = point.y()
+                polyline.append(p)
+
+
+            for p in persons:
+<<<<<<< HEAD
+                print("PERSONA")
+                pn = Person (p.x, p.z, p.angle)
+                print ("Pose persona", pn.x, pn.y)
+                if (d):
+=======
+                pn = Person(p.x, p.z, p.angle)
+                print("PERSONA")
+                if d:
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
+                    body = plt.Circle((pn.x, pn.y), radius=0.3, fill=False)
+                    plt.gca().add_patch(body)
+
+                    x_aux = pn.x + 0.30 * cos(pi / 2 - pn.th);
+                    y_aux = pn.y + 0.30 * sin(pi / 2 - pn.th);
+                    heading = plt.Line2D((pn.x, x_aux), (pn.y, y_aux), lw=1, color='k')
+                    plt.gca().add_line(heading)
+                    plt.axis('equal')
+
+<<<<<<< HEAD
+                if (space.containsPoint(QPointF(pn.x,pn.y),Qt.OddEvenFill)):
+                    print("DENTROOOOO")
+=======
+
+                ##CHECKING THE ORIENTATION
+                a = abs(obj.th - abs(pn.th-math.pi))
+                if a < math.radians(45):
+                    checkangle = True
+                else:
+                    checkangle = False
+
+
+                # ang = abs(pn.th - math.pi)
+                # print(thrinf, thrsup, ang)
+                # if thrinf < ang and ang < thrsup:
+                #     checkangle = True
+                #     print ("MIRANDOOOOOO")
+
+                # else:
+                #     print ("NO MIRAAAAA")
+                #     checkangle = False
+
+                ##CHECKING IF THE PERSON IS INSIDE THE POLYGON
+                if space.containsPoint(QPointF(pn.x,pn.y),Qt.OddEvenFill) and checkangle:
+                    print("DENTROOOOO Y MIRANDO")
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
+                    polylines.append(polyline)
+
+                    break
+
+                else:
+<<<<<<< HEAD
+                    print("FUERAAAAAAA")
+=======
+                    print("FUERA O NO MIRANDO")
+>>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
+
+
+        if (d):
+            for ps in polylines:
+                #  plt.figure()
+                for p in ps:
+                    plt.plot(p.x, p.z, "ro")
+                    plt.axis('equal')
+                    plt.xlabel('X')
+                    plt.ylabel('Y')
+            plt.show()
+        plt.show()
+
+
+
         return polylines

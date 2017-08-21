@@ -127,12 +127,15 @@ bool InnerModelDraw::addPlane_notExisting(InnerModelViewer *innerViewer, const Q
 		return false;
 	}
 	InnerModelPlane *plane = innerViewer->innerModel->newPlane(item, parent, texture, size(0), size(1), size(2), 1, n(0), n(1), n(2), p(0), p(1), p(2), true);
-	parent->addChild(plane); 
+	parent->addChild(plane);
+
 // 	innerViewer->innerModel->save(item+".xml");
 	innerViewer->recursiveConstructor(plane, innerViewer->mts[parent->id], innerViewer->mts, innerViewer->meshHash);
 
 	return true;
 }
+
+
 
 
 void InnerModelDraw::drawLine(InnerModelViewer *innerViewer, QString name, QString parent, const QVec& normalVector, float length, float width, QString texture)
