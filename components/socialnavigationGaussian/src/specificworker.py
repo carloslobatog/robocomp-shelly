@@ -120,9 +120,12 @@ class Person(object):
 <<<<<<< HEAD
     _radius = 0.30
 
+<<<<<<< HEAD
 =======
     _radius = 0.35
 >>>>>>> parent of 22b88f9... changes in trajectory de mierda
+=======
+>>>>>>> 28535e950b9c0a725a163618df62901f2683c6eb
     """ Public Methods """
 
 <<<<<<< HEAD

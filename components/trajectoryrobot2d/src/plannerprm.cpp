@@ -324,6 +324,7 @@ bool PlannerPRM::updateGraph(LocalPolyLineList Polylines)
 	
 	for (auto poly:Polylines)
 	{
+		
 		QPolygonF qp;					
 		listtoremoveE.clear();
 		//listtoremoveV.clear();
@@ -366,17 +367,7 @@ bool PlannerPRM::updateGraph(LocalPolyLineList Polylines)
 			listtotalE.push_back(e);
 			boost::remove_edge(e, graph);	
 			modified = true;
-<<<<<<< HEAD
-// 		//	qDebug()<<"listo";
-=======
-			qDebug()<<"listo";
-		}
-		for (auto v:listtoremoveV)
-		{
-			boost::clear_vertex(v, graph);
-			boost::remove_vertex(v, graph);
-			modified = true;
->>>>>>> parent of 22b88f9... changes in trajectory de mierda
+		//	qDebug()<<"listo";
 		}
 		
 // 		for (auto v:listtoremoveV)

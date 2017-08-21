@@ -28,17 +28,16 @@ void WayPoints::initialize(InnerModel* inner, const RoboCompCommonBehavior::Para
 	innerModel = inner;
 	threshold =  QString::fromStdString(params.at("ArrivalTolerance").value).toFloat();
 	MINIMUM_SAFETY_DISTANCE =  QString::fromStdString(params.at("MinimumSafetyDistance").value).toFloat(); 
-	ROBOT_RADIUS =  QString::fromStdString(params.at("RobotRadius").value).toFloat(); 	
+	ROBOT_RADIUS =  QString::fromStdString(params.at("RobotRadius").value).toFloat(); 
+	
 }
-
 
 //////////////////
 /// Main method
 /////////////////
 void WayPoints::update()
 {
-	
-	static QTime reloj = QTime::currentTime();
+static QTime reloj = QTime::currentTime();
 	//////////////////////////////////////////////////////
 	//Get robot's position in world and create robot's nose
 	//////////////////////////////////////////////////////
@@ -263,7 +262,7 @@ void WayPoints::computeDistancesToNext()
 
 QLine2D WayPoints::getRobotZAxis(InnerModel *innerModel)
 {
-	Q_ASSERT(currentPoint + 1 < road.size() and road.size() > 0);
+        Q_ASSERT(indexOfCurrentPoint + 1 < road.size() and road.size() > 0);
 
 	QVec robotPos = innerModel->transform("world", QVec::zeros(3), "robot");
 	//QVec robot2DPos = QVec::vec2( innerModel->getBaseX(), innerModel->getBaseZ());

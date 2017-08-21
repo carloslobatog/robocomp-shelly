@@ -1,9 +1,13 @@
 <innermodel>
 <<<<<<< HEAD:components/trajectoryrobot2d/guardoinner.xml~896d66e... changes in socialnavig
+<<<<<<< HEAD:components/trajectoryrobot2d/guardoinner.xml~896d66e... changes in socialnavig
 	<transform id="robot" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
 =======
 	<transform id="robot" tx="5686.452637" ty="0" tz="2167.911621"  rx="0" ry="0.485708952" rz="0">
 >>>>>>> parent of 22b88f9... changes in trajectory de mierda:components/trajectoryrobot2d/caca.xml
+=======
+	<transform id="robot" tx="0" ty="0" tz="0"  rx="0" ry="0" rz="0">
+>>>>>>> 28535e950b9c0a725a163618df62901f2683c6eb:components/trajectoryrobot2d/guardoinner.xml~896d66e... changes in socialnavig
 		<transform id="laserPose" tx="0" ty="370" tz="230"  rx="0" ry="0" rz="0">
 			<laser id="laser" port="10003" min="100" max="30000" measures="100" angle="4.199999809" ifconfig="" />
 		</transform>
@@ -188,9 +192,13 @@
 				<plane id="muro8" texture="#008800" size="309.0472412,1900,9" repeat="1000" nx="308.9304199" ny="0" nz="-8.497071266" px="0" py="0" pz="0" collide="0" />
 			</transform>
 <<<<<<< HEAD:components/trajectoryrobot2d/guardoinner.xml~896d66e... changes in socialnavig
+<<<<<<< HEAD:components/trajectoryrobot2d/guardoinner.xml~896d66e... changes in socialnavig
 			<transform id="pared9" tx="5408.647461" ty="950" tz="-222.9507446"  rx="
 =======
 		</transform>
 	</transform>
 </innermodel>
 >>>>>>> parent of 22b88f9... changes in trajectory de mierda:components/trajectoryrobot2d/caca.xml
+=======
+			<transform id="pared9" tx="5408.647461" ty="950" tz="-222.9507446"  rx="
+>>>>>>> 28535e950b9c0a725a163618df62901f2683c6eb:components/trajectoryrobot2d/guardoinner.xml~896d66e... changes in socialnavig

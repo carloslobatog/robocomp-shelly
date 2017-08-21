@@ -55,7 +55,6 @@ class WayPoint
 class WayPoints : public QList< WayPoint >
 {
 	public:
-	
 		WayPoints();
 		~WayPoints();
 		void reset();

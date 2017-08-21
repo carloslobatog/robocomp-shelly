@@ -40,7 +40,7 @@
 
 using namespace std;
 /**
-       \brief Component that plans and executes a trajectory for an omnidirectional robot. The trajectory es planned using a combination of PRM and RRT and 
+       \brief Component that plans and executes a trajectory for an omnidirectional robot. The trajectory es planned using a combination of PRM and RRT and
        projected onto the outside world through the laser field. The projection allows for real-time dynamic corrections. A controller drives the robot
        along the trajectory.
        @author Pablo Bustos
@@ -48,7 +48,7 @@ using namespace std;
 
 /**
  * @brief ...Auxiliary class to keep the state of the algorithm and make it accesible to the middleware
- * 
+ *
  */
 class TrajectoryState
 {
@@ -82,7 +82,6 @@ class TrajectoryState
 			n.distanceToTarget = road.getRobotDistanceToTarget();
 			return n;
 		};
-		
 	private:
 		QMutex m;
 		long elapsedTime = 0;
@@ -96,12 +95,11 @@ class TrajectoryState
 class SpecificWorker : public GenericWorker
 /**
  * @brief Main class of the component
- * 
+ *
  */
 {
 	Q_OBJECT
 	public:
-	
 		SpecificWorker(MapPrx& mprx, QWidget *parent = 0);
 		~SpecificWorker();
 		bool setParams(RoboCompCommonBehavior::ParameterList params);
@@ -119,10 +117,9 @@ class SpecificWorker : public GenericWorker
 		TLaserData getLaserData();
 		LaserConfData getLaserConfData();
 		TLaserData getLaserAndBStateData(RoboCompGenericBase::TBaseState &bState);
-		
-		int vamosave = 0;
+		InnerModelPlane *copyplane;
 		/**
-	   * @brief Sends the robot to a new target position. 
+	   * @brief Sends the robot to a new target position.
 		 * There can be only one active target
 		 * A new target overrides the existing one without stopping the robot
 		 * The state of the process is recorded in the TrajectoryState structure that cnan be accessed through the getState() method
@@ -130,10 +127,10 @@ class SpecificWorker : public GenericWorker
 		 * @return float Distance in mm to target along a straight line
 		*/
 		float go(const TargetPose &target);
-			
+
 	public slots:
-		void	compute(); 	
-		
+		void	compute();
+
 	private:
 		RoboCompGenericBase::TBaseState bState;
 		TrajectoryState tState;	// object coding changing state for external interface
@@ -143,65 +140,63 @@ class SpecificWorker : public GenericWorker
 		CurrentTarget currentTargetAnt, currentTargetBack;
 		InnerModel *innerModel;
 
-		//probando      
-		InnerModel *inner= new InnerModel();
-		
+
 		RoboCompCommonBehavior::ParameterList worker_params;
 		QMutex *worker_params_mutex;
 		/**
 		 * @brief Instance of the Sampler of free space. Needs to be initialized. Robot's workspace is defined as a rectangle in outerRegion.
 		 * Internal regions not to be visited by the robot are defined as a list of rectangles in innerRegions
-		 * 
+		 *
 		 */
 		Sampler sampler;
 		QList<QRectF> innerRegions;
 		QRectF outerRegion;
-	
+
 		/**
-		 * @brief Object holding the trajectory as a list (WayPoints) of points (WayPoint). It has an update method to compute a set of variables that 
+		 * @brief Object holding the trajectory as a list (WayPoints) of points (WayPoint). It has an update method to compute a set of variables that
 		 * hold the relation between the robot and the road. Those variables can be accessed bi corresponding getter methods.
 		 * The road checks if the robot has achived the current target.
-		 * 
+		 *
 		 */
 		WayPoints road;
-		
+
 		/**
 		 * @brief Local robot controller that implements a set of equations relating robot's pose relative to the road, state of the robot and target.
 		 * It outputs three speeds: advance, lateral and rotational and uses the robot's proxy to send them to the physical/simulated robot
-		 * 
+		 *
 		 */
 		Controller *controller;
-		
+
 		/**
-		 * @brief Projects the road onto the physical world through a provided laser field. It transforms distance relations between the road and the surrounding 
+		 * @brief Projects the road onto the physical world through a provided laser field. It transforms distance relations between the road and the surrounding
 		 * obstacles into a repulsion force acting on the road. It also computes an internal string-type force that straightens the road, effectively smoothing the path.
 		 * It has an update method that has to be called.
 		 */
 		ElasticBand elasticband;
-		
+
 		/**
-		 * @brief Adpapter for the OMPL library. Not too generic so far but works. It is instantiated here to connecto to the RRT algorithm. It is used when 
+		 * @brief Adpapter for the OMPL library. Not too generic so far but works. It is instantiated here to connecto to the RRT algorithm. It is used when
 		 * the PRM planner does not find a viable way between the robot and the target.
 		 */
 		PlannerOMPL *plannerOMPL;
-		
+
 		/**
-		 * @brief Hand made, boost graph libray based PRM planner based on the original Kavrani et al paper. 
-		 * If there is not a "grafo.dot" file in the local directory the class will create a new sampled graph of the free space using InnerModel's FCL 
+		 * @brief Hand made, boost graph libray based PRM planner based on the original Kavrani et al paper.
+		 * If there is not a "grafo.dot" file in the local directory the class will create a new sampled graph of the free space using InnerModel's FCL
 		 * collision detector and the provided free space sampler.
-		 * 
+		 *
 		 */
 		PlannerPRM plannerPRM;
-		
+
 			/**
 		 * @brief Drawing classes to draw the planner's graph and the road. These classes abstract away the drwaing code from PlannerPRM and WayPoints
-		 * 
+		 *
 		 */
 		#ifdef USE_QTGUI
 			GraphDraw graphdraw;
 			WaypointsDraw waypointsdraw;
 		#endif
-	
+
 		/**
 		 * @brief InnerModelViewer wrapper that runs on its own thread
 		 */
@@ -209,14 +204,15 @@ class SpecificWorker : public GenericWorker
 		#ifdef USE_QTGUI
 			InnerViewer *viewer;
 		#endif
-			
-		
+
+
 		/**
 		 * @brief QTimer used to implement a filter limiting the maximun input frequency of target requests through the go/goReferenced methods.
-		 * 
+		 *
 		 */
 		QTime relojForInputRateControl;  //used to limit input frequency
 		QTime taskReloj;  //Measures duration of commands
+
 
 		////////////////////////////////////////////////////////////////////////
 		//Commands corresponding to servant methods, but running on local thread
@@ -227,7 +223,7 @@ class SpecificWorker : public GenericWorker
 		bool changeTargetCommand(InnerModel* innerModel, CurrentTarget& target,  TrajectoryState &stat, WayPoints& myRoad);
 		bool goBackwardsCommand(InnerModel* innerModel, CurrentTarget& current,CurrentTarget &currentT, TrajectoryState& state, WayPoints& myRoad);
 		bool learnCommand(CurrentTarget &target,const WayPoints& myRoad);
-		
+
 		////////////////////////////////////////////////////////////////////////
 		//Auxiliary methods
 		/////////////////////////////////////////////////////////////////////////
@@ -248,14 +244,14 @@ class SpecificWorker : public GenericWorker
 		//Values read from config
 		float MINIMUN_DETECTABLE_ROTATION;
 		float MINIMUN_DETECTABLE_TRANSLATION;
-		
+
 		//local copy of human PolyLineList
 		SafePolyList safePolyList;
-		
+
 		void fichero(TLaserData laser, string path);
 		void ficheroP(LocalPolyLineList p, string path, InnerModel *innermodel);
 		bool flagLaser = false; //bool para pintar en el monitor
-		
+
 		bool newPolyline = false; // Para idicar que la polilinea se ha modificado. Lo necesitamos para el planner
 		void updateObstacles(LocalPolyLineList polylines);
 };

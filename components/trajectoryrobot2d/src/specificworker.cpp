@@ -42,13 +42,13 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	try
 	{
 		innerModel = new InnerModel(params.at("InnerModel").value);
-		innerModel->getNode<InnerModelJoint>("armX1")->setAngle(0);//setAngle(-1)
-		innerModel->getNode<InnerModelJoint>("armX2")->setAngle(0);//setAngle(2.5)
+		innerModel->getNode<InnerModelJoint>("armX1")->setAngle(-1);
+		innerModel->getNode<InnerModelJoint>("armX2")->setAngle(2.5);
 #ifdef USE_QTGUI
 		viewer = new InnerViewer(innerModel);  // makes a copy of innermodel for internal use
 #endif
 		MINIMUN_DETECTABLE_ROTATION = QString::fromStdString(params.at("MinimumDetectableRotation").value).toFloat();
-		MINIMUN_DETECTABLE_TRANSLATION = QString::fromStdString(params.at("MinimumDetectableTranslation").value).toFloat(); 
+		MINIMUN_DETECTABLE_TRANSLATION = QString::fromStdString(params.at("MinimumDetectableTranslation").value).toFloat();
 	}
 	catch (std::exception e)
 	{
@@ -69,8 +69,8 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	///////////////////
 	//Planner
 	///////////////////
-	plannerPRM.initialize(&sampler, params);  
-	
+	plannerPRM.initialize(&sampler, params);
+
 	///////////////////
 	//Initializes the elastic band structure "road"
 	///////////////////
@@ -88,188 +88,113 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	controller = new Controller(innerModel, laserData, params, 2 );
 
 	qDebug() << __FUNCTION__ << "All objects initialized";
-	
+
 #ifdef USE_QTGUI
 	graphdraw.draw(plannerPRM, viewer);
-	viewer->start();	
+	viewer->start();
 #endif
-	
+
 	Period = 100;
 	timer.start(Period);
 	return true;
 };
 
-///////////////NOS QUEDAMOS AQUI/////////////////////
+
 void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
-<<<<<<< HEAD
-{	
-<<<<<<< HEAD
- 	if (innerModel) delete innerModel;
- 	innerModel= new InnerModel(params.at("InnerModel").value);
-	
-=======
-  	if (innerModel) delete innerModel;
-  	innerModel= new InnerModel(params.at("InnerModel").value);
-  
->>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
+{
+	if (innerModel) delete innerModel;
+   innerModel= new InnerModel(params.at("InnerModel").value);
 	qDebug() << __FUNCTION__ << "updateObstacles";
-	//Borrar todos los newpolyline_obs_X que existan del innermodel y del innermodel viewer
-	
-	///////////////////////////////removing/////////////////////////
+	//Delete all existing newpolyline_obs_X from the innermodel and innermodel viewer
+
+	//Create obs for each polynena
 	for (int i=0; i<100; i++)
 	{
 		QString cadena = QString("polyline_obs_") + QString::number(i,10);
 		//printf("puntero a %s: %p\n", cadena.toStdString().c_str(), viewer->innerModel->getNode(cadena));
-<<<<<<< HEAD
 
-		//qDebug() << __FUNCTION__ <<"intentamos borrar "<<cadena;
-// 		if (innerModel->getNode(cadena))
-// 				innerModel->removeNode(cadena);
-=======
-		
 		//qDebug() << __FUNCTION__ <<"intentamos borrar "<<cadena;
 		if (innerModel->getNode(cadena))
 				innerModel->removeNode(cadena);
->>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
-		
-		  
+
 		if (not InnerModelDraw::removeObject(viewer->innerViewer, cadena) )
 		{
 		//	printf("removeObject devuelve falso\n");
 			break;
-<<<<<<< HEAD
  		}
- 		
-=======
- 		}	
->>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
 	}
-	
-	///////////////////////////////adding/////////////////////////
-	
-=======
-{
-	printf("updateObstacles\n");
-	//Borrar todos los newpolyline_obs_X que existan del innermodel y del innermodel viewer
-	
-	//Crear obs por cada polinenaf
-// 	for (int i=0; i<100; i++)
-// 	{
-// 		QString cadena = QString("polyline_obs_") + QString::number(i,10);
-// 		printf("puntero a %s: %p\n", cadena.toStdString().c_str(), viewer->innerModel->getNode(cadena));
-// 
-// 		qDebug()<<"intentamos borrar "<<cadena;
-// 		if (not InnerModelDraw::removeObject(viewer->innerViewer, cadena) )
-// 		{
-// 			printf("removeObject devuelve falso\n");
-// 			break;
-// 		}
-// 	}
 
 
->>>>>>> parent of 22b88f9... changes in trajectory de mierda
 	int count = 0;
-	
 	for (auto poly:polylines)
 	{
-	  
 		auto previousPoint = poly[poly.size()-1];
-		
+
 		for (auto currentPoint:poly)
 		{
 			//qDebug()<<"INCLUIMOS EN INNERDRAW";
 			QString cadena = QString("polyline_obs_")+QString::number(count,10);
-<<<<<<< HEAD
 			//qDebug() << __FUNCTION__ << "nombre"<<cadena;
-=======
-			qDebug()<<"nombre"<<cadena;
->>>>>>> parent of 22b88f9... changes in trajectory de mierda
 			QVec ppoint = QVec::vec3(previousPoint.x, 1000, previousPoint.z);
 			QVec cpoint = QVec::vec3(currentPoint.x, 1000, currentPoint.z);
 			QVec center = (cpoint + ppoint).operator*(0.5);
-			
+
 			QVec normal = (cpoint-ppoint);
-			float dist=normal.norm2();	
+			float dist=normal.norm2();
 			float temp = normal(2);
 			normal(2) = normal(0);
 			normal(0) = -temp;
-			
-<<<<<<< HEAD
- 			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,90));
-		
-// 			////////////////////////////////////////////////////////////////
-<<<<<<< HEAD
-			
-			
-			//qDebug()<<"INCLUIMOS EN INNERMODEL";
-			if (innerModel->getNode(cadena)!= NULL)
-			{		
-			qDebug()<<"Eliminamos "<<cadena;  
-			
-			innerModel->removeNode(cadena);
 
-							
+ 			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,90));
+
+// 			//////////////////////////////////////SE METE LA PARED EN EL INNER///////////////////////////////////
+			//qDebug()<<"INCLUIMOS EN INNERMODEL";
+			if (innerModel->getNode(cadena))
+			{
+				try
+				{
+
+					innerModel->removeNode(cadena);
+				//	qDebug() << __FUNCTION__ << "borrado " << cadena;
+				}
+
+				catch(QString es){ qDebug() << "EXCEPCION" << es;}
 			}
-			
-=======
-		
->>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
-	
-			InnerModelNode *parent = innerModel->getNode(QString("world"));			
+
+
+
+
+
+
+
+			InnerModelNode *parent = innerModel->getNode(QString("world"));
 			if (parent == NULL)
 				printf("%s: parent not exists\n", __FUNCTION__);
 			else
-			{			
+			{
 				InnerModelPlane *plane;
 				try
 				{
-// 					if (innerModel->getNode(cadena))
-// 						qDebug() << "SHIT!!!!!!!!!!!!!!!!!!!!!!!!";
-					
-					if(innerModel->getNode(cadena)== NULL)
-					{
-					plane  = innerModel->newPlane(cadena, parent, QString("#FFFF00"), dist, 2000, 90, 1,
-							normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
-<<<<<<< HEAD
-					qDebug()<<"Nueva"<<cadena; 
-					
-		
-=======
-					//qDebug()<<"Nueva"<<cadena; 
-					
->>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
-					parent->addChild(plane); 
-					}
-					
+					if (innerModel->getNode(cadena))
+						qDebug() << "SHIT!!!!!!!!!!!!!!!!!!!!!!!!";
+					plane  = innerModel->newPlane(cadena, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
+					copyplane = plane;
+					parent->addChild(plane);
+
 				}
 				catch(QString es)
 				{ qDebug() << "EXCEPCION" << es;}
 
 			}
-			
-	
+
+
 			////////////////////////////////////////////////////////////////////////////////////
-=======
-			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("root"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,70));
->>>>>>> parent of 22b88f9... changes in trajectory de mierda
 			count++;
 			previousPoint=currentPoint;
 		}
-		
-		
 	}
-	
-<<<<<<< HEAD
-<<<<<<< HEAD
-	innerModel->save("guardoinner.xml");
-
-=======
-	
->>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
-=======
->>>>>>> parent of 22b88f9... changes in trajectory de mierda
 }
-		
+
 
 /**
  * @brief Main execution loop. Checks if there is an active target
@@ -281,7 +206,7 @@ void SpecificWorker::compute()
 
 
 	flagLaser = false;
-	
+
 	// Check for connection failure
 	if (updateInnerModel(innerModel, tState) == false)
 	{
@@ -291,66 +216,55 @@ void SpecificWorker::compute()
 		tState.setDescription("Disconnected");
 		currentTarget.state = CurrentTarget::State::DISCONNECTED;
 	}
-	
+
 	if (newPolyline)
-	
+
 	{
-		qDebug()<<"Nueva polilinea. llamamos a UpdateGraph";
-		
+		qDebug()<<"New polyline. We called UpdateGraph";
+
 		if ( plannerPRM.updateGraph(safePolyList.read()) == true)
-		{	
-			qDebug()<<"El grafo ha cambiado";
+		{
+			qDebug()<<"The graph has changed";
 			#ifdef USE_QTGUI
-			qDebug()<<"Entramos en Graphdraw.draw";
+			qDebug()<<"Entering Graphdraw.draw";
 			graphdraw.draw(plannerPRM, viewer);
-			qDebug()<<"Salimos de GraphDraw";
-			#endif		
+			qDebug()<<"Leaving GraphDraw";
+			#endif
 		}
-		
+
 		else
 		{
-			qDebug()<<"El grafo no ha cambiado";
+			qDebug()<<"The graph has not changed";
 		}
-		
-		qDebug()<<"LLamamos a updateObstacles";
+
+		qDebug()<<"We call updateObstacles";
 		updateObstacles(safePolyList.read());
-		qDebug()<<"Salimos e UpdateObstacles";
-<<<<<<< HEAD
-	
-=======
->>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
-		
-		qDebug()<<"Llamamos a Sampler.initialize";
-		sampler.initialize(innerModel, params);
-		qDebug()<<"Salimos de Sampler.initialize";
-<<<<<<< HEAD
+		qDebug()<<"We leave UpdateObstacles";
+
+
+		qDebug()<<"We call Sampler.initialize";
+		try
+			{
+			sampler.initialize(innerModel, params);
+			}
+		catch(...)
+		{
+			qDebug()<<"Again";
+		}
+		qDebug()<<"We left Sampler.initialize";
 		newPolyline = false;
-	
+
 		////SE CIERRA CADA VEZ QUE LLAMAMOS AL SAMPLER.INITIALIZE UNA VEZ QUE SE HA AÑADIDO LA POLILINEA EN EL INNERMODEL
 		//printf("%p %p\n", innerModel, sampler.innerModelSampler);
-=======
-		
-		qDebug()<<"Llamamos a myRoad.initialize";
-		road.initialize(innerModel, params);
-		qDebug()<<"Salimos de myRoad.initialize";
-		
-		
-		newPolyline = false;
-	
->>>>>>> 4a123defec4e0344e337d4a02147d467ef77a033
-	
-		
-	}
-	
-<<<<<<< HEAD
-	
 
-=======
-	//if (innerModel->getNode("polyline_obs_0") == NULL ) qFatal("");
->>>>>>> parent of 22b88f9... changes in trajectory de mierda
-	
+
+	}
+
+
+
+
 	if (road.isBlocked()) currentTarget.setState(CurrentTarget::State::BLOCKED);
-	
+
 	switch (currentTarget.state)
 	{
 		case CurrentTarget::State::STOP:
@@ -366,25 +280,25 @@ void SpecificWorker::compute()
 			break;
 		case CurrentTarget::State::SETHEADING:
 			setHeadingCommand(innerModel, currentTarget.getRotation().y(), currentTarget, tState, road);
-			break;		
+			break;
 		case CurrentTarget::State::BLOCKED:
-			
-			controller->stopTheRobot(omnirobot_proxy);
-			road.update();		
-			elasticband.update(innerModel, road, laserData, currentTarget, safePolyList);	
+
+		//	controller->stopTheRobot(omnirobot_proxy);
+			road.update();
+			elasticband.update(innerModel, road, laserData, currentTarget, safePolyList);
 			if( road.isBlocked() == true)
 			{
-				
+
 				qDebug() << __FUNCTION__ << "Blocked. Calling replanning";
 				controller->stopTheRobot(omnirobot_proxy);
 				road.setRequiresReplanning(true);
 				//road.setBlocked(true);
 			}
-	
-			currentTarget.setState(CurrentTarget::State::GOTO);	
-			
+
+			currentTarget.setState(CurrentTarget::State::GOTO);
+
 			break;
-		
+
 		case CurrentTarget::State::GOBACKWARDS:
 			goBackwardsCommand(innerModel, currentTargetBack, currentTarget, tState, road);
 			break;
@@ -392,7 +306,7 @@ void SpecificWorker::compute()
 			timer.setInterval(2000);
 			break;
 		case CurrentTarget::State::ROBOT_COLLISION:			// Check if robot is inside limits and not in collision.
-			
+
 			if (std::get<bool>(sampler.checkRobotValidStateAtTarget(innerModel->transform6D("world", "robot"))))
 			{
 				tState.setState("IDLE"); tState.setDescription("");
@@ -407,11 +321,11 @@ void SpecificWorker::compute()
 				currentTarget.setState(CurrentTarget::State::IDLE);
 			}
 			break;
-		case CurrentTarget::State::LEARNING:	
-			if(plannerPRM.learnForAWhile(150, false)) //150, Max number of nodes in the graph. 
+		case CurrentTarget::State::LEARNING:
+			if(plannerPRM.learnForAWhile(150, false)) //150, Max number of nodes in the graph.
 			{
 				#ifdef USE_QTGUI
-					//plannerPRM.drawGraph(viewer->innerViewer);  
+					//plannerPRM.drawGraph(viewer->innerViewer);
 				#endif
 			}
 			currentTarget.setState(CurrentTarget::State::IDLE);
@@ -419,13 +333,13 @@ void SpecificWorker::compute()
 		case CurrentTarget::State::IDLE:
 			timer.setInterval(700);
 			tState.setDescription("Waiting new target");
-			
+
 			//////////////DESCOMENTAR///////////////////
 			//qDebug() << __FUNCTION__ << "Computed period" << reloj.elapsed()  << "ms. State. Robot at:" << innerModel->transform6D("world", "robot");
 			//currentTarget.setState(CurrentTarget::State::LEARNING);
 			break;
 	}
-	
+
 	worker_params_mutex->lock();
 // 		//save framerate in params
 		worker_params["frameRate"].value = std::to_string(reloj.restart()/1000.f);
@@ -463,7 +377,7 @@ bool SpecificWorker::stopCommand(CurrentTarget &target, WayPoints &myRoad, Traje
  * @return bool
  */
 bool SpecificWorker::changeTargetCommand(InnerModel *innerModel, CurrentTarget &target, TrajectoryState &state,
-                                         WayPoints &)
+                                         WayPoints &myRoad)
 {
 	//DEPRECATED
 	qDebug() << __FUNCTION__ << "DEPRECATED";
@@ -519,19 +433,18 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 // 			target.setState(CurrentTarget::State::GOTO);
 // 			state.setState("EXECUTING");
 // 		}
-		
+
 	if (myRoad.isBlocked() == true )	//Road BLOCKED, go to BLOCKED state and wait it the obstacle moves PARAMS
 	{
 		controller->stopTheRobot(omnirobot_proxy);
 		target.setWithoutPlan(true);
 		myRoad.setBlocked(false);
 	}
-		
+
 	qDebug() << __FUNCTION__ << "GOTO:" << "Robot at:" << innerModel->transform6D("world", "robot") << "Target:" << currentTarget.getFullPose();
 	// Get here when robot is stuck
-<<<<<<< HEAD
-	
-	
+
+
 	if (myRoad.getRequiresReplanning() == true)
 	{
 		qDebug() << __FUNCTION__ << "STUCK, PLANNING REQUIRED";
@@ -539,14 +452,7 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 // 		plannerPRM.computePath(localT, innerModel);
 		target.setWithoutPlan(true);
 	}
-=======
-// 	if(myRoad.requiresReplanning == true)
-// 	{
-// 	 		//qDebug() << __FUNCTION__ << "STUCK, PLANNING REQUIRED";
-// 	 		//computePlan(innerModel);
-// 	}
->>>>>>> parent of 22b88f9... changes in trajectory de mierda
-	
+
 	//////////////////////////////////////////
 	// Check if there is a plan for the target
 	//////////////////////////////////////////
@@ -588,22 +494,20 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 	///////////////////////////////////
 	// compute all measures relating the robot to the road
 	/////////////////////////////////
-	qDebug()<<"llamamos a myroad.update";
 	myRoad.update();
-	qDebug()<<"salimos de myroad.update";
+
 	//myRoad.printRobotState(innerModel, target);
 
 	/////////////////////////////////////////////////////
 	//move the robot according to the current force field
 	//////////////////////////////////////////////////////
-	qDebug()<<"llamamos a controller";
 	controller->update(innerModel, lData, omnirobot_proxy, myRoad, true);
 
-	
+
 	#ifdef USE_QTGUI
 		waypointsdraw.draw(myRoad, viewer,  target);
 	#endif
-	
+
 	state.setEstimatedTime(myRoad.getETA());
 	return true;
 }
@@ -632,7 +536,7 @@ SpecificWorker::setHeadingCommand(InnerModel *innerModel, float alfa, CurrentTar
 	alfa = angmMPI(alfa);
 	float error = angmMPI(angRobot - alfa);
 	state.setState("EXECUTING-TURNING");
-	
+
 	/////////////////////////////
 	/// Check for minimun admisible orientation error
 	//////////////////////////////
@@ -674,7 +578,7 @@ bool SpecificWorker::goBackwardsCommand(InnerModel *innerModel, CurrentTarget &c
 	const float MAX_ADV_SPEED = 400.f;
 	const float MAX_POSITIONING_ERROR = 40;  //mm
 	static float errorAnt = std::numeric_limits<float>::max();
-	
+
 	///////////////////
 	//CHECK PARAMETERS
 	///////////////////
@@ -687,7 +591,7 @@ bool SpecificWorker::goBackwardsCommand(InnerModel *innerModel, CurrentTarget &c
 		throw ex;
 		return false;
 	}
-	
+
 	state.setState("BACKWARDS");
 	QVec rPose = innerModel->transform("world", "robot");
 	float error = (rPose - target).norm2();
@@ -709,7 +613,7 @@ bool SpecificWorker::goBackwardsCommand(InnerModel *innerModel, CurrentTarget &c
 		float vadv = -0.5 * error;  //Proportional controller
 		if (vadv < -MAX_ADV_SPEED) vadv = -MAX_ADV_SPEED;
 		try
-		{	omnirobot_proxy->setSpeedBase(0, vadv, 0);	} 
+		{	omnirobot_proxy->setSpeedBase(0, vadv, 0);	}
 		catch (const Ice::Exception &ex)
 		{ std::cout << ex << std::endl; }
 	}
@@ -761,14 +665,14 @@ float SpecificWorker::goReferenced(const TargetPose &target_, const float xRef, 
 		innerModel->updateTransformValues("virtualTarget", target_.x, 0, target_.z, 0, target_.ry, 0, "world");
 		targetT = innerModel->transform("world", QVec::vec3(-xRef, 0, -zRef), "virtualTarget");
 	}
-	
+
 	QVec currentT = currentTarget.getTranslation();
 	QVec currentRot = currentTarget.getRotation();
 	QVec robotT = innerModel->transform("world", "robot");
 	QVec robotRot = innerModel->transform6D("world", "robot").subVector(3, 5);
-	
+
 	drawTarget(targetT);
-	
+
 	qDebug() << __FUNCTION__
 	         << "----------------------------------------------------------------------------------------------";
 	qDebug() << __FUNCTION__ << ": Target received" << targetT << targetRot << ". Contact Point: " << xRef << zRef << "tolerance: " << threshold << " with ROBOT at" << robotT << robotRot;
@@ -790,7 +694,7 @@ float SpecificWorker::goReferenced(const TargetPose &target_, const float xRef, 
 	///////////////////////////////////////////////
 	// Check same target, minimum distance admitted 60mm and 0.05rads
 	///////////////////////////////////////////////
-									
+
 	if ((currentT - targetT).norm2() < MINIMUN_DETECTABLE_TRANSLATION and fabs(currentRot.y() - targetRot.y()) < MINIMUN_DETECTABLE_ROTATION)
 	{
 
@@ -807,7 +711,7 @@ float SpecificWorker::goReferenced(const TargetPose &target_, const float xRef, 
 	///////////////////////////////////////////////
 	// Minimun change admitted 60mm and 0.05rads
 	///////////////////////////////////////////////
-									
+
 	if ((targetT - robotT).norm2() < MINIMUN_DETECTABLE_TRANSLATION and angmMPI(targetRot.y() - robotRot.y()) < MINIMUN_DETECTABLE_ROTATION)
 	{
 
@@ -856,12 +760,12 @@ float SpecificWorker::goReferenced(const TargetPose &target_, const float xRef, 
 	// move virtualrobot to xref, zRef to act as a surrogate
 	//innerModel->updateTransformValues("virtualRobot", xRef, 0, zRef, 0, 0, 0, "robot");
 	//InnerModelDraw::addPlane_ignoreExisting(innerViewer, "virtualRobot", "robot", QVec::vec3(xRef,0,zRef), QVec::vec3(0,0,0), "#555555", QVec::vec3(50,1000,50));
-	
+
 	road.setThreshold(threshold);
 
 	currentTarget.reset(targetT, targetRot, target_.doRotation);
 	currentTarget.setState(CurrentTarget::State::GOTO);
-	tState.setState("EXECUTING");	
+	tState.setState("EXECUTING");
 	tState.setDescription("Executing plan");
 	taskReloj.restart();
 	return (robotT - targetT).norm2();
@@ -898,16 +802,16 @@ float SpecificWorker::goBackwards(const TargetPose &target)
 		throw ex;
 		return 0.;
 	}
-	
+
 	currentTarget.setState( CurrentTarget::State::STOP );
 	taskReloj.restart();
-	
+
 	///////////////////////////////////
 	// Wait until the robot has stopped or 5secs
 	////////////////////////////////////
 	while( (currentTarget.state !=  CurrentTarget::State::IDLE) and taskReloj.elapsed() < 5000 )
 	{};
-	
+
 	if( currentTarget.state ==  CurrentTarget::State::IDLE)
 	{
 		currentTarget.setTranslation(QVec::vec3(target.x, target.y, target.z));
@@ -917,7 +821,7 @@ float SpecificWorker::goBackwards(const TargetPose &target)
 			currentTarget.setHasRotation(true);
 		taskReloj.restart();
 	}
-	else 
+	else
 	{
 		RoboCompTrajectoryRobot2D::RoboCompException ex;
 		ex.text = "Doing nothing. Cannot stop the robot";
@@ -928,12 +832,12 @@ float SpecificWorker::goBackwards(const TargetPose &target)
 
 void SpecificWorker::setHumanSpace(const PolyLineList& polyList)
 {
-  
+
 	qDebug()<<"La polilinea ha llegado";
 	safePolyList.write(polyList);
-	
+
 	newPolyline=true;
-  
+
 }
 
 TLaserData SpecificWorker::getLaserData()
@@ -953,7 +857,7 @@ TLaserData SpecificWorker::getLaserAndBStateData(TBaseState& bState)
 
 LaserConfData SpecificWorker::getLaserConfData()
 {
-	
+
 	LaserConfData lc;
 	lc.maxMeasures = 100;
     lc.maxDegrees = 240;
@@ -981,9 +885,9 @@ void SpecificWorker::mapBasedTarget(const NavigationParameterMap &parameters)
 		qDebug() << __FUNCTION__ << QString::fromStdString(p.first) << QString::fromStdString(p.second);
 
 // 	std::string command;
-// 	try 
-// 	{ 
-// 		command = parameters.at("command"); 	
+// 	try
+// 	{
+// 		command = parameters.at("command");
 // 		if( command == "go")  //Fill go params
 // 		{
 // 			QVec target = QVec::zeros(6);
@@ -991,29 +895,29 @@ void SpecificWorker::mapBasedTarget(const NavigationParameterMap &parameters)
 // 			bool hasRotation = false;
 // 			bool hasTip = false;
 // 			float tolerance = 20;
-// 			try 
-// 			{ 
-// 				target[0] = std::stof(parameters.at("tx")); 
-// 				target[2] = std::stof(parameters.at("tz")); 
-// 			} 
+// 			try
+// 			{
+// 				target[0] = std::stof(parameters.at("tx"));
+// 				target[2] = std::stof(parameters.at("tz"));
+// 			}
 // 			catch(...){};
-// 			try 
-// 			{ 
-// 				target[5] = std::stof(parameters.at("ry")); 
+// 			try
+// 			{
+// 				target[5] = std::stof(parameters.at("ry"));
 // 				hasRotation = true;
-// 			} 
+// 			}
 // 			catch(...){};
 // 			try
-// 			{ 
-// 				tip[0] = std::stof(parameters.at("tip_x")); 
-// 				tip[2] = std::stof(parameters.at("tip_z")); 
+// 			{
+// 				tip[0] = std::stof(parameters.at("tip_x"));
+// 				tip[2] = std::stof(parameters.at("tip_z"));
 // 				hasTip = true;
-// 			} 
+// 			}
 // 			catch(...){};
 // 			try
-// 			{ 
-// 				tolerance = std::stof(parameters.at("tolerance")); 
-// 			} 
+// 			{
+// 				tolerance = std::stof(parameters.at("tolerance"));
+// 			}
 // 			catch(...){};
 // 			//goReferenced(target, tip, tolerance);
 // 		}
@@ -1022,8 +926,8 @@ void SpecificWorker::mapBasedTarget(const NavigationParameterMap &parameters)
 // 			currentTarget.setState(CurrentTarget::State::STOP);
 // 		}
 // 	}
-// 	catch (const std::out_of_range& oor) 
-// 	{ 
+// 	catch (const std::out_of_range& oor)
+// 	{
 // 		std::cerr << "Error, command not found in parameters list" << std::endl;
 // 		RoboCompTrajectoryRobot2D::RoboCompException ex;
 // 		ex.text = "Error, command not found in parameters list";
@@ -1054,7 +958,7 @@ void SpecificWorker::ficheroP(LocalPolyLineList polylines, string path, InnerMod
 		for (auto l:p){
 			QVec point_poli = innermodel->transform("laser", (QVec::vec3(l.x, 0, l.z)), "world");
 			fichero<< point_poli.x() << " " <<point_poli.z()<< endl;
-			
+
 		}
 	}
 	fichero.close();
@@ -1077,38 +981,20 @@ bool SpecificWorker::updateInnerModel(InnerModel *inner, TrajectoryState &state)
 		qDebug() << __FUNCTION__ << "Can't connect to OmniRobot proxy. Retrying...";
 		return false;
 	}
-	
-<<<<<<< HEAD
-=======
-	printf("a\n");
-	try
-	{
-		printf("1\n");
-		inner->save("caca.xml");
-		printf("colisiona: %d\n", inner->collide("base_mesh", "polyline_obs_1"));
-		printf("2\n");
-	}
-	catch(...)
-	{
-		printf("3\n");
-	}
-	printf("b\n");
 
-	
->>>>>>> parent of 22b88f9... changes in trajectory de mierda
-	
+
 	try
 	{
 	//	printf("Escribiendo a laserantes\n");
 		laserData = laser_proxy->getLaserData();
- 		fichero(laserData,"laserantes.txt");
-	
+ 	//	fichero(laserData,"laserantes.txt");
+
 	//	QTime tiempo = QTime::currentTime();
 		laserData = elasticband.unionpoligonos(laserData, safePolyList, inner);
 	//	cout << "tardamos (ms) " << tiempo.elapsed() << endl;
-	//	
- 		fichero(laserData,"laserdespues.txt");
-		ficheroP(safePolyList.read(),"poly.txt", inner); 
+	//
+ 	//	fichero(laserData,"laserdespues.txt");
+	//	ficheroP(safePolyList.read(),"poly.txt", inner);
 	//	printf("Escribiendo a laserdespues\n");
  	}
 	catch (const Ice::Exception &ex)
@@ -1125,7 +1011,7 @@ bool SpecificWorker::updateInnerModel(InnerModel *inner, TrajectoryState &state)
 		currentTarget.state = CurrentTarget::State::IDLE;
 		timer.setInterval(Period);
 	}
-	
+
 	flagLaser =true;
 	return true;
 }
@@ -1156,10 +1042,10 @@ float SpecificWorker::angmMPI(float angle)
 // 		qDebug() << __FUNCTION__ << a << angle << fmod(a, M_PI);
 // 		//qFatal("FMOD SUCKS");
 // 	}
-	
+
 	return angle;
 	}
-	
+
 
 /////////////////////////////////////////////////////////////////////////////
 //// DRAWING METHODS
@@ -1223,7 +1109,7 @@ bool SpecificWorker::removeNode(const QString &item)
 
 /**
  * @brief Adds a plane to InnerModel
- * 
+ *
  * @param item ...
  * @param parentS ...
  * @param path ...
@@ -1241,7 +1127,7 @@ bool SpecificWorker::removeNode(const QString &item)
 // 	mesh->setScale(scale(0), scale(1), scale(2));
 // 	parent->addChild(mesh);
 // }
-// 
+//
 
 bool SpecificWorker::insertObstacle()
 {
@@ -1251,7 +1137,7 @@ bool SpecificWorker::insertObstacle()
 // 	QVec R = QVec::vec3(0,0,1);
 // 	QVec final = innerModel->transform("world",QVec::vec3(0,0,300),"laser");
 // 	QVec sizeObstacle = QVec::vec3(500, 800, 100);
-// 	
+//
 // 	InnerModelDraw::addPlane_ignoreExisting(innerViewer, obstacleName, obstacleParent, final, R, "#555555", sizeObstacle);
 // 	addPlane(obstacleName, obstacleParent, "/home/robocomp/robocomp/files/osgModels/basics/cube.3ds", sizeObstacle, final, R);
 // 	innerViewer->update();
@@ -1294,7 +1180,7 @@ RoboCompCommonBehavior::ParameterList SpecificWorker::getWorkerParams()
 // 	float error = (rPose-target).norm2();
 // 	//float error = target.norm2();
 // 	// 	qDebug() << __FUNCTION__ << "Error: " << error;
-// 
+//
 // 	if( error < MAX_POSITIONING_ERROR )		//TASK IS FINISHED
 // 	{
 // //		current.setHasRotation(false);
@@ -1311,11 +1197,11 @@ RoboCompCommonBehavior::ParameterList SpecificWorker::getWorkerParams()
 // 		  omnirobot_proxy->setSpeedBase(0, 0, 0);
 // 		} catch (const Ice::Exception &ex) { std::cout << ex << std::endl; }
 // 		//myRoad.requiresReplanning = true;
-// 
+//
 // 		currentT.setWithoutPlan(false);
 // 		///////
 // 		//agregar plane		AQUI HAY QUE AGREGAR EL PLANO Y DAR LA ORDEN DE REPLANIFICAR!!
-// 		
+//
 // 		changeCommand(currentT,CurrentTarget::Command::INSERTOBSTACLE);
 // 	}
 // 	else
@@ -1329,7 +1215,7 @@ RoboCompCommonBehavior::ParameterList SpecificWorker::getWorkerParams()
 // // 		  omnirobot2_proxy->setSpeedBase(0, vadv, 0);
 // 		} catch (const Ice::Exception &ex) { std::cout << ex << std::endl; }
 // 	}
-// 
+//
 
 
 //////////////////////////////////////
