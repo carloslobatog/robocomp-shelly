@@ -75,9 +75,8 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	{
 		RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
 		structuralChange(w);
-// 		qDebug() << __FUNCTION__ << "Extracting InnerModel";	
-// 		innerModel = AGMInner::extractInnerModel(worldModel, "world", false);
 		}
+		
 	catch(...)
 	{
 		printf("SetParams: The executive is probably not running, waiting for first AGM model publication...");
@@ -86,6 +85,8 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 			qFatal("SetParams: InnerModel could not be read from Executive");
 	
 	pathfinder.initialize(innerModel, this->params, params);
+	
+	
 	
 	//Proxies for actionExecution
 	aE.logger_proxy = logger_proxy;
@@ -106,7 +107,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 */
 void SpecificWorker::compute( )
 {
-  
+	bool sendChangesAGM = false;
 	static bool first=true;
 	if (first)
 	{	
@@ -114,19 +115,20 @@ void SpecificWorker::compute( )
 		rDebug2(("SocialnavigationAgent started"));
 	}
 	
-	if (worldModel->getIdentifierByType("robot") < 0)
-	{ 
-		try 
-		{
-			//qDebug()<<"Leo el mundo";
-			agmexecutive_proxy->broadcastModel();		
-			return;
-		}
-		catch(...)
-		{	
-			//printf("The executive is probably not running, waiting for first AGM model publication...");	}	
-		}
-	}
+	AGMModel::SPtr newM(new AGMModel(worldModel));
+// 	if (worldModel->getIdentifierByType("robot") < 0)
+// 	{ 
+// 		try 
+// 		{
+// 			//qDebug()<<"Leo el mundo";
+// 			agmexecutive_proxy->broadcastModel();		
+// 			return;
+// 		}
+// 		catch(...)
+// 		{	
+// 			//printf("The executive is probably not running, waiting for first AGM model publication...");	}	
+// 		}
+// 	}
 
 	//Check if the person is in the model
  	for (int i=0;i<pn.size();i++)
@@ -138,10 +140,10 @@ void SpecificWorker::compute( )
 			std::string name = "fakeperson" + std::to_string(i+1);
 			
 			int idx=0;
-			while ((personSymbolId = worldModel->getIdentifierByType(type, idx++)) != -1)
+			while ((personSymbolId = newM->getIdentifierByType(type, idx++)) != -1)
 			{
 				if (idx > 4) exit(0);
-				if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
+				if (newM->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
 				{
 					pSymbolId[i]=personSymbolId;
 					changepos=true;
@@ -164,8 +166,8 @@ void SpecificWorker::compute( )
 		{
 			if (pn[ind])
 			{
-				AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(pSymbolId[ind], "RT");
-				AGMModelEdge &edgeRT = worldModel->getEdgeByIdentifiers(personParent->identifier, pSymbolId[ind], "RT");
+				AGMModelSymbol::SPtr personParent = newM->getParentByLink(pSymbolId[ind], "RT");
+				AGMModelEdge &edgeRT = newM->getEdgeByIdentifiers(personParent->identifier, pSymbolId[ind], "RT");
 				person.x = str2float(edgeRT.attributes["tx"])/1000;
 				person.z = str2float(edgeRT.attributes["tz"])/1000;
 				person.angle = str2float(edgeRT.attributes["ry"]);
@@ -187,15 +189,27 @@ void SpecificWorker::compute( )
 					totalaux[ind]=person;  	  
 					
 				}
-			
-				sr.checkHRI(person,ind+1,innerModel);
 				
+				try
+				{
+					if (sr.checkHRI(person,ind+1,innerModel,newM) == true)
+					{	
+						qDebug()<<"SEND MODIFICATION PROPOSAL";
+						sendChangesAGM = true;
+					}
+					else 
+						qDebug()<<"NO HAY MODIFICACION";
+				}
+				catch(...)
+				{
+			
+				}
 			}
 		}
 		
-		robotSymbolId = worldModel->getIdentifierByType("robot");
-		AGMModelSymbol::SPtr robotparent = worldModel->getParentByLink(robotSymbolId, "RT");
-		AGMModelEdge &edgeRTrobot  = worldModel->getEdgeByIdentifiers(robotparent->identifier, robotSymbolId, "RT");
+		robotSymbolId = newM->getIdentifierByType("robot");
+		AGMModelSymbol::SPtr robotparent = newM->getParentByLink(robotSymbolId, "RT");
+		AGMModelEdge &edgeRTrobot  = newM->getEdgeByIdentifiers(robotparent->identifier, robotSymbolId, "RT");
 			
 		robot.x=str2float(edgeRTrobot.attributes["tx"])/1000;
 		robot.z=str2float(edgeRTrobot.attributes["tz"])/1000;
@@ -243,7 +257,21 @@ void SpecificWorker::compute( )
 	
 	//qDebug()<<"Update actionEx";
 	//aE.Update(action,params);
-	
+	if (sendChangesAGM)
+	{	
+		try
+		{
+			newM->save("agmmod.xml");
+			sendModificationProposal(worldModel,newM,"m");
+			worldModel->save("agmdespuesmod.xml");
+			std::abort();
+		
+		}
+		catch(...)
+		{
+			qDebug ()<<"NO SE PUEEEE";
+		}
+	}
 }
 	 	
 
@@ -565,17 +593,22 @@ void SpecificWorker::sendModificationProposal(AGMModel::SPtr &newModel, AGMModel
 	QMutexLocker locker(mutex);
 
 	try
-	{
-		AGMMisc::publishModification(newModel, agmexecutive_proxy, std::string( "graspingAgent")+m);
+	{	
+		qDebug()<<"trying publishModification";
+		AGMMisc::publishModification(newModel, agmexecutive_proxy, std::string( "SocialnavigationAgent")+m);
+		qDebug()<<"publishModification okeeeey";
+		
 	}
 	catch(const RoboCompAGMExecutive::Locked &e)
 	{
 	}
 	catch(const RoboCompAGMExecutive::OldModel &e)
 	{
+		printf("modelo viejo\n");
 	}
 	catch(const RoboCompAGMExecutive::InvalidChange &e)
 	{
+		printf("modelo invalido\n");
 	}
 	catch(const Ice::Exception& e)
 	{
