@@ -7,44 +7,41 @@
 		</transform>
 		
 		
-
-		
-		
 		
 		
 		<transform id="room">
 
 			<transform id="pared1" tz="5000" ty="950" >
-				<plane id="muro1" size="10000,1900,100"  texture="#FF8800" />
+				<plane id="muro1" size="10000,1900,10"  texture="#FF8800" />
 			</transform>
 
 			<transform id="pared2" tz="-5000" ty="950" >
-				<plane id="muro2" size="10000,1900,100"  texture="#FF8800" />
+				<plane id="muro2" size="10000,1900,10"  texture="#FF8800" />
 			</transform>
 
 			<transform id="pared3" tx="-5000" ty="950">
-				<plane id="muro3" nx="2500" size="10000,1900,100"  texture="#FF8800" />
+				<plane id="muro3" nx="2500" size="10000,1900,10"  texture="#FF8800" />
 			</transform>
 			
 			<transform id="pared4" tx="5000" ty="950">
-				<plane id="muro4" nx="2500" size="10000,1900,100"  texture="#FF8800" />
+				<plane id="muro4" nx="2500" size="10000,1900,10"  texture="#FF8800" />
 			</transform>
 
 		<!--Pasillo-->
 
 			<transform id="pared5" tz="750" tx="-4500" ty="950" >
-				<plane id="muro5" size="1000,1900,100"  texture="#0088FF" />
+				<plane id="muro5" size="1000,1900,10"  texture="#0088FF" />
 			</transform>
-			<transform id="pared5.1" tz="750" tx="1000" ty="950" >
-				<plane id="muro5.1" size="8000,1900,100"  texture="#0088FF" />
+			<transform id="pared5.1" tz="750" tx="1062.5" ty="950" >
+				<plane id="muro5.1" size="7875,1900,10"  texture="#0088FF" />
 			</transform>
 
 
 			<transform id="pared6" tz="-750" tx="4500" ty="950" >
-				<plane id="muro6" size="1000,1900,100"  texture="#00FF00" />
+				<plane id="muro6" size="1000,1900,10"  texture="#00FF00" />
 			</transform>
-			<transform id="pared6.1" tz="-750" tx="-1000" ty="950" >
-				<plane id="muro6.1" size="8000,1900,100"  texture="#00FF00" />
+			<transform id="pared6.1" tz="-750" tx="-1062.5" ty="950" >
+				<plane id="muro6.1" size="7875,1900,10"  texture="#00FF00" />
 			</transform>
 
 		</transform>
