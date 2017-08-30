@@ -396,7 +396,7 @@ void SpecificWorker::compute()
 		try
 		{
 		
-		if ((tbutton.up==true)||(tbutton.down==true)||(tbutton.right==true)||(tbutton.left==true)||(tbutton.rotacion==true))
+		if ((tbutton.up==true)or(tbutton.down==true)or(tbutton.right==true)or(tbutton.left==true)or(tbutton.rotacion==true))
 		{
 		  move();
 		}

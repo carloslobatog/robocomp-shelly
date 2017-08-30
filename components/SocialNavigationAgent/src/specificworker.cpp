@@ -96,6 +96,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	//Proxies for SocialRules
 	sr.socialnavigationgaussian_proxy=socialnavigationgaussian_proxy;
 	sr.agmexecutive_proxy=agmexecutive_proxy;
+	sr.mux=mutex;
 	
 	return true;
 }
@@ -107,12 +108,17 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 */
 void SpecificWorker::compute( )
 {
+	QMutexLocker locker(mutex);
+
 	bool sendChangesAGM = false;
 	static bool first=true;
+	
 	if (first)
 	{	
 		qLog::getInstance()->setProxy("both", logger_proxy);
 		rDebug2(("SocialnavigationAgent started"));
+		changepos=true;
+		
 	}
 	
 	AGMModel::SPtr newM(new AGMModel(worldModel));
@@ -131,6 +137,7 @@ void SpecificWorker::compute( )
 // 	}
 
 	//Check if the person is in the model
+	
  	for (int i=0;i<pn.size();i++)
 	{
 
@@ -162,7 +169,6 @@ void SpecificWorker::compute( )
 		totalpersons.clear();
 		
 		for (int ind=0;ind<pn.size();ind++)
-	
 		{
 			if (pn[ind])
 			{
@@ -178,7 +184,8 @@ void SpecificWorker::compute( )
 				if (totalaux.empty())
 				{
 					//This must be changed. If the first human to be inserted is human2 it would be wrong
-					totalaux.push_back(person);
+					//totalaux.push_back(person);
+					totalaux[ind]=person;
 					movperson=true;
 				}
 				else if  (movperson==false)
@@ -191,11 +198,13 @@ void SpecificWorker::compute( )
 				}
 				
 				try
-				{
+				{	
+					qDebug()<<"------------------------------------------------";
 					if (sr.checkHRI(person,ind+1,innerModel,newM) == true)
 					{	
 						qDebug()<<"SEND MODIFICATION PROPOSAL";
 						sendChangesAGM = true;
+						
 					}
 					else 
 						qDebug()<<"NO HAY MODIFICACION";
@@ -257,14 +266,15 @@ void SpecificWorker::compute( )
 	
 	//qDebug()<<"Update actionEx";
 	//aE.Update(action,params);
+	
 	if (sendChangesAGM)
 	{	
+		qDebug()<<"WTF";
 		try
 		{
 			newM->save("agmmod.xml");
-			sendModificationProposal(worldModel,newM,"m");
+			sendModificationProposal(newM,worldModel,"m");
 			worldModel->save("agmdespuesmod.xml");
-			std::abort();
 		
 		}
 		catch(...)
@@ -591,27 +601,33 @@ bool SpecificWorker::setParametersAndPossibleActivation(const ParameterMap &prs,
 void SpecificWorker::sendModificationProposal(AGMModel::SPtr &newModel, AGMModel::SPtr &worldModel, string m)
 {
 	QMutexLocker locker(mutex);
-
-	try
-	{	
-		qDebug()<<"trying publishModification";
-		AGMMisc::publishModification(newModel, agmexecutive_proxy, std::string( "SocialnavigationAgent")+m);
-		qDebug()<<"publishModification okeeeey";
-		
-	}
-	catch(const RoboCompAGMExecutive::Locked &e)
+	int tries = 0;
+	while (tries<5)
 	{
-	}
-	catch(const RoboCompAGMExecutive::OldModel &e)
-	{
-		printf("modelo viejo\n");
-	}
-	catch(const RoboCompAGMExecutive::InvalidChange &e)
-	{
-		printf("modelo invalido\n");
-	}
-	catch(const Ice::Exception& e)
-	{
-		exit(1);
+		tries++;
+		try
+		{	
+			qDebug()<<"trying publishModification";
+			AGMMisc::publishModification(newModel, agmexecutive_proxy, std::string( "SocialnavigationAgent")+m);
+			qDebug()<<"publishModification okeeeey";
+			break;
+		}
+		catch(const RoboCompAGMExecutive::Locked &e)
+		{
+		}
+		catch(const RoboCompAGMExecutive::OldModel &e)
+		{
+			printf("modelo viejo\n");
+			break;
+		}
+		catch(const RoboCompAGMExecutive::InvalidChange &e)
+		{
+			printf("modelo invalido\n");
+			break;
+		}
+		catch(const Ice::Exception& e)
+		{
+			exit(1);
+		}
 	}
 }

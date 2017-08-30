@@ -63,10 +63,10 @@ public:
 	int32_t pSymbolId[6];
 	
 	SNGPerson person;
-	SNGPerson personaux;
+//	SNGPerson personaux;
 // 	SNGPersonSeq totalp; // quiet person
 // 	SNGPersonSeq totalpmov; //moving person
-	SNGPersonSeq totalaux; //to check if the person has changed its position
+	SNGPersonSeq totalaux = {person,person,person,person,person,person}; //to check if the person has changed its position
 	
 	//bool para saber si se ha movido alguna persona
 	bool movperson = false;

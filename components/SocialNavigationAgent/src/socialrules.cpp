@@ -108,23 +108,29 @@ SNGPolylineSeq SocialRules::objectInteraction(bool d)
 
 bool SocialRules::checkHRI(SNGPerson p, int ind, InnerModel *i, AGMModel::SPtr w)
 {	
+
 	bool changes = false;
 	/////////////////////Checking if the person is close and looking at the robot
 	std::string type = "person" + std::to_string(ind);
 	std::string name = "fakeperson" + std::to_string(ind);
-	
+		
+	qDebug()<<QString::fromStdString(type)<<"-"<<QString::fromStdString(name);
+
 	bool looking = false;
 	bool close = false;
-	
+
+
+	mux->lock();
 	QVec pose = i->transform(QString::fromStdString(name),"robot");
-	
+	mux->unlock();
+
 	float dist = sqrt(pose.x()*pose.x()+pose.z()*pose.z());
 	float angle = atan2(pose.x(),pose.z());
 	
 	qDebug()<<"pose x"<<pose.x()<<"pose z"<<pose.z();
 	qDebug()<<"dist"<<dist<<"angle"<<abs(angle/0.0175);
 	
-	if (abs(angle)<30*0.0175)
+	if (abs(angle)<20*0.0175)
 	{
 		qDebug()<<"LOOOKING";
 		looking = true;
@@ -140,16 +146,14 @@ bool SocialRules::checkHRI(SNGPerson p, int ind, InnerModel *i, AGMModel::SPtr w
 	
 	int32_t Idperson = w->getIdentifierByType(type);
 	AGMModelSymbol::SPtr person = w->getSymbolByIdentifier(Idperson);
-	
 	int32_t Idrobot = w->getIdentifierByType("robot");
 	AGMModelSymbol::SPtr robot = w->getSymbolByIdentifier(Idrobot);
-	
+
 	if ((looking==true) and (close==true))
 	{
 		qDebug()<<"CERCA Y MIRANDO";
 		try
-		{
-			
+		{		
 			w->addEdge(person,robot, "interrupting");
 			qDebug()<<"SE AÑADE EL ENLACE";
 			changes = true;
@@ -158,15 +162,14 @@ bool SocialRules::checkHRI(SNGPerson p, int ind, InnerModel *i, AGMModel::SPtr w
 		{
 			qDebug()<<"EXISTE EL ENLACE";
 			changes = false;
-		}
-			
+		}		
 	}	
 	
 	else 
 	{	try
 		{
 			w->removeEdge(person,robot,"interrupting");
-			changes =true;
+			changes = true;
 		}
 		catch(...)
 		{
@@ -174,7 +177,6 @@ bool SocialRules::checkHRI(SNGPerson p, int ind, InnerModel *i, AGMModel::SPtr w
 			changes = false;
 		}
 	}
-	
 	return changes;
 }
 

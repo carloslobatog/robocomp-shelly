@@ -35,7 +35,7 @@ public:
 	AGMExecutivePrx agmexecutive_proxy;
 	
 	int prox = 0; //reading the slider
-	
+	QMutex *mux;
 
 	SNGPersonSeq quietperson; // quiet person
 	SNGPersonSeq movperson; //moving person
