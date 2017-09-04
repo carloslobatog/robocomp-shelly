@@ -84,7 +84,7 @@ void SpecificWorker::includeInRCIS()
 void SpecificWorker::includeInAGM()
 {
 	printf("includeInAGM begins\n");
-
+	
 	int idx=0;
 	while ((personSymbolId = worldModel->getIdentifierByType("person3", idx++)) != -1)
 	{
@@ -203,7 +203,7 @@ void SpecificWorker::includeInAGM()
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 {
 	try
-	{
+	{	
 		RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
 		structuralChange(w);
 	}
@@ -212,12 +212,8 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 		printf("The executive is probably not running, waiting for first AGM model publication...");
 	}
 
-	// Include person in RCIS
-	includeInRCIS();
-
-	// Include person in AGM
-	includeInAGM();
-
+	
+	
 	// Joystick
 	/*printf("Creating joystick...\n");
 	joystick = new QJoyStick("/dev/input/js0");
@@ -373,8 +369,8 @@ void SpecificWorker::move (){
 		edgeRT.attributes["rx"] = "0";
 		edgeRT.attributes["ry"] = float2str(humanRot);
 		edgeRT.attributes["rz"] = "0";
+		
 	
-			
 		AGMMisc::publishEdgeUpdate(edgeRT, agmexecutive_proxy);
 	 	
 }
@@ -384,21 +380,34 @@ void SpecificWorker::compute()
 
 {
 	QMutexLocker locker(mutex);
+	static bool first = true;
 	//static QTime lastCompute = QTime::currentTime();
+	
+	if (first)
+	{
+		worldModel->save("worldModel.xml");
+		// Include person in RCIS
+		includeInRCIS();
+		// Include person in AGM
+		includeInAGM();
+		first = false;
+		return;
+	}
 	
 		try
 		{
 		
 		    if ((tbutton.up==true)||(tbutton.down==true)||(tbutton.right==true)||(tbutton.left==true)||(tbutton.rotacion==true))
 		    {
-		      move();
+			
+			    move();
 		    }
 	    
 		}		
 		catch(...){}
 	
 	
-	
+
 	
 	
 
@@ -513,7 +522,7 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World &w)
 {
 	mutex->lock();
  	AGMModelConverter::fromIceToInternal(w, worldModel);
- 
+
 	delete innerModel;
 	innerModel = AGMInner::extractInnerModel(worldModel);
 	mutex->unlock();
@@ -600,7 +609,7 @@ bool SpecificWorker::setParametersAndPossibleActivation(const ParameterMap &prs,
 void SpecificWorker::sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel)
 {
 	try
-	{	qDebug()<<"Intentando sendModificationProposal";
+	{	
 		AGMMisc::publishModification(newModel, agmexecutive_proxy, "fakeHumanAgentAgent");
 		qDebug()<<"sendModificationProposal";
 	}

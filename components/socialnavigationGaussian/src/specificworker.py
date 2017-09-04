@@ -121,16 +121,16 @@ class Person(object):
         self.vel = vel
 
 
-    def draw(self, v,sigma_h,sigma_r,sigma_s,rot, drawPersonalSpace=False):
+    def draw(self, sigma_h,sigma_r,sigma_s,rot, drawPersonalSpace=False):
         #numero de curvas de contorno
-        nc = 10
-        if v <= 20:
-            aprox = 0
-        else:
-            if v == 100:
-                aprox = nc - 2
-            else:
-                aprox = int(v/10) - 1
+        # nc = 10
+        # if v <= 20:
+        #     aprox = 0
+        # else:
+        #     if v == 100:
+        #         aprox = nc - 2
+        #     else:
+        #         aprox = int(v/10) - 1
 
 
             #numero de curvas de contorno que se van a dibujar
@@ -153,10 +153,10 @@ class Person(object):
 
             ##PROBLEMICA -> a partir de nc> 4 dibuja una linea de menos. Por eso en el caso de que v==100 he puesto que aprox=nc-2
 
-            CS = plt.contour(X, Y, Z, nc)
+            CS = plt.contour(X, Y, Z, 10)
 
 
-            dat0 = CS.allsegs[aprox][0]
+            #dat0 = CS.allsegs[5][0]
 
             #print(dat0)
 
@@ -259,7 +259,7 @@ class SpecificWorker(GenericWorker):
     #
     # getPolyline
     #
-    def getPersonalSpace(self, persons, v, dibujar):
+    def getPersonalSpace(self, persons, prox, dibujar):
 
         plt.close('all')
        ##DESCOMENTAR EL FIGUREEE
@@ -271,7 +271,6 @@ class SpecificWorker(GenericWorker):
         #ax.grid(True)
       #  x = y = np.arange(-3.0, 3.0, 0.05)
       #  X, Y = np.meshgrid(x, y)
-
 
         ##Limites de la representacion
 
@@ -298,12 +297,14 @@ class SpecificWorker(GenericWorker):
         for p in persons:
             pn = Person(p.x, p.z, p.angle)
             #print('Pose x', pn.x, 'Pose z', pn.y, 'Rotacion', pn.th)
-            pn.draw(v,4,2,2*4/3,pi/2 - pn.th, drawPersonalSpace=dibujar)
+            pn.draw(4,2,2*4/3,pi/2 - pn.th, drawPersonalSpace=dibujar)
             #normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 2.0, 2.0, 2.0], elliptical=True))
             normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 4, 2, 2*4/3], elliptical=True))
         #print ("numero de gaussianas",len(normals))
 
-        h = 0.4
+        #h = 0.4
+        h = prox/100
+
         resolution = 0.1
         limits = [[lx_inf, lx_sup], [ly_inf, ly_sup]]
         _, z = Normal.makeGrid(normals, h, 2, limits=limits, resolution=resolution)
@@ -356,7 +357,7 @@ class SpecificWorker(GenericWorker):
 
         return polylines
 
-    def getPassOnRight(self, persons, v, dibujar):
+    def getPassOnRight(self, persons, prox, dibujar):
 
         plt.close("all")
 
@@ -371,14 +372,15 @@ class SpecificWorker(GenericWorker):
         for p in persons:
             pn = Person(p.x, p.z, p.angle, p.vel)
 
-            pn.draw(v,(50/((7*pn.vel/50)+43)*4), (50/((7*pn.vel/50)+43)*4)/2, 2*(50/((7*pn.vel/50)+43)*4)/3,pi/2-pn.th, drawPersonalSpace=dibujar)
-            pn.draw(v,4, 1.5, 10/3, pi - pn.th, drawPersonalSpace=dibujar)
+            pn.draw((50/((7*pn.vel/50)+43)*4), (50/((7*pn.vel/50)+43)*4)/2, 2*(50/((7*pn.vel/50)+43)*4)/3,pi/2-pn.th, drawPersonalSpace=dibujar)
+            pn.draw(4, 1.5, 10/3, pi - pn.th, drawPersonalSpace=dibujar)
 
             normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, (50/((7*pn.vel/50)+43)*4), (50/((7*pn.vel/50)+43)*4)/2, 2*(50/((7*pn.vel/50)+43)*4)/3], elliptical=True))
             normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th , 4, 1.5, 10/3], elliptical=True))
 
 
-        h = 0.4
+        #h = 0.4
+        h = prox / 100
         resolution = 0.1
         limits = [[lx_inf, lx_sup], [ly_inf, ly_sup]]
         _, z = Normal.makeGrid(normals, h, 2, limits=limits, resolution=resolution)

@@ -53,8 +53,8 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	//connect (proximidad,SIGNAL(sliderMoved()),this,SLOT(sliderM()));
 	
 	proximidad->QSlider::setMinimum (0);
-	proximidad->QSlider::setMaximum (100);	
-	proximidad->QSlider::setTracking (false);	
+	proximidad->QSlider::setMaximum (90);	
+	proximidad->QSlider::setTracking (true);	
 	proximidad->QSlider::setValue (50);
 	
 }		
@@ -155,7 +155,6 @@ void SpecificWorker::compute( )
 					pSymbolId[i]=personSymbolId;
 					changepos=true;
 					pn[i]=true;
-					
 					break;
 				}	  
 			}			
@@ -171,7 +170,9 @@ void SpecificWorker::compute( )
 		for (int ind=0;ind<pn.size();ind++)
 		{
 			if (pn[ind])
-			{
+			{	
+				
+				
 				AGMModelSymbol::SPtr personParent = newM->getParentByLink(pSymbolId[ind], "RT");
 				AGMModelEdge &edgeRT = newM->getEdgeByIdentifiers(personParent->identifier, pSymbolId[ind], "RT");
 				person.x = str2float(edgeRT.attributes["tx"])/1000;
@@ -196,6 +197,8 @@ void SpecificWorker::compute( )
 					totalaux[ind]=person;  	  
 					
 				}
+				
+				/////////////////////checking if the person is looking at the robot /////////////////////////
 				
 				try
 				{	
@@ -256,7 +259,7 @@ void SpecificWorker::compute( )
 		
 		catch( const Ice::Exception &e)
 		{ 
-// 			std::cout << e << std::endl;
+//			std::cout << e << std::endl;
 		}
 		
 	}	
@@ -269,18 +272,12 @@ void SpecificWorker::compute( )
 	
 	if (sendChangesAGM)
 	{	
-		qDebug()<<"WTF";
 		try
 		{
-			newM->save("agmmod.xml");
-			sendModificationProposal(newM,worldModel,"m");
-			worldModel->save("agmdespuesmod.xml");
+			sendModificationProposal(newM,worldModel,"-");
 		
 		}
-		catch(...)
-		{
-			qDebug ()<<"NO SE PUEEEE";
-		}
+		catch(...){}
 	}
 }
 	 	
@@ -601,33 +598,25 @@ bool SpecificWorker::setParametersAndPossibleActivation(const ParameterMap &prs,
 void SpecificWorker::sendModificationProposal(AGMModel::SPtr &newModel, AGMModel::SPtr &worldModel, string m)
 {
 	QMutexLocker locker(mutex);
-	int tries = 0;
-	while (tries<5)
-	{
-		tries++;
-		try
-		{	
-			qDebug()<<"trying publishModification";
-			AGMMisc::publishModification(newModel, agmexecutive_proxy, std::string( "SocialnavigationAgent")+m);
-			qDebug()<<"publishModification okeeeey";
-			break;
-		}
-		catch(const RoboCompAGMExecutive::Locked &e)
-		{
-		}
-		catch(const RoboCompAGMExecutive::OldModel &e)
-		{
-			printf("modelo viejo\n");
-			break;
-		}
-		catch(const RoboCompAGMExecutive::InvalidChange &e)
-		{
-			printf("modelo invalido\n");
-			break;
-		}
-		catch(const Ice::Exception& e)
-		{
-			exit(1);
-		}
+	
+	try
+	{	
+		AGMMisc::publishModification(newModel, agmexecutive_proxy, std::string( "SocialnavigationAgent")+m);
 	}
+	catch(const RoboCompAGMExecutive::Locked &e)
+	{
+	}
+	catch(const RoboCompAGMExecutive::OldModel &e)
+	{
+		printf("modelo viejo\n");
+	}
+	catch(const RoboCompAGMExecutive::InvalidChange &e)
+	{
+		printf("modelo invalido\n");
+	}
+	catch(const Ice::Exception& e)
+	{
+		exit(1);
+	}
+	
 }

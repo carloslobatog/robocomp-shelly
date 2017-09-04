@@ -42,7 +42,6 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 */
 SpecificWorker::~SpecificWorker()
 {
-	
 }
 
 void SpecificWorker::includeInRCIS()
@@ -382,7 +381,7 @@ void SpecificWorker::move (){
 	
 		
 		AGMMisc::publishEdgeUpdate(edgeRT, agmexecutive_proxy);
-	 	
+		
 }
 
 
@@ -397,8 +396,8 @@ void SpecificWorker::compute()
 		{
 		
 		if ((tbutton.up==true)or(tbutton.down==true)or(tbutton.right==true)or(tbutton.left==true)or(tbutton.rotacion==true))
-		{
-		  move();
+		{			
+			move();
 		}
 	
 		}
