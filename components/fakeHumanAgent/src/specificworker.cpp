@@ -20,8 +20,6 @@
 #include "specificworker.h"
 #include <qt4/QtGui/qdial.h>
 
-
-
 /**
 * \brief Default constructor
 */
@@ -44,7 +42,6 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 */
 SpecificWorker::~SpecificWorker()
 {
-	
 }
 
 void SpecificWorker::includeInRCIS()
@@ -384,7 +381,7 @@ void SpecificWorker::move (){
 	
 		
 		AGMMisc::publishEdgeUpdate(edgeRT, agmexecutive_proxy);
-	 	
+		
 }
 
 
@@ -398,9 +395,9 @@ void SpecificWorker::compute()
 		try
 		{
 		
-		if ((tbutton.up==true)||(tbutton.down==true)||(tbutton.right==true)||(tbutton.left==true)||(tbutton.rotacion==true))
-		{
-		  move();
+		if ((tbutton.up==true)or(tbutton.down==true)or(tbutton.right==true)or(tbutton.left==true)or(tbutton.rotacion==true))
+		{			
+			move();
 		}
 	
 		}

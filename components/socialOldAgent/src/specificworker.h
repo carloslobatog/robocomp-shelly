@@ -26,14 +26,7 @@
 #include <vector>
 #include <QFile>
 #include <innermodel/innermodel.h>
-
-
-//PROBLEMA: con python 3.5 da error al compilar
-
-#include <innermodel/innermodel.h>
-
 #include <boost/format.hpp>
-
 #define THRESHOLD 40
 
 /**
@@ -51,7 +44,7 @@ public:
 	~SpecificWorker();
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
 
-//bool para indicar si se ha movido la persona, lo utilizare para imprimir la coordenada de la persona cada vez que se mueva
+	//bool para indicar si se ha movido la persona, lo utilizare para imprimir la coordenada de la persona cada vez que se mueva
 	bool cambiopos=false;
 
 	SNGPolylineSeq secuencia,secuencia2,secuenciaObj;
@@ -61,19 +54,16 @@ public:
 
 	SNGPerson robot;
 	
-	SNGPerson object;
+	SNGObject object;
+	SNGObjectSeq objects;
 	//estas guardaran la posicion anterior de cada persona, para comprobar si se ha movido
 
 	//bool para saber si se ha movido alguna persona
 	bool movperson = false;
 
 	//PARA ALMACENAR EL SIMBOLO DE LA PERSONA AL LEERLA DEL MUNDO
-	
 	int32_t robotSymbolId;
 	
-	//chaaaanges
-	//bool pn[6] = {};
-	//bool ppn[6] = {};
 	vector <bool> pn = {false,false,false,false,false,false}; 
 	vector <bool> ppn = {false,false,false,false,false,false}; 
 	
@@ -87,8 +77,10 @@ public:
 	
 	
 	int32_t objectSymbolId;
-	int32_t objectSymbolId1;
-	//BOOL PARA COMPROBAR SI LA PERSONA ESTA EN EL MUNDO
+
+	
+	bool staticperson = false;
+	bool movingperson = false;
 
 
 	//RoboCompInnerModelManager::Pose3D pose;
@@ -108,10 +100,8 @@ public:
 	//PARA GUARDAR LA DISTANCIA RECORRIDA
 	float totaldist=0;
 
-	//PARA COMPROBAR SI DOS PERSONAS ESTAN HABLANDO. ya no se usa
-	bool conversation = false;
-	bool checkconversation();
-
+	void addObjects();
+      
 
 
 	//////////////
@@ -140,7 +130,6 @@ public slots:
 	SNGPolylineSeq gauss(bool dibujar=true);
 	SNGPolylineSeq gausspor(bool dibujar=true);
 	SNGPolylineSeq objectInteraction(bool dibujar = true);
-	void addObjects();
 	void cambiarvalor(int valor);
 	void grabarfichero();
 

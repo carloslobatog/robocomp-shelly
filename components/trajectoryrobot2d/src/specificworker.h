@@ -101,6 +101,7 @@ class SpecificWorker : public GenericWorker
 {
 	Q_OBJECT
 	public:
+	
 		SpecificWorker(MapPrx& mprx, QWidget *parent = 0);
 		~SpecificWorker();
 		bool setParams(RoboCompCommonBehavior::ParameterList params);
@@ -216,7 +217,6 @@ class SpecificWorker : public GenericWorker
 		 */
 		QTime relojForInputRateControl;  //used to limit input frequency
 		QTime taskReloj;  //Measures duration of commands
-
 
 		////////////////////////////////////////////////////////////////////////
 		//Commands corresponding to servant methods, but running on local thread

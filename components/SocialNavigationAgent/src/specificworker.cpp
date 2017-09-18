@@ -16,12 +16,10 @@
  *    You should have received a copy of the GNU General Public License
  *    along with RoboComp.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #include "specificworker.h"
 #include <math.h> 
 
 #define PI M_PI
-
 
 /**
  * \brief Default constructor
@@ -29,6 +27,7 @@
 
 SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 {
+	
 	active = false;
 	active = false;	
 	worldModel = AGMModel::SPtr(new AGMModel());
@@ -38,20 +37,22 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	// 	world = AGMModel::SPtr(new AGMModel());
 
 	//Timed slot to read TrajectoryRobot2D state
-	connect(&trajReader, SIGNAL(timeout()), this, SLOT(readTrajState()));
-	//Dibujar gaussiana
-	connect(gaussiana,SIGNAL(clicked()),this, SLOT(gauss()));
-	//Sacar la pose del robot
+	connect(&trajReader, SIGNAL(timeout()), &aE, SLOT(readTrajState()));
+
+	connect(gaussiana,SIGNAL(clicked()),&sr, SLOT(gauss()));
+	connect(por,SIGNAL(clicked()),&sr, SLOT(PassOnRight()));
+	connect(objint,SIGNAL(clicked()),&sr, SLOT(objectInteraction()));
+	
 	connect(datos,SIGNAL(clicked()),this, SLOT(savedata()));
 	//trajReader.start(1000);
 
 	//SLIDER
-	connect (proximidad,SIGNAL(valueChanged(int)),this,SLOT(changevalue(int)));
+	connect (proximidad,SIGNAL(valueChanged(int)),&sr,SLOT(changevalue(int)));
 	//connect (proximidad,SIGNAL(sliderMoved()),this,SLOT(sliderM()));
 
 	proximidad->QSlider::setMinimum (0);
-	proximidad->QSlider::setMaximum (100);	
-	proximidad->QSlider::setTracking (false);	
+	proximidad->QSlider::setMaximum (90);	
+	proximidad->QSlider::setTracking (true);	
 	proximidad->QSlider::setValue (50);
 
 }		
@@ -70,13 +71,17 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	
 	try
 	{		
-			RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
-			AGMModelConverter::fromIceToInternal(w, worldModel);
+//		RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
+//		AGMModelConverter::fromIceToInternal(w, worldModel);
   		//innerModel = AGMInner::extractInnerModel(worldModel, "world", false);
 			//		structuralChange(w);
-		rDebug2(("Extracting InnerModel"));	
-	}
+//		rDebug2(("Extracting InnerModel"));	
+	
+//		RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
+//		structuralChange(w);
+	}		
 	catch(...)
+	{
 	{	rDebug2(("The executive is probably not running, waiting for first AGM model publication...")); }
 	
 // 	if( innerModel == nullptr)
@@ -107,9 +112,20 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 
 	Period = 200;
 	timer.start(Period);
+
+
+	//Proxies for actionExecution
+	aE.logger_proxy = logger_proxy;
+	aE.agmexecutive_proxy = agmexecutive_proxy;
+	aE.omnirobot_proxy = omnirobot_proxy;
+	aE.trajectoryrobot2d_proxy = trajectoryrobot2d_proxy;
+	//Proxies for SocialRules
+	sr.socialnavigationgaussian_proxy=socialnavigationgaussian_proxy;
+	sr.agmexecutive_proxy=agmexecutive_proxy;
+	sr.mux=mutex;
+	
 	return true;
 }
-
 
 /**
  * \brief Check if persons are included in the AGM. 
@@ -141,6 +157,19 @@ void SpecificWorker::compute( )
 	
 	
 	//qDebug() << SpecificWorker::compute";
+	bool sendChangesAGM = false;
+	static bool first=true;
+	
+	if (first)
+	{	
+		qLog::getInstance()->setProxy("both", logger_proxy);
+		rDebug2(("SocialnavigationAgent started"));
+		changepos=true;
+		
+	}
+	
+	AGMModel::SPtr newM(new AGMModel(worldModel));
+
 // 	if (worldModel->getIdentifierByType("robot") < 0)
 // 	{ 
 // 		try 
@@ -304,6 +333,152 @@ void SpecificWorker::changevalue(int value)
  * \brief This is for saving in txt files different informations (robotpose,personpose,polylines and dist)
  */
 
+	//Check if the person is in the model
+	
+ 	for (int i=0;i<pn.size();i++)
+	{
+
+		if (pn[i]==false)
+		{	
+			std::string type = "person" + std::to_string(i+1);
+			std::string name = "fakeperson" + std::to_string(i+1);
+			
+			int idx=0;
+			while ((personSymbolId = newM->getIdentifierByType(type, idx++)) != -1)
+			{
+				if (idx > 4) exit(0);
+				if (newM->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
+				{
+					pSymbolId[i]=personSymbolId;
+					changepos=true;
+					pn[i]=true;
+					break;
+				}	  
+			}			
+		}
+	}
+
+//If a person has moved its pose it is updated reading it from the AGM again.
+
+	if (changepos)
+	{
+		totalpersons.clear();
+		
+		for (int ind=0;ind<pn.size();ind++)
+		{
+			if (pn[ind])
+			{	
+				
+				
+				AGMModelSymbol::SPtr personParent = newM->getParentByLink(pSymbolId[ind], "RT");
+				AGMModelEdge &edgeRT = newM->getEdgeByIdentifiers(personParent->identifier, pSymbolId[ind], "RT");
+				person.x = str2float(edgeRT.attributes["tx"])/1000;
+				person.z = str2float(edgeRT.attributes["tz"])/1000;
+				person.angle = str2float(edgeRT.attributes["ry"]);
+	 			//person.vel=str2float(edgeRT.attributes["velocity"]);			
+				person.vel=0;
+				totalpersons.push_back(person);		
+				qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << "Rotacion "<< person.angle/0.0175;			
+				if (totalaux.empty())
+				{
+					//This must be changed. If the first human to be inserted is human2 it would be wrong
+					//totalaux.push_back(person);
+					totalaux[ind]=person;
+					movperson=true;
+				}
+				else if  (movperson==false)
+				{
+					if ((totalaux[ind].x!=person.x)or(totalaux[ind].z!=person.z)or(totalaux[ind].angle!=person.angle))
+						movperson = true;
+			
+					totalaux[ind]=person;  	  
+					
+				}
+				
+				/////////////////////checking if the person is looking at the robot /////////////////////////
+				
+				try
+				{	
+					qDebug()<<"------------------------------------------------";
+					if (sr.checkHRI(person,ind+1,innerModel,newM) == true)
+					{	
+						qDebug()<<"SEND MODIFICATION PROPOSAL";
+						sendChangesAGM = true;
+						
+					}
+					else 
+						qDebug()<<"NO HAY MODIFICACION";
+				}
+				catch(...)
+				{
+			
+				}
+			}
+		}
+		
+		robotSymbolId = newM->getIdentifierByType("robot");
+		AGMModelSymbol::SPtr robotparent = newM->getParentByLink(robotSymbolId, "RT");
+		AGMModelEdge &edgeRTrobot  = newM->getEdgeByIdentifiers(robotparent->identifier, robotSymbolId, "RT");
+			
+		robot.x=str2float(edgeRTrobot.attributes["tx"])/1000;
+		robot.z=str2float(edgeRTrobot.attributes["tz"])/1000;
+		robot.angle=str2float(edgeRTrobot.attributes["ry"]);
+
+		point.x=robot.x;
+		point.z=robot.z;
+		 
+		if (poserobot.size()==0)
+			poserobot.push_back(point);
+	  
+		else if ((poserobot[poserobot.size()-1].x!=point.x)or(poserobot[poserobot.size()-1].z!=point.z))		  
+		{  
+		  float  dist=sqrt((point.x - poserobot[poserobot.size()-1].x)*(point.x - poserobot[poserobot.size()-1].x)
+				+(point.z - poserobot[poserobot.size()-1].z)*(point.z - poserobot[poserobot.size()-1].z));
+		    
+		  totaldist=totaldist + dist;
+		  qDebug()<<"Distancia calculada"<<dist<<"Distancia total"<<totaldist;
+		    
+		  poserobot.push_back(point);  
+		}		 	
+		
+		first = false;
+		changepos=false;	
+	}
+		  
+	if (movperson)
+	{
+	
+		try
+		{
+			RoboCompTrajectoryRobot2D::PolyLineList list = sr.ApplySocialRules(totalpersons);
+			trajectoryrobot2d_proxy->setHumanSpace(list);
+		}
+		
+		catch( const Ice::Exception &e)
+		{ 
+//			std::cout << e << std::endl;
+		}
+		
+	}	
+	
+	
+	movperson=false;
+	
+	//qDebug()<<"Update actionEx";
+	//aE.Update(action,params);
+	
+	if (sendChangesAGM)
+	{	
+		try
+		{
+			sendModificationProposal(newM,worldModel,"-");
+		
+		}
+		catch(...){}
+	}
+}
+	 	
+
 void SpecificWorker::savedata()
 {
 
@@ -463,15 +638,48 @@ void SpecificWorker::actionExecution()
 	QMutexLocker locker(mutex);
 	qDebug() << "---------------------------------------------------";
 	qDebug() <<__FUNCTION__ <<"Checking ACTION: " << QString::fromStdString(action);
-
-	static std::string previousAction = "";
-	bool newAction = (previousAction != action);
-
-	if (newAction)
-	{
-		printf("prev:%s  new:%s\n", previousAction.c_str(), action.c_str());
-		rDebug2(("action %s") % action.c_str() );
+			QVec normal = (cpoint-ppoint);
+			float dist=normal.norm2();	
+			float temp = normal(2);
+			normal(2) = normal(0);
+			normal(0) = -temp;
+		
+			if (innerModel->getNode(name))
+			{
+				try
+				{
+					innerModel->removeNode(name);
+				}
+				  
+				catch(QString es){ qDebug() << "EXCEPCION" << es;}
+			}
+			
+			InnerModelNode *parent = innerModel->getNode(QString("world"));			
+			if (parent == NULL)
+				printf("%s: parent does not exist\n", __FUNCTION__);
+			else
+			{			
+				InnerModelPlane *plane;
+				try
+				{
+					plane  = innerModel->newPlane(name, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
+					parent->addChild(plane); 
+				}
+				catch(QString es)
+				{ 
+					qDebug() << "EXCEPCION" << es;}
+				}
+			count++;
+			previousPoint=currentPoint;
+		}
 	}
+	
+}	
+
+
+// *****************************************************************************************++
+// AGENT RELATED
+// **********************************************************************************************
 
 	if (action == "changeroom")
 	{
@@ -510,32 +718,35 @@ void SpecificWorker::actionExecution()
 		action_HandObject_Offer();
 	}
 	else if (action == "handobject_leave")
+bool SpecificWorker::activateAgent(const ParameterMap& prs)
+{
+	bool activated = false;
+	printf("<<activateAgent\n");
+	if (setParametersAndPossibleActivation(prs, activated))
 	{
-		action_HandObject_leave();
+			if (not activated)
+			{
+				printf("activateAgent 0 >>\n");
+				return activate(p);
+			}
 	}
-	if (newAction)
+	else
 	{
-		previousAction = action;
-		printf("New action: %s\n", action.c_str());
+		printf("activateAgent 1 >>\n");
+		return false;
 	}
 	manageReachedPose();
 	// 	printf("actionExecution>>\n");
+	printf("activateAgent 2 >>\n");
+	return true;
 }
 
-void SpecificWorker::action_HandObject_leave(bool newAction)
+bool SpecificWorker::deactivateAgent()
 {
-	try
-	{	
-		//trajectoryrobot2d_proxy->stop();
-		//omnirobot_proxy->setSpeedBase(0.,0.,0.0);
-	}
-	catch(...)
-	{
-		printf("Can't stop the robot!!\n");
-	}
+		return deactivate();
 }
 
-void SpecificWorker::action_DetectPerson(bool newAction)
+StateStruct SpecificWorker::getAgentState()
 {
 
 	static bool b=false;
@@ -545,53 +756,38 @@ void SpecificWorker::action_DetectPerson(bool newAction)
 		b=true;
 	}
 	try
+	StateStruct s;
+	if (isActive())
 	{
-		omnirobot_proxy->setSpeedBase(0.,0.,0.1);
+		s.state = Running;
 	}
-	catch(...)
+	else
 	{
-		printf("Can't connect to the robot!!\n");
+		s.state = Stopped;
 	}
-
+	s.info = p.action.name;
+	return s;
 }
 
-/////////////////////////////////////////////////////////////
-// Slots
-/////////////////////////////////////////////////////////////
-
-void SpecificWorker::readTrajState()
+ParameterMap SpecificWorker::getAgentParameters()
 {
-	try
-	{
-		//planningState = trajectoryrobot2d_proxy->getState();
-		std::cout << "State:" + planningState.state + ". Description: " + planningState.description << std::endl;
-	}
-	catch(const Ice::Exception &ex)
-	{
-		std::cout << ex << "Error talking to TrajectoryRobot2D" <<  std::endl;
-	}
-	catch(...)
-	{
-		printf("something else %d\n", __LINE__);
-	}
+	return params;
 }
 
-void SpecificWorker::action_HandObject(bool newAction)
+bool SpecificWorker::setAgentParameters(const ParameterMap& prs)
 {
-	// Get symbols' map
-	std::map<std::string, AGMModelSymbol::SPtr> symbols;
-	try
-	{
-		symbols = worldModel->getSymbolsMap(params/*,  "robot", "room", "object", "status"*/); //ALL THE SYMBOLS GIVEN IN THE RULE
-	}
-	catch(...)
-	{
-		printf("navigationAgent, action_HandObject: Couldn't retrieve action's parameters\n");
-		printf("<<WORLD\n");
-		AGMModelPrinter::printWorld(worldModel);
-		printf("WORLD>>\n");
-		if (worldModel->size() > 0) { exit(-1); }
-	}
+	bool activated = false;
+	return setParametersAndPossibleActivation(prs, activated);
+}
+
+void SpecificWorker::killAgent()
+{
+}
+
+Ice::Int SpecificWorker::uptimeAgent()
+{
+	return 0;
+}
 
 	// Get target
 	int roomID, personID, robotID;
@@ -711,8 +907,28 @@ void SpecificWorker::action_HandObject(bool newAction)
 		std::cout << ex << std::endl;
 	}
 
-
+bool SpecificWorker::reloadConfigAgent()
+{
+	return true;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modification)
+{	qDebug()<<"StructuralChange";
+	printf("pre <<structuralChange\n");
+	QMutexLocker l(mutex);
+	printf("<<structuralChange\n");
+
+	AGMModelConverter::fromIceToInternal(modification, worldModel);
+	
+	//if (roomsPolygons.size()==0 and worldModel->numberOfSymbols()>0)
+		//roomsPolygons = extractPolygonsFromModel(worldModel);
+
+	if (innerModel) delete innerModel;
+	
+	innerModel = AGMInner::extractInnerModel(worldModel, "world", false);
 
 /**
  *  \brief Called when the robot is sent close to a person to offer the object
@@ -1524,6 +1740,10 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 // 		printf("structuralChange>>\n");
 // 		firsttime = false;
 // 	}
+	changepos=true;
+	
+	printf("structuralChange>>\n");
+	
 }
 void SpecificWorker::symbolUpdated(const RoboCompAGMWorldModel::Node& modification)
 {
@@ -1558,7 +1778,6 @@ void SpecificWorker::edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &mod
 // 		updateRobotPosition();
 // 	}
 }
-
 
 /**
  * \brief ACTUALIZACION DEL ENLACE EN INNERMODEL
@@ -1628,22 +1847,25 @@ bool SpecificWorker::setParametersAndPossibleActivation(const ParameterMap &prs,
 void SpecificWorker::sendModificationProposal(AGMModel::SPtr &newModel, AGMModel::SPtr &worldModel, string m)
 {
 	QMutexLocker locker(mutex);
-
+	
 	try
-	{
-		AGMMisc::publishModification(newModel, agmexecutive_proxy, std::string( "graspingAgent")+m);
+	{	
+		AGMMisc::publishModification(newModel, agmexecutive_proxy, std::string( "SocialnavigationAgent")+m);
 	}
 	catch(const RoboCompAGMExecutive::Locked &e)
 	{
 	}
 	catch(const RoboCompAGMExecutive::OldModel &e)
 	{
+		printf("modelo viejo\n");
 	}
 	catch(const RoboCompAGMExecutive::InvalidChange &e)
 	{
+		printf("modelo invalido\n");
 	}
 	catch(const Ice::Exception& e)
 	{
 		exit(1);
 	}
+	
 }

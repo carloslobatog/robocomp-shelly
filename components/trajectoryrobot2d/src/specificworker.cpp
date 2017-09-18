@@ -42,8 +42,8 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	try
 	{
 		innerModel = new InnerModel(params.at("InnerModel").value);
-		innerModel->getNode<InnerModelJoint>("armX1")->setAngle(-1);
-		innerModel->getNode<InnerModelJoint>("armX2")->setAngle(2.5);
+		innerModel->getNode<InnerModelJoint>("armX1")->setAngle(0); //setAngle(-1);
+		innerModel->getNode<InnerModelJoint>("armX2")->setAngle(0); //setAngle(2.5);
 #ifdef USE_QTGUI
 		viewer = new InnerViewer(innerModel);  // makes a copy of innermodel for internal use
 #endif
@@ -102,31 +102,32 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 
 void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 {	
- 	if (innerModel) delete innerModel;
- 	innerModel= new InnerModel(params.at("InnerModel").value);
-	
+  	if (innerModel) delete innerModel;
+  	innerModel= new InnerModel(params.at("InnerModel").value);
+  
 	qDebug() << __FUNCTION__ << "updateObstacles";
 	//Borrar todos los newpolyline_obs_X que existan del innermodel y del innermodel viewer
 	
-	//Crear obs por cada polinenaf
+	///////////////////////////////removing/////////////////////////
 	for (int i=0; i<100; i++)
 	{
 		QString cadena = QString("polyline_obs_") + QString::number(i,10);
 		//printf("puntero a %s: %p\n", cadena.toStdString().c_str(), viewer->innerModel->getNode(cadena));
-
-		//qDebug() << __FUNCTION__ <<"intentamos borrar "<<cadena;
-// 		if (innerModel->getNode(cadena))
-// 				innerModel->removeNode(cadena);
 		
+		//qDebug() << __FUNCTION__ <<"intentamos borrar "<<cadena;
+		if (innerModel->getNode(cadena))
+				innerModel->removeNode(cadena);
+		
+		  
 		if (not InnerModelDraw::removeObject(viewer->innerViewer, cadena) )
 		{
 		//	printf("removeObject devuelve falso\n");
 			break;
- 		}
- 		
+ 		}	
 	}
-
-		
+	
+	///////////////////////////////adding/////////////////////////
+	
 	int count = 0;
 	
 	for (auto poly:polylines)
@@ -152,18 +153,7 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
  			InnerModelDraw::addPlane_ignoreExisting(viewer->innerViewer, cadena, QString("world"), center, normal,  QString("#FFFF00"), QVec::vec3(dist,2000,90));
 		
 // 			////////////////////////////////////////////////////////////////
-			
-			
-			//qDebug()<<"INCLUIMOS EN INNERMODEL";
-			if (innerModel->getNode(cadena)!= NULL)
-			{		
-			qDebug()<<"Eliminamos "<<cadena;  
-			
-			innerModel->removeNode(cadena);
-
-							
-			}
-			
+		
 	
 			InnerModelNode *parent = innerModel->getNode(QString("world"));			
 			if (parent == NULL)
@@ -180,9 +170,8 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 					{
 					plane  = innerModel->newPlane(cadena, parent, QString("#FFFF00"), dist, 2000, 90, 1,
 							normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
-					qDebug()<<"Nueva"<<cadena; 
+					//qDebug()<<"Nueva"<<cadena; 
 					
-		
 					parent->addChild(plane); 
 					}
 					
@@ -199,8 +188,7 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 		}
 	}
 	
-	innerModel->save("guardoinner.xml");
-
+	
 }
 		
 
@@ -248,15 +236,18 @@ void SpecificWorker::compute()
 		qDebug()<<"LLamamos a updateObstacles";
 		updateObstacles(safePolyList.read());
 		qDebug()<<"Salimos e UpdateObstacles";
-	
 		
 		qDebug()<<"Llamamos a Sampler.initialize";
 		sampler.initialize(innerModel, params);
 		qDebug()<<"Salimos de Sampler.initialize";
+		
+		qDebug()<<"Llamamos a myRoad.initialize";
+		road.initialize(innerModel, params);
+		qDebug()<<"Salimos de myRoad.initialize";
+		
+		
 		newPolyline = false;
 	
-		////SE CIERRA CADA VEZ QUE LLAMAMOS AL SAMPLER.INITIALIZE UNA VEZ QUE SE HA AÑADIDO LA POLILINEA EN EL INNERMODEL
-		//printf("%p %p\n", innerModel, sampler.innerModelSampler);
 	
 		
 	}
@@ -378,7 +369,7 @@ bool SpecificWorker::stopCommand(CurrentTarget &target, WayPoints &myRoad, Traje
  * @return bool
  */
 bool SpecificWorker::changeTargetCommand(InnerModel *innerModel, CurrentTarget &target, TrajectoryState &state,
-                                         WayPoints &myRoad)
+                                         WayPoints &)
 {
 	//DEPRECATED
 	qDebug() << __FUNCTION__ << "DEPRECATED";
@@ -495,13 +486,15 @@ SpecificWorker::gotoCommand(InnerModel *innerModel, CurrentTarget &target, Traje
 	///////////////////////////////////
 	// compute all measures relating the robot to the road
 	/////////////////////////////////
+	qDebug()<<"llamamos a myroad.update";
 	myRoad.update();
-
+	qDebug()<<"salimos de myroad.update";
 	//myRoad.printRobotState(innerModel, target);
 
 	/////////////////////////////////////////////////////
 	//move the robot according to the current force field
 	//////////////////////////////////////////////////////
+	qDebug()<<"llamamos a controller";
 	controller->update(innerModel, lData, omnirobot_proxy, myRoad, true);
 
 	

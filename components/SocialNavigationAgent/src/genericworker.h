@@ -88,8 +88,8 @@ public:
 	OmniRobotPrx omnirobot_proxy;
 	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;
 	LaserPrx laser_proxy;
-	LoggerPrx logger_proxy;
 	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
+	LoggerPrx logger_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 
 	virtual bool reloadConfigAgent() = 0;

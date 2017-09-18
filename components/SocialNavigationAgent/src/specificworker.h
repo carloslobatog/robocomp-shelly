@@ -27,6 +27,8 @@
 #include <QFile>
 #include "pathfinder.h"
 #include <innermodel/innermodelmgr.h>
+#include <actionexecution.h>
+#include <socialrules.h>
 
 //PROBLEMA: con python 3.5 da error al compilar
 
@@ -59,52 +61,38 @@ public:
 	bool changepos=false;
 	
 	SNGPolylineSeq sequence;
-	
 	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
 	SNGPersonSeq totalpersons; //este es para leer el fichero
-	SNGPerson robot;
-	// to check if the person is in the world
-	vector <bool> pn = {false,false,false,false,false,false};  
-	// if the person is moving
-	vector <bool> ppn = {false,false,false,false,false,false};  
+	SNGPerson robot;	
+	vector <bool> pn = {false,false,false,false,false,false};  // to check if the person is in the world	
+	//vector <bool> ppn = {false,false,false,false,false,false};  // if the person is moving
 	int32_t personSymbolId;
 	int32_t pSymbolId[6];
+	
 	SNGPerson person;
-	SNGPerson personaux;
-	SNGPersonSeq totalp; // quiet person
-	SNGPersonSeq totalpmov; //moving person
-	SNGPersonSeq totalaux; //to check if the person has changed its position
+//	SNGPerson personaux;
+// 	SNGPersonSeq totalp; // quiet person
+// 	SNGPersonSeq totalpmov; //moving person
+	SNGPersonSeq totalaux = {person,person,person,person,person,person}; //to check if the person has changed its position
 	
 	//bool para saber si se ha movido alguna persona
 	bool movperson = false;
-	
-	
-	int32_t robotSymbolId;
-	
-
-
-	//PARA GUARDAR LOS DATOS EN UN ARCHIVO
-
-	struct Point {
+	int32_t robotSymbolId;	
+    
+	struct Point { //PARA GUARDAR LOS DATOS EN UN ARCHIVO
 	  float x;
 	  float z;
 	};
 	Point point;
 	vector <Point> poserobot;
 	
-	//PARA LEER EL VALOR DEL SLIDER
-	int prox = 0;
-
-	
 	//PARA GUARDAR LA DISTANCIA RECORRIDA
 	float totaldist=0;
 	
-	//PARA COMPROBAR SI DOS PERSONAS ESTAN HABLANDO. ya no se usa
-	bool conversation = false;
-	bool checkconversation();
-
-	int i = 0;
+	ActionExecution aE; //Class ActionExecution
+	SocialRules sr; //Class SocialRules
 	
+	bool staticperson = false;
 	///////////////////////////////////////////////////////////////////////////
 	/// SERVANTS
 	//////////////////////////////////////////////////////////////////////////
@@ -137,9 +125,9 @@ public:
 	
 public slots:
  	void compute();
-	void readTrajState();
-	SNGPolylineSeq gauss(bool dibujar=true);
-	void changevalue(int valor);
+	//void readTrajState();
+// 	SNGPolylineSeq gauss(bool draw=true);
+// 	void changevalue(int value);
 	void savedata();
 	void UpdateInnerModel(SNGPolylineSeq seq);
 
@@ -148,12 +136,8 @@ private:
 	bool setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated);
 	bool active;
 	void sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel,std::string m);
-	void includeMovementInRobotSymbol(AGMModelSymbol::SPtr robot);
-	void go(float x, float z, float alpha=0, bool rot=false, float xRef=0, float zRef=0, float threshold=200);
-	void stopL();
-	void actionExecution();
-	int32_t getIdentifierOfRobotsLocation(AGMModel::SPtr &worldModel);
-	void setIdentifierOfRobotsLocation(AGMModel::SPtr &worldModel, int32_t identifier);
+	
+private:
 	std::string action;
 	ParameterMap params;
 	AGMModel::SPtr worldModel;
@@ -174,20 +158,6 @@ private:
 	RoboCompGenericBase::TBaseState bState;
 	InnerModelMgr innerModel;
 	
-	void manageReachedPose();
-	float distanceToNode(std::string reference_name, AGMModel::SPtr model, AGMModelSymbol::SPtr object);
-	void action_WaitingToAchieve();
-	void action_Stop(bool newAction = true);
-	void action_ReachPose(bool newAction = true);
-	void action_ChangeRoom(bool newAction = true);
-	void action_FindObjectVisuallyInTable(bool newAction = true);
-	void action_SetObjectReach(bool newAction = true);
-//	void action_GraspObject(bool newAction = true);
-	void action_DetectPerson (bool newAction = true);
-	void action_HandObject(bool newAction = true);
-	void action_NoAction(bool newAction = true);
-	void action_HandObject_Offer(bool newAction = true);
-	void action_HandObject_leave(bool newAction = true);
 //CHECK
 	//void updateRobotsCognitiveLocation();
 //	std::map<int32_t, QPolygonF> roomsPolygons;
@@ -195,50 +165,6 @@ private:
 //	RoboCompOmniRobot::TBaseState bState;
 	
 };
-
-
-class TimedList
-{
-	class TimedDatum
-	{
-	public:
-		 TimedDatum(float d)
-		{
-			datum = d;
-			datum_time = QTime::currentTime();
-		}
-		float datum;
-		QTime datum_time;
-	};
-
-public:
-	TimedList(float msecs)
-	{
-		maxMSec = msecs;
-	}
-	void add(float datum)
-	{
-		data.push_back(TimedDatum(datum));
-	}
-	float getSum()
-	{
-		while (data.size()>0)
-		{
-			if (data[0].datum_time.elapsed() > maxMSec)
-				data.pop_front();
-			else
-				break;
-		}
-		float acc = 0.;
-		for (int i=0; i<data.size(); i++)
-			acc += data[i].datum;
-		return acc;
-	}
-private:
-	float maxMSec;
-	QList<TimedDatum> data;
-};
-
 
 
 #endif

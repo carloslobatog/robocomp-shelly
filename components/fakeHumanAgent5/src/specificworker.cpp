@@ -201,7 +201,7 @@ void SpecificWorker::includeInAGM()
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 {
 	try
-	{
+	{	
 		RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
 		structuralChange(w);
 	}
@@ -210,6 +210,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 		printf("The executive is probably not running, waiting for first AGM model publication...");
 	}
 
+	
 	// Include person in RCIS
 	includeInRCIS();
 

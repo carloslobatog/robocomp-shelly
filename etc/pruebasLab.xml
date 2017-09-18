@@ -31,14 +31,14 @@
 				<plane id="cajaMesh1" nx="1" nz="-1000" size="1100,1100,1100"  texture="#880000" />
 			</transform-->
 
-			<!-- TABLE D MESA REDONDA DEL COMEDOR>
-			<transform id="tableD" tx="1500" tz="1767" ty="730" >
+			<!-- TABLE D MESA REDONDA DEL COMEDOR> 
+			<transform id="tableD" tx="3000" tz="4500" ty="730" >
 				
 				<mesh id="tableD_mesh" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="600,600,20" 						rx="1.570799947" collide="1"/>
 				<transform id="rwreewreet" ty="-365" >
 					<mesh id="tableD_mesh2" file="/home/robocomp/robocomp/files/osgModels/basics/cylinder.3ds" scale="600,600,360" 						rx="1.570799947" collide="1"/>
 				</transform>
-			</transform-->
+			</transform>-->
 
 		</transform>
 		

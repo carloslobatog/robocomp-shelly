@@ -107,31 +107,30 @@ class Person(object):
     x = 0
     y = 0
     th = 0
-    polyline = []
-    xdot = 0
-    ydot = 0
-    vel=0
+    vel = 0
+
 
     _radius = 0.30
+
     """ Public Methods """
 
-    def __init__(self, x=0, y=0, th=0,vel=0):
+    def __init__(self, x=0, y=0, th=0, vel=0):
         self.x = x
         self.y = y
         self.th = th
         self.vel = vel
 
 
-    def draw(self, v,sigma_h,sigma_r,sigma_s,rot, drawPersonalSpace=False):
+    def draw(self, sigma_h,sigma_r,sigma_s,rot, drawPersonalSpace=False):
         #numero de curvas de contorno
-        nc = 10
-        if v <= 20:
-            aprox = 0
-        else:
-            if v == 100:
-                aprox = nc - 2
-            else:
-                aprox = int(v/10) - 1
+        # nc = 10
+        # if v <= 20:
+        #     aprox = 0
+        # else:
+        #     if v == 100:
+        #         aprox = nc - 2
+        #     else:
+        #         aprox = int(v/10) - 1
 
 
             #numero de curvas de contorno que se van a dibujar
@@ -154,10 +153,10 @@ class Person(object):
 
             ##PROBLEMICA -> a partir de nc> 4 dibuja una linea de menos. Por eso en el caso de que v==100 he puesto que aprox=nc-2
 
-            CS = plt.contour(X, Y, Z, nc)
+            CS = plt.contour(X, Y, Z, 10)
 
 
-            dat0 = CS.allsegs[aprox][0]
+            #dat0 = CS.allsegs[5][0]
 
             #print(dat0)
 
@@ -201,9 +200,6 @@ class Person(object):
         """
         ##he cambiado el valor de las sigmas porque la gaussiana que dibujaba con las anteriores era muy grande
 
-
-
-
         alpha = np.arctan2(y - self.y, x - self.x) - rot - pi / 2
         nalpha = np.arctan2(np.sin(alpha), np.cos(alpha))  # Normalizando no intervalo [-pi, pi)
 
@@ -221,6 +217,12 @@ class Person(object):
         return z
 
 
+class Object():
+    def __init__(self, x=0, y=0, th=0, sp=0):
+        self.x = x
+        self.y = y
+        self.th = th
+        self.sp = sp
 
 
 class SpecificWorker(GenericWorker):
@@ -257,7 +259,7 @@ class SpecificWorker(GenericWorker):
     #
     # getPolyline
     #
-    def getPersonalSpace(self, persons, v, dibujar):
+    def getPersonalSpace(self, persons, prox, dibujar):
 
         plt.close('all')
        ##DESCOMENTAR EL FIGUREEE
@@ -269,7 +271,6 @@ class SpecificWorker(GenericWorker):
         #ax.grid(True)
       #  x = y = np.arange(-3.0, 3.0, 0.05)
       #  X, Y = np.meshgrid(x, y)
-
 
         ##Limites de la representacion
 
@@ -296,12 +297,14 @@ class SpecificWorker(GenericWorker):
         for p in persons:
             pn = Person(p.x, p.z, p.angle)
             #print('Pose x', pn.x, 'Pose z', pn.y, 'Rotacion', pn.th)
-            pn.draw(v,4,2,2*4/3,pi/2 - pn.th, drawPersonalSpace=dibujar)
+            pn.draw(4,2,2*4/3,pi/2 - pn.th, drawPersonalSpace=dibujar)
             #normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 2.0, 2.0, 2.0], elliptical=True))
             normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 4, 2, 2*4/3], elliptical=True))
         #print ("numero de gaussianas",len(normals))
 
-        h = 0.4
+        #h = 0.4
+        h = prox/100
+
         resolution = 0.1
         limits = [[lx_inf, lx_sup], [ly_inf, ly_sup]]
         _, z = Normal.makeGrid(normals, h, 2, limits=limits, resolution=resolution)
@@ -354,9 +357,9 @@ class SpecificWorker(GenericWorker):
 
         return polylines
 
-    def getPassOnRight(self, persons, v, dibujar):
+    def getPassOnRight(self, persons, prox, dibujar):
 
-        plt.close('all')
+        plt.close("all")
 
 
         lx_inf = -6
@@ -369,14 +372,15 @@ class SpecificWorker(GenericWorker):
         for p in persons:
             pn = Person(p.x, p.z, p.angle, p.vel)
 
-            pn.draw(v,(50/((7*pn.vel/50)+43)*4), (50/((7*pn.vel/50)+43)*4)/2, 2*(50/((7*pn.vel/50)+43)*4)/3,pi/2-pn.th, drawPersonalSpace=dibujar)
-            pn.draw(v,4, 1.5, 10/3, pi - pn.th, drawPersonalSpace=dibujar)
+            pn.draw((50/((7*pn.vel/50)+43)*4), (50/((7*pn.vel/50)+43)*4)/2, 2*(50/((7*pn.vel/50)+43)*4)/3,pi/2-pn.th, drawPersonalSpace=dibujar)
+            pn.draw(4, 1.5, 10/3, pi - pn.th, drawPersonalSpace=dibujar)
 
             normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, (50/((7*pn.vel/50)+43)*4), (50/((7*pn.vel/50)+43)*4)/2, 2*(50/((7*pn.vel/50)+43)*4)/3], elliptical=True))
             normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th , 4, 1.5, 10/3], elliptical=True))
 
 
-        h = 0.4
+        #h = 0.4
+        h = prox / 100
         resolution = 0.1
         limits = [[lx_inf, lx_sup], [ly_inf, ly_sup]]
         _, z = Normal.makeGrid(normals, h, 2, limits=limits, resolution=resolution)
@@ -418,7 +422,7 @@ class SpecificWorker(GenericWorker):
         polylines = []
 
         for o in objects:
-            obj = Person(o.x, o.z, o.angle)
+            obj = Object(o.x, o.z, o.angle, o.space)
             print("OBJETO")
             ##para dibujarlo
             if (d):
@@ -432,10 +436,10 @@ class SpecificWorker(GenericWorker):
                 plt.gca().add_line(heading)
 
             w = 1.0
-            h = 1.5
+
             print (obj.x,obj.y)
             ##para calcular el rectangulo
-            s = QRectF(QPointF(0, 0), QSize(w, h))
+            s = QRectF(QPointF(0, 0), QSizeF(w, obj.sp))
 
             # if (d):
             #     plt.plot (s.bottomLeft().x(),s.bottomLeft().y(),"go")
@@ -446,8 +450,8 @@ class SpecificWorker(GenericWorker):
             space = QPolygonF()
             space.append(s.topLeft())
             space.append(s.topRight())
-            space.append(QPointF(s.bottomRight().x()+ w/4, s.bottomRight().y()))
-            space.append(QPointF(s.bottomLeft().x()-w/4,s.bottomLeft().y()))
+            space.append(QPointF(s.bottomRight().x()+ obj.sp/6, s.bottomRight().y()))
+            space.append(QPointF(s.bottomLeft().x()-obj.sp/6,s.bottomLeft().y()))
 
 
             t = QTransform()

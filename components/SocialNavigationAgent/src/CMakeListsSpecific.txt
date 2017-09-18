@@ -14,6 +14,8 @@ SET ( SOURCES
   projector.cpp
   linesimplifier/simplifyPath.cpp
   controller.cpp
+  actionexecution.cpp
+  socialrules.cpp
 )
 
 ADD_DEFINITIONS( -std=c++14 )

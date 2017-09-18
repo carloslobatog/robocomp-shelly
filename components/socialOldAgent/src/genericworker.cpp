@@ -28,9 +28,9 @@ QObject()
 #endif
 
 {
+	trajectoryrobot2d_proxy = (*(TrajectoryRobot2DPrx*)mprx["TrajectoryRobot2DProxy"]);
 	innermodelmanager_proxy = (*(InnerModelManagerPrx*)mprx["InnerModelManagerProxy"]);
 	omnirobot_proxy = (*(OmniRobotPrx*)mprx["OmniRobotProxy"]);
-	trajectoryrobot2d_proxy = (*(TrajectoryRobot2DPrx*)mprx["TrajectoryRobot2DProxy"]);
 	socialnavigationgaussian_proxy = (*(SocialNavigationGaussianPrx*)mprx["SocialNavigationGaussianProxy"]);
 	agmexecutive_proxy = (*(AGMExecutivePrx*)mprx["AGMExecutiveProxy"]);
 	logger_proxy = (*(LoggerPrx*)mprx["LoggerPub"]);
