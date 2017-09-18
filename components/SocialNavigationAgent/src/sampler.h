@@ -23,18 +23,36 @@
 #include <innermodel/innermodel.h>
 //#include <QtCore>
 //#include <ompl/base/spaces/RealVectorStateSpace.h>
-#include "qmat/qline2d.h"
+//#include <qmat/qline2d.h>
+
+#include <qmat/qline2d.h>
+#include <innermodel/innermodelmgr.h>
 #include <assert.h>
 #include <stdio.h>    
+#include <mutex>
 #include "robocompexception.h"
 
 class Sampler
 {
 	public:
-		Sampler();
-		void initialize(InnerModel* inner, const RoboCompCommonBehavior::ParameterList &params);
+ 		Sampler() = default;
+  		Sampler(Sampler &&other) = delete;  //poner con moves
+  		Sampler(Sampler &other)
+		{
+			robotNodes = other.robotNodes;
+			restNodes = other.restNodes;
+			excludedNodes = other.excludedNodes;
+			innerRegions = other.innerRegions;
+			innerModelSampler = other.innerModelSampler;
+		};
+ 		Sampler& operator=(Sampler&& other) = delete;
+
+		void lock(){mutex.lock();};
+		void unlock(){mutex.unlock();};
+		void initialize(InnerModelMgr inner, std::shared_ptr<RoboCompCommonBehavior::ParameterList> params_);
 		std::tuple< bool, QString > checkRobotValidStateAtTarget(const QVec& targetPos, const QVec& targetRot) const;
 		std::tuple< bool, QString > checkRobotValidStateAtTarget(const QVec& target) const;
+		bool checkRobotValidStateAtTargetFast(const QVec &targetPos, const QVec &targetRot) const;
 		QList<QVec> sampleFreeSpaceR2(uint nPoints = 1);
 		QList<QVec> sampleFreeSpaceR2Uniform(const QRectF &box, uint32_t i=1);
 		QList<QVec> sampleFreeSpaceR2Gaussian(float meanX, float meanY, float sigma1, float sigma2, uint32_t nPoints = 1);
@@ -44,17 +62,19 @@ class Sampler
 		bool checkRobotValidDirectionToTargetOneShot(const QVec & origin , const QVec & target) const;
 		bool searchRobotValidStateCloseToTarget(QVec &target);
 		QRectF getOuterRegion() const { return outerRegion;};
-		mutable QMutex mutex;
+
+		void reloadInnerModel(InnerModelMgr other) { innerModelSampler = other.deepcopy();};	
 		
-		InnerModel *innerModelSampler;
 	private:
+		mutable InnerModelMgr innerModelSampler;
+		mutable std::mutex mutex;
 		std::vector<QString> robotNodes;
 		std::vector<QString> restNodes;
 		std::set<QString> excludedNodes;
 		QList<QRectF> innerRegions;
 		QRectF outerRegion;
 		void recursiveIncludeMeshes(InnerModelNode *node, QString robotId, bool inside, std::vector<QString> &in, std::vector<QString> &out, std::set<QString> &excluded);
-		
+		std::string robotname = "robot";
 };
 
 #endif // SAMPLER_H

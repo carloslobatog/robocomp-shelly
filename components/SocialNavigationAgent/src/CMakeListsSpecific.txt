@@ -9,6 +9,11 @@ SET ( SOURCES
   road.cpp
   sampler.cpp
   pathplanner.cpp
+  innerviewer.cpp
+  drawroad.cpp
+  projector.cpp
+  linesimplifier/simplifyPath.cpp
+  controller.cpp
 )
 
 ADD_DEFINITIONS( -std=c++14 )

@@ -17,18 +17,17 @@
 
 #include "road.h"
 
-Road::Road()
-{}
-
-Road::~Road()
-{}
-
-void Road::initialize(InnerModel* inner, const RoboCompCommonBehavior::ParameterList& params)
+void Road::initialize(InnerModelMgr inner, 
+					  const std::shared_ptr<NavigationState> &state_,
+					  const std::shared_ptr<RoboCompCommonBehavior::ParameterList> &params)
 {
 	innerModel = inner;
-	threshold =  QString::fromStdString(params.at("ArrivalTolerance").value).toFloat();
-	MINIMUM_SAFETY_DISTANCE =  QString::fromStdString(params.at("MinimumSafetyDistance").value).toFloat(); 
-	ROBOT_RADIUS =  QString::fromStdString(params.at("RobotRadius").value).toFloat(); 
+	state = state_;
+	try{ robotname = params->at("RobotName").value;} catch(const std::exception &e){ std::cout << e.what() << " No Robot name defined in config. Using default 'robot' " << std::endl;}
+	threshold =  QString::fromStdString(params->at("ArrivalTolerance").value).toFloat();
+	MINIMUM_SAFETY_DISTANCE =  QString::fromStdString(params->at("MinimumSafetyDistance").value).toFloat(); 
+	ROBOT_RADIUS =  QString::fromStdString(params->at("RobotRadius").value).toFloat(); 
+	reset();
 	std::cout << __FUNCTION__ << "Road initialized correclty" << std::endl;
 }
 
@@ -37,41 +36,47 @@ void Road::initialize(InnerModel* inner, const RoboCompCommonBehavior::Parameter
 /////////////////
 void Road::update()
 {
-static QTime reloj = QTime::currentTime();
+	static QTime reloj = QTime::currentTime();
+	
+	if(this->isEmpty())
+		return;
+	
 	/// Get robot's position in world and create robot's nose
-	QVec robot3DPos = innerModel->transform("world", "robot");
-	QVec noseInRobot = innerModel->transform("world", QVec::vec3(0, 0, 1000), "robot");
-	QLine2D nose = QLine2D(QVec::vec2(robot3DPos.x(), robot3DPos.z()), QVec::vec2(noseInRobot.x(), noseInRobot.z()));
+	QVec robot3DPos = innerModel->transformS("world", robotname);
+	QVec noseInRobot = innerModel->transformS("world", QVec::vec3(0, 0, 1000), robotname);
+	//QLine2D nose = QLine2D(QVec::vec2(robot3DPos.x(), robot3DPos.z()), QVec::vec2(noseInRobot.x(), noseInRobot.z()));
+	QLine2D nose = QLine2D(QVec::vec2(noseInRobot.x(), noseInRobot.z()),QVec::vec2(robot3DPos.x(), robot3DPos.z()));
 
 	/// Compute closest point in road to robot. If closer than 1000mm it will use the virtual point (tip) instead of the center of the robot.
 	Road::iterator closestPoint = computeClosestPointToRobot(robot3DPos);
-
+	
 	/// Compute roadTangent at closestPoint
 	QLine2D tangent = computeTangentAt(closestPoint);
 	setTangentAtClosestPoint(tangent);
-
+	
 	/// Compute signed perpenduicular distance from robot to tangent at closest point
 	setRobotPerpendicularDistanceToRoad(tangent.perpendicularDistanceToPoint(robot3DPos));
-
+	
 	/// Compute signed angle between nose and tangent at closest point
 	float ang = nose.signedAngleWithLine2D(tangent);
 	if (std::isnan(ang))
 		ang = 0;
 	setAngleWithTangentAtClosestPoint(ang);
-
+	
 	/// Compute distance to target along trajectory
 	setRobotDistanceToTarget(computeDistanceToTarget(closestPoint, robot3DPos));  //computes robotDistanceVariationToTarget
+	
 	setRobotDistanceVariationToTarget(robotDistanceVariationToTarget);
-
+	
 	/// Update estimated time of arrival
 	setETA();
-
+	
 	/// Compute curvature of trajectory at closest point to robot
 	setRoadCurvatureAtClosestPoint(computeRoadCurvature(closestPoint, 3));
-
+	
 	/// Compute distance to last road point visible with laser field
 	setRobotDistanceToLastVisible(computeDistanceToLastVisible(closestPoint, robot3DPos));
-
+	
 	/// Compute robot angle in each point
 	for( Road::iterator it = this->begin(); it != this->end(); ++it )
 	{
@@ -84,36 +89,27 @@ static QTime reloj = QTime::currentTime();
 	}
 
 	/// Check for arrival to target (translation)  TOO SIMPLE
-	//qDebug() << __FUNCTION__ << "Arrived:" << getRobotDistanceToTarget() <<  this->threshold << getRobotDistanceVariationToTarget();
-
-	//	print();
-	//	printRobotState(innerModel);
-	qDebug() <<__FUNCTION__ << "time "<< reloj.restart();
-	qDebug() <<__FUNCTION__ << "*********************************************";
-	qDebug() <<__FUNCTION__ << "current point: "<<(int)getIndexOfCurrentPoint()+1 << " size: "<<(int)this->size();
-	qDebug() <<__FUNCTION__ << "robot distance target: "<< getRobotDistanceToTarget() << "thershold: "<<threshold;
-	qDebug() <<__FUNCTION__ << "robot distance variation " <<getRobotDistanceVariationToTarget();
-
-
-	if (((((int) getIndexOfCurrentPoint()+1 == (int) this->size()) and  (getRobotDistanceToTarget() < threshold))) or
-	    (((int) getIndexOfCurrentPoint()+1 == (int) this->size()) and (getRobotDistanceVariationToTarget() > 0)))
-	{
-		qDebug() << __FUNCTION__ << "ROAD: FINISHED";
-		qDebug() <<__FUNCTION__ << "	reason: " << ((int) getIndexOfCurrentPoint()+1 == (int) this->size()) << "index " << getIndexOfCurrentPoint();
-		qDebug() <<__FUNCTION__ << "	reason: " << (getRobotDistanceToTarget() < threshold) << " distance: "<<getRobotDistanceToTarget() << getRobotDistanceVariationToTarget();
-		setFinished(true);
-	}
-    else
+// 	if (((((int) getIndexOfCurrentPoint()+1 == (int) this->size()) and  (getRobotDistanceToTarget() < threshold))) or
+// 	    (((int) getIndexOfCurrentPoint()+1 == (int) this->size()) and (getRobotDistanceVariationToTarget() > 0)))
+// 	{
+// 		qDebug() << "Road::" <<__FUNCTION__ << "ROAD: FINISHED";
+// 		qDebug() << "Road::" <<__FUNCTION__ << "	reason: " << ((int) getIndexOfCurrentPoint()+1 == (int)this->size()) << "index " << getIndexOfCurrentPoint();
+// 		qDebug() << "Road::" <<__FUNCTION__ << "	reason: " << (getRobotDistanceToTarget() < threshold) << " distance: "<<getRobotDistanceToTarget() << getRobotDistanceVariationToTarget();
+// 		
+// 		clear();
+// 		setFinished(true);
+// 	}
+//     else
 	{
 		///////////////////////////////////////////
 		//Check for blocked road
 		///////////////////////////////////////////
-		qDebug() << __FUNCTION__ << "ROAD: Robot distance to last visible" << getRobotDistanceToLastVisible() << (getIterToLastVisiblePoint() < this->end());
+		qDebug() << "Road::" <<__FUNCTION__ << "ROAD: Robot distance to last visible" << getRobotDistanceToLastVisible() << (getIterToLastVisiblePoint() < this->end());
 		//print();
 		if( getRobotDistanceToLastVisible() < 250  and   			//PARAMS
 			  getIterToLastVisiblePoint() < this->end())
 		{
-			qDebug() <<__FUNCTION__ <<"BLOCKED" << "distanceToLastVisible" << getRobotDistanceToLastVisible();
+			qDebug() <<"Road::" <<__FUNCTION__ <<"BLOCKED" << "distanceToLastVisible" << getRobotDistanceToLastVisible();
 			setBlocked(true);
 			
 		}	
@@ -182,7 +178,7 @@ void Road::reset()
 	requiresReplanning = false;
 	backList.clear();
 	antDist = std::numeric_limits<float>::max();
-
+	active = false;
 }
 
 void Road::startRoad()
@@ -205,7 +201,7 @@ void Road::readRoadFromFile(InnerModel *innerModel, std::string name)
 	std::ifstream file(name.c_str(), std::ios_base::in);
 	if (file.is_open())
 	{
-		QVec rPos = innerModel->transform("world", "robot");
+		QVec rPos = innerModel->transformS("world", robotname);
 		append(WayPoint(rPos));
 
 		while (file.eof() == false)
@@ -224,11 +220,19 @@ void Road::readRoadFromList(QList<QVec> list)
 {
 	Q_ASSERT_X(list.size() > 0, "readRoadFromList", "Empty list");
 	clear();
-			foreach(QVec point, list)
-		{
-			append(WayPoint(point));
-		}
+	foreach(QVec point, list)
+	{
+		append(WayPoint(point));
+	}
 	//print();
+}
+
+void Road::readRoadFromList(const std::list<QVec> &list)
+{
+	for( auto &point: list)
+	{
+		append(WayPoint(point));
+	}
 }
 
 void Road::computeDistancesToNext()
@@ -242,21 +246,19 @@ QLine2D Road::getRobotZAxis(InnerModel *innerModel)
 {
 	Q_ASSERT(currentPoint + 1 < road.size() and road.size() > 0);
 
-	QVec robotPos = innerModel->transform("world", QVec::zeros(3), "robot");
-	//QVec robot2DPos = QVec::vec2( innerModel->getBaseX(), innerModel->getBaseZ());
-	QVec nose = innerModel->transform("world", QVec::vec3(0, 0, 1000), "robot");
-	//QVec noseR = QVec::vec2(nose.x(),nose.z());
+	QVec robotPos = innerModel->transformS("world", QVec::zeros(3), robotname);
+	QVec nose = innerModel->transformS("world", QVec::vec3(0, 0, 1000), robotname);
 	return QLine2D(robotPos, nose);
 }
 
 float Road::robotDistanceToCurrentPoint(InnerModel *innerModel)
 {
-	return (innerModel->transform("world", QVec::zeros(3), "robot") - (*this)[indexOfCurrentPoint].pos).norm2();
+	return (innerModel->transformS("world", QVec::zeros(3), robotname) - (*this)[indexOfCurrentPoint].pos).norm2();
 }
 
 float Road::robotDistanceToNextPoint(InnerModel *innerModel)
 {
-	return (innerModel->transform("world", QVec::zeros(3), "robot") - (*this)[indexOfNextPoint].pos).norm2();
+	return (innerModel->transformS("world", QVec::zeros(3), robotname) - (*this)[indexOfNextPoint].pos).norm2();
 }
 
 QLine2D Road::getTangentToCurrentPoint()
@@ -280,7 +282,7 @@ QLine2D Road::getTangentToCurrentPointInRobot(InnerModel *innerModel)
 		QVec p1 = QVec::vec3((*this)[indexOfCurrentPoint].pos.x(), 0., (*this)[indexOfCurrentPoint].pos.z());
 		QVec p2 = QVec::vec3((*this)[indexOfCurrentPoint + 1].pos.x(), 0., (*this)[indexOfCurrentPoint + 1].pos.z());
 		//Use the 3D vector constructor
-		QLine2D line(innerModel->transform("robot", p1, "world"), innerModel->transform("robot", p2, "world"));
+		QLine2D line(innerModel->transformS(robotname, p1, "world"), innerModel->transformS(robotname, p2, "world"));
 		lineAnt = line;
 	}
 	return lineAnt;
@@ -288,7 +290,7 @@ QLine2D Road::getTangentToCurrentPointInRobot(InnerModel *innerModel)
 
 void Road::printRobotState(InnerModel *innerModel)
 {
-	QVec robot3DPos = innerModel->transform("world", "robot");
+	QVec robot3DPos = innerModel->transformS("world", robotname);
 	qDebug() << "-------Road status report  ---------------------";
 	qDebug() << "	Robot position:" << robot3DPos;
 	//qDebug() << "	Target:" << currentTarget.getTranslation();
@@ -347,7 +349,17 @@ Road::iterator Road::computeClosestPointToRobot(const QVec &robot)
 	QList<WayPoint>::iterator it = this->begin();
 	QList<WayPoint>::iterator res = this->end();
 	uint count = 0, index = 0;
-
+	
+	qDebug() << "Road::computeClosestPointToRobot" << this->size();
+	if(it == res)
+	{
+		robotDistanceToClosestPoint = 0.0;
+		indexOfCurrentPoint = index;  
+		indexOfClosestPointToRobot = index;
+		iterToClosestPointToRobot = res; 
+		return it;
+	}
+	
 	for (it = this->begin(); it != this->end(); ++it, ++count)
 	{
 		float d = (it->pos - robot).norm2();
@@ -394,8 +406,9 @@ QLine2D Road::computeTangentAt(Road::iterator w) const
 		return antLine;
 
 	// The tangent
-	QLine2D l(ant->pos, post->pos);
-
+	//QLine2D l(ant->pos, post->pos);
+	QLine2D l(post->pos, ant->pos);
+	
 	if (std::isnan(l[0]) or std::isnan(l[1]) or std::isnan(l[2]))
 	{
 		ant->pos.print("ant");
@@ -441,15 +454,16 @@ float Road::computeDistanceToLastVisible(Road::iterator closestPoint, const QVec
  * @return float Distance to target in the units of InnerModel
  */
 float Road::computeDistanceToTarget(Road::iterator closestPoint, const QVec &robotPos)
-{
+{		
 	float dist = (robotPos - closestPoint->pos).norm2();
 	Road::iterator it;
+	
 	for (it = closestPoint; it != end() - 1; ++it)
 	{
 		dist += (it->pos - (it + 1)->pos).norm2();
 	}
-	float distE = (robotPos -
-	               it->pos).norm2();  //Euclidean distance to last point to detect the robot going away from the target
+	
+	float distE = (robotPos - it->pos).norm2();  //Euclidean distance to last point to detect the robot going away from the target
 	robotDistanceVariationToTarget = distE - antDist;
 	antDist = distE;
 	return dist;

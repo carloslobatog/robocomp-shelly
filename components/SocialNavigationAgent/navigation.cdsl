@@ -2,12 +2,13 @@ import "TrajectoryRobot2D.idsl";
 import "Logger.idsl";
 import "OmniRobot.idsl";
 import "SocialNavigationGaussian.idsl";
+import "Laser.idsl";
 
 Component SocialNavigationAgent
 {
 	Communications
 	{
-		requires TrajectoryRobot2D, OmniRobot, SocialNavigationGaussian;
+		requires TrajectoryRobot2D, OmniRobot, SocialNavigationGaussian, Laser;
 		publishes Logger;
 		implements TrajectoryRobot2D;
 	};

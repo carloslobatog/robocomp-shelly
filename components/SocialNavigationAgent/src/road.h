@@ -27,12 +27,15 @@
 #include <float.h>
 #include <qmat/qline2d.h>
 #include "currenttarget.h"
+#include "navigationstate.h"
+#include <innermodel/innermodelmgr.h>
+
 
 class WayPoint
 {
 	public:
 		WayPoint()			  { pos = QVec::zeros(3); isVisible = true; hasRotation = false;};
-		WayPoint(QVec p) 	{ pos = p; isVisible = true; hasRotation = false;};
+		WayPoint(QVec p) 	  { pos = p; isVisible = true; hasRotation = false;};
 		~WayPoint()			  {};
 	
 		//For ElasticBand
@@ -49,21 +52,22 @@ class WayPoint
 		float visibleLaserDist;
 		QVec posInRobotFrame;
 		bool hasRotation;
-		
 }; 
 
 class Road : public QList< WayPoint >
 {
 	public:
-		Road();
-		~Road();
+		Road() = default;
+		void initialize( InnerModelMgr inner, 
+						 const std::shared_ptr<NavigationState> &state_,
+						 const std::shared_ptr<RoboCompCommonBehavior::ParameterList> &params);
 		void reset();
 		void startRoad();
 		void endRoad();
-		void setThreshold(const float _threshold) 			{ QMutexLocker ml(&mutex); threshold = _threshold;};
-		void initialize( InnerModel *inner, const RoboCompCommonBehavior::ParameterList &params);
+		void setThreshold(const float _threshold) 			{ /*QMutexLocker ml(&mutex);*/ threshold = _threshold;};
 		void readRoadFromFile(InnerModel *innerModel, std::string name);
 		void readRoadFromList(QList<QVec> list);
+		void readRoadFromList(const std::list<QVec> &list);
 		void printRobotState(InnerModel* innerModel /*, const CurrentTarget& currentTarget*/);
 		void print() const;
 		QList<QVec> backList;
@@ -130,61 +134,64 @@ class Road : public QList< WayPoint >
 		 * 
 		 * @return Road::iterator
 		*/
-		Road::iterator getIterToClosestPointToRobot() const 	      					{ return iterToClosestPointToRobot;};
+		Road::iterator getIterToClosestPointToRobot() const 	 			     	{ return iterToClosestPointToRobot;};
 		
 		/**
 		* @brief Computes the tangent to the robot at the road's closest point to it.
 		* 	
 		* @return QLine2D in world system of reference
 		*/
-		QLine2D getTangentAtClosestPoint() const																	{ return roadTangentAtClosestPoint;};
+		QLine2D getTangentAtClosestPoint() const											{ return roadTangentAtClosestPoint;};
 		
 		/**
 		* @brief Computes the distance from the robot to the closest point of the road. 
 		* 	
 		* @return float distance in mm
 		*/
-		float getRobotDistanceToClosestPoint() 	const															{ return robotDistanceToClosestPoint;};
+		float getRobotDistanceToClosestPoint() 	const									{ return robotDistanceToClosestPoint;};
 		
 		/**
 		* @brief Computes the perpendicular distance from the robot to road. 
 		* 	
 		* @return float distance in mm
 		*/
-		float getRobotPerpendicularDistanceToRoad()	const													{ return robotPerpendicularDistanceToRoad;};
+		float getRobotPerpendicularDistanceToRoad()	const							{ return robotPerpendicularDistanceToRoad;};
 		
 		/**
 		 * @brief True if current point is last point in the road.
 		 * 
 		 * @return bool
 		 */
-		bool atLastPoint() const 																			{ return (int)(getIndexOfCurrentPoint()+1) == size();}
-		void setRequiresReplanning(bool v)																	{ requiresReplanning = v;}
-		bool getRequiresReplanning()																		{ return requiresReplanning; }
+		bool atLastPoint() const 																{ return (int)(getIndexOfCurrentPoint()+1) == size();}
+		void setRequiresReplanning(bool v)														{ requiresReplanning = v;}
+		bool getRequiresReplanning()															{ return requiresReplanning; }
 		QLine2D roadTangentAtClosestPoint;
-		float getAngleWithTangentAtClosestPoint() const														{ return angleWithTangentAtClosestPoint;};
-		uint getIndexOfCurrentPoint() const																	{ return indexOfCurrentPoint;};
-		uint getIndexOfNextPoint() const																	{ return indexOfNextPoint;};
-		WayPoint getCurrentPoint() const   	    							                				{ return (*this)[indexOfCurrentPoint];};
-		WayPoint getNextPoint() const	    							                 					{ return (*this)[indexOfNextPoint];};
-		float getRoadCurvatureAtClosestPoint() const														{ return roadCurvatureAtClosestPoint;};
-		float getRobotDistanceToTarget() const																{ return robotDistanceToTarget;};
-		float getRobotDistanceToLastVisible() const															{ return robotDistanceToLastVisible;};
-		float getRobotDistanceVariationToTarget() const 													{ return robotDistanceVariationToTarget;};
-		ulong getETA() const 																				{ return estimatedTimeOfArrival;};
-		Road::iterator getIterToLastVisiblePoint() const												{ return iterToLastVisiblePoint;};
-		uint32_t getIndexOfClosestPointToRobot() const														{ return indexOfClosestPointToRobot;};
-		bool isBlocked() const																				{ return blockedRoad;};
-		bool isFinished() const                                                   							{ return finish;};
-		bool isVisible(int i) const  																		{ if( i>=0 and i< this->size()) return (*this)[i].isVisible; else return false;};
-		void setFinished( bool b)																			{ QMutexLocker ml(&mutex); finish = b; }
-		void setBlocked(bool b)																				{ blockedRoad = b;};
+		float getAngleWithTangentAtClosestPoint() const											{ return angleWithTangentAtClosestPoint;};
+		uint getIndexOfCurrentPoint() const														{ return indexOfCurrentPoint;};
+		uint getIndexOfNextPoint() const														{ return indexOfNextPoint;};
+		WayPoint getCurrentPoint() const   	    							        			{ return (*this)[indexOfCurrentPoint];};
+		WayPoint getNextPoint() const	 														{ return (*this)[indexOfNextPoint];};
+		float getRoadCurvatureAtClosestPoint() const											{ return roadCurvatureAtClosestPoint;};
+		float getRobotDistanceToTarget() const													{ return robotDistanceToTarget;};
+		float getRobotDistanceToLastVisible() const												{ return robotDistanceToLastVisible;};
+		float getRobotDistanceVariationToTarget() const 										{ return robotDistanceVariationToTarget;};
+		ulong getETA() const 																	{ return estimatedTimeOfArrival;};
+		Road::iterator getIterToLastVisiblePoint() const										{ return iterToLastVisiblePoint;};
+		uint32_t getIndexOfClosestPointToRobot() const											{ return indexOfClosestPointToRobot;};
+		bool isBlocked() const																	{ return blockedRoad;};
+		bool isFinished() const                                       							{ return finish;};
+		bool isVisible(int i) const  															{ if( i>=0 and i< this->size()) return (*this)[i].isVisible; else return false;};
+		void setFinished( bool b)																{ /*QMutexLocker ml(&mutex);*/ finish = b; }
+		void setBlocked(bool b)																	{ blockedRoad = b;};
+		inline bool isNotEmpty() const															{ return !this->empty();};
+		inline bool isEmpty() const																{ return this->size() < 2;};
 		
 		int indexOfNextPoint = 1;
 		bool blockedRoad = false;
 		bool isLost = false;
 		int currentCollisionIndex = 0;
 		float currentDistanceToFrontier = 0;
+		
 		
 	private:
 		bool requiresReplanning;
@@ -201,26 +208,26 @@ class Road : public QList< WayPoint >
 		float threshold = 20.f;  //Default tolerance on arrival
 		bool finish = false;
 		ulong estimatedTimeOfArrival = 0;
-		InnerModel *innerModel;
+		InnerModelMgr innerModel;
 		QTime reloj;
 		float meanSpeed = 200;  
 		long elapsedTime = 0;
 		int initialDurationEstimation = 0;
 		float antDist = std::numeric_limits<float>::max(); 
 
-		void setclosestPointToRobot(Road::iterator it) 				    							{ iterToClosestPointToRobot = it;};
-		void setTangentAtClosestPoint(const QLine2D &tangent) 												{ roadTangentAtClosestPoint = tangent;};
-		void setRobotDistanceToClosestPoint(float dist) 															{ robotDistanceToClosestPoint = dist;};
-		void setRobotPerpendicularDistanceToRoad(float dist) 													{ robotPerpendicularDistanceToRoad = dist;};
-		void setAngleWithTangentAtClosestPoint( float ang)														{ angleWithTangentAtClosestPoint = ang;};
-		void setRoadCurvatureAtClosestPoint( float c)																	{ roadCurvatureAtClosestPoint = c;};
-		void setRobotDistanceToTarget( float dist)																		{ robotDistanceToTarget = dist;};
-		void setRobotDistanceToLastVisible( float dist)																{ robotDistanceToLastVisible = dist;};
-		void setRobotDistanceVariationToTarget(float dist)														{ robotDistanceVariationToTarget = dist;};
-		void changeTarget(const QVec &target)																					{ QMutexLocker ml(&mutex); replace(length()-1, target); antDist = std::numeric_limits< float >::max();};
+		void setclosestPointToRobot(Road::iterator it) 				    					{ iterToClosestPointToRobot = it;};
+		void setTangentAtClosestPoint(const QLine2D &tangent) 								{ roadTangentAtClosestPoint = tangent;};
+		void setRobotDistanceToClosestPoint(float dist) 									{ robotDistanceToClosestPoint = dist;};
+		void setRobotPerpendicularDistanceToRoad(float dist) 								{ robotPerpendicularDistanceToRoad = dist;};
+		void setAngleWithTangentAtClosestPoint( float ang)									{ angleWithTangentAtClosestPoint = ang;};
+		void setRoadCurvatureAtClosestPoint( float c)										{ roadCurvatureAtClosestPoint = c;};
+		void setRobotDistanceToTarget( float dist)											{ robotDistanceToTarget = dist;};
+		void setRobotDistanceToLastVisible( float dist)										{ robotDistanceToLastVisible = dist;};
+		void setRobotDistanceVariationToTarget(float dist)									{ robotDistanceVariationToTarget = dist;};
+		//void changeTarget(const QVec &target)												{ QMutexLocker ml(&mutex); replace(length()-1, target); antDist = std::numeric_limits< float >::max();};
 		void setETA();
 
-		QMutex mutex;
+		//QMutex mutex;
 		
 		float computeRoadCurvature(Road::iterator closestPoint, uint pointsAhead);
 		float computeDistanceToTarget(Road::iterator closestPoint, const QVec &robotPos);
@@ -236,6 +243,12 @@ class Road : public QList< WayPoint >
 		
 		float MINIMUM_SAFETY_DISTANCE;
 		float ROBOT_RADIUS;
+		
+		std::string robotname = "robot";
+		bool active = false;;
+		
+		//Global nav state
+		std::shared_ptr<NavigationState> state;
 };
 
 #endif // ROAD_H

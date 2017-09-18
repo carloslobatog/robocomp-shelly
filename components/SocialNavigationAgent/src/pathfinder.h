@@ -27,6 +27,19 @@
 #include "road.h"
 #include "sampler.h"
 #include "pathplanner.h"
+#include "drawroad.h"
+#include "projector.h"
+#include "controller.h"
+#include "navigationstate.h"
+#include <innermodel/innermodelmgr.h>
+#include <qlog/qlog.h>
+
+#define USE_QTGUI
+
+#ifdef USE_QTGUI
+	#include "innerviewer.h"
+#endif
+
 
 using namespace std;
 
@@ -40,24 +53,44 @@ namespace robocomp
 		{
 			public:
 				PathFinder() = default;
-				virtual ~PathFinder(){};
-				void initialize(InnerModel *innerModel, const RoboCompAGMCommonBehavior::ParameterMap &params, const RoboCompCommonBehavior::ParameterList &localparams);
+				void initialize(const InnerModelMgr &innerModel_,
+								const shared_ptr< RoboCompCommonBehavior::ParameterList > &configparams_,
+								LaserPrx laser_prx,
+								OmniRobotPrx omnirobot_proxy);
 				void releaseRoad();
 				Road& getRoad();
-				
+				RoboCompTrajectoryRobot2D::NavState getState(){ return state->toIce(); };
+	
 			/////////////////////////////
 			/// Interface
 			////////////////////////////
 			void go(float x, float z, const ParameterMap &parameters = ParameterMap());
-			
+			//void setInnerModel(InnerModel* innerModel_){ innerModel = innerModel_; };
+			void innerModelChanged(InnerModelMgr &innerModel_, bool structural = false);
+			void run();
 			///////////////////////////
 			
 			private:
-		
+				std::shared_ptr<NavigationState> state;
 				mutable std::mutex mymutex;
 				Road road;
-				Sampler sampler;
 				PathPlanner pathplanner;
+				std::shared_ptr<CurrentTarget> currenttarget;
+				std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams;
+				std::string robotname = "robot";
+				DrawRoad drawroad;
+				Projector projector;
+				Controller controller;
+			
+				//InnerModel *innerModel = nullptr;
+				InnerModelMgr innerModel;
+				#ifdef USE_QTGUI
+					InnerViewer *viewer = nullptr;
+				#endif
+			
+				std::thread thread_planner;
+				std::thread thread_projector;
+				std::thread thread_controller;
 				
 		};	
 	} //path
