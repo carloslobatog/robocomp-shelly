@@ -30,7 +30,9 @@
 #include <assert.h>
 #include <stdio.h>    
 #include <mutex>
+#include <boost/shared_ptr.hpp>
 #include "robocompexception.h"
+
 
 class Sampler
 {

@@ -146,8 +146,7 @@ int ::SocialNavigationAgent::run(int argc, char* argv[])
 	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
 	OmniRobotPrx omnirobot_proxy;
 	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;
-	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
-	OmniRobotPrx omnirobot_proxy;
+	
 	LaserPrx laser_proxy;
 	LoggerPrx logger_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
