@@ -75,6 +75,17 @@ class SpecificWorker(GenericWorker):
 
 
 	#
+	# RemovePoints
+	#
+	def RemovePoints(self, list):
+		ret = SNGPolylineSeq()
+		#
+		#implementCODE
+		#
+		return ret
+
+
+	#
 	# getPersonalSpace
 	#
 	def getPersonalSpace(self, persons, v, d):

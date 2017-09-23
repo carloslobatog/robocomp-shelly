@@ -247,13 +247,7 @@ class SpecificWorker(GenericWorker):
 
     @QtCore.Slot()
     def compute(self):
-       # print('SpecificWorker.compute...')
-        # computeCODE
-        # try:
-        #	self.differentialrobot_proxy.setSpeedBase(100, 0)
-        # except Ice.Exception, e:
-        #	traceback.print_exc()
-        #	print e
+
         return True
 
     #
@@ -416,22 +410,22 @@ class SpecificWorker(GenericWorker):
     #
     def getObjectInteraction(self, persons, objects, d):
 
-        print("getObjectInteration")
+        # print("getObjectInteration")
         plt.close('all')
 
         polylines = []
 
         for o in objects:
             obj = Object(o.x, o.z, o.angle, o.space)
-            print("OBJETO")
+            # print("OBJETO")
             ##para dibujarlo
-            if (d):
+            if d:
                 plt.figure('ObjectSpace')
                 rect = plt.Rectangle((obj.x-0.25,obj.y-0.25),0.5,0.5,fill=False)
 
                 plt.gca().add_patch(rect)
-                x_aux = obj.x + 0.25 * cos(pi / 2 - obj.th);
-                y_aux = obj.y + 0.25 * sin(pi / 2 - obj.th);
+                x_aux = obj.x + 0.25 * cos(pi / 2 - obj.th)
+                y_aux = obj.y + 0.25 * sin(pi / 2 - obj.th)
                 heading = plt.Line2D((obj.x, x_aux), (obj.y, y_aux), lw=1, color='k')
                 plt.gca().add_line(heading)
 
@@ -450,8 +444,8 @@ class SpecificWorker(GenericWorker):
             space = QPolygonF()
             space.append(s.topLeft())
             space.append(s.topRight())
-            space.append(QPointF(s.bottomRight().x()+ obj.sp/6, s.bottomRight().y()))
-            space.append(QPointF(s.bottomLeft().x()-obj.sp/6,s.bottomLeft().y()))
+            space.append(QPointF(s.bottomRight().x()+ obj.sp/4, s.bottomRight().y()))
+            space.append(QPointF(s.bottomLeft().x()-obj.sp/4,s.bottomLeft().y()))
 
 
             t = QTransform()
@@ -475,7 +469,7 @@ class SpecificWorker(GenericWorker):
 
             polyline = []
 
-            for x in xrange(space.count() ):
+            for x in xrange(space.count()):
                 point = space.value(x)
                 if (d):
                     plt.plot(point.x(), point.y(), "go")
@@ -488,13 +482,13 @@ class SpecificWorker(GenericWorker):
 
             for p in persons:
                 pn = Person(p.x, p.z, p.angle)
-                print("PERSONA")
+                print("PERSONA", persons.index(p)+1)
                 if d:
                     body = plt.Circle((pn.x, pn.y), radius=0.3, fill=False)
                     plt.gca().add_patch(body)
 
-                    x_aux = pn.x + 0.30 * cos(pi / 2 - pn.th);
-                    y_aux = pn.y + 0.30 * sin(pi / 2 - pn.th);
+                    x_aux = pn.x + 0.30 * cos(pi / 2 - pn.th)
+                    y_aux = pn.y + 0.30 * sin(pi / 2 - pn.th)
                     heading = plt.Line2D((pn.x, x_aux), (pn.y, y_aux), lw=1, color='k')
                     plt.gca().add_line(heading)
                     plt.axis('equal')
@@ -507,26 +501,11 @@ class SpecificWorker(GenericWorker):
                 else:
                     checkangle = False
 
-
-                # ang = abs(pn.th - math.pi)
-                # print(thrinf, thrsup, ang)
-                # if thrinf < ang and ang < thrsup:
-                #     checkangle = True
-                #     print ("MIRANDOOOOOO")
-
-                # else:
-                #     print ("NO MIRAAAAA")
-                #     checkangle = False
-
                 ##CHECKING IF THE PERSON IS INSIDE THE POLYGON
                 if space.containsPoint(QPointF(pn.x,pn.y),Qt.OddEvenFill) and checkangle:
-                    print("DENTROOOOO Y MIRANDO")
-                    polylines.append(polyline)
-
-                    break
-
-                else:
-                    print("FUERA O NO MIRANDO")
+                    # print("DENTROOOOO Y MIRANDO")
+                    if not polyline in polylines:
+                        polylines.append(polyline)
 
 
         if (d):
@@ -539,7 +518,69 @@ class SpecificWorker(GenericWorker):
                     plt.ylabel('Y')
             plt.show()
         plt.show()
+        return polylines
 
 
+    #
+    # RemovePoints
+    #
+
+    def RemovePoints(self, listp):
+        aux = listp
+        polylines = []
+        print ("--------------------------------------------------------")
+        print("Hay ", len(listp), "polilineas")
+        for pol in listp:
+            print("creo poligono para polilinea ", listp.index(pol) + 1)
+            qp = QPolygonF()
+            for p in pol:
+                qp.append(QPointF(p.x, p.z))
+                # plt.axis('equal')
+                # plt.plot(p.x, p.z, "*g-")
+            qp.append(QPointF(pol[0].x, pol[0].z))
+
+        for poly in listp:
+            if listp.index(pol) != listp.index(poly):
+
+                for point in poly:
+                    contains = False
+                    if qp.containsPoint(QPointF(point.x,point.z),Qt.OddEvenFill):
+                        contains = True
+
+                if contains:
+                    aux.append(poly + pol)
+                    aux.remove(poly)
+                    aux.remove(pol)
+
+
+        for pl in aux[:]:
+            points = []
+            for p in pl:
+                points.append([p.x, p.z])
+
+            points = np.asarray(points)
+            hull = ConvexHull(points)
+            aux.remove(pl)
+            aux.append(points[hull.vertices])
+
+
+        for pol in aux:
+             polyline = []
+             for pnt in pol:
+                punto = SNGPoint2D()
+                punto.x = pnt[0]
+                punto.z = pnt[1]
+                polyline.append(punto)
+                polylines.append(polyline)
+
+
+        # plt.figure()
+        # for ps in polylines:
+        #     for p in ps:
+        #         plt.plot(p.x, p.z, "*r-")
+        #         plt.axis('equal')
+        #         plt.xlabel('X')
+        #         plt.ylabel('Y')
+        # plt.show()
 
         return polylines

@@ -241,9 +241,9 @@ void SpecificWorker::compute()
 		sampler.initialize(innerModel, params);
 		qDebug()<<"Salimos de Sampler.initialize";
 		
-		qDebug()<<"Llamamos a myRoad.initialize";
-		road.initialize(innerModel, params);
-		qDebug()<<"Salimos de myRoad.initialize";
+// 		qDebug()<<"Llamamos a myRoad.initialize";
+// 		road.initialize(innerModel, params);
+// 		qDebug()<<"Salimos de myRoad.initialize";
 		
 		
 		newPolyline = false;

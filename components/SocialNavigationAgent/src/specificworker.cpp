@@ -52,10 +52,11 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	connect (proximidad,SIGNAL(valueChanged(int)),&sr,SLOT(changevalue(int)));
 	//connect (proximidad,SIGNAL(sliderMoved()),this,SLOT(sliderM()));
 	
-	proximidad->QSlider::setMinimum (0);
+	proximidad->QSlider::setMinimum (10);
 	proximidad->QSlider::setMaximum (90);	
-	proximidad->QSlider::setTracking (true);	
+	proximidad->QSlider::setTracking (false);	
 	proximidad->QSlider::setValue (50);
+	
 	
 }		
 /**
@@ -97,6 +98,8 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	sr.socialnavigationgaussian_proxy=socialnavigationgaussian_proxy;
 	sr.agmexecutive_proxy=agmexecutive_proxy;
 	sr.mux=mutex;
+	
+	sr.objectInteraction(false);
 	
 	return true;
 }
@@ -270,12 +273,12 @@ void SpecificWorker::compute( )
 	//qDebug()<<"Update actionEx";
 	//aE.Update(action,params);
 	
+	
 	if (sendChangesAGM)
 	{	
 		try
 		{
 			sendModificationProposal(newM,worldModel,"-");
-		
 		}
 		catch(...){}
 	}

@@ -3,28 +3,33 @@
 		
 		<!-- FLOOR -->
 		<transform id="floor" tx="2000" tz="2000" ty="0">
-			<plane id="floor_plane" ny="1" size="5000,5000,10" texture="#eebb77" />
+			<plane id="floor_plane" ny="1" size="8000,5000,10" texture="#eebb77" />
 		</transform>
 	
 		
 		<transform id="room_3">
 
 			<!-- ROOM A -->
-			<transform id="pared0" tx="-500" tz="2000" ty="950" >
+			<transform id="pared0" tx="-2000" tz="2000" ty="950" >
 				<plane id="muro0" nx="-500" nz="0" size="5000,1900,9"  texture="#880000" />
 			</transform>
 
 			<transform id="pared1" tx="2000" tz="4500" ty="950" >
-				<plane id="muro1" nx="0" nz="5000" size="5000,1900,9"  texture="#880000" />
+				<plane id="muro1" nx="0" nz="5000" size="8000,1900,9"  texture="#880000" />
 			</transform> 
 
-			<transform id="pared2" tx="4500" tz="2000" ty="950" >
+			<transform id="pared2" tx="6000" tz="2000" ty="950" >
 				<plane id="muro2" nx="5000" nz="0" size="5000,1900,9"  texture="#880000" />
 			</transform>
 		
 			<transform id="pared3" tx="2000" tz="-500" ty="950" >
-				<plane id="muro3" nx="0" nz="-5000" size="5000,1900,9"  texture="#880000" />
+				<plane id="muro3" nx="0" nz="-5000" size="8000,1900,9"  texture="#880000" />
 			</transform>
+			
+			<!-- PIN BOARD -->
+			<transform id="board" tx="2000" tz="4400" ty="1200" ry="3.141516"> 
+				<mesh id="board_mesh" file="/home/robocomp/robocomp/components/robocomp-araceli/models/board.3DS" 					scale="7,7,7" rx="1.57" rz="3.141516" collide="1" />
+			</transform>	
 
 
 			<!--transform id="caja1" tx="0" tz="2000" ty="950" >

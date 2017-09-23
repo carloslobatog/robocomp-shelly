@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/specificworker.py" description="            # points = []&#10;            # for x in x..." line="475" />
+    <bookmark url="file://$PROJECT_DIR$/src/specificworker.py" description="            # points = []&#10;            # for x in x..." line="469" />
+    <bookmark url="file://$PROJECT_DIR$/src/specificworker.py" line="554" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa36ea70-3279-405c-90f6-1bb252189711" name="Default" comment="" />
@@ -23,31 +24,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="normal.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/normal.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="870">
-              <caret line="58" column="58" lean-forward="false" selection-start-line="58" selection-start-column="58" selection-end-line="58" selection-end-column="58" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GaussianMix.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/GaussianMix.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="34" column="34" lean-forward="false" selection-start-line="34" selection-start-column="34" selection-end-line="34" selection-end-column="34" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="specificworker.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/specificworker.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-714">
-              <caret line="359" column="42" lean-forward="false" selection-start-line="359" selection-start-column="42" selection-end-line="359" selection-end-column="42" />
+            <state relative-caret-position="366">
+              <caret line="507" column="24" lean-forward="false" selection-start-line="507" selection-start-column="24" selection-end-line="507" selection-end-column="24" />
               <folding>
                 <element signature="e#735#766#0" expanded="true" />
               </folding>
@@ -55,21 +36,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="socialnavigationGaussian.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/socialnavigationGaussian.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1080">
-              <caret line="79" column="0" lean-forward="false" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="checkboundaries.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/checkboundaries.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="11" column="27" lean-forward="false" selection-start-line="11" selection-start-column="27" selection-end-line="11" selection-end-column="27" />
+            <state relative-caret-position="259">
+              <caret line="18" column="53" lean-forward="false" selection-start-line="18" selection-start-column="53" selection-end-line="18" selection-end-column="53" />
               <folding />
             </state>
           </provider>
@@ -86,19 +57,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>grid</find>
-      <find>plt</find>
-      <find>convexh</find>
-      <find>ck</find>
-      <find>resolution</find>
-      <find>l</find>
-      <find>ret</find>
-      <find>radi</find>
-      <find>sqrt</find>
-      <find>range</find>
-      <find>math</find>
-      <find>figure</find>
-      <find>GM</find>
       <find>move</find>
       <find>SNGPolylineSeq()</find>
       <find>SNGPolylineSeq</find>
@@ -107,7 +65,6 @@
       <find>qpoint</find>
       <find>slot</find>
       <find>to</find>
-      <find>convexHull</find>
       <find>space</find>
       <find>points</find>
       <find>plt.plot</find>
@@ -116,10 +73,26 @@
       <find>xdot</find>
       <find>object</find>
       <find>draw</find>
+      <find>v</find>
+      <find>qp</find>
+      <find>qpointf</find>
+      <find>remove</find>
+      <find>contains</find>
+      <find>containsPoint</find>
+      <find>qpolygon</find>
+      <find>qp.append</find>
+      <find>l</find>
+      <find>list</find>
+      <find>convexHull</find>
+      <find>totalpuntosorde</find>
+      <find>POLYLINES</find>
+      <find>person</find>
     </findStrings>
     <replaceStrings>
       <replace>pn</replace>
       <replace>transrect</replace>
+      <replace>list</replace>
+      <replace>listp</replace>
     </replaceStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -133,18 +106,18 @@
         <option value="$PROJECT_DIR$/src/obtainpoly.py" />
         <option value="$PROJECT_DIR$/src/prueba.py" />
         <option value="$PROJECT_DIR$/src/normal.py" />
-        <option value="$PROJECT_DIR$/src/checkboundaries.py" />
         <option value="$PROJECT_DIR$/../socialnavigationAgent/printpose.py" />
         <option value="$PROJECT_DIR$/../socialnavigationAgent/distmin" />
         <option value="$PROJECT_DIR$/../socialnavigationAgent/distmin.py" />
         <option value="$USER_HOME$/Desktop/pruebas/lab/distmin.py" />
         <option value="$PROJECT_DIR$/src/socialnavigationgaussianI.py" />
+        <option value="$PROJECT_DIR$/src/checkboundaries.py" />
         <option value="$PROJECT_DIR$/src/specificworker.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1919" />
+    <option name="x" value="-1" />
     <option name="y" value="24" />
     <option name="width" value="1368" />
     <option name="height" value="721" />
@@ -403,12 +376,12 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1919" y="24" width="1368" height="721" extended-state="6" />
+    <frame x="-1" y="24" width="1368" height="721" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14421669" sideWeight="0.91437805" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10248902" sideWeight="0.91437805" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.0" sideWeight="0.49270833" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3279483" sideWeight="0.5072917" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0" sideWeight="0.5072917" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.0" sideWeight="0.47916666" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -657,14 +630,6 @@
     <entry file="file://$PROJECT_DIR$/src/prueba.py" />
     <entry file="file://$USER_HOME$/Desktop/pruebas/lab/printpose.py" />
     <entry file="file://$USER_HOME$/Desktop/pruebas/lab/distmin.py" />
-    <entry file="file://$PROJECT_DIR$/src/normal.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="870">
-          <caret line="58" column="58" lean-forward="false" selection-start-line="58" selection-start-column="58" selection-end-line="58" selection-end-column="58" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/specificworker.py.new">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1440">
@@ -686,34 +651,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/GaussianMix.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="34" column="34" lean-forward="false" selection-start-line="34" selection-start-column="34" selection-end-line="34" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_imps/_pydev_execfile.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/socialnavigationGaussian.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1080">
-          <caret line="79" column="0" lean-forward="false" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/checkboundaries.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="27" lean-forward="false" selection-start-line="11" selection-start-column="27" selection-end-line="11" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -724,10 +665,41 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/socialnavigationGaussian.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-206">
+          <caret line="79" column="0" lean-forward="false" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/checkboundaries.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="259">
+          <caret line="18" column="53" lean-forward="false" selection-start-line="18" selection-start-column="53" selection-end-line="18" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GaussianMix.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="34" column="34" lean-forward="false" selection-start-line="34" selection-start-column="34" selection-end-line="34" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/normal.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="58" column="58" lean-forward="false" selection-start-line="58" selection-start-column="58" selection-end-line="58" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/specificworker.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-714">
-          <caret line="359" column="42" lean-forward="false" selection-start-line="359" selection-start-column="42" selection-end-line="359" selection-end-column="42" />
+        <state relative-caret-position="366">
+          <caret line="507" column="24" lean-forward="false" selection-start-line="507" selection-start-column="24" selection-end-line="507" selection-end-column="24" />
           <folding>
             <element signature="e#735#766#0" expanded="true" />
           </folding>

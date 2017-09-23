@@ -62,6 +62,8 @@ class SocialNavigationGaussianI(SocialNavigationGaussian):
 
 	def getPassOnRight(self, persons, v, d, c):
 		return self.worker.getPassOnRight(persons, v, d)
+	def RemovePoints(self, list, c):
+		return self.worker.RemovePoints(list)
 	def getPersonalSpace(self, persons, v, d, c):
 		return self.worker.getPersonalSpace(persons, v, d)
 	def getObjectInteraction(self, persons, objects, d, c):

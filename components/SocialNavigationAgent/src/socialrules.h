@@ -45,6 +45,7 @@ public:
 	
 	SNGObject object;
 	SNGObjectSeq objects;
+	SNGPolylineSeq seq;
 	int32_t objectSymbolId;
 
 	RoboCompTrajectoryRobot2D::PolyLineList ApplySocialRules(SNGPersonSeq tperson);

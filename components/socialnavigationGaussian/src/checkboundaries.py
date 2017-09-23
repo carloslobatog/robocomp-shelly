@@ -16,12 +16,12 @@ def checkboundaries(grid, i, j, totalpuntos):
 
     for a in totalpuntos:
         for b in a:
-            if ((b in entorno)and (mismocluster==False)):
+            if (b in entorno)and (mismocluster==False):
                 #print ("b esta en el entorno")
                 mismocluster=True
                 indice = totalpuntos.index(a)
 
-            if ((b in entorno)and(mismocluster==True)):
+            if (b in entorno)and(mismocluster==True):
                 aux = totalpuntos.index(a)
                 if (aux != indice):
                  #   print("El entorno coincide en dos listas")
