@@ -120,7 +120,7 @@ public:
 	float goReferenced(const TargetPose &target, const float xRef, const float zRef, const float threshold);
 	float changeTarget(const TargetPose &target){return 0.0;};
 	void mapBasedTarget(const NavigationParameterMap &parameters){};
-	float go(const TargetPose &target){ pathfinder.go(target.x, target.z); return 0.0;};
+	float go(const TargetPose &target){ pathfinder.go(target.x, -target.z); return 0.0;};
 
 	
 public slots:
@@ -149,9 +149,12 @@ private:
 	RoboCompTrajectoryRobot2D::NavState planningState;
 	// Target info
 	RoboCompTrajectoryRobot2D::TargetPose currentTarget;
+	
+	
 	robocomp::pathfinder::PathFinder pathfinder;
 	std::thread thread_pathfinder;
- 	#ifdef USE_QTGUI
+ 	
+	#ifdef USE_QTGUI
  		InnerViewer *viewer = nullptr;
  	#endif
 	std::string robotname = "robot";

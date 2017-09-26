@@ -8,7 +8,7 @@ Component SocialNavigationAgent
 {
 	Communications
 	{
-		requires TrajectoryRobot2D, OmniRobot, SocialNavigationGaussian, Laser;
+		requires OmniRobot, SocialNavigationGaussian, Laser;
 		publishes Logger;
 		implements TrajectoryRobot2D;
 	};

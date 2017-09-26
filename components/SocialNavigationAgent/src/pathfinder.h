@@ -77,7 +77,9 @@ namespace robocomp
 				PathPlanner pathplanner;
 				std::shared_ptr<CurrentTarget> currenttarget;
 				std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams;
-				std::string robotname = "robot";
+				
+				std::string robotname = "robot";  ///OJO
+				
 				DrawRoad drawroad;
 				Projector projector;
 				Controller controller;

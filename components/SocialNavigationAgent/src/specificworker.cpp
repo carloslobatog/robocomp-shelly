@@ -27,7 +27,7 @@
 
 SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 {
-	
+	qDebug() << __FUNCTION__ ;
 	active = false;
 	active = false;	
 	worldModel = AGMModel::SPtr(new AGMModel());
@@ -117,7 +117,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	aE.logger_proxy = logger_proxy;
 	aE.agmexecutive_proxy = agmexecutive_proxy;
 	aE.omnirobot_proxy = omnirobot_proxy;
-	aE.trajectoryrobot2d_proxy = trajectoryrobot2d_proxy;
+	//aE.trajectoryn2d_proxy = trajectoryrobot2d_proxy;
 	//Proxies for SocialRules
 	sr.socialnavigationgaussian_proxy=socialnavigationgaussian_proxy;
 	sr.agmexecutive_proxy=agmexecutive_proxy;
