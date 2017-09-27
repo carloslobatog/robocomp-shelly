@@ -487,7 +487,7 @@ float Projector::computeForces(Road &road, const RoboCompLaser::TLaserData &lase
 				repulsionForce = jacobian * (T)(FORCE_DISTANCE_LIMIT - w1.minDist);
 
 			}
-		}
+		
 		
 		// ATRACTION_FORCE_COEFFICIENT negative values between 0 and -1. The bigger in magnitude, the stiffer the road becomes PARAM
 		// REPULSION_FORCE_COEFFICIENT Positive values between 0 and 1	 The bigger in magnitude, more separation from obstacles
@@ -510,6 +510,7 @@ float Projector::computeForces(Road &road, const RoboCompLaser::TLaserData &lase
 
 		w1.pos = w1.pos - change;
 		totalChange = totalChange + change.norm2();
+		}
 	}
 	return totalChange;
 }

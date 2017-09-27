@@ -150,7 +150,7 @@ private:
 	// Target info
 	RoboCompTrajectoryRobot2D::TargetPose currentTarget;
 	
-	
+	// New TrajectoryRobot Class
 	robocomp::pathfinder::PathFinder pathfinder;
 	std::thread thread_pathfinder;
  	

@@ -23,10 +23,10 @@
 using namespace std::chrono_literals;
 
 void Controller::initialize(InnerModel *innerModel_,
-														LaserPrx laser_prx, 
-														std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams,
-														OmniRobotPrx omnirobot_proxy_,
-														int delay/*secs*/)
+							LaserPrx laser_prx, 
+							std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams,
+							OmniRobotPrx omnirobot_proxy_,
+							int delay/*secs*/)
 {
 	innerModel = innerModel_;
 	omnirobot_proxy = omnirobot_proxy_;
