@@ -17,8 +17,6 @@
 
 #include "sampler.h"
 
-Sampler::Sampler()
-{}
 
 /**
  * @brief Initializes the Sampler with the limits of robot's workspace and a point to innermodel.
@@ -30,24 +28,24 @@ Sampler::Sampler()
  * @param innerRegions_ List of QRectF polygons delimiting forbidden regions inside robot's workspace
  * @return void
  */
-void Sampler::initialize(InnerModel *inner, const RoboCompCommonBehavior::ParameterList &params)
+void Sampler::initialize(InnerModelMgr inner, std::shared_ptr<RoboCompCommonBehavior::ParameterList> params_)
 {
-  
-	qDebug() << __FUNCTION__ << "Sampler: Copying InnerModel...";
-	//innerModelSampler = inner->copy();
-	innerModelSampler = inner;
+	qDebug() << "Sampler::" << __FUNCTION__;
+	innerModelSampler = inner.deepcopy();    
 	
 	/// Processing configuration parameters
+	try{ robotname = params_->at("RobotName").value;} catch(const std::exception &e){ std::cout << e.what() << " Sampler::initialize - No Robot name defined in config. Using default 'robot' " << std::endl;}
+
 	try
 	{	
-		outerRegion.setLeft(std::stof(params.at("OuterRegionLeft").value));
-		outerRegion.setRight(std::stof(params.at("OuterRegionRight").value));
-		outerRegion.setBottom(std::stof(params.at("OuterRegionBottom").value));
-		outerRegion.setTop(std::stof(params.at("OuterRegionTop").value));
+		outerRegion.setLeft(std::stof(params_->at("OuterRegionLeft").value));
+		outerRegion.setRight(std::stof(params_->at("OuterRegionRight").value));
+		outerRegion.setBottom(std::stof(params_->at("OuterRegionBottom").value));
+		outerRegion.setTop(std::stof(params_->at("OuterRegionTop").value));
 	}
 	catch(const std::exception &e)
 	{ 
-		std::cout << "Exception " << e.what() << " at Sampler::initialize(). OuterRegion parameters not found in config file" << std::endl; 
+		std::cout << "Exception " << e.what() << " Sampler::initialize(). OuterRegion parameters not found in config file" << std::endl; 
 		//robocomp::exception ex("OuterRegion parameters not found in config file");
 		throw e;
 	}
@@ -66,8 +64,8 @@ void Sampler::initialize(InnerModel *inner, const RoboCompCommonBehavior::Parame
 		throw ex;
 	}
 		
-	QStringList ls = QString::fromStdString(params.at("ExcludedObjectsInCollisionCheck").value).replace(" ", "" ).split(',');
-	qDebug() << __FUNCTION__ << ls.size() << "objects read for exclusion list";
+	QStringList ls = QString::fromStdString(params_->at("ExcludedObjectsInCollisionCheck").value).replace(" ", "" ).split(',');
+	qDebug() << __FILE__ << __FUNCTION__ << ls.size() << "objects read for exclusion list";
 	
 	foreach(const QString &s, ls)
 		excludedNodes.insert(s);
@@ -87,16 +85,15 @@ void Sampler::initialize(InnerModel *inner, const RoboCompCommonBehavior::Parame
  * @param targetPos robot position in world ref. system
  * @param targetRot robot rotation in world ref system
  * 
- * @return bool: true if target is a valid position for the robot. 
+ * @return std::pair<bool,QString>: true if target is a valid position for the robot. A diagnosis is provided for debuggin purposes
  */
 
 std::tuple<bool, QString> Sampler::checkRobotValidStateAtTarget(const QVec &targetPos, const QVec &targetRot) const 
 {
- 	QMutexLocker ml(&mutex);
 	QString diagnosis;
 	
 	//First we move the robot in our copy of innermodel to its current coordinates
-	innerModelSampler->updateTransformValues("robot", targetPos.x(), targetPos.y(), targetPos.z(), targetRot.x(), targetRot.y(), targetRot.z());
+ 	innerModelSampler->updateTransformValues("robot", targetPos.x(), targetPos.y(), targetPos.z(), targetRot.x(), targetRot.y(), targetRot.z());
 
 	///////////////////////
 	//// Check if the target is a point inside known space and outside forbidden regions
@@ -106,7 +103,7 @@ std::tuple<bool, QString> Sampler::checkRobotValidStateAtTarget(const QVec &targ
 		diagnosis += "OuterRegion " + QVariant(outerRegion).toString() + "does not contain the point";
 		return std::make_tuple(false, diagnosis);
 	}
-	foreach( QRectF r, innerRegions)
+	foreach( const QRectF &r, innerRegions)
 	{
 		if( r.contains( QPointF(targetPos.x(), targetPos.z())) == true )
 		{
@@ -118,14 +115,13 @@ std::tuple<bool, QString> Sampler::checkRobotValidStateAtTarget(const QVec &targ
 	///////////////////////
 	//// Check if the robot at the target collides with any know object
 	///////////////////////
-//	innerModelSampler->save("lalalala.xml");
 	for ( auto &in : robotNodes )
 	{
 		for ( auto &out : restNodes )
 		{
 			if ( innerModelSampler->collide( in, out))
 			{
-				qDebug() << __FUNCTION__ << "collision de " << in << " con " << out;
+				//qDebug() << __FUNCTION__ << "collision de " << in << " con " << out;
 				diagnosis += "Collision of robot's mesh '" + in + "' with '" + out + "' at robot position " + QString::number(targetPos.x()) + ", " + QString::number(targetPos.z());
 				return std::make_tuple(false, diagnosis);
 			}
@@ -134,12 +130,51 @@ std::tuple<bool, QString> Sampler::checkRobotValidStateAtTarget(const QVec &targ
 	return std::make_tuple(true, diagnosis);
 }
 
+/**
+ * @brief Expects a 6D vector with translation and rotation values
+ * 
+ * @param target p_target:...
+ * @return std::tuple< bool >
+ */
 std::tuple< bool, QString > Sampler::checkRobotValidStateAtTarget(const QVec& target) const
 {
 	if( target.size() != 6 )
 		return std::make_tuple(false, QString("Invalid target vector. A 6D vector is required"));
 	return checkRobotValidStateAtTarget(target.subVector(0,2), target.subVector(3,5));
 }
+
+
+/**
+ * @brief  Ultrafast checkRobotValidStateAtTarget version with simplified functionality. No diagnosisis provided
+ * 
+ * @param targetPos robot position in world ref. system
+ * @param targetRot robot rotation in world ref system
+ * 
+ * @return bool: true if target is a valid position for the robot. 
+ */
+
+bool Sampler::checkRobotValidStateAtTargetFast(const QVec &targetPos, const QVec &targetRot) const 
+{
+	//First we move the robot in our copy of innermodel to its current coordinates
+ 	innerModelSampler->updateTransformValues("robot", targetPos.x(), targetPos.y(), targetPos.z(), targetRot.x(), targetRot.y(), targetRot.z());
+
+	///////////////////////
+	//// Check if the robot at the target collides with any know object
+	///////////////////////
+	for ( auto &in : robotNodes )
+	{
+		for ( auto &out : restNodes )
+		{
+			if ( innerModelSampler->collide( in, out))
+			{
+				//qDebug() << __FUNCTION__ << "collision de " << in << " con " << out;
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
 
 /**
  * @brief Samples nPoints from robot free space delimited by the union of rectangles in outerregion and 
@@ -324,10 +359,6 @@ bool Sampler::checkRobotValidDirectionToTarget(const QVec & origin , const QVec 
 	return true;
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////
-// PRIVATE
-///////////////////////////////////////////////////////////////////////////////////////////
-
 /**
  * @brief Constructs the list of robot and world meshes from InnerModel that will be used in detection of collisions
  * 
@@ -377,106 +408,6 @@ void Sampler::recursiveIncludeMeshes(InnerModelNode *node, QString robotId, bool
 	
 }
 
-//NOT WORKING WELL
-// bool Sampler::checkRobotValidDirectionToTargetBinarySearch(const QVec & origin , const QVec & target, QVec &lastPoint) const
-// {
-// 	const float MAX_LENGTH_ALONG_RAY = (target-origin).norm2();
-// 	bool hit = false;
-// 	QVec finalPoint;
-// 	float wRob=600, hRob=1600;  //GET FROM INNERMODEL!!!
-// 
-// 	
-// 	if( MAX_LENGTH_ALONG_RAY < 50)   //FRACTION OF ROBOT SIZE
-// 	{
-// 		qDebug() << __FUNCTION__ << "target y origin too close";
-// 		lastPoint = target;
-// 		return false;
-// 	}
-// 		
-// 	//Compute angle between origin-target line and world Zaxis
-// 	float alfa1 = QLine2D(target,origin).getAngleWithZAxis();
-// 	//qDebug() << "Angle with Z axis" << origin << target << alfa1;
-// 	
-// 	// Update robot's position and align it with alfa1 so it looks at the TARGET point 	
-// 	innerModelSampler->updateTransformValues("robot", origin.x(), origin.y(), origin.z(), 0., alfa1, 0.);
-// 	
-// 	// Compute rotation matrix between robot and world. Should be the same as alfa
-// 	QMat r1q = innerModelSampler->getRotationMatrixTo("world", "robot");	
-// 
-// 	// Create a tall box for robot body with center at zero and sides:
-// 	//boost::shared_ptr<fcl::Box> robotBox(new fcl::Box(wRob, hRob, wRob));
-// 	
-// 	// Create a collision object
-// //	fcl::CollisionObject robotBoxCol(robotBox);
-// 	
-// 	//Create and fcl rotation matrix to orient the box with the robot
-// 	const fcl::Matrix3f R1( r1q(0,0), r1q(0,1), r1q(0,2), r1q(1,0), r1q(1,1), r1q(1,2), r1q(2,0), r1q(2,1), r1q(2,2) );
-// 		
-// 	//Check collision at maximum distance
-// 	float hitDistance = MAX_LENGTH_ALONG_RAY;
-// 	
-// 	//Resize big box to enlarge it along the ray direction
-// 	robotBox->side = fcl::Vec3f(wRob, hRob, hitDistance);
-// 		
-// 	//Compute the coord of the tip of a "nose" going away from the robot (Z dir) up to hitDistance/2
-// 	const QVec boxBack = innerModelSampler->transform("world", QVec::vec3(0, hRob/2, hitDistance/2.), "robot");
-// 	
-// 	//move the big box so it is aligned with the robot and placed along the nose
-// 	robotBoxCol.setTransform(R1, fcl::Vec3f(boxBack(0), boxBack(1), boxBack(2)));
-// 	
-// 	//Check collision of the box with the world
-// 	for (uint out=0; out<restNodes.size(); out++)
-// 	{
-// 		hit = innerModelSampler->collide(restNodes[out], &robotBoxCol);
-// 		if (hit) break;
-// 	}	
-// 	
-// 	//Binary search. If not free way do a binary search
-// 	if (hit)
-// 	{	
-// 		hit = false;
-// 		float min=0;
-// 		float max=MAX_LENGTH_ALONG_RAY;
-// 		
-// 		while (max-min>10)
-// 		{
-// 			//set hitDistance half way
-// 			hitDistance = (max+min)/2.;
-// 			// Stretch and create the stick
-// 			robotBox->side = fcl::Vec3f(wRob,hRob,hitDistance);
-// 			const QVec boxBack = innerModelSampler->transform("world", QVec::vec3(0, hRob/2, hitDistance/2.), "robot");
-// 			robotBoxCol.setTransform(R1, fcl::Vec3f(boxBack(0), boxBack(1), boxBack(2)));
-// 			
-// 			//qDebug() << "checking ang" << r1q.extractAnglesR_min().y() << "and size " << boxBack << hitDistance;
-// 
-// 			// Check collision using current ray length
-// 			for (uint out=0; out<restNodes.size(); out++)
-// 			{
-// 				hit = innerModelSampler->collide(restNodes[out], &robotBoxCol);
-// 				if (hit)
-// 					break;
-// 			}
-// 			// Manage next min-max range
-// 			if (hit)
-// 				max = hitDistance;
-// 			else
-// 				min = hitDistance;
-// 		}
-// 		// Set final hit distance
-// 		hitDistance = (max+min)/2.;
-// 		
-// 		if( hitDistance < 50) 
-// 			lastPoint = origin;
-// 		else
-// 			lastPoint = innerModelSampler->transform("world", QVec::vec3(0, 0, hitDistance-10), "robot");
-// 		return false;;
-// 	}
-// 	else  //we made it up to the Target!
-// 	{
-// 		lastPoint = target;
-// 		return true;
-// 	}
-// }
 
 /**
  * @brief Checks is there is a valid straight tunnel from origin to target the size of the robot
@@ -489,29 +420,24 @@ void Sampler::recursiveIncludeMeshes(InnerModelNode *node, QString robotId, bool
 
 bool Sampler::checkRobotValidDirectionToTargetOneShot(const QVec & origin , const QVec & target) const
 {
-	//qDebug() << __FUNCTION__ << "Checking between: " << origin << "and " << target;
+	qDebug() << __FUNCTION__ << " Checking between: " << origin << "and " << target;
 	
 	const float MAX_LENGTH_ALONG_RAY = (target-origin).norm2();
 	QVec finalPoint;
 	float wRob=420, hRob=1600;  //GET FROM INNERMODEL!!! 
 	
-// 	if( MAX_LENGTH_ALONG_RAY < 50)   //COMMENT THIS FOR NOW ::::::::::::::::::::...
-// 	{
-// 		qDebug() << __FUNCTION__ << "target y origin too close";
-// 		return false;
-// 	}
-		
 	//Compute angle between origin-target line and world Zaxis
-	float alfa1 = QLine2D(target,origin).getAngleWithZAxis();
-	//qDebug() << "Angle with Z axis" << origin << target << alfa1;
+	float alfa1 = QLine2D(target, origin).getAngleWithZAxis();
+	
+	qDebug() << "Angle with Z axis" << origin << target << alfa1;
 	
 	// Update robot's position and align it with alfa1 so it looks at the TARGET point 	
 	innerModelSampler->updateTransformValues("robot", origin.x(), origin.y(), origin.z(), 0., alfa1, 0.);
 	
 	// Compute rotation matrix between robot and world. Should be the same as alfa
-	QMat r1q = innerModelSampler->getRotationMatrixTo("world", "robot");
+	QMat r1q = innerModelSampler->getRotationMatrixTo("world", QString::fromStdString(robotname));
 	
-	//qDebug()<< "alfa1" << alfa1 << r1q.extractAnglesR_min().y() << "robot" << innerModelSampler->transform("world","robot"); 
+	qDebug()<< "alfa1" << alfa1 << "robot alfa:" << r1q.extractAnglesR_min().y() << "robot tr" << innerModelSampler->transform("world","robot") << MAX_LENGTH_ALONG_RAY; 
 	
 	// Create a tall box for robot body with center at zero and sides:
 	boost::shared_ptr<fcl::Box> robotBox(new fcl::Box(wRob, hRob, wRob));
@@ -529,17 +455,20 @@ bool Sampler::checkRobotValidDirectionToTargetOneShot(const QVec & origin , cons
 	robotBox->side = fcl::Vec3f(wRob, hRob, hitDistance);
 	
 	//Compute the coord of the tip of a "nose" going away from the robot (Z dir) up to hitDistance/2
-	const QVec boxBack = innerModelSampler->transform("world", QVec::vec3(0, hRob/2, hitDistance/2), "robot");
+	const QVec boxBack = innerModelSampler->transformS("world", QVec::vec3(0, hRob/2, hitDistance/2), robotname);
 	
 	//move the big box so it is aligned with the robot and placed along the nose
 	robotBoxCol.setTransform(R1, fcl::Vec3f(boxBack(0), boxBack(1), boxBack(2)));
 		
+	qDebug() << robotBoxCol.getTranslation()[0] <<robotBoxCol.getTranslation()[1]<<robotBoxCol.getTranslation()[2];
+	
+	
 	//Check collision of the box with the world
 	for ( auto &it : restNodes)
 	{
 		if ( innerModelSampler->collide(it, &robotBoxCol))
 		{
-			//qDebug() << __FUNCTION__ << ": Robot collides with " << it;
+			qDebug() << __FUNCTION__ << ": Robot collides with " << it;
 			return false;
 		}
 	}
@@ -592,50 +521,3 @@ bool Sampler::searchRobotValidStateCloseToTarget(QVec& target)
 		return false;
 }
 
-
-///////////////////////
-// 	InnerModelPlane *floor = NULL;
-// 	try
-// 	{
-// 		// 		floor = innerModel->getPlane("floor_plane");  ///TIENE QUE HABER UN FLOOR_PLANE
-// 		// 		qDebug() << __FUNCTION__ << "floor_plane dimensions from InnerModel: " << floor->width << "W" << floor->height << "H";
-// 		// 		QVec upperLeft = innerModel->transform("world", QVec::vec3(floor->width / 2, 0, floor->height / 2), "floor");
-// 		// 		QVec downRight = innerModel->transform("world", QVec::vec3(-floor->width / 2, 0, -floor->height / 2), "floor");
-// 		// 		qDebug() << __FUNCTION__ << "QRect representation:";
-// 		// 		upperLeft.print("	UL");
-// 		// 		downRight.print("	DR");
-// 		// 
-// 		// 		outerRegion.setLeft(upperLeft.x());
-// 		// 		outerRegion.setRight(downRight.x());
-// 		// 		outerRegion.setBottom(downRight.z());
-// 		// 		outerRegion.setTop(upperLeft.z());
-// 		// 		qDebug() << __FUNCTION__ << "OuterRegion" << outerRegion;
-// 		
-// 		/*
-// 		outerRegion.setLeft( upperLeft.x() + floor->point.x() );
-// 		outerRegion.setRight( downRight.x() + floor->point.x() );
-// 		outerRegion.setBottom( downRight.z() + floor->point.z() );
-// 		outerRegion.setTop( upperLeft.z() + floor->point.z() );
-// 		*/
-// 		// 		outerRegion.setLeft(0);
-// 		// 		outerRegion.setRight(6000);
-// 		// 		outerRegion.setBottom(-4250);
-// 		// 		outerRegion.setTop(4250);
-// 		// 		
-// 		
-// // 		outerRegion.setLeft(std::stof(params.at("OuterRegionLeft").value));
-// // 		outerRegion.setRight(std::stof(params.at("OuterRegionRight").value));
-// // 		outerRegion.setBottom(std::stof(params.at("OuterRegionBottom").value));
-// // 		outerRegion.setTop(std::stof(params.at("OuterRegionTop").value));
-// 		
-// 		qDebug() << __FUNCTION__ << "OuterRegion" << outerRegion;
-// 	}
-// 	catch (QString err)
-// 	{
-// 		qDebug() << __FUNCTION__ << "Aborting. We need a plane named 'floor_plane' in InnerModel.xml to delimit robot's space";
-// 		throw err;
-// 	}
-// 
-// 	// for Rocking apartment                         y = x       x = -y
-// 	// 	innerRegions << QRectF(-6000,-5000, 12000, 1000) << QRectF(-6000, -2700, 2900, 3500) << QRectF(6000, 0, -2900 , -5000) << QRectF(4500, 5000, 1800, -10000)<< QRectF(-1800, 3000, 7800, 2000);// << QRectF(-200, -200, 1800, -5000);
-// 	

@@ -95,6 +95,10 @@ void SpecificMonitor::readConfig(RoboCompCommonBehavior::ParameterList &params )
 	params["NavigationAgent.InnerModel"] = aux;
 	
 	aux.editable = false;
+	configGetString("NavigationAgent", "RobotName", aux.value,"robot");
+	params["NavigationAgent.RobotName"] = aux;
+	
+	aux.editable = false;
 	configGetString( "NavigationAgent","ArrivalTolerance", aux.value,"20");
 	params["ArrivalTolerance"] = aux;
 	

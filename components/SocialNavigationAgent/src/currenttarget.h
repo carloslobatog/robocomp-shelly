@@ -20,6 +20,8 @@
 #include <QMutex>
 #include <QMutexLocker>
 #include <qmat/QMatAll>
+#include <mutex>
+#include <thread>
 
 /**
  * @brief Holds the current target since it is created until it is destroyed
@@ -27,32 +29,38 @@
  */
 class CurrentTarget
 {
+	typedef std::lock_guard<std::mutex> guard;
 	public:
-		CurrentTarget();					
-		void reset(const QVec &t = QVec::zeros(3), const QVec &r = QVec::zeros(3), bool hasRotation = false); 						
-		QVec getTranslation() const;			
-		void setTranslation(const QVec &t);
-		QVec getRotation() const;		
-		void setRotation(const QVec &r);
-		QVec getFullPose() const;
-		bool isWithoutPlan() const ;
-		void setWithoutPlan(bool w); 
-		void print();
-		ulong getElapsedTime() const;  //ms
-		bool hasRotation() const;
-		bool isBlocked() const;
-		void setHasRotation(bool a);
-		enum class State { GOTO, SETHEADING, STOP, CHANGETARGET, GOBACKWARDS, IDLE, DISCONNECTED, ROBOT_COLLISION, TARGET_COLLISION, LEARNING, BLOCKED};
-		State state;
-		void setState(State st);
 		
-	private:
-		mutable QMutex mutex;
-		QVec targetTr;
-		QVec targetRot;
-		bool withoutPlan;
-		QTime reloj;
-		bool doRotation;
+ 		CurrentTarget() = default;
+ 		CurrentTarget(CurrentTarget &&other);
+// 		void reset(const QVec &t = QVec::zeros(3), const QVec &r = QVec::zeros(3), bool hasRotation = false); 						
+ 		QVec getTranslation() const;			
+		void setTranslation(const QVec &t);
+ 		QVec getRotation() const;		
+// 		void setRotation(const QVec &r);
+// 		QVec getFullPose() const;
+// 		bool isWithoutPlan() const ;
+// 		void setWithoutPlan(bool w); 
+// 		void print();
+// 		ulong getElapsedTime() const;  //ms
+ 		bool hasRotation() const;
+// 		bool isBlocked() const;
+// 		void setHasRotation(bool a);
+// 		enum class State { GOTO, SETHEADING, STOP, CHANGETARGET, GOBACKWARDS, IDLE, DISCONNECTED, ROBOT_COLLISION, TARGET_COLLISION, LEARNING, BLOCKED};
+// 		State state;
+// 		void setState(State st);
+		inline bool isActive() const;
+		void setActive(bool value);			
+// 		
+// 	private:
+		mutable std::mutex mutex;
+  		QVec targetTr = QVec::zeros(3);
+ 		QVec targetRot = QVec::zeros(3);
+// 		bool withoutPlan;
+// 		QTime reloj;
+ 		bool doRotation = false;;
+  		bool active = false;
 		
 };
 

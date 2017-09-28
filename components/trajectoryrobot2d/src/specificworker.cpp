@@ -109,7 +109,7 @@ void SpecificWorker::updateObstacles(LocalPolyLineList polylines)
 	//Borrar todos los newpolyline_obs_X que existan del innermodel y del innermodel viewer
 	
 	///////////////////////////////removing/////////////////////////
-	for (int i=0; i<100; i++)
+	for (int i=0; i<200; i++)
 	{
 		QString cadena = QString("polyline_obs_") + QString::number(i,10);
 		//printf("puntero a %s: %p\n", cadena.toStdString().c_str(), viewer->innerModel->getNode(cadena));

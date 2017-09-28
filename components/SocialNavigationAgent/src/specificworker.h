@@ -26,6 +26,7 @@
 #include <vector>
 #include <QFile>
 #include "pathfinder.h"
+#include <innermodel/innermodelmgr.h>
 #include <actionexecution.h>
 #include <socialrules.h>
 
@@ -33,6 +34,12 @@
 
 #include <innermodel/innermodel.h>
 #include <boost/format.hpp>
+
+
+//#define USE_QTGUI
+#ifdef USE_QTGUI
+	#include "innerviewer.h"
+#endif
 
 #define THRESHOLD 40
 
@@ -48,7 +55,7 @@ Q_OBJECT
 public:  
 	SpecificWorker(MapPrx& mprx);
 	~SpecificWorker();
-	bool setParams(RoboCompCommonBehavior::ParameterList params);
+	bool setParams(RoboCompCommonBehavior::ParameterList paramsL);
 	
 //bool para indicar si se ha movido la persona, lo utilizare para imprimir la coordenada de la persona cada vez que se mueva
 	bool changepos=false;
@@ -106,14 +113,14 @@ public:
 
 	//double agaussian(SNGPerson person, float x, float y);
 
-	NavState getState(){ return NavState(); };
-	float goBackwards(const TargetPose &target){};
+	NavState getState(){ return pathfinder.getState(); };
+	float goBackwards(const TargetPose &target){return 0.0;};
 	void stop(){};
 	void setHumanSpace(const PolyLineList &polyList){};
-	float goReferenced(const TargetPose &target, const float xRef, const float zRef, const float threshold){ pathfinder.go(target.x, target.z); };
-	float changeTarget(const TargetPose &target){};
+	float goReferenced(const TargetPose &target, const float xRef, const float zRef, const float threshold);
+	float changeTarget(const TargetPose &target){return 0.0;};
 	void mapBasedTarget(const NavigationParameterMap &parameters){};
-	float go(const TargetPose &target){ pathfinder.go(target.x, target.z); };
+	float go(const TargetPose &target){ pathfinder.go(target.x, -target.z); return 0.0;};
 
 	
 public slots:
@@ -125,6 +132,7 @@ public slots:
 	void UpdateInnerModel(SNGPolylineSeq seq);
 
 private:
+	void updateRobotPosition();
 	bool setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated);
 	bool active;
 	void sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel,std::string m);
@@ -133,16 +141,25 @@ private:
 	std::string action;
 	ParameterMap params;
 	AGMModel::SPtr worldModel;
-	InnerModel *innerModel;
+	//InnerModel *innerModel = nullptr;
 	bool haveTarget;
 	QTimer trajReader;
-	InnerModel *inner;
+	//InnerModel *inner;
 	AGMModel::SPtr world;	
 	RoboCompTrajectoryRobot2D::NavState planningState;
 	// Target info
 	RoboCompTrajectoryRobot2D::TargetPose currentTarget;
-	robocomp::pathfinder::PathFinder pathfinder;
 	
+	// New TrajectoryRobot Class
+	robocomp::pathfinder::PathFinder pathfinder;
+	std::thread thread_pathfinder;
+ 	
+	#ifdef USE_QTGUI
+ 		InnerViewer *viewer = nullptr;
+ 	#endif
+	std::string robotname = "robot";
+	RoboCompGenericBase::TBaseState bState;
+	InnerModelMgr innerModel;
 	
 //CHECK
 	//void updateRobotsCognitiveLocation();

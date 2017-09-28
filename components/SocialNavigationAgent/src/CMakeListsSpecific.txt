@@ -9,10 +9,15 @@ SET ( SOURCES
   road.cpp
   sampler.cpp
   pathplanner.cpp
+  innerviewer.cpp
+  drawroad.cpp
+  projector.cpp
+  linesimplifier/simplifyPath.cpp
+  controller.cpp
   actionexecution.cpp
   socialrules.cpp
 )
 
 ADD_DEFINITIONS( -std=c++14 )
 INCLUDE_DIRECTORIES( /usr/include/libxml2 )
-SET (LIBS ${LIBS} -L/usr/local/lib/ fcl -lpointmatcher -lnabo )
+SET (LIBS ${LIBS} -L/usr/local/lib/ pthread osg osgViewer fcl pointmatcher nabo )

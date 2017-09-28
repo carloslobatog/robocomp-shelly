@@ -75,9 +75,9 @@ class SpecificWorker(GenericWorker):
 
 
 	#
-	# RemovePoints
+	# removePoints
 	#
-	def RemovePoints(self, list):
+	def removePoints(self, l):
 		ret = SNGPolylineSeq()
 		#
 		#implementCODE

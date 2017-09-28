@@ -35,7 +35,7 @@ SET ( SOURCES
 
 #ROBOCOMP
 ROBOCOMP_INITIALIZE( $ENV{ROBOCOMP}/ )
-ROBOCOMP_WRAP_ICE( CommonBehavior TrajectoryRobot2D  Logger  OmniRobot  GenericBase  SocialNavigationGaussian  AGMExecutive AGMWorldModel Planning AGMCommonBehavior )
+ROBOCOMP_WRAP_ICE( CommonBehavior TrajectoryRobot2D  Logger  OmniRobot  GenericBase  SocialNavigationGaussian  Laser  GenericBase  AGMExecutive AGMWorldModel Planning AGMCommonBehavior )
 SET (EXECUTABLE_OUTPUT_PATH ${RC_COMPONENT_DEVEL_PATH}/bin)
 
 # Qt4

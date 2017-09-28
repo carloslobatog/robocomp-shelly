@@ -39,6 +39,8 @@ from PySide.QtGui import QTransform, QPainter, QPolygonF
 import math
 
 
+
+
 def getPolyline(grid, resolution, lx_inf, ly_inf):
 
     totalpuntos = []
@@ -431,7 +433,7 @@ class SpecificWorker(GenericWorker):
 
             w = 1.0
 
-            print (obj.x,obj.y)
+            #print (obj.x,obj.y)
             ##para calcular el rectangulo
             s = QRectF(QPointF(0, 0), QSizeF(w, obj.sp))
 
@@ -482,7 +484,7 @@ class SpecificWorker(GenericWorker):
 
             for p in persons:
                 pn = Person(p.x, p.z, p.angle)
-                print("PERSONA", persons.index(p)+1)
+                # print("PERSONA", persons.index(p)+1)
                 if d:
                     body = plt.Circle((pn.x, pn.y), radius=0.3, fill=False)
                     plt.gca().add_patch(body)
@@ -508,7 +510,7 @@ class SpecificWorker(GenericWorker):
                         polylines.append(polyline)
 
 
-        if (d):
+        if d:
             for ps in polylines:
                 #  plt.figure()
                 for p in ps:
@@ -521,66 +523,82 @@ class SpecificWorker(GenericWorker):
         return polylines
 
 
-    #
-    # RemovePoints
-    #
 
-    def RemovePoints(self, listp):
-        aux = listp
-        polylines = []
-        print ("--------------------------------------------------------")
-        print("Hay ", len(listp), "polilineas")
-        for pol in listp:
-            print("creo poligono para polilinea ", listp.index(pol) + 1)
+    #
+    # removePoints
+    #
+    def removePoints(self, listp):
+        print ("Remove Points")
+        print("--------------------------------------------------------")
+        print("Entran", len(listp), "polilineas")
+        #######################################################################
+        poligon_list = []
+
+        for poliline in listp:
             qp = QPolygonF()
-            for p in pol:
+            for p in poliline:
                 qp.append(QPointF(p.x, p.z))
-                # plt.axis('equal')
-                # plt.plot(p.x, p.z, "*g-")
-            qp.append(QPointF(pol[0].x, pol[0].z))
+            poligon_list.append(qp)
 
-        for poly in listp:
-            if listp.index(pol) != listp.index(poly):
+        print("Hay ", len(poligon_list), "poligonos")
+        resulting_list = recursiP(poligon_list)
+        polylines = []
 
-                for point in poly:
-                    contains = False
-                    if qp.containsPoint(QPointF(point.x,point.z),Qt.OddEvenFill):
-                        contains = True
-
-                if contains:
-                    aux.append(poly + pol)
-                    aux.remove(poly)
-                    aux.remove(pol)
-
-
-        for pl in aux[:]:
-            points = []
-            for p in pl:
-                points.append([p.x, p.z])
-
-            points = np.asarray(points)
-            hull = ConvexHull(points)
-            aux.remove(pl)
-            aux.append(points[hull.vertices])
-
-
-        for pol in aux:
-             polyline = []
-             for pnt in pol:
+        for element in resulting_list:
+            polyline = []
+            for pnt in element:
                 punto = SNGPoint2D()
-                punto.x = pnt[0]
-                punto.z = pnt[1]
+                punto.x = pnt.x()
+                punto.z = pnt.y()
                 polyline.append(punto)
-                polylines.append(polyline)
+            polylines.append(polyline)
 
-
-        # plt.figure()
-        # for ps in polylines:
-        #     for p in ps:
-        #         plt.plot(p.x, p.z, "*r-")
-        #         plt.axis('equal')
-        #         plt.xlabel('X')
-        #         plt.ylabel('Y')
-        # plt.show()
-
+        print("Salen", len(polylines), "polilineas")
+        print("--------------------------------------------------------")
         return polylines
+
+
+        #
+        # print("--------------------------------------------------------")
+        # # plt.figure()
+        # # for ps in polylines:
+        # #     for p in ps:
+        # #         plt.plot(p.x, p.z, "*r-")
+        # #         plt.axis('equal')
+        # #         plt.xlabel('X')
+        # #         plt.ylabel('Y')
+        # # plt.show()
+
+
+
+def recursiP(poligon_list):
+    print("--------------------------------------------------------")
+    print ("Recursividad")
+
+    union_list = []
+    index_list = []
+    change = False
+
+    print("Recursividad -- Entran ", len(poligon_list), "poligonos")
+    #for poli in poligon_list:
+        #print ("Poligono ",poligon_list.index(poli),"=", poli)
+
+    for index1, poligon1 in enumerate(poligon_list):
+        if not poligon1 in index_list:
+            resulting_poligon = poligon1
+            for index2, poligon2 in enumerate(poligon_list[index1+1:]):
+
+                if poligon2.intersected(resulting_poligon):
+                    change = True
+                    resulting_poligon = resulting_poligon.united(poligon2)
+                    index_list.append(poligon1)
+                    index_list.append(poligon2)
+
+            union_list.append(resulting_poligon)
+
+    if change:
+        union_list = recursiP(union_list)
+
+    print("Recursividad -- Salen ", len(union_list), "poligonos")
+    print("--------------------------------------------------------")
+    return union_list
