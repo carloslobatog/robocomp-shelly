@@ -36,7 +36,7 @@
 #include <boost/format.hpp>
 
 
-//#define USE_QTGUI
+#define USE_QTGUI
 #ifdef USE_QTGUI
 	#include "innerviewer.h"
 #endif

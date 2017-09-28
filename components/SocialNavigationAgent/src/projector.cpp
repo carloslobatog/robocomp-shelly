@@ -472,7 +472,6 @@ float Projector::computeForces(Road &road, const RoboCompLaser::TLaserData &lase
 			//Compute derivative of force field and store values in w1.bMinuxX .... and w1.minDist. Also variations wrt former epochs
 			computeDistanceField(w1, laserData, FORCE_DISTANCE_LIMIT);
 
-			
 			QVec jacobian(3);
 
 			// space interval to compute the derivative. Related to to robot's size
@@ -480,36 +479,34 @@ float Projector::computeForces(Road &road, const RoboCompLaser::TLaserData &lase
 			if ((w1.minDistHasChanged == true) /*and (w1.minDist < 250)*/ )
 			{
 				jacobian = QVec::vec3(w1.bMinusX - w1.bPlusX,
-															0,
-															w1.bMinusY - w1.bPlusY) * (T) (1.f / (2.f * h));
+									  0,
+									  w1.bMinusY - w1.bPlusY) * (T) (1.f / (2.f * h));
 
 				// repulsion force is computed in the direction of maximun laser-point distance variation and scaled so it is 0 is beyond FORCE_DISTANCE_LIMIT and FORCE_DISTANCE_LIMIT if w1.minDist.
 				repulsionForce = jacobian * (T)(FORCE_DISTANCE_LIMIT - w1.minDist);
-
 			}
 		
-		
-		// ATRACTION_FORCE_COEFFICIENT negative values between 0 and -1. The bigger in magnitude, the stiffer the road becomes PARAM
-		// REPULSION_FORCE_COEFFICIENT Positive values between 0 and 1	 The bigger in magnitude, more separation from obstacles
+			// ATRACTION_FORCE_COEFFICIENT negative values between 0 and -1. The bigger in magnitude, the stiffer the road becomes PARAM
+			// REPULSION_FORCE_COEFFICIENT Positive values between 0 and 1	 The bigger in magnitude, more separation from obstacles
 
-		ATRACTION_FORCE_COEFFICIENT = -0.3;  //PARAMS
-		REPULSION_FORCE_COEFFICIENT = 1.;
+			ATRACTION_FORCE_COEFFICIENT = -0.3;  //PARAMS
+			REPULSION_FORCE_COEFFICIENT = 1.;
 		
-		QVec change = (atractionForce * ATRACTION_FORCE_COEFFICIENT) + (repulsionForce * REPULSION_FORCE_COEFFICIENT);
+			QVec change = (atractionForce * ATRACTION_FORCE_COEFFICIENT) + (repulsionForce * REPULSION_FORCE_COEFFICIENT);
 		
-		if (std::isnan(change.x()) or std::isnan(change.y()) or std::isnan(change.z()))
-		{
-			road.print();
-			qDebug() << atractionForce << repulsionForce;
-			return(0);
-		}
+			if (std::isnan(change.x()) or std::isnan(change.y()) or std::isnan(change.z()))
+			{
+				road.print();
+				qDebug() << atractionForce << repulsionForce;
+				return(0);
+			}
 		
-		//Now we remove the tangencial component of the force to avoid recirculation of band points
-		//QVec pp = road.getTangentToCurrentPoint().getPerpendicularVector();
-		//QVec nChange = pp * (pp * change);
+			//Now we remove the tangencial component of the force to avoid recirculation of band points
+			//QVec pp = road.getTangentToCurrentPoint().getPerpendicularVector();
+			//QVec nChange = pp * (pp * change);
 
-		w1.pos = w1.pos - change;
-		totalChange = totalChange + change.norm2();
+			w1.pos = w1.pos - change;
+			totalChange = totalChange + change.norm2();
 		}
 	}
 	return totalChange;

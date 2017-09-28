@@ -84,17 +84,15 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	}		
 	catch(...)
 	{	rDebug2(("The executive is probably not running, waiting for first AGM model publication...")); }
-	
-// 	if( innerModel == nullptr)
-// 		qFatal("SetParams: InnerModel could not be read from the DSR graph");
-	
-	innerModel = InnerModelMgr(std::make_shared<InnerModel>("/home/pbustos/robocomp/components/robocomp-araceli/etcSim/simulation.xml"));
+		
+	innerModel = InnerModelMgr(std::make_shared<InnerModel>("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml"));
 
 	// Fold arm
  	innerModel->getNode<InnerModelJoint>("armX1")->setAngle(-1);
  	innerModel->getNode<InnerModelJoint>("armX2")->setAngle(2.5);
 	
 	std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams = std::make_shared<RoboCompCommonBehavior::ParameterList>(paramsL);
+	
 	
 	// Initializing PathFinder
 	pathfinder.initialize(innerModel, configparams, laser_proxy, omnirobot_proxy);
@@ -104,28 +102,30 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	rDebug2(("Pathfinder up and running"));
 
 	#ifdef USE_QTGUI
-		//viewer = new InnerViewer(innerModel);  // makes a copy of innermodel for internal use
-		//viewer->start();	
+		viewer = new InnerViewer(innerModel);  // makes a copy of innermodel for internal use
+		viewer->start();	
 	#endif
 
 	qLog::getInstance()->setProxy("both", logger_proxy);
 	rDebug2(("NavigationAgent started"));
-
+	
 	Period = 200;
 	timer.start(Period);
 
-
+	
 	//Proxies for actionExecution
-	aE.logger_proxy = logger_proxy;
-	aE.agmexecutive_proxy = agmexecutive_proxy;
-	aE.omnirobot_proxy = omnirobot_proxy;
+	//aE.logger_proxy = logger_proxy;
+	//aE.agmexecutive_proxy = agmexecutive_proxy;
+	//aE.omnirobot_proxy = omnirobot_proxy;
+	
 	//aE.trajectoryn2d_proxy = trajectoryrobot2d_proxy;
 	//Proxies for SocialRules
-	sr.socialnavigationgaussian_proxy=socialnavigationgaussian_proxy;
-	sr.agmexecutive_proxy=agmexecutive_proxy;
-	sr.mux=mutex;
 	
-	sr.objectInteraction(false);
+	//sr.socialnavigationgaussian_proxy=socialnavigationgaussian_proxy;
+	//sr.agmexecutive_proxy=agmexecutive_proxy;
+	//sr.mux=mutex;
+	
+	//sr.objectInteraction(false);
 	
 	return true;
 }
@@ -137,17 +137,25 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
  */
 void SpecificWorker::compute( )
 {
-// 	static bool first=true;
-// 	if (first)
-// 	{	
-// 		qLog::getInstance()->setProxy("both", logger_proxy);
-// 		rDebug2(("navigationAgent started"));
-// 		first = false;
-// 	}
+ 	static bool first=true;
+ 	if (first)
+ 	{	
+ 		qLog::getInstance()->setProxy("both", logger_proxy);
+ 		rDebug2(("navigationAgent started"));
+ 		first = false;
+ 	}
 
 	// PROVISIONAL read robot position from proxy
-	omnirobot_proxy->getBaseState(bState);
-	//qDebug() << "SpecificWorker::compute" << bState.x << bState.z << bState.alpha;
+	try 
+	{
+		omnirobot_proxy->getBaseState(bState);
+		qDebug() << "SpecificWorker::compute" << bState.x << bState.z << bState.alpha;
+	}
+	catch(const Ice::Exception &ex)
+	{	printf("The executive is probably not running, waiting for first AGM model publication...");
+		std::cout << ex << std::endl;
+	}	
+	
 	//We need to secure access to InnerModel 
 	innerModel.lock();
 		innerModel->updateTransformValues("robot", bState.x,0,bState.z,0,bState.alpha,0);
@@ -161,17 +169,8 @@ void SpecificWorker::compute( )
 	
 	//qDebug() << SpecificWorker::compute";
 	bool sendChangesAGM = false;
-	static bool first=true;
 	
-	if (first)
-	{	
-		qLog::getInstance()->setProxy("both", logger_proxy);
-		rDebug2(("SocialnavigationAgent started"));
-		changepos=true;
-		
-	}
-	
-	AGMModel::SPtr newM(new AGMModel(worldModel));
+//	AGMModel::SPtr newM(new AGMModel(worldModel));
 
 // 	if (worldModel->getIdentifierByType("robot") < 0)
 // 	{ 
@@ -920,7 +919,7 @@ void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq)
 void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modification)
 {	qDebug()<<"StructuralChange";
 	printf("pre <<structuralChange\n");
-	QMutexLocker l(mutex);
+	//QMutexLocker l(mutex);
 	printf("<<structuralChange\n");
 
 // 	AGMModelConverter::fromIceToInternal(modification, worldModel);
