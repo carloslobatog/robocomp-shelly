@@ -143,17 +143,10 @@ int ::SocialNavigationAgent::run(int argc, char* argv[])
 
 	int status=EXIT_SUCCESS;
 
-<<<<<<< HEAD
-	LoggerPrx logger_proxy;
-	OmniRobotPrx omnirobot_proxy;
-	TrajectoryRobot2DPrx trajectoryrobot2d_proxy;
-	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
-=======
 	OmniRobotPrx omnirobot_proxy;
 	LaserPrx laser_proxy;
 	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
 	LoggerPrx logger_proxy;
->>>>>>> ace89f3ebc035ab6533708adbade6dd5476ca1b0
 	AGMExecutivePrx agmexecutive_proxy;
 
 	string proxy, tmp;
@@ -179,32 +172,19 @@ int ::SocialNavigationAgent::run(int argc, char* argv[])
 
 	try
 	{
-<<<<<<< HEAD
-		if (not GenericMonitor::configGetString(communicator(), prefix, "TrajectoryRobot2DProxy", proxy, ""))
-		{
-			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy TrajectoryRobot2DProxy\n";
-		}
-		trajectoryrobot2d_proxy = TrajectoryRobot2DPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
-=======
 		if (not GenericMonitor::configGetString(communicator(), prefix, "LaserProxy", proxy, ""))
 		{
 			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy LaserProxy\n";
 		}
 		laser_proxy = LaserPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
->>>>>>> ace89f3ebc035ab6533708adbade6dd5476ca1b0
 	}
 	catch(const Ice::Exception& ex)
 	{
 		cout << "[" << PROGRAM_NAME << "]: Exception: " << ex;
 		return EXIT_FAILURE;
 	}
-<<<<<<< HEAD
-	rInfo("TrajectoryRobot2DProxy initialized Ok!");
-	mprx["TrajectoryRobot2DProxy"] = (::IceProxy::Ice::Object*)(&trajectoryrobot2d_proxy);//Remote server proxy creation example
-=======
 	rInfo("LaserProxy initialized Ok!");
 	mprx["LaserProxy"] = (::IceProxy::Ice::Object*)(&laser_proxy);//Remote server proxy creation example
->>>>>>> ace89f3ebc035ab6533708adbade6dd5476ca1b0
 
 
 	try

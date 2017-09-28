@@ -49,22 +49,14 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	//SLIDER
 	connect (proximidad,SIGNAL(valueChanged(int)),&sr,SLOT(changevalue(int)));
 	//connect (proximidad,SIGNAL(sliderMoved()),this,SLOT(sliderM()));
-<<<<<<< HEAD
+
 	
 	proximidad->QSlider::setMinimum (10);
-=======
 
-	proximidad->QSlider::setMinimum (0);
->>>>>>> ace89f3ebc035ab6533708adbade6dd5476ca1b0
 	proximidad->QSlider::setMaximum (90);	
 	proximidad->QSlider::setTracking (false);	
 	proximidad->QSlider::setValue (50);
-<<<<<<< HEAD
-	
-	
-=======
 
->>>>>>> ace89f3ebc035ab6533708adbade6dd5476ca1b0
 }		
 /**
  * \brief Default destructor
@@ -370,126 +362,6 @@ float SpecificWorker::goReferenced(const TargetPose &target, const float xRef, c
 
 //If a person has moved its pose it is updated reading it from the AGM again.
 
-<<<<<<< HEAD
-	if (changepos)
-	{
-		totalpersons.clear();
-		
-		for (int ind=0;ind<pn.size();ind++)
-		{
-			if (pn[ind])
-			{	
-				
-				
-				AGMModelSymbol::SPtr personParent = newM->getParentByLink(pSymbolId[ind], "RT");
-				AGMModelEdge &edgeRT = newM->getEdgeByIdentifiers(personParent->identifier, pSymbolId[ind], "RT");
-				person.x = str2float(edgeRT.attributes["tx"])/1000;
-				person.z = str2float(edgeRT.attributes["tz"])/1000;
-				person.angle = str2float(edgeRT.attributes["ry"]);
-	 			//person.vel=str2float(edgeRT.attributes["velocity"]);			
-				person.vel=0;
-				totalpersons.push_back(person);		
-				qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << "Rotacion "<< person.angle/0.0175;			
-				if (totalaux.empty())
-				{
-					//This must be changed. If the first human to be inserted is human2 it would be wrong
-					//totalaux.push_back(person);
-					totalaux[ind]=person;
-					movperson=true;
-				}
-				else if  (movperson==false)
-				{
-					if ((totalaux[ind].x!=person.x)or(totalaux[ind].z!=person.z)or(totalaux[ind].angle!=person.angle))
-						movperson = true;
-			
-					totalaux[ind]=person;  	  
-					
-				}
-				
-				/////////////////////checking if the person is looking at the robot /////////////////////////
-				
-				try
-				{	
-					qDebug()<<"------------------------------------------------";
-					if (sr.checkHRI(person,ind+1,innerModel,newM) == true)
-					{	
-						qDebug()<<"SEND MODIFICATION PROPOSAL";
-						sendChangesAGM = true;
-						
-					}
-					else 
-						qDebug()<<"NO HAY MODIFICACION";
-				}
-				catch(...)
-				{
-			
-				}
-			}
-		}
-		
-		robotSymbolId = newM->getIdentifierByType("robot");
-		AGMModelSymbol::SPtr robotparent = newM->getParentByLink(robotSymbolId, "RT");
-		AGMModelEdge &edgeRTrobot  = newM->getEdgeByIdentifiers(robotparent->identifier, robotSymbolId, "RT");
-			
-		robot.x=str2float(edgeRTrobot.attributes["tx"])/1000;
-		robot.z=str2float(edgeRTrobot.attributes["tz"])/1000;
-		robot.angle=str2float(edgeRTrobot.attributes["ry"]);
-
-		point.x=robot.x;
-		point.z=robot.z;
-		 
-		if (poserobot.size()==0)
-			poserobot.push_back(point);
-	  
-		else if ((poserobot[poserobot.size()-1].x!=point.x)or(poserobot[poserobot.size()-1].z!=point.z))		  
-		{  
-		  float  dist=sqrt((point.x - poserobot[poserobot.size()-1].x)*(point.x - poserobot[poserobot.size()-1].x)
-				+(point.z - poserobot[poserobot.size()-1].z)*(point.z - poserobot[poserobot.size()-1].z));
-		    
-		  totaldist=totaldist + dist;
-		  qDebug()<<"Distancia calculada"<<dist<<"Distancia total"<<totaldist;
-		    
-		  poserobot.push_back(point);  
-		}		 	
-		
-		first = false;
-		changepos=false;	
-	}
-		  
-	if (movperson)
-	{
-	
-		try
-		{
-			RoboCompTrajectoryRobot2D::PolyLineList list = sr.ApplySocialRules(totalpersons);
-			trajectoryrobot2d_proxy->setHumanSpace(list);
-		}
-		
-		catch( const Ice::Exception &e)
-		{ 
-//			std::cout << e << std::endl;
-		}
-		
-	}	
-	
-	
-	movperson=false;
-	
-	//qDebug()<<"Update actionEx";
-	//aE.Update(action,params);
-	
-	
-	if (sendChangesAGM)
-	{	
-		try
-		{
-			sendModificationProposal(newM,worldModel,"-");
-		}
-		catch(...){}
-	}
-}
-	 	
-=======
 // 	if (changepos)
 // 	{
 // 		totalpersons.clear();
@@ -608,7 +480,7 @@ float SpecificWorker::goReferenced(const TargetPose &target, const float xRef, c
 // 	}
 // }
 // 	 	
->>>>>>> ace89f3ebc035ab6533708adbade6dd5476ca1b0
+
 
 void SpecificWorker::savedata()
 {
