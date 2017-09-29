@@ -101,11 +101,6 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	thread_pathfinder = std::thread(&robocomp::pathfinder::PathFinder::run, &pathfinder);
 	rDebug2(("Pathfinder up and running"));
 
-	#ifdef USE_QTGUI
-		viewer = new InnerViewer(innerModel);  // makes a copy of innermodel for internal use
-		viewer->start();	
-	#endif
-
 	qLog::getInstance()->setProxy("both", logger_proxy);
 	rDebug2(("NavigationAgent started"));
 	
@@ -135,7 +130,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
  * Then, their pose is stored.
  * Everytime a person has moved, its position is updated
  */
-void SpecificWorker::compute( )
+void SpecificWorker::compute()
 {
  	static bool first=true;
  	if (first)

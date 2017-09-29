@@ -34,7 +34,7 @@
  using std::chrono::duration_cast;
  using std::chrono::milliseconds;
 
-#define TILE_SIZE 600  // grid discrtization step
+#define TILE_SIZE 400  // grid discrtization step
  
 template<class T> auto operator<<(std::ostream& os, const T& t) -> decltype(t.print(os), os) 
 { 

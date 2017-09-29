@@ -6,9 +6,6 @@
 			<plane id="floor_plane" ny="1" size="10000,10000,10" texture="#eebb77" />
 		</transform>
 		
-		
-		
-		
 		<transform id="room_3">
 
 			<transform id="pared1" tz="5000" ty="950" >
@@ -36,7 +33,6 @@
 				<plane id="muro51" size="7875,1900,10"  texture="#0088FF" />
 			</transform>
 
-
 			<transform id="pared6" tz="-750" tx="4500" ty="950" >
 				<plane id="muro6" size="1000,1900,10"  texture="#00FF00" />
 			</transform>
@@ -44,6 +40,14 @@
 				<plane id="muro61" size="7875,1900,10"  texture="#00FF00" />
 			</transform>
 
+			<transform id="pared7" tz="-2250" tx="1100" ty="950" >
+				<plane id="muro7" size="7875,1900,10"  texture="#FFFF00" />
+			</transform>
+			<transform id="pared71" tz="-2250" tx="-4500" ty="950" >
+				<plane id="muro71" size="1000,1900,10"  texture="#FFFF00" />
+			</transform>
+
+			
 		</transform>
 		
 	</transform>

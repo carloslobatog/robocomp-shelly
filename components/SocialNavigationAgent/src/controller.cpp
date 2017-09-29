@@ -103,9 +103,8 @@ bool Controller::update(InnerModel *innerModel, RoboCompOmniRobot::OmniRobotPrx 
 // 		return false;
 // 	}
 		
-
 	/////////////////////////////////////////////////
-	//////  CHECK CPU AVAILABILITY. If lagging reduce speed  CURRENTLY DISBLED!!!!!!!!!!!!!
+	//////  CHECK CPU AVAILABILITY. If lagging reduces speed  CURRENTLY DISBLED!!!!!!!!!!!!!
 	/////////////////////////////////////////////////
 
 	if ( this->time.elapsed() > this->delay )   //Initial wait in secs so the robot waits for everything is setup. Maybe it could be moved upwards
@@ -118,7 +117,6 @@ bool Controller::update(InnerModel *innerModel, RoboCompOmniRobot::OmniRobotPrx 
 		//float vadvance = 0;
 		//float vrot = 0;
 	}
-	
 	
 	/////////////////////////////////////////////////
 	///  SPEED DIRECTION AND MODULUS
@@ -134,7 +132,7 @@ bool Controller::update(InnerModel *innerModel, RoboCompOmniRobot::OmniRobotPrx 
 	float vrot = 0;
 	QVec robotRot = innerModel->transform6D("world", "robot").subVector(3, 5);
 	if( (road.getRobotDistanceToTarget() > ROBOT_RADIUS_MM *3) or 
-	(road.getRobotDistanceToTarget() > ROBOT_RADIUS_MM and road.last().hasRotation and (angmMPI(road.last().rot(1) - robotRot.y()) > M_PI/2.0)))// No rotation if target is close so small translational movements are allowed
+		(road.getRobotDistanceToTarget() > ROBOT_RADIUS_MM and road.last().hasRotation and (angmMPI(road.last().rot(1) - robotRot.y()) > M_PI/2.0)))// No rotation if target is close so small translational movements are allowed
 	{
 		vrot = 0.7 * road.getAngleWithTangentAtClosestPoint();
  		if(vrot > MAX_ROT_SPEED) vrot = MAX_ROT_SPEED;
@@ -153,13 +151,15 @@ bool Controller::update(InnerModel *innerModel, RoboCompOmniRobot::OmniRobotPrx 
 
 	// Turn radialDir towards the road if robot's perpendicular distance to road is != 0
 	// Compute turn angle
-	float mod = exponentialFunction(1.f/road.getRobotPerpendicularDistanceToRoad(), 1./250, 0.5, 0 );
+	float mod = exponentialFunction(1.f/road.getRobotPerpendicularDistanceToRoad(), 1./500, 0.5, 0 );
+	
 	// Compute rotation matrix for radialDir
 	Rot2D fix( mod * -sgn(road.getRobotPerpendicularDistanceToRoad()));  //Esto no deberia ser asi pero es!!
+	
 	// rotate radialDir with angle
 	radialDir = fix * radialDir;
 	
-	//Now change sense and scale according to properties of the road and target
+	//Now change direction and scale according to properties of the road and target
 	float modulus = MAX_ADV_SPEED 
 									* exponentialFunction(road.getRoadCurvatureAtClosestPoint(), 5, 0.7 , 0.1)									
 									* exponentialFunction(1./road.getRobotDistanceToTarget(),1./700, 0.4, 0.1)
@@ -168,7 +168,8 @@ bool Controller::update(InnerModel *innerModel, RoboCompOmniRobot::OmniRobotPrx 
 	radialDir = radialDir * (T)-modulus;
 	
 	//Next, decompose it into vadvance and vside componentes by projecting on robot's Z and X axis
-	float vside = radialDir * QVec::vec2(1.,0.);
+	float vside = radialDir * QVec::vec2(0.4,0.);
+	
 	//vside += road.getRobotPerpendicularDistanceToRoad()*0.2;
 	float vadvance = radialDir * QVec::vec2(0.,1.);
 
