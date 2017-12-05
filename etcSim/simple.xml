@@ -72,7 +72,7 @@
  <node alias="executive" endpoint="agmexecutive:tcp -h localhost -p 10198">
   <dependence alias="storm" />
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost AGMExecutive /home/robocomp/AGM/tools/AGMExecutive_robocomp python AGMExecutive_robocomp.py /home/robocomp/robocomp/components/robocomp-shelly/etcSim/executiveAUTONOMY.conf" />
+  <upCommand command="rcremote localhost AGMExecutive /home/robocomp/AGM/tools/AGMExecutive_robocomp python AGMExecutive_robocomp.py /home/robocomp/robocomp/components/robocomp-araceli/etcSim/executiveAUTONOMY.conf" />
   <downCommand command="pkill -9 -f AGMExecutive_robocomp.py" />
   <configFile path="xxx" />
   <xpos value="-8.22150957623" />
@@ -99,7 +99,7 @@
   <!--<dependence alias="socialnavigA"/>-->
   <dependence alias="socialnavigA"/>
   <workingDir path="/home/robocomp/"/>
-  <upCommand command="rcremote localhost testtrajectory2D /home/robocomp/robocomp/components/robocomp-tests/testTrajectoryRobot2D python ./src/testTrajectoryRobot2D.py config"/>
+  <upCommand command="rcremote localhost testtrajectory2D /home/robocomp/robocomp/components/robocomp-tests/testTrajectoryRobot2D python src/testTrajectoryRobot2D.py etc/config"/>
   <downCommand command="pkill -9 -f testTrajectoryRobot2D.py"/>
   <configFile path="/home/robocomp/robocomp/components/robocomp-tests/testTrajectoryRobot2D/config"/>
   <xpos value="-271.097569307"/><ypos value="-63.5106363282"/>
@@ -111,7 +111,7 @@
   <!--<dependence alias="executive" />-->
   <dependence alias="base" />
   <workingDir path="/home/robocomp/" />
-  <upCommand command="rcremote localhost socialnavAgnt /home/robocomp/robocomp/components/robocomp-araceli/components/SocialNavigationAgent ./bin/SocialNavigationAgent /home/robocomp/robocomp/components/robocomp-araceli/etcSimPablo/socialnavigationAgent.conf" />
+  <upCommand command="rcremote localhost socialnavAgnt /home/robocomp/robocomp/components/robocomp-araceli/components/SocialNavigationAgent ./bin/SocialNavigationAgent /home/robocomp/robocomp/components/robocomp-araceli/etcSim/socialnavigationAgent.conf" />
   <downCommand command="killall -9 SocialNavigationAgent" />
   <configFile path="/home/robocomp/robocomp/components/robocomp-araceli/etcSim/socialnavigationAgent.conf" />
   <xpos value="-77.9789855056" />
