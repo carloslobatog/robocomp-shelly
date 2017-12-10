@@ -43,12 +43,12 @@ public:
 	
 	SNGPolylineSeq sequence, sequence2, sequenceObj;
 	
-	SNGObject object;
+
 	SNGObjectSeq objects;
 	SNGPolylineSeq seq;
 	int32_t objectSymbolId;
 
-	RoboCompTrajectoryRobot2D::PolyLineList ApplySocialRules(SNGPersonSeq tperson);
+	SNGPolylineSeq ApplySocialRules(SNGPersonSeq tperson);
 	void  structuralChange(const RoboCompAGMWorldModel::World & modification);
 	bool checkHRI(SNGPerson p, int ind, InnerModel *i, AGMModel::SPtr w);
 	

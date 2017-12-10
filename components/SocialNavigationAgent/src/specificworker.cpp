@@ -114,13 +114,15 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	//aE.omnirobot_proxy = omnirobot_proxy;
 	
 	//aE.trajectoryn2d_proxy = trajectoryrobot2d_proxy;
+	
+	
 	//Proxies for SocialRules
 	
-	//sr.socialnavigationgaussian_proxy=socialnavigationgaussian_proxy;
-	//sr.agmexecutive_proxy=agmexecutive_proxy;
-	//sr.mux=mutex;
+	sr.socialnavigationgaussian_proxy=socialnavigationgaussian_proxy;
+	sr.agmexecutive_proxy=agmexecutive_proxy;
+	sr.mux=mutex;
 	
-	//sr.objectInteraction(false);
+	sr.objectInteraction(false);
 	
 	return true;
 }
@@ -144,7 +146,7 @@ void SpecificWorker::compute()
 	try 
 	{
 		omnirobot_proxy->getBaseState(bState);
-		qDebug() << "SpecificWorker::compute" << bState.x << bState.z << bState.alpha;
+	//	qDebug() << "SpecificWorker::compute" << bState.x << bState.z << bState.alpha;
 	}
 	catch(const Ice::Exception &ex)
 	{	printf("The executive is probably not running, waiting for first AGM model publication...");
@@ -165,14 +167,14 @@ void SpecificWorker::compute()
 	//qDebug() << SpecificWorker::compute";
 	bool sendChangesAGM = false;
 	
-//	AGMModel::SPtr newM(new AGMModel(worldModel));
-
+	AGMModel::SPtr newM(new AGMModel(worldModel));
 // 	if (worldModel->getIdentifierByType("robot") < 0)
 // 	{ 
 // 		try 
 // 		{
 // 			//qDebug()<<"Leo el mundo";
-// 			agmexecutive_proxy->broadcastModel();		
+// 			//RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
+// 			//structuralChange(w);		
 // 			return;
 // 		}
 // 		catch(...)
@@ -180,223 +182,76 @@ void SpecificWorker::compute()
 // 			//printf("The executive is probably not running, waiting for first AGM model publication...");	}	
 // 		}
 // 	}
-// 
-// 	//Check if the person is in the model
-// 	for (uint i=0;i < pn.size();i++)
-// 	{
-// 
-// 		if (pn[i]==false)
-// 		{	
-// 			std::string type = "person" + std::to_string(i+1);
-// 			std::string name = "fakeperson" + std::to_string(i+1);
-// 
-// 			int idx=0;
-// 			while ((personSymbolId = worldModel->getIdentifierByType(type, idx++)) != -1)
-// 			{
-// 				if (idx > 4) exit(0);
-// 				if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
-// 				{
-// 					pSymbolId[i]=personSymbolId;
-// 					pn[i]=true;
-// 
-// 					break;
-// 				}	  
-// 			}			
-// 		}
-// 	}
-// 
-// 	//If a person has moved its pose it is updated reading it from the AGM again.
-// 
-// 	if (changepos)
-// 	{
-// 		totalp.clear();
-// 		totalpmov.clear();
-// 		totalpersons.clear();
-// 		for (u_int16_t ind=0;ind < pn.size();ind++)
-// 		{
-// 			if (pn[ind])
-// 			{
-// 				AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(pSymbolId[ind], "RT");
-// 				AGMModelEdge &edgeRT = worldModel->getEdgeByIdentifiers(personParent->identifier, pSymbolId[ind], "RT");
-// 				person.x = str2float(edgeRT.attributes["tx"])/1000;
-// 				person.z = str2float(edgeRT.attributes["tz"])/1000;
-// 				person.angle = str2float(edgeRT.attributes["ry"]);
-// 				// 			person.vel=str2float(edgeRT.attributes["velocity"]);			
-// 				totalpersons.push_back(person);		
-// 
-// 				// 			if(person.vel>0)
-// 				// 				ppn[ind]=true;
-// 				//				totalpmov.push_back(person);
-// 				// 			else
-// 				// 				ppn[ind]=false;
-// 				totalp.push_back(person);		
-// 			}
-// 
-// 			if (first)
-// 			{
-// 				totalaux.push_back(person);
-// 				movperson=true;
-// 			}
-// 			else
-// 			{
-// 				if  (movperson==false){
-// 					if ((totalaux[i].x!=person.x)||(totalaux[i].z!=person.z)||(totalaux[i].angle!=person.angle))
-// 						movperson = true;
-// 				}
-// 
-// 				totalaux[i]=person;
-// 			}
-// 		}
-// 
-// 		robotSymbolId = worldModel->getIdentifierByType("robot");
-// 		AGMModelSymbol::SPtr robotparent = worldModel->getParentByLink(robotSymbolId, "RT");
-// 		AGMModelEdge &edgeRTrobot  = worldModel->getEdgeByIdentifiers(robotparent->identifier, robotSymbolId, "RT");
-// 
-// 		robot.x=str2float(edgeRTrobot.attributes["tx"])/1000;
-// 		robot.z=str2float(edgeRTrobot.attributes["tz"])/1000;
-// 		robot.angle=str2float(edgeRTrobot.attributes["ry"]);
-// 
-// 		point.x=robot.x;
-// 		point.z=robot.z;
-// 
-// 		if (poserobot.size()==0)
-// 			poserobot.push_back(point);
-// 
-// 		else if ((poserobot[poserobot.size()-1].x!=point.x)||(poserobot[poserobot.size()-1].z!=point.z))		  
-// 		{  
-// 			float  dist=sqrt((point.x - poserobot[poserobot.size()-1].x)*(point.x - poserobot[poserobot.size()-1].x)
-// 					+(point.z - poserobot[poserobot.size()-1].z)*(point.z - poserobot[poserobot.size()-1].z));
-// 
-// 			totaldist=totaldist + dist;
-// 			qDebug()<<"Distancia calculada"<<dist<<"Distancia total"<<totaldist;
-// 
-// 			poserobot.push_back(point);  
-// 		}		 	    
-// 		first = false;
-// 		changepos=false;	
-// 	}
-// 
-// 	if (movperson)
-// 	{
-// 		qDebug ("A person has moved. Calling trajectory");		
-// 		try
-// 		{  
-// 			SNGPolylineSeq seq = gauss(false);
-// 			UpdateInnerModel(seq);
-// 			RoboCompTrajectoryRobot2D::PolyLineList list;
-// 			for(auto s: seq)
-// 			{
-// 				RoboCompTrajectoryRobot2D::PolyLine poly; 
-// 				for(auto p: s)   
-// 				{
-// 					RoboCompTrajectoryRobot2D::PointL pointT = {p.x, p.z};
-// 					poly.push_back(pointT);
-// 				}
-// 				list.push_back(poly);
-// 			}
-// 			//  trajectoryrobot2d_proxy->setHumanSpace(list);
-// 		}
-// 		catch( const Ice::Exception &e)
-// 		{ 
-// 			std::cout << e << std::endl;
-// 		}		
-// 		movperson = false;
-// 	}	
 
-	//actionExecution();
-}	 	
+	//Check if the person is in the model
+	
+ 	for (int i=0;i<pn.size();i++)
+	{
 
-
-float SpecificWorker::goReferenced(const TargetPose &target, const float xRef, const float zRef, const float threshold)
-{
-	//std::shared_ptr<InnerModel> in = std::make_shared<InnerModel>("/home/pbustos/robocomp/components/robocomp-araceli/etcSim/simulation.xml");
-	InnerModelMgr newInnerModel = InnerModelMgr(std::make_shared<InnerModel>("/home/pbustos/robocomp/components/robocomp-araceli/etcSim/simulation.xml"));
-	innerModel.reset(newInnerModel);
-	pathfinder.innerModelChanged(newInnerModel, true);
-	pathfinder.go(target.x, target.z); return 0.0;
-};
-
-
-/**
- * \brief Change the slider's value
- */
-
-// void SpecificWorker::changevalue(int value)
-// {
-// 	prox=value;
-// 	qDebug()<<"Proximity" << prox;
-// }
-// /**
-//  * \brief This is for saving in txt files different informations (robotpose,personpose,polylines and dist)
-//  */
-// 
-// 	//Check if the person is in the model
-//  	for (int i=0;i<pn.size();i++)
-// 	{
-// 
-// 		if (pn[i]==false)
-// 		{	
-// 			std::string type = "person" + std::to_string(i+1);
-// 			std::string name = "fakeperson" + std::to_string(i+1);
-// 			
-// 			int idx=0;
-// 			while ((personSymbolId = newM->getIdentifierByType(type, idx++)) != -1)
-// 			{
-// 				if (idx > 4) exit(0);
-// 				if (newM->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
-// 				{
-// 					pSymbolId[i]=personSymbolId;
-// 					changepos=true;
-// 					pn[i]=true;
-// 					break;
-// 				}	  
-// 			}			
-// 		}
-// 	}
+		if (pn[i]==false)
+		{	
+			std::string type = "person" + std::to_string(i+1);
+			std::string name = "fakeperson" + std::to_string(i+1);
+			
+			int idx=0;
+			while ((personSymbolId = newM->getIdentifierByType(type, idx++)) != -1)
+			{
+				if (idx > 4) exit(0);
+				if (newM->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
+				{
+					pSymbolId[i]=personSymbolId;
+					changepos=true;
+					pn[i]=true;
+					break;
+				}	  
+			}			
+		}
+	}
 
 //If a person has moved its pose it is updated reading it from the AGM again.
 
-// 	if (changepos)
-// 	{
-// 		totalpersons.clear();
-// 		
-// 		for (int ind=0;ind<pn.size();ind++)
-// 		{
-// 			if (pn[ind])
-// 			{	
-// 				
-// 				
-// 				AGMModelSymbol::SPtr personParent = newM->getParentByLink(pSymbolId[ind], "RT");
-// 				AGMModelEdge &edgeRT = newM->getEdgeByIdentifiers(personParent->identifier, pSymbolId[ind], "RT");
-// 				person.x = str2float(edgeRT.attributes["tx"])/1000;
-// 				person.z = str2float(edgeRT.attributes["tz"])/1000;
-// 				person.angle = str2float(edgeRT.attributes["ry"]);
-// 	 			//person.vel=str2float(edgeRT.attributes["velocity"]);			
-// 				person.vel=0;
-// 				totalpersons.push_back(person);		
-// 				qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << "Rotacion "<< person.angle/0.0175;			
-// 				if (totalaux.empty())
-// 				{
-// 					//This must be changed. If the first human to be inserted is human2 it would be wrong
-// 					//totalaux.push_back(person);
-// 					totalaux[ind]=person;
-// 					movperson=true;
-// 				}
-// 				else if  (movperson==false)
-// 				{
-// 					if ((totalaux[ind].x!=person.x)or(totalaux[ind].z!=person.z)or(totalaux[ind].angle!=person.angle))
-// 						movperson = true;
-// 			
-// 					totalaux[ind]=person;  	  
-// 					
-// 				}
-// 				
-// 				/////////////////////checking if the person is looking at the robot /////////////////////////
-// 				
+	if (changepos)
+	{
+		totalpersons.clear();
+		
+		for (int ind=0;ind<pn.size();ind++)
+		{
+			if (pn[ind])
+			{	
+				AGMModelSymbol::SPtr personParent = newM->getParentByLink(pSymbolId[ind], "RT");
+				AGMModelEdge &edgeRT = newM->getEdgeByIdentifiers(personParent->identifier, pSymbolId[ind], "RT");
+				
+				person.x = str2float(edgeRT.attributes["tx"])/1000;
+				person.z = str2float(edgeRT.attributes["tz"])/1000;
+				person.angle = str2float(edgeRT.attributes["ry"]);
+	 			//person.vel=str2float(edgeRT.attributes["velocity"]);			
+				person.vel=0;
+				totalpersons.push_back(person);	
+				
+				qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << "Rotacion "<< person.angle;			
+				
+				if (totalaux.empty())
+				{
+					//This must be changed. If the first human to be inserted is human2 it would be wrong
+					//totalaux.push_back(person);
+					totalaux[ind]=person;
+					movperson=true;
+				}
+				else if  (movperson==false)
+				{
+					if ((totalaux[ind].x!=person.x)or(totalaux[ind].z!=person.z)or(totalaux[ind].angle!=person.angle))
+						movperson = true;
+			
+					totalaux[ind]=person;  	  
+					
+				}
+				
+				/////////////////////checking if the person is looking at the robot /////////////////////////
+				
 // 				try
 // 				{	
 // 					qDebug()<<"------------------------------------------------";
-// 					if (sr.checkHRI(person,ind+1,innerModel,newM) == true)
+// 					if (sr.checkHRI(person,ind+1,innerModel.get(),newM) == true)
 // 					{	
 // 						qDebug()<<"SEND MODIFICATION PROPOSAL";
 // 						sendChangesAGM = true;
@@ -409,71 +264,85 @@ float SpecificWorker::goReferenced(const TargetPose &target, const float xRef, c
 // 				{
 // 			
 // 				}
-// 			}
-// 		}
-// 		
-// 		robotSymbolId = newM->getIdentifierByType("robot");
-// 		AGMModelSymbol::SPtr robotparent = newM->getParentByLink(robotSymbolId, "RT");
-// 		AGMModelEdge &edgeRTrobot  = newM->getEdgeByIdentifiers(robotparent->identifier, robotSymbolId, "RT");
-// 			
-// 		robot.x=str2float(edgeRTrobot.attributes["tx"])/1000;
-// 		robot.z=str2float(edgeRTrobot.attributes["tz"])/1000;
-// 		robot.angle=str2float(edgeRTrobot.attributes["ry"]);
-// 
-// 		point.x=robot.x;
-// 		point.z=robot.z;
-// 		 
-// 		if (poserobot.size()==0)
-// 			poserobot.push_back(point);
-// 	  
-// 		else if ((poserobot[poserobot.size()-1].x!=point.x)or(poserobot[poserobot.size()-1].z!=point.z))		  
-// 		{  
-// 		  float  dist=sqrt((point.x - poserobot[poserobot.size()-1].x)*(point.x - poserobot[poserobot.size()-1].x)
-// 				+(point.z - poserobot[poserobot.size()-1].z)*(point.z - poserobot[poserobot.size()-1].z));
-// 		    
-// 		  totaldist=totaldist + dist;
-// 		  qDebug()<<"Distancia calculada"<<dist<<"Distancia total"<<totaldist;
-// 		    
-// 		  poserobot.push_back(point);  
-// 		}		 	
-// 		
-// 		first = false;
-// 		changepos=false;	
-// 	}
-// 		  
-// 	if (movperson)
-// 	{
-// 	
-// 		try
-// 		{
-// 			RoboCompTrajectoryRobot2D::PolyLineList list = sr.ApplySocialRules(totalpersons);
-// 			trajectoryrobot2d_proxy->setHumanSpace(list);
-// 		}
-// 		
-// 		catch( const Ice::Exception &e)
-// 		{ 
-// //			std::cout << e << std::endl;
-// 		}
-// 		
-// 	}	
-// 	
-// 	
-// 	movperson=false;
-// 	
-// 	//qDebug()<<"Update actionEx";
-// 	//aE.Update(action,params);
-// 	
-// 	if (sendChangesAGM)
-// 	{	
-// 		try
-// 		{
-// 			sendModificationProposal(newM,worldModel,"-");
-// 		
-// 		}
-// 		catch(...){}
-// 	}
-// }
-// 	 	
+			}
+		}
+		
+		robotSymbolId = newM->getIdentifierByType("robot");
+		AGMModelSymbol::SPtr robotparent = newM->getParentByLink(robotSymbolId, "RT");
+		AGMModelEdge &edgeRTrobot  = newM->getEdgeByIdentifiers(robotparent->identifier, robotSymbolId, "RT");
+			
+		robot.x=str2float(edgeRTrobot.attributes["tx"])/1000;
+		robot.z=str2float(edgeRTrobot.attributes["tz"])/1000;
+		robot.angle=str2float(edgeRTrobot.attributes["ry"]);
+
+		point.x=robot.x;
+		point.z=robot.z;
+		 
+		if (poserobot.size()==0)
+			poserobot.push_back(point);
+	  
+		else if ((poserobot[poserobot.size()-1].x!=point.x)or(poserobot[poserobot.size()-1].z!=point.z))		  
+		{  
+		  float  dist=sqrt((point.x - poserobot[poserobot.size()-1].x)*(point.x - poserobot[poserobot.size()-1].x)
+				+(point.z - poserobot[poserobot.size()-1].z)*(point.z - poserobot[poserobot.size()-1].z));
+		    
+		  totaldist=totaldist + dist;
+		  qDebug()<<"Distancia calculada"<<dist<<"Distancia total"<<totaldist;
+		    
+		  poserobot.push_back(point);  
+		}		 	
+		
+		first = false;
+		changepos=false;	
+	}
+		  
+	if (movperson)
+	{
+	
+		try
+		{
+			SNGPolylineSeq list = sr.ApplySocialRules(totalpersons);
+			qDebug()<<"salgo de ApplySocialRules";
+			
+			//UpdateInnerModel(list);
+		}
+		
+		catch( const Ice::Exception &e)
+		{ 
+//			std::cout << e << std::endl;
+		}
+		
+	}	
+	
+	
+	movperson=false;
+	
+	//qDebug()<<"Update actionEx";
+	//aE.Update(action,params);
+	
+	
+	if (sendChangesAGM)
+	{	
+		try
+		{
+			sendModificationProposal(newM,worldModel,"-");
+		}
+		catch(...){}
+	}
+}
+	 	
+	 	
+
+
+float SpecificWorker::goReferenced(const TargetPose &target, const float xRef, const float zRef, const float threshold)
+{
+	//std::shared_ptr<InnerModel> in = std::make_shared<InnerModel>("/home/pbustos/robocomp/components/robocomp-araceli/etcSim/simulation.xml");
+	InnerModelMgr newInnerModel = InnerModelMgr(std::make_shared<InnerModel>("/home/pbustos/robocomp/components/robocomp-araceli/etcSim/simulation.xml"));
+	innerModel.reset(newInnerModel);
+	pathfinder.innerModelChanged(newInnerModel, true);
+	pathfinder.go(target.x, target.z); return 0.0;
+};
+
 
 
 void SpecificWorker::savedata()
@@ -752,18 +621,18 @@ void SpecificWorker::symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence &m
 
 void SpecificWorker::edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &modifications)
 {	
-	//qDebug()<<"edgesUpdated";
-// 	changepos=true;
-// 	QMutexLocker lockIM(mutex);
-// 
-// 	for (auto modification : modifications)
-// 	{
-// 		AGMModelConverter::includeIceModificationInInternalModel(modification, worldModel);
-// 		AGMModelEdge dst;
-// 		AGMModelConverter::fromIceToInternal(modification,dst);
-// 		AGMInner::updateImNodeFromEdge(worldModel, dst, innerModel);
-// 		updateRobotPosition();
-// 	}
+	qDebug()<<"edgesUpdated";
+	changepos=true;
+	QMutexLocker lockIM(mutex);
+
+	for (auto modification : modifications)
+	{
+		AGMModelConverter::includeIceModificationInInternalModel(modification, worldModel);
+		AGMModelEdge dst;
+		AGMModelConverter::fromIceToInternal(modification,dst);
+		AGMInner::updateImNodeFromEdge(worldModel, dst, innerModel.get());
+		updateRobotPosition();
+	}
 }
 
 /**
@@ -771,15 +640,15 @@ void SpecificWorker::edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &mod
  */ 
 void SpecificWorker::edgeUpdated(const RoboCompAGMWorldModel::Edge& modification)
 {	
-// 	changepos=true;
-// 
-// 	qDebug() << "edgeUpdated";
-// 	QMutexLocker lockIM(mutex);
-// 	AGMModelConverter::includeIceModificationInInternalModel(modification, worldModel);
-// 	AGMModelEdge dst;
-// 	AGMModelConverter::fromIceToInternal(modification,dst);
-// 	AGMInner::updateImNodeFromEdge(worldModel, dst, innerModel);
-// 	updateRobotPosition();
+	changepos=true;
+
+	qDebug() << "edgeUpdated";
+	QMutexLocker lockIM(mutex);
+	AGMModelConverter::includeIceModificationInInternalModel(modification, worldModel);
+	AGMModelEdge dst;
+	AGMModelConverter::fromIceToInternal(modification,dst);
+	AGMInner::updateImNodeFromEdge(worldModel, dst, innerModel.get());
+	updateRobotPosition();
 }
 
 

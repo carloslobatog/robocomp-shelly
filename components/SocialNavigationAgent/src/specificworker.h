@@ -55,14 +55,14 @@ Q_OBJECT
 public:  
 	SpecificWorker(MapPrx& mprx);
 	~SpecificWorker();
-	bool setParams(RoboCompCommonBehavior::ParameterList paramsL);
+	bool setParams(RoboCompCommonBehavior::ParameterList params);
 	
 //bool para indicar si se ha movido la persona, lo utilizare para imprimir la coordenada de la persona cada vez que se mueva
 	bool changepos=false;
 	
 	SNGPolylineSeq sequence;
 	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
-	SNGPersonSeq totalpersons; //este es para leer el fichero
+	
 	SNGPerson robot;	
 	vector <bool> pn = {false,false,false,false,false,false};  // to check if the person is in the world	
 	//vector <bool> ppn = {false,false,false,false,false,false};  // if the person is moving
@@ -70,6 +70,7 @@ public:
 	int32_t pSymbolId[6];
 	
 	SNGPerson person;
+	SNGPersonSeq totalpersons; 
 //	SNGPerson personaux;
 // 	SNGPersonSeq totalp; // quiet person
 // 	SNGPersonSeq totalpmov; //moving person

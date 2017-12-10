@@ -46,10 +46,13 @@ void SocialRules::changevalue(int value)
 
 SNGPolylineSeq SocialRules::gauss(bool draw)
 {
+	qDebug()<<__FUNCTION__;
+	
 	if (!quietperson.empty())
-	{  
+	{  	
 		sequence.clear();
 		sequence = socialnavigationgaussian_proxy-> getPersonalSpace(quietperson, prox, draw);
+	
 	}
 	return sequence;
 }
@@ -57,7 +60,8 @@ SNGPolylineSeq SocialRules::gauss(bool draw)
 
 SNGPolylineSeq SocialRules::PassOnRight(bool draw)
 {
-
+		
+	qDebug()<<__FUNCTION__;
 	if (!movperson.empty())
 	{
 		sequence2.clear();
@@ -72,12 +76,13 @@ SNGPolylineSeq SocialRules::PassOnRight(bool draw)
 
 SNGPolylineSeq SocialRules::objectInteraction(bool d)
 {
-  
+	qDebug()<<__FUNCTION__;
+	
 	RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
-	structuralChange(w);
+	AGMModelConverter::fromIceToInternal(w, worldModel);
 	
 	objects.clear();
-	
+	sequenceObj.clear();
 	try
 	{
 		int idx=0;
@@ -86,6 +91,7 @@ SNGPolylineSeq SocialRules::objectInteraction(bool d)
 			
 			AGMModelSymbol::SPtr objectP = worldModel->getParentByLink(objectSymbolId, "RT");
 			AGMModelEdge &edgeRT  = worldModel->getEdgeByIdentifiers(objectP->identifier,objectSymbolId, "RT");
+			SNGObject object;
 			object.x = str2float(edgeRT.attributes["tx"])/1000;
 			object.z = str2float(edgeRT.attributes["tz"])/1000;
 			object.angle=str2float(edgeRT.attributes["ry"]);
@@ -95,12 +101,14 @@ SNGPolylineSeq SocialRules::objectInteraction(bool d)
 			
 			qDebug()<<"Object"<<"Pose x"<<object.x<<"Pose z"<<object.z<<"Angle"<<object.angle<<"Space"<<object.space;
 		}
+		
+		sequenceObj = socialnavigationgaussian_proxy->getObjectInteraction(totalperson,objects,d);
 	}
 	catch(...){}
 	
 
-	sequenceObj.clear();
-	sequenceObj = socialnavigationgaussian_proxy->getObjectInteraction(totalperson,objects,d);
+	
+	
 
 	return sequenceObj;
 	
@@ -182,12 +190,14 @@ bool SocialRules::checkHRI(SNGPerson p, int ind, InnerModel *i, AGMModel::SPtr w
 }
 
 
-RoboCompTrajectoryRobot2D::PolyLineList SocialRules::ApplySocialRules(SNGPersonSeq tperson)
+SNGPolylineSeq SocialRules::ApplySocialRules(SNGPersonSeq tperson)
 {
+	qDebug()<<__FUNCTION__;
 	totalperson=tperson;
 	movperson.clear();
 	quietperson.clear();
 	seq.clear();
+	
 	//for each person check if the velocity is 0, if it is add to totalp, if not add to totalpmov
 	
 	for (auto p: totalperson)
@@ -201,11 +211,13 @@ RoboCompTrajectoryRobot2D::PolyLineList SocialRules::ApplySocialRules(SNGPersonS
 	
 	
 	
-	RoboCompTrajectoryRobot2D::PolyLineList list;
+	//RoboCompTrajectoryRobot2D::PolyLineList list;
 	
 	if (!quietperson.empty())
 	{
 		SNGPolylineSeq secuencia = gauss(false);
+		qDebug()<<"salgo de gauss";
+		
 		for(auto s: secuencia)
 		{	
 			seq.push_back(s);
@@ -235,7 +247,7 @@ RoboCompTrajectoryRobot2D::PolyLineList SocialRules::ApplySocialRules(SNGPersonS
 	
 	//SNGPolylineSeq seqpoints = socialnavigationgaussian_proxy->RemovePoints(seq);
 	
-	for(auto s: seq)
+/*	for(auto s: seq)
 		{			
 			RoboCompTrajectoryRobot2D::PolyLine poly;
 
@@ -246,23 +258,9 @@ RoboCompTrajectoryRobot2D::PolyLineList SocialRules::ApplySocialRules(SNGPersonS
 			}
 			
 			list.push_back(poly);
-		}	
+		}*/	
 	
-	return list;
+	return seq;
 }
 
-void SocialRules::structuralChange(const World& modification)
-{
 
-	printf("pre <<structuralChange\n");
-	//QMutexLocker l(mx);
-	printf("<<structuralChange\n");
-
-	AGMModelConverter::fromIceToInternal(modification, worldModel);
-	//if (roomsPolygons.size()==0 and worldModel->numberOfSymbols()>0)
-		//roomsPolygons = extractPolygonsFromModel(worldModel);
-
-	if (innerModel) delete innerModel;
-	innerModel = AGMInner::extractInnerModel(worldModel, "world", true);
-	printf("structuralChange>>\n");
-}

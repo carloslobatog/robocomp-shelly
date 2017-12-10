@@ -110,6 +110,7 @@
  <node alias="socialnavigA" endpoint="agmcommonbehavior:tcp -h localhost -p 10330">
   <!--<dependence alias="executive" />-->
   <dependence alias="base" />
+  <dependence alias="socialnavigG" />
   <workingDir path="/home/robocomp/" />
   <upCommand command="rcremote localhost socialnavAgnt /home/robocomp/robocomp/components/robocomp-araceli/components/SocialNavigationAgent ./bin/SocialNavigationAgent /home/robocomp/robocomp/components/robocomp-araceli/etcSim/socialnavigationAgent.conf" />
   <downCommand command="killall -9 SocialNavigationAgent" />
@@ -119,5 +120,18 @@
   <radius value="10.0" />
   <color value="#33FF33" />
  </node>
+
+
+ <node alias="socialnavigG" endpoint="socialnavigationgaussian:tcp -h localhost -p 20020">
+  <workingDir path="/home/robocomp/" />
+  <upCommand command="rcremote localhost socialnavGauss /home/robocomp/robocomp/components/robocomp-araceli/components/socialnavigationGaussian python src/socialnavigationGaussian.py etc/config" />
+  <downCommand command="pkill -9 -f socialnavigationGaussian.py"/>
+<configFile path="/home/robocomp/robocomp/components/robocomp-araceli/etcSim/socialnavigationGaussian.conf" />
+  <xpos value="-171.097569307" />
+  <ypos value="-23.5106363282" />
+  <radius value="10.0" />
+  <color value="#33FF33" />
+ </node>
+
  
 </rcmanager>
