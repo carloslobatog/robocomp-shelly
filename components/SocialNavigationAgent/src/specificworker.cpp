@@ -103,10 +103,11 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 
 	qLog::getInstance()->setProxy("both", logger_proxy);
 	rDebug2(("NavigationAgent started"));
+
+	
 	
 	Period = 200;
 	timer.start(Period);
-
 	
 	//Proxies for actionExecution
 	//aE.logger_proxy = logger_proxy;
@@ -158,11 +159,7 @@ void SpecificWorker::compute()
 		innerModel->updateTransformValues("robot", bState.x,0,bState.z,0,bState.alpha,0);
 	innerModel.unlock();
 	
- 	pathfinder.innerModelChanged(innerModel, false);
-	
-	//
-	//updateRobotPosition();
-	
+
 	
 	//qDebug() << SpecificWorker::compute";
 	bool sendChangesAGM = false;
@@ -333,15 +330,6 @@ void SpecificWorker::compute()
 	 	
 	 	
 
-
-float SpecificWorker::goReferenced(const TargetPose &target, const float xRef, const float zRef, const float threshold)
-{
-	//std::shared_ptr<InnerModel> in = std::make_shared<InnerModel>("/home/pbustos/robocomp/components/robocomp-araceli/etcSim/simulation.xml");
-	InnerModelMgr newInnerModel = InnerModelMgr(std::make_shared<InnerModel>("/home/pbustos/robocomp/components/robocomp-araceli/etcSim/simulation.xml"));
-	innerModel.reset(newInnerModel);
-	pathfinder.innerModelChanged(newInnerModel, true);
-	pathfinder.go(target.x, target.z); return 0.0;
-};
 
 
 
@@ -572,11 +560,11 @@ bool SpecificWorker::reloadConfigAgent()
 
 void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modification)
 {
-	/*static bool firsttime=true;
+	static bool firsttime=true;
 	
 	if(firsttime)
 	{
-	*/	qDebug()<<"StructuralChange";
+		qDebug()<<"StructuralChange";
 		QMutexLocker l(mutex);
 		
 		AGMModelConverter::fromIceToInternal(modification, worldModel);
@@ -588,12 +576,36 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 // 			delete innerModel;
 
 		innerModel = AGMInner::extractInnerModel(worldModel, "world", false);
-		pathfinder.innerModelChanged(innerModel);
+		qDebug()<<"InnerModelChanged";
+		pathfinder.innerModelChanged(innerModel,false);
+		qDebug()<<"Salimos de InnerModelChanged";
 		updateRobotPosition();
 		changepos=true;
 		printf("structuralChange>>\n");
-// 		firsttime = false;
-// 	}
+ 		firsttime = false;
+ 	}
+ 	
+ 	else
+	{
+		qDebug()<<"StructuralChange";
+		QMutexLocker l(mutex);
+		
+		AGMModelConverter::fromIceToInternal(modification, worldModel);
+
+		//if (roomsPolygons.size()==0 and worldModel->numberOfSymbols()>0)
+		//roomsPolygons = extractPolygonsFromModel(worldModel);
+
+// 		if (innerModel) 
+// 			delete innerModel;
+
+		innerModel = AGMInner::extractInnerModel(worldModel, "world", false);
+		qDebug()<<"InnerModelChanged";
+		pathfinder.innerModelChanged(innerModel,true);
+		qDebug()<<"Salimos de InnerModelChanged";
+		updateRobotPosition();
+		changepos=true;
+		printf("structuralChange>>\n");
+	}
 	
 	changepos=true;
 	

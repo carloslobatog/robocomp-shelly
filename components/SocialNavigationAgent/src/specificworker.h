@@ -115,13 +115,16 @@ public:
 	//double agaussian(SNGPerson person, float x, float y);
 
 	NavState getState(){ return pathfinder.getState(); };
-	float goBackwards(const TargetPose &target){return 0.0;};
-	void stop(){};
+	
 	void setHumanSpace(const PolyLineList &polyList){};
-	float goReferenced(const TargetPose &target, const float xRef, const float zRef, const float threshold);
+	
+	//Trajectory
+	float goBackwards(const TargetPose &target){return 0.0;};
+	void stop(){};	
+	float goReferenced(const TargetPose &target, const float xRef, const float zRef, const float threshold){return 0;};
 	float changeTarget(const TargetPose &target){return 0.0;};
 	void mapBasedTarget(const NavigationParameterMap &parameters){};
-	float go(const TargetPose &target){ pathfinder.go(target.x, -target.z); return 0.0;};
+	float go(const TargetPose &target){ pathfinder.go(target.x, -target.z); pathfinder.innerModelChanged(innerModel,false); return 0.0;};
 
 	
 public slots:

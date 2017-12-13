@@ -83,16 +83,21 @@ void PathFinder::initialize( const InnerModelMgr &innerModel_,
 void PathFinder::run()
 {
  	while(true)
-	{
+	{	
 		Road &road = getRoad();
+			QVec robotpos = innerModel->transformS6D("world", robotname);
+			viewer->updateTransformValues(QString::fromStdString(robotname), robotpos);
 			road.update();
 // 			if( road.isBlocked())
 // 				road.reset();
 // 				road.setRequiresReplanning(true);
 			drawroad.draw(road, viewer, currenttarget);
 			drawroad.drawmap(pathplanner, viewer, pathplanner.fmap);
+			
 		releaseRoad();
+	
 		std::this_thread::sleep_for(200ms);
+	
 	}
 }
 
@@ -100,6 +105,7 @@ void PathFinder::innerModelChanged ( InnerModelMgr &innerModel_, bool structural
 {
 	if(structural) //replace all objects with copies of InnerModel. Broadcast a signal to subscribed objects
 	{
+		qDebug()<<"innerModelChanged TRUE";
 		Road &road = getRoad(); //to block the threads
 			pathplanner.reloadInnerModel(innerModel) ;  
 			// road.reloadInnerModel( innerModel ) ;  
@@ -109,8 +115,11 @@ void PathFinder::innerModelChanged ( InnerModelMgr &innerModel_, bool structural
 		//viewer->reloadInnerModel(innerModel);
 	}
 	else
-	{
+	{	
+		
 		#ifdef USE_QTGUI
+		qDebug()<<"innerModelChanged FALSE";
+			
 			if(viewer != nullptr)
 			{
 				Road &road = getRoad(); //to block the threads
