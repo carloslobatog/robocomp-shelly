@@ -92,6 +92,8 @@ void InnerViewer::reloadInnerModel(InnerModelMgr other)
 {
 	guard gl(mutex);
 	innerModelViewer->innerModel = other.deepcopy();
+// 	other->save("GUARDOINNERVIEWER.xml");
+	
 }
 
 void InnerViewer::updateTransformValues(const QString item, const QVec &pos, const QString &parent)

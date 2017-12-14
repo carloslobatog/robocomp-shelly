@@ -76,7 +76,7 @@
   <downCommand command="pkill -9 -f AGMExecutive_robocomp.py" />
   <configFile path="xxx" />
   <xpos value="-8.22150957623" />
-  <ypos value="-153.85398289" />
+  <ypos value="-115.512538117" />
   <radius value="10.0" />
   <color value="#33FF33" />
  </node>
@@ -89,7 +89,7 @@
   <upCommand command="rcremote localhost localizationAgnt /home/robocomp/robocomp/components/robocomp-shelly/components/localizationAgent ./bin/localizationAgent --Ice.Config=/home/robocomp/robocomp/components/robocomp-shelly/etcSim/localizationAgent.conf" />
   <downCommand command="killall -9 localizationAgent" />
   <configFile path="/home/robocomp/robocomp/components/robocomp-shelly/etcSim/localizationAgent.conf" />
-  <xpos value="-136.591834202" />
+  <xpos value="-116.350970747" />
   <ypos value="-115.512538117" />
   <radius value="13.0" />
 <!--   <color value="#FF3333" /> -->
@@ -115,8 +115,8 @@
   <upCommand command="rcremote localhost socialnavAgnt /home/robocomp/robocomp/components/robocomp-araceli/components/SocialNavigationAgent ./bin/SocialNavigationAgent /home/robocomp/robocomp/components/robocomp-araceli/etcSim/socialnavigationAgent.conf" />
   <downCommand command="killall -9 SocialNavigationAgent" />
   <configFile path="/home/robocomp/robocomp/components/robocomp-araceli/etcSim/socialnavigationAgent.conf" />
-  <xpos value="-77.9789855056" />
-  <ypos value="-53.5106363282" />
+  <xpos value="-271.097569307" />
+  <ypos value="20.5106363282" />
   <radius value="10.0" />
   <color value="#33FF33" />
  </node>
@@ -128,7 +128,7 @@
   <downCommand command="pkill -9 -f socialnavigationGaussian.py"/>
 <configFile path="/home/robocomp/robocomp/components/robocomp-araceli/etcSim/socialnavigationGaussian.conf" />
   <xpos value="-171.097569307" />
-  <ypos value="-23.5106363282" />
+  <ypos value="20.5106363282" />
   <radius value="10.0" />
   <color value="#33FF33" />
  </node>

@@ -216,7 +216,6 @@ SNGPolylineSeq SocialRules::ApplySocialRules(SNGPersonSeq tperson)
 	if (!quietperson.empty())
 	{
 		SNGPolylineSeq secuencia = gauss(false);
-		qDebug()<<"salgo de gauss";
 		
 		for(auto s: secuencia)
 		{	

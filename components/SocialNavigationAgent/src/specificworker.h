@@ -124,7 +124,8 @@ public:
 	float goReferenced(const TargetPose &target, const float xRef, const float zRef, const float threshold){return 0;};
 	float changeTarget(const TargetPose &target){return 0.0;};
 	void mapBasedTarget(const NavigationParameterMap &parameters){};
-	float go(const TargetPose &target){ pathfinder.go(target.x, -target.z); pathfinder.innerModelChanged(innerModel,false); return 0.0;};
+	//float go(const TargetPose &target){ pathfinder.innerModelChanged(innerModel,true); pathfinder.go(target.x, -target.z);  return 0.0;};
+	float go(const TargetPose &target){pathfinder.go(target.x, -target.z);  return 0.0;};
 
 	
 public slots:

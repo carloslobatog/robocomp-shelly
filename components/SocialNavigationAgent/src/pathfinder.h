@@ -66,7 +66,8 @@ namespace robocomp
 			////////////////////////////
 			void go(float x, float z, const ParameterMap &parameters = ParameterMap());
 			//void setInnerModel(InnerModel* innerModel_){ innerModel = innerModel_; };
-			void innerModelChanged(InnerModelMgr &innerModel_, bool structural = false);
+			void innerModelChanged(InnerModelMgr &innerModel_, bool structural = false, vector <bool> pn = {false,false,false,false,false,false} ); //Le estoy metiendo el vector de personas para actualizar su posición
+			
 			void run();
 			///////////////////////////
 			

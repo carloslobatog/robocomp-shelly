@@ -101,32 +101,64 @@ void PathFinder::run()
 	}
 }
 
-void PathFinder::innerModelChanged ( InnerModelMgr &innerModel_, bool structural )
+void PathFinder::innerModelChanged ( InnerModelMgr &innerModel_, bool structural,vector <bool> pn )
 {
 	if(structural) //replace all objects with copies of InnerModel. Broadcast a signal to subscribed objects
 	{
-		qDebug()<<"innerModelChanged TRUE";
+		qDebug()<<"----------------innerModelChanged TRUE---------------------";
 		Road &road = getRoad(); //to block the threads
-			pathplanner.reloadInnerModel(innerModel) ;  
-			// road.reloadInnerModel( innerModel ) ;  
-			projector.reloadInnerModel(innerModel ) ;  
-			// controller.reloadInnerModel( innerModel );
+			pathplanner.reloadInnerModel(innerModel_) ;  
+		
+			//road.reloadInnerModel( innerModel ) ;  
+			
+			projector.reloadInnerModel(innerModel_) ;  
+
+			//controller.reloadInnerModel( innerModel );
+			
 		releaseRoad();
-		//viewer->reloadInnerModel(innerModel);
+		viewer->reloadInnerModel(innerModel_);
+
+		qDebug()<<"----------------SALGO DE innerModelChanged TRUE---------------------";
 	}
+	
 	else
 	{	
 		
 		#ifdef USE_QTGUI
-		qDebug()<<"innerModelChanged FALSE";
+		qDebug()<<"----------------innerModelChanged FALSE---------------------";
 			
 			if(viewer != nullptr)
 			{
+				qDebug()<<"-----------1--------------";
 				Road &road = getRoad(); //to block the threads
-					QVec robotpos = innerModel->transformS6D("world", robotname);
+
+					qDebug()<<"-----------2--------------";
+					QVec robotpos = innerModel_->transformS6D("world", robotname);
+					
+					qDebug()<<"-----------3--------------";
 					viewer->updateTransformValues(QString::fromStdString(robotname), robotpos);
+					
+					
+					qDebug()<<"-----------4--------------";
+					
+					//Actualizar en el viewer la posición de cada persona
+					for (int i=0;i<pn.size();i++)
+					{
+						std::string personname = "fakeperson" + std::to_string(i+1);
+						
+						if (pn[i])
+						{	
+							QVec personpose = innerModel_->transformS6D("world",personname);
+							viewer->updateTransformValues(QString::fromStdString(personname), personpose);
+						}
+						
+					}	
+						
+						
 				releaseRoad();
 			}
+			
+		qDebug()<<"---------------- SALGO DE innerModelChanged FALSE---------------------";	
 		#endif
 	}
 }
