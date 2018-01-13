@@ -82,14 +82,18 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	//innerModel = InnerModelMgr(std::make_shared<InnerModel>("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml"));
 
 	// Fold arm
- 	innerModel->getNode<InnerModelJoint>("armX1")->setAngle(-1);
- 	innerModel->getNode<InnerModelJoint>("armX2")->setAngle(2.5);
-	
+	innerModel.lock();
+		innerModel->getNode<InnerModelJoint>("armX1")->setAngle(-1);
+		innerModel->getNode<InnerModelJoint>("armX2")->setAngle(2.5);
+	innerModel.unlock();
+
 	std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams = std::make_shared<RoboCompCommonBehavior::ParameterList>(paramsL);
 	
 	
 	// Initializing PathFinder
+	
 	pathfinder.initialize(innerModel, configparams, laser_proxy, omnirobot_proxy);
+
 	
 	// releasing pathfinder
 	thread_pathfinder = std::thread(&robocomp::pathfinder::PathFinder::run, &pathfinder);
@@ -149,33 +153,20 @@ void SpecificWorker::compute()
 	}	
 	
 	//We need to secure access to InnerModel 
+	QMutexLocker l(mutex);
 	innerModel.lock();
 		innerModel->updateTransformValues("robot", bState.x,0,bState.z,0,bState.alpha,0);
 	innerModel.unlock();
 	
-
-	
+		
 	//qDebug() << SpecificWorker::compute";
 	bool sendChangesAGM = false;
 	
-	AGMModel::SPtr newM(new AGMModel(worldModel));
-// 	if (worldModel->getIdentifierByType("robot") < 0)
-// 	{ 
-// 		try 
-// 		{
-// 			//qDebug()<<"Leo el mundo";
-// 			//RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
-// 			//structuralChange(w);		
-// 			return;
-// 		}
-// 		catch(...)
-// 		{	
-// 			//printf("The executive is probably not running, waiting for first AGM model publication...");	}	
-// 		}
-// 	}
 
-	//Check if the person is in the model
+	AGMModel::SPtr newM(new AGMModel(worldModel));	
 	
+	//Check if the person is in the model
+
  	for (int i=0;i<pn.size();i++)
 	{
 
@@ -199,6 +190,7 @@ void SpecificWorker::compute()
 		}
 	}
 
+		
 //If a person has moved its pose it is updated reading it from the AGM again.
 
 	if (changepos)
@@ -258,6 +250,8 @@ void SpecificWorker::compute()
 			}
 		}
 		
+		
+		
 		robotSymbolId = newM->getIdentifierByType("robot");
 		AGMModelSymbol::SPtr robotparent = newM->getParentByLink(robotSymbolId, "RT");
 		AGMModelEdge &edgeRTrobot  = newM->getEdgeByIdentifiers(robotparent->identifier, robotSymbolId, "RT");
@@ -286,7 +280,8 @@ void SpecificWorker::compute()
 		first = false;
 		changepos=false;	
 	}
-		  
+	
+		
 	if (movperson)
 	{
 	
@@ -310,14 +305,17 @@ void SpecificWorker::compute()
 	//aE.Update(action,params);
 	
 	
-	if (sendChangesAGM)
-	{	
-		try
-		{
-			sendModificationProposal(newM,worldModel,"-");
-		}
-		catch(...){}
-	}
+// 	if (sendChangesAGM)
+// 	{	
+// 		try
+// 		{
+// 			sendModificationProposal(newM,worldModel,"-");
+// 		}
+// 		catch(...){}
+// 	}
+
+	//pathfinder.viewer->unlock();	
+
 }
 	 	
 	 	
@@ -401,8 +399,11 @@ void SpecificWorker::savedata()
  */
  void SpecificWorker::updateRobotPosition()
  {
- 	innerModel->updateTransformValues("robot", bState.x,0,bState.z,0,bState.alpha,0);
- 	pathfinder.innerModelChanged(innerModel, false,pn);
+	innerModel.lock(); 
+		innerModel->updateTransformValues("robot", bState.x,0,bState.z,0,bState.alpha,0);
+	innerModel.unlock();
+	
+	pathfinder.innerModelChanged(innerModel, false,pn);
  }
 
 /**
@@ -413,9 +414,9 @@ void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq)
 {
 	QMutexLocker locker(mutex);
 	qDebug() << __FUNCTION__ << "UpdadeInnerModel";
-
+	
 	// Extract innerModel	
-	//innerModel.reset(AGMInner::extractInnerModel(worldModel, "world", false));  ///OJO esto deja a las otras copias con el antiguo
+//	innerModel = AGMInner::extractInnerModel(worldModel, "world", false); 
 	
 			
 	//INSERT POLYLINES
@@ -428,7 +429,7 @@ void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq)
 // 		for (auto currentPoint:s)
 // 		{
 // 			QString name = QString("polyline_obs_")+QString::number(count,10);
-// 			//qDebug() << __FUNCTION__ << "nombre"<<name;
+// 			qDebug() << __FUNCTION__ << "nombre"<<name;
 // 			QVec ppoint = QVec::vec3(previousPoint.x*1000, 1000, previousPoint.z*1000);
 // 			QVec cpoint = QVec::vec3(currentPoint.x*1000, 1000, currentPoint.z*1000);
 // 			QVec center = (cpoint + ppoint).operator*(0.5);
@@ -469,10 +470,10 @@ void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq)
 // 		}
 // 	}
 // 
-// 	if (i==3) innerModel->save("innerInicio.xml"); 
-// 	if (i==50) innerModel->save("innerfinal.xml"); 
-// 
-// 	i++;
+
+	
+	
+	
 }	
 
 
@@ -552,15 +553,15 @@ bool SpecificWorker::reloadConfigAgent()
 
 void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modification)
 {
+	//pathfinder.viewer->lock();
 	static bool firsttime=true;
-	
         qDebug()<<"StructuralChange";
         QMutexLocker l(mutex);
-    
+	
         AGMModelConverter::fromIceToInternal(modification, worldModel);
-
-        innerModel = AGMInner::extractInnerModel(worldModel, "world", false);
-//         innerModel->save("guardandoinner.xml");
+	
+	innerModel=AGMInner::extractInnerModel(worldModel, "world", false);
+	
 	
         if (firsttime==true)
         {
@@ -575,8 +576,8 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 	
       //  updateRobotPosition();
         changepos=true;
-  
-	printf("structuralChange>>\n");
+	//pathfinder.viewer->unlock();
+	printf("FIN structuralChange>>\n");
 	
 }
 

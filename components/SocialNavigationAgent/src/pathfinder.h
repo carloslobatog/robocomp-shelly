@@ -60,13 +60,18 @@ namespace robocomp
 				void releaseRoad();
 				Road& getRoad();
 				RoboCompTrajectoryRobot2D::NavState getState(){ return state->toIce(); };
-	
+				bool structuralchange = false;
+				
 			/////////////////////////////
 			/// Interface
 			////////////////////////////
 			void go(float x, float z, const ParameterMap &parameters = ParameterMap());
 			//void setInnerModel(InnerModel* innerModel_){ innerModel = innerModel_; };
 			void innerModelChanged(InnerModelMgr &innerModel_, bool structural = false, vector <bool> pn = {false,false,false,false,false,false} ); //Le estoy metiendo el vector de personas para actualizar su posición
+			
+			#ifdef USE_QTGUI
+				InnerViewer *viewer = nullptr;
+			#endif
 			
 			void run();
 			///////////////////////////
@@ -87,9 +92,7 @@ namespace robocomp
 			
 				//InnerModel *innerModel = nullptr;
 				InnerModelMgr innerModel;
-				#ifdef USE_QTGUI
-					InnerViewer *viewer = nullptr;
-				#endif
+				
 			
 				std::thread thread_planner;
 				std::thread thread_projector;

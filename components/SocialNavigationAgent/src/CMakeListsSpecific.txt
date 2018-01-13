@@ -8,9 +8,9 @@ SET ( SOURCES
   currenttarget.cpp
   road.cpp
   sampler.cpp
-  pathplanner.cpp
   innerviewer.cpp
   drawroad.cpp
+  pathplanner.cpp
   projector.cpp
   linesimplifier/simplifyPath.cpp
   controller.cpp

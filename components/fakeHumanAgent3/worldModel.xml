@@ -979,35 +979,20 @@
 	<attribute key="interaction" value="0.75" />
 </symbol>
 <symbol id="2001" type="objectSt"/>
-<symbol id="3092" type="person2">
-	<attribute key="imName" value="fakeperson2" />
+<symbol id="3092" type="person1">
+	<attribute key="imName" value="fakeperson1" />
 	<attribute key="imType" value="transform" />
 </symbol>
 <symbol id="3093" type="personSt"/>
 <symbol id="3094" type="mesh">
 	<attribute key="collidable" value="false" />
-	<attribute key="imName" value="fakepersonMesh2" />
+	<attribute key="imName" value="fakepersonMesh" />
 	<attribute key="imType" value="mesh" />
-	<attribute key="path" value="/home/robocomp/robocomp/components/robocomp-araceli/models/human02.3ds" />
+	<attribute key="path" value="/home/robocomp/robocomp/components/robocomp-araceli/models/human01.3ds" />
 	<attribute key="render" value="NormalRendering" />
-	<attribute key="scalex" value="1.12" />
-	<attribute key="scaley" value="1.12" />
-	<attribute key="scalez" value="1.12" />
-</symbol>
-<symbol id="3095" type="person3">
-	<attribute key="imName" value="fakeperson3" />
-	<attribute key="imType" value="transform" />
-</symbol>
-<symbol id="3096" type="personSt"/>
-<symbol id="3097" type="mesh">
-	<attribute key="collidable" value="false" />
-	<attribute key="imName" value="fakepersonMesh3" />
-	<attribute key="imType" value="mesh" />
-	<attribute key="path" value="/home/robocomp/robocomp/components/robocomp-araceli/models/human03.3ds" />
-	<attribute key="render" value="NormalRendering" />
-	<attribute key="scalex" value="8" />
-	<attribute key="scaley" value="8" />
-	<attribute key="scalez" value="8" />
+	<attribute key="scalex" value="12" />
+	<attribute key="scaley" value="12" />
+	<attribute key="scalez" value="12" />
 </symbol>
 
 
@@ -1845,40 +1830,20 @@
 </link>
 <link src="3092" dst="3093" label="hasStatus"/>
 <link src="3092" dst="3093" label="noReach"/>
-<link src="3092" dst="3093" label="person"/>
+<link src="3092" dst="3093" label="person1"/>
 <link src="3092" dst="3" label="in"/>
 <link src="100" dst="3092" label="RT">
 	<linkAttribute key="rx" value="0" />
-	<linkAttribute key="ry" value="0" />
+	<linkAttribute key="ry" value="4.9175" />
 	<linkAttribute key="rz" value="0" />
-	<linkAttribute key="tx" value="5000" />
+	<linkAttribute key="tx" value="1428.72" />
 	<linkAttribute key="ty" value="0" />
-	<linkAttribute key="tz" value="1500" />
+	<linkAttribute key="tz" value="2899.14" />
 </link>
 <link src="3092" dst="3094" label="RT">
 	<linkAttribute key="rx" value="1.570796326794" />
 	<linkAttribute key="ry" value="0" />
 	<linkAttribute key="rz" value="3.1415926535" />
-	<linkAttribute key="tx" value="0" />
-	<linkAttribute key="ty" value="0" />
-	<linkAttribute key="tz" value="0" />
-</link>
-<link src="3095" dst="3096" label="hasStatus"/>
-<link src="3095" dst="3096" label="noReach"/>
-<link src="3095" dst="3096" label="person"/>
-<link src="3095" dst="3" label="in"/>
-<link src="100" dst="3095" label="RT">
-	<linkAttribute key="rx" value="0" />
-	<linkAttribute key="ry" value="5.145" />
-	<linkAttribute key="rz" value="0" />
-	<linkAttribute key="tx" value="4275.04" />
-	<linkAttribute key="ty" value="0" />
-	<linkAttribute key="tz" value="2296.56" />
-</link>
-<link src="3095" dst="3097" label="RT">
-	<linkAttribute key="rx" value="1.570796326794" />
-	<linkAttribute key="ry" value="0" />
-	<linkAttribute key="rz" value="1.57079632679" />
 	<linkAttribute key="tx" value="0" />
 	<linkAttribute key="ty" value="0" />
 	<linkAttribute key="tz" value="0" />

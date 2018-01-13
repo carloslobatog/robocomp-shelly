@@ -46,7 +46,6 @@ void SocialRules::changevalue(int value)
 
 SNGPolylineSeq SocialRules::gauss(bool draw)
 {
-	qDebug()<<__FUNCTION__;
 	
 	if (!quietperson.empty())
 	{  	
@@ -192,7 +191,7 @@ bool SocialRules::checkHRI(SNGPerson p, int ind, InnerModel *i, AGMModel::SPtr w
 
 SNGPolylineSeq SocialRules::ApplySocialRules(SNGPersonSeq tperson)
 {
-	qDebug()<<__FUNCTION__;
+	//qDebug()<<__FUNCTION__;
 	totalperson=tperson;
 	movperson.clear();
 	quietperson.clear();

@@ -101,46 +101,42 @@ void PathFinder::run()
 	}
 }
 
+
+
 void PathFinder::innerModelChanged ( InnerModelMgr &innerModel_, bool structural,vector <bool> pn )
 {
+	innerModel = innerModel_;
+	
 	if(structural) //replace all objects with copies of InnerModel. Broadcast a signal to subscribed objects
 	{
-		qDebug()<<"----------------innerModelChanged TRUE---------------------";
+		structuralchange = true;
+
 		Road &road = getRoad(); //to block the threads
-			pathplanner.reloadInnerModel(innerModel_) ;  
+			pathplanner.reloadInnerModel(innerModel) ;  
 		
 			//road.reloadInnerModel( innerModel ) ;  
 			
-			projector.reloadInnerModel(innerModel_) ;  
+			projector.reloadInnerModel(innerModel) ;  
 
 			//controller.reloadInnerModel( innerModel );
 			
 		releaseRoad();
-		viewer->reloadInnerModel(innerModel_);
+		
+		viewer->reloadInnerModel(innerModel);
 
-		qDebug()<<"----------------SALGO DE innerModelChanged TRUE---------------------";
+
 	}
 	
 	else
 	{	
 		
 		#ifdef USE_QTGUI
-		qDebug()<<"----------------innerModelChanged FALSE---------------------";
 			
 			if(viewer != nullptr)
 			{
-				qDebug()<<"-----------1--------------";
 				Road &road = getRoad(); //to block the threads
-
-					qDebug()<<"-----------2--------------";
-					QVec robotpos = innerModel_->transformS6D("world", robotname);
-					
-					qDebug()<<"-----------3--------------";
+					QVec robotpos = innerModel->transformS6D("world", robotname);
 					viewer->updateTransformValues(QString::fromStdString(robotname), robotpos);
-					
-					
-					qDebug()<<"-----------4--------------";
-					
 					//Actualizar en el viewer la posición de cada persona
 					for (int i=0;i<pn.size();i++)
 					{
@@ -148,7 +144,7 @@ void PathFinder::innerModelChanged ( InnerModelMgr &innerModel_, bool structural
 						
 						if (pn[i])
 						{	
-							QVec personpose = innerModel_->transformS6D("world",personname);
+							QVec personpose = innerModel->transformS6D("world",personname);
 							viewer->updateTransformValues(QString::fromStdString(personname), personpose);
 						}
 						
@@ -158,7 +154,6 @@ void PathFinder::innerModelChanged ( InnerModelMgr &innerModel_, bool structural
 				releaseRoad();
 			}
 			
-		qDebug()<<"---------------- SALGO DE innerModelChanged FALSE---------------------";	
 		#endif
 	}
 }
@@ -170,6 +165,7 @@ Road& PathFinder::getRoad()
 {
 	mymutex.lock();
 	innerModel.lock();
+	
 	return road;	
 }
 
