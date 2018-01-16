@@ -98,6 +98,16 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	// releasing pathfinder
 	thread_pathfinder = std::thread(&robocomp::pathfinder::PathFinder::run, &pathfinder);
 	rDebug2(("Pathfinder up and running"));
+	
+	
+		
+// 	qDebug()<<"PATH FINDER INNERMODEL CHANGE";
+// 	innerModel->print("");
+// 	pathfinder.innerModelChanged(innerModel,true,pn); 
+// 	qDebug()<<"----------------------------";
+// 	
+	
+	//qFatal("Fary");
 
 	qLog::getInstance()->setProxy("both", logger_proxy);
 	rDebug2(("NavigationAgent started"));

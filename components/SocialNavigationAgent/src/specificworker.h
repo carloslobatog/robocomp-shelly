@@ -30,6 +30,7 @@
 #include <actionexecution.h>
 #include <socialrules.h>
 
+
 //PROBLEMA: con python 3.5 da error al compilar
 
 #include <innermodel/innermodel.h>
@@ -124,8 +125,13 @@ public:
 	float goReferenced(const TargetPose &target, const float xRef, const float zRef, const float threshold){return 0;};
 	float changeTarget(const TargetPose &target){return 0.0;};
 	void mapBasedTarget(const NavigationParameterMap &parameters){};
-	//float go(const TargetPose &target){ pathfinder.innerModelChanged(innerModel,true); pathfinder.go(target.x, -target.z);  return 0.0;};
-	float go(const TargetPose &target){pathfinder.go(target.x, -target.z);  return 0.0;};
+	float go(const TargetPose &target){ 
+		//innerModel->print("");
+// 		qDebug()<<"------------FIN------------------";
+		pathfinder.innerModelChanged(innerModel,true,pn); 
+		pathfinder.go(target.x, -target.z);  
+		return 0.0;};
+	//float go(const TargetPose &target){pathfinder.go(target.x, -target.z);  return 0.0;};
 
 	
 public slots:
@@ -165,6 +171,7 @@ private:
 	std::string robotname = "robot";
 	RoboCompGenericBase::TBaseState bState;
 	InnerModelMgr innerModel;
+	std::atomic_shared_ptr<InnerModel> inner;
 	
 //CHECK
 	//void updateRobotsCognitiveLocation();

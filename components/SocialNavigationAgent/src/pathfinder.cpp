@@ -110,19 +110,24 @@ void PathFinder::innerModelChanged ( InnerModelMgr &innerModel_, bool structural
 	if(structural) //replace all objects with copies of InnerModel. Broadcast a signal to subscribed objects
 	{
 		structuralchange = true;
-
+		qDebug()<<__FUNCTION__<< "--------------ESPERANDO GET ROAD -----------------------";
+		
 		Road &road = getRoad(); //to block the threads
+			qDebug()<<"reloadInnerModel PATHPLANNER";
 			pathplanner.reloadInnerModel(innerModel) ;  
 		
 			//road.reloadInnerModel( innerModel ) ;  
-			
+			qDebug()<<"reloadInnerModel PROJECTOR";
 			projector.reloadInnerModel(innerModel) ;  
 
 			//controller.reloadInnerModel( innerModel );
+			qDebug()<<"reloadInnerModel VIEWER";
+			viewer->reloadInnerModel(innerModel);
 			
 		releaseRoad();
 		
-		viewer->reloadInnerModel(innerModel);
+		qDebug()<<__FUNCTION__<< "--------------TERMINA GET ROAD -----------------------";
+		
 
 
 	}

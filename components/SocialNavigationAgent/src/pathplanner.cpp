@@ -285,8 +285,8 @@ void PathPlanner::constructGraph(FMap &fmap, uint tile_size)
 			bool free = sampler.checkRobotValidStateAtTargetFast(QVec::vec3(i,10,j),QVec::zeros(3));
 			fmap.emplace( Key(i,j),Value{k++,free,1}); 
  		}
-	for(FMap::iterator iter = fmap.begin(); iter != fmap.end(); ++iter)
-		std::cout << iter->first << " " << iter->second.id << std::endl;
+// 	for(FMap::iterator iter = fmap.begin(); iter != fmap.end(); ++iter)
+// 		std::cout << iter->first << " " << iter->second.id << std::endl;
 
 	set_map_dirty_bit(true);
 	qDebug() << __FILE__ << __FUNCTION__ << "Map size: " << fmap.size();	
