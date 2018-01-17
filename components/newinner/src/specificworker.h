@@ -29,6 +29,55 @@
 
 #include <genericworker.h>
 #include <innermodel/innermodel.h>
+#include <thread>
+
+class Traverser
+{
+	public:
+		Traverser(){};
+		void run(std::shared_ptr<InnerModel> inner)
+		{
+			while(true)
+			{
+				traverse(inner->getRoot());
+				//std::this_thread::sleep_for(50ms);
+			}
+		}
+		void traverse(InnerModelNode *node)
+		{	
+			qDebug() << "node:" << node->getId();
+			for (int i=0; i<node->children.size(); i++)
+			{
+				traverse(node->children[i]);
+			}
+		}
+};
+
+class Writer
+{
+	public:
+		Writer(){};
+		void run(std::shared_ptr<InnerModel> inner)
+		{
+			while(true)
+			{
+				traverse(inner->getRoot());
+				//std::this_thread::sleep_for(50ms);
+			}
+		}
+		void traverse(InnerModelNode *node)
+		{	
+			//qDebug() << "node:" << node->id;
+			QString a = node->getId();
+			node->setId("cacafasdfasdfasdfasdfasdfasdf");
+			//std::this_thread::sleep_for(20ms);
+			node->setId(a);
+			for (int i=0; i<node->children.size(); i++)
+			{
+				traverse(node->children[i]);
+			}
+		}
+};
 
 class SpecificWorker : public GenericWorker
 {
@@ -43,8 +92,17 @@ public slots:
 	void compute();
 
 private:
-	InnerModel *innerModel;
+	std::shared_ptr<InnerModel> innermodel;
+	void traverse(InnerModelNode *node);
+	void traverseAndChange(InnerModelNode *node);
+	
+	
+	int num_threadsR = 10;
+	int num_threadsW = 5;
+	std::thread threadsR[10], threadsW[10];
 
 };
+
+
 
 #endif

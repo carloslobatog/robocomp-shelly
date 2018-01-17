@@ -36,40 +36,57 @@ SpecificWorker::~SpecificWorker()
 
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 {
-//       THE FOLLOWING IS JUST AN EXAMPLE
-//
-//	try
-//	{
-//		RoboCompCommonBehavior::Parameter par = params.at("InnerModelPath");
-//		innermodel_path = par.value;
-//		innermodel = new InnerModel(innermodel_path);
-//	}
-//	catch(std::exception e) { qFatal("Error reading config params"); }
-
-
-
-
-	timer.start(Period);
-
-
+	innermodel = std::make_shared<InnerModel>(InnerModel("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml"));
+	//innermodel->print("inner");
+	
+	/// Threads
+	Traverser traverser;
+	Writer writer;
+    for (int i = 0; i < num_threadsR; ++i)
+	{
+		threadsR[i] = std::thread(&Traverser::run, traverser, innermodel);
+    }
+	for (int i = 0; i < num_threadsW; ++i)
+	{
+		threadsW[i] = std::thread(&Writer::run, writer, innermodel);
+    }
+	for (int i = 0; i < num_threadsR; ++i)
+		threadsR[i].join();
+	for (int i =
+		0; i < num_threadsW; ++i)
+		threadsW[i].join();
+	
+	
+    qDebug() << __FILE__ << __FUNCTION__ << "All finished";
+	exit(-1);
+	//timer.start(Period);
+	//compute();
 	return true;
 }
 
 void SpecificWorker::compute()
 {
-	QMutexLocker locker(mutex);
-	//computeCODE
-// 	try
-// 	{
-// 		camera_proxy->getYImage(0,img, cState, bState);
-// 		memcpy(image_gray.data, &img[0], m_width*m_height*sizeof(uchar));
-// 		searchTags(image_gray);
-// 	}
-// 	catch(const Ice::Exception &e)
-// 	{
-// 		std::cout << "Error reading from Camera" << e << std::endl;
-// 	}
 }
 
 
+// void SpecificWorker::traverse(InnerModelNode *node)
+// {	
+// 	qDebug() << "node:" << node->id;
+// 	for (int i=0; i<node->children.size(); i++)
+// 	{
+// 		traverse(node->children[i]);
+// 	}
+// }
+// 
+// void SpecificWorker::traverseAndChange(InnerModelNode *node)
+// {	
+// 	QString a = node->id;
+// 	node->id = "caca";
+// 	qDebug() << "node:" << node->id;
+// 	node->id = a;
+// 	for (int i=0; i<node->children.size(); i++)
+// 	{
+// 		traverseAndChange(node->children[i]);
+// 	}
+// }
 
