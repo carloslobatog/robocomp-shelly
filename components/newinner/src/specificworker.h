@@ -30,6 +30,7 @@
 #include <genericworker.h>
 #include <innermodel/innermodel.h>
 #include <thread>
+#include <random>
 
 class Traverser
 {
@@ -45,7 +46,7 @@ class Traverser
 		}
 		void traverse(InnerModelNode *node)
 		{	
-			qDebug() << "node:" << node->getId();
+			//qDebug() << "node:" << node->getId();
 			for (int i=0; i<node->children.size(); i++)
 			{
 				traverse(node->children[i]);
@@ -62,19 +63,36 @@ class Writer
 			while(true)
 			{
 				traverse(inner->getRoot());
+				transforms(inner);
 				//std::this_thread::sleep_for(50ms);
 			}
 		}
 		void traverse(InnerModelNode *node)
 		{	
-			//qDebug() << "node:" << node->id;
 			QString a = node->getId();
 			node->setId("cacafasdfasdfasdfasdfasdfasdf");
 			//std::this_thread::sleep_for(20ms);
 			node->setId(a);
 			for (int i=0; i<node->children.size(); i++)
-			{
 				traverse(node->children[i]);
+		}
+		
+		void transforms(std::shared_ptr<InnerModel> inner)
+		{
+			QList<QString> keys = inner->getIDKeys();
+			std::random_device r;
+			std::default_random_engine e1(r());
+			std::uniform_int_distribution<int> uniform_dist(0, keys.size()-1);
+			
+			for(int i=0; i<100; i++)
+			{
+				QString dest = keys[uniform_dist(e1)];
+				QString orig = keys[uniform_dist(e1)];
+				if( dynamic_cast<InnerModelTransform *>(inner->getNode(orig)) != nullptr and dynamic_cast<InnerModelTransform *>(inner->getNode(dest)) != nullptr)
+				{
+					qDebug() << orig << dest;
+					inner->transform(dest, QVec::vec3(3,4,5), orig);
+				}
 			}
 		}
 };
