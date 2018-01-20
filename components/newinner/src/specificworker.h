@@ -40,13 +40,15 @@ class Traverser
 		{
 			while(true)
 			{
-				traverse(inner->getRoot());
+				//traverse(inner->getRoot());
 				//std::this_thread::sleep_for(50ms);
 			}
 		}
 		void traverse(InnerModelNode *node)
 		{	
-			//qDebug() << "node:" << node->getId();
+			QMat r = node->getR(); QVec t = node->getTr();
+			qDebug() << "reader:" << node->getId();
+			r.print("rot"); t.print("t");
 			for (int i=0; i<node->children.size(); i++)
 			{
 				traverse(node->children[i]);
@@ -54,17 +56,15 @@ class Traverser
 		}
 };
 
-class Writer
+class WriterIDS
 {
 	public:
-		Writer(){};
+		WriterIDS(){};
 		void run(std::shared_ptr<InnerModel> inner)
 		{
 			while(true)
 			{
-				traverse(inner->getRoot());
-				transforms(inner);
-				//std::this_thread::sleep_for(50ms);
+				//traverse(inner->getRoot());
 			}
 		}
 		void traverse(InnerModelNode *node)
@@ -76,7 +76,18 @@ class Writer
 			for (int i=0; i<node->children.size(); i++)
 				traverse(node->children[i]);
 		}
-		
+};
+class WriterTransforms
+{
+	public:
+		WriterTransforms(){};
+		void run(std::shared_ptr<InnerModel> inner)
+		{
+			while(true)
+			{
+				//transforms(inner);
+			}
+		}
 		void transforms(std::shared_ptr<InnerModel> inner)
 		{
 			QList<QString> keys = inner->getIDKeys();
@@ -87,11 +98,46 @@ class Writer
 			for(int i=0; i<100; i++)
 			{
 				QString dest = keys[uniform_dist(e1)];
-				QString orig = keys[uniform_dist(e1)];
-				if( dynamic_cast<InnerModelTransform *>(inner->getNode(orig)) != nullptr and dynamic_cast<InnerModelTransform *>(inner->getNode(dest)) != nullptr)
+				QString orig = keys[uniform_dist(e1)];			
+
+				InnerModelTransform *no = inner->getNodeSafeAndLock<InnerModelTransform>(orig);
+				InnerModelTransform *nd = inner->getNodeSafeAndLock<InnerModelTransform>(dest);
+				if(no != nullptr and nd != nullptr)
 				{
-					qDebug() << orig << dest;
-					inner->transform(dest, QVec::vec3(3,4,5), orig);
+					QVec v = inner->transform6D(dest, QVec::vec6(3,4,5,0,0,0), orig);
+					no->unlock(); nd->unlock();
+					qDebug() << orig << dest << v;
+				}
+			}
+		}
+};
+class WriterUpdates
+{
+	public: 
+		WriterUpdates(){};
+		void run(std::shared_ptr<InnerModel> inner)
+		{
+			while(true)
+			{
+				updates(inner);
+			}
+		}
+		void updates(std::shared_ptr<InnerModel> inner)
+		{
+			QList<QString> keys = inner->getIDKeys();
+			std::random_device r;
+			std::default_random_engine e1(r());
+			std::uniform_int_distribution<int> uniform_dist(0, keys.size()-1);
+			std::uniform_int_distribution<int> vs(-1000, 1000);
+			
+			for(int i=0; i<keys.size(); i++)
+			{
+				InnerModelTransform *no = inner->getNode<InnerModelTransform>(keys[i]);
+				if(no != nullptr)
+				{
+					qDebug() << "updates" << keys[i];
+					inner->updateTransformValues(keys[i], vs(e1), vs(e1), vs(e1), vs(e1), vs(e1), vs(e1));
+					//no->unlock();
 				}
 			}
 		}
@@ -111,13 +157,8 @@ public slots:
 
 private:
 	std::shared_ptr<InnerModel> innermodel;
-	void traverse(InnerModelNode *node);
-	void traverseAndChange(InnerModelNode *node);
+
 	
-	
-	int num_threadsR = 10;
-	int num_threadsW = 5;
-	std::thread threadsR[10], threadsW[10];
 
 };
 

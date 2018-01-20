@@ -39,24 +39,42 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	innermodel = std::make_shared<InnerModel>(InnerModel("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml"));
 	//innermodel->print("inner");
 	
+	int NR = 5;
+	int NW = 5;
+	std::thread threadsR[NR], threadsIDS[NW], threadsUpdate[NW], threadsTransform[NW];
 	
 	/// Threads
 	Traverser traverser;
-	Writer writer;
-    for (int i = 0; i < num_threadsR; ++i)
+	WriterIDS writer;
+	WriterTransforms writertransforms;
+	WriterUpdates writerupdates;
+	
+    for (int i = 0; i < NR; ++i)
 	{
 		threadsR[i] = std::thread(&Traverser::run, traverser, innermodel);
     }
-	for (int i = 0; i < num_threadsW; ++i)
+	for (int i = 0; i < NW; ++i)
 	{
-		threadsW[i] = std::thread(&Writer::run, writer, innermodel);
+		threadsIDS[i] = std::thread(&WriterIDS::run, writer, innermodel);
     }
-	for (int i = 0; i < num_threadsR; ++i)
+    for (int i = 0; i < NW; ++i)
+	{
+		threadsTransform[i] = std::thread(&WriterTransforms::run, writertransforms, innermodel);
+    }
+    for (int i = 0; i < NW; ++i)
+	{
+		threadsUpdate[i] = std::thread(&WriterUpdates::run, writerupdates, innermodel);
+    }
+    
+    
+	for (int i = 0; i < NW; ++i)
 		threadsR[i].join();
-	for (int i =
-		0; i < num_threadsW; ++i)
-		threadsW[i].join();
-	
+	for (int i =0; i < NW; ++i)
+	{
+		threadsIDS[i].join();
+		threadsTransform[i].join();
+		threadsUpdate[i].join();
+	}
 	
     qDebug() << __FILE__ << __FUNCTION__ << "All finished";
 	exit(-1);
@@ -70,24 +88,4 @@ void SpecificWorker::compute()
 }
 
 
-// void SpecificWorker::traverse(InnerModelNode *node)
-// {	
-// 	qDebug() << "node:" << node->id;
-// 	for (int i=0; i<node->children.size(); i++)
-// 	{
-// 		traverse(node->children[i]);
-// 	}
-// }
-// 
-// void SpecificWorker::traverseAndChange(InnerModelNode *node)
-// {	
-// 	QString a = node->id;
-// 	node->id = "caca";
-// 	qDebug() << "node:" << node->id;
-// 	node->id = a;
-// 	for (int i=0; i<node->children.size(); i++)
-// 	{
-// 		traverseAndChange(node->children[i]);
-// 	}
-// }
 

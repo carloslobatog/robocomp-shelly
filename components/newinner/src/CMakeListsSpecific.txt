@@ -11,5 +11,5 @@ SET ( HEADERS
   specificmonitor.h
 )
 
-ADD_DEFINITIONS( -std=c++14 )
+ADD_DEFINITIONS( -g -std=c++14 )
 
