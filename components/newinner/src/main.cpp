@@ -81,9 +81,6 @@
 #include "specificmonitor.h"
 #include "commonbehaviorI.h"
 
-
-
-
 // User includes here
 
 // Namespaces
@@ -234,6 +231,5 @@ int main(int argc, char* argv[])
 		}
 	}
 	::NewInner app(prefix);
-
 	return app.main(argc, argv, configFile.c_str());
 }

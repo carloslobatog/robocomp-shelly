@@ -39,9 +39,12 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	innermodel = std::make_shared<InnerModel>(InnerModel("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml"));
 	//innermodel->print("inner");
 	
-	int NR = 5;
-	int NW = 5;
-	std::thread threadsR[NR], threadsIDS[NW], threadsUpdate[NW], threadsTransform[NW];
+	int R = 15;
+	int IDS = 0;
+	int UP = 15;
+	int TR = 15;
+	
+	std::thread threadsR[R], threadsIDS[IDS], threadsUpdate[UP], threadsTransform[TR];
 	
 	/// Threads
 	Traverser traverser;
@@ -49,32 +52,32 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	WriterTransforms writertransforms;
 	WriterUpdates writerupdates;
 	
-    for (int i = 0; i < NR; ++i)
+    for (int i = 0; i < R; ++i)
 	{
 		threadsR[i] = std::thread(&Traverser::run, traverser, innermodel);
     }
-	for (int i = 0; i < NW; ++i)
+	for (int i = 0; i < IDS; ++i)
 	{
 		threadsIDS[i] = std::thread(&WriterIDS::run, writer, innermodel);
     }
-    for (int i = 0; i < NW; ++i)
+    for (int i = 0; i < TR; ++i)
 	{
 		threadsTransform[i] = std::thread(&WriterTransforms::run, writertransforms, innermodel);
     }
-    for (int i = 0; i < NW; ++i)
+    for (int i = 0; i < UP; ++i)
 	{
 		threadsUpdate[i] = std::thread(&WriterUpdates::run, writerupdates, innermodel);
     }
     
     
-	for (int i = 0; i < NW; ++i)
+	for (int i = 0; i < R; ++i)
 		threadsR[i].join();
-	for (int i =0; i < NW; ++i)
-	{
+	for (int i =0; i < IDS; ++i)
 		threadsIDS[i].join();
+	for (int i =0; i < TR; ++i)
 		threadsTransform[i].join();
+	for (int i =0; i < UP; ++i)
 		threadsUpdate[i].join();
-	}
 	
     qDebug() << __FILE__ << __FUNCTION__ << "All finished";
 	exit(-1);

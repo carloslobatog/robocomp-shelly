@@ -40,15 +40,16 @@ class Traverser
 		{
 			while(true)
 			{
-				//traverse(inner->getRoot());
-				//std::this_thread::sleep_for(50ms);
+				traverse(inner->getRoot());
+				std::this_thread::sleep_for(1ms);
+				qDebug() << "Reader:";
 			}
 		}
 		void traverse(InnerModelNode *node)
 		{	
-			QMat r = node->getR(); QVec t = node->getTr();
-			qDebug() << "reader:" << node->getId();
-			r.print("rot"); t.print("t");
+			QMat r = node->getRTS(); QVec t = node->getTrTS();
+			//qDebug() << "Reader:" << node->getIdTS();
+			//r.print("rot"); t.print("t");
 			for (int i=0; i<node->children.size(); i++)
 			{
 				traverse(node->children[i]);
@@ -64,7 +65,8 @@ class WriterIDS
 		{
 			while(true)
 			{
-				//traverse(inner->getRoot());
+				traverse(inner->getRoot());
+				std::this_thread::sleep_for(1ms);
 			}
 		}
 		void traverse(InnerModelNode *node)
@@ -77,6 +79,7 @@ class WriterIDS
 				traverse(node->children[i]);
 		}
 };
+
 class WriterTransforms
 {
 	public:
@@ -85,7 +88,8 @@ class WriterTransforms
 		{
 			while(true)
 			{
-				//transforms(inner);
+				transforms(inner);
+				std::this_thread::sleep_for(1ms);
 			}
 		}
 		void transforms(std::shared_ptr<InnerModel> inner)
@@ -95,22 +99,13 @@ class WriterTransforms
 			std::default_random_engine e1(r());
 			std::uniform_int_distribution<int> uniform_dist(0, keys.size()-1);
 			
-			for(int i=0; i<100; i++)
-			{
-				QString dest = keys[uniform_dist(e1)];
-				QString orig = keys[uniform_dist(e1)];			
-
-				InnerModelTransform *no = inner->getNodeSafeAndLock<InnerModelTransform>(orig);
-				InnerModelTransform *nd = inner->getNodeSafeAndLock<InnerModelTransform>(dest);
-				if(no != nullptr and nd != nullptr)
-				{
-					QVec v = inner->transform6D(dest, QVec::vec6(3,4,5,0,0,0), orig);
-					no->unlock(); nd->unlock();
-					qDebug() << orig << dest << v;
-				}
-			}
+			QString dest = keys[uniform_dist(e1)];
+			QString orig = keys[uniform_dist(e1)];			
+			QVec v = inner->transform(dest, QVec::vec6(3,4,5,0,0,0), orig);
+			qDebug() << "Transform: " << orig << dest << v;
 		}
 };
+
 class WriterUpdates
 {
 	public: 
@@ -120,6 +115,7 @@ class WriterUpdates
 			while(true)
 			{
 				updates(inner);
+				std::this_thread::sleep_for(1ms);
 			}
 		}
 		void updates(std::shared_ptr<InnerModel> inner)
@@ -130,35 +126,29 @@ class WriterUpdates
 			std::uniform_int_distribution<int> uniform_dist(0, keys.size()-1);
 			std::uniform_int_distribution<int> vs(-1000, 1000);
 			
-			for(int i=0; i<keys.size(); i++)
-			{
-				InnerModelTransform *no = inner->getNode<InnerModelTransform>(keys[i]);
-				if(no != nullptr)
-				{
-					qDebug() << "updates" << keys[i];
-					inner->updateTransformValues(keys[i], vs(e1), vs(e1), vs(e1), vs(e1), vs(e1), vs(e1));
-					//no->unlock();
-				}
-			}
+			QString parent = keys[uniform_dist(e1)];
+			QString id = keys[uniform_dist(e1)];
+			qDebug() << "Updates:" << id;
+			inner->updateTransformValues(id, vs(e1), vs(e1), vs(e1), vs(e1), vs(e1), vs(e1), parent);
+			
+			if( inner->getNode<InnerModelJoint>(id) != nullptr)
+				inner->updateJointValue(id, vs(e1), false);
 		}
 };
 
 class SpecificWorker : public GenericWorker
 {
-Q_OBJECT
-public:
-	SpecificWorker(MapPrx& mprx);
-	~SpecificWorker();
-	bool setParams(RoboCompCommonBehavior::ParameterList params);
+	Q_OBJECT
+	public:
+		SpecificWorker(MapPrx& mprx);
+		~SpecificWorker();
+		bool setParams(RoboCompCommonBehavior::ParameterList params);
 
+	public slots:
+		void compute();
 
-public slots:
-	void compute();
-
-private:
-	std::shared_ptr<InnerModel> innermodel;
-
-	
+	private:
+		std::shared_ptr<InnerModel> innermodel;
 
 };
 
