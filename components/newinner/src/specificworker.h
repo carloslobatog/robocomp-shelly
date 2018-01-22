@@ -134,11 +134,9 @@ class WriterUpdates
 			std::uniform_int_distribution<int> vs(-1000, 1000);
 			QString parent = keys[uniform_dist(e1)];
 			QString id = keys[uniform_dist(e1)];
+			//if(id == "root") return;
 			qDebug() << "Updates:" << id;
-			try
-			{
-				inner->updateTransformValues(id, vs(e1), vs(e1), vs(e1), vs(e1), vs(e1), vs(e1), parent);
-			}
+			try{ inner->updateTransformValues(id, vs(e1), vs(e1), vs(e1), vs(e1), vs(e1), vs(e1), parent); }
 			catch(const InnerModelException &e){ std::cout << e.what() << std::endl; };
 			
 			if( inner->getNode<InnerModelJoint>(id) != nullptr)
@@ -179,13 +177,13 @@ class WriterDeletes
 				inner->removeSubTree(p, &l);
 				qDebug() << "LISTA" <<  l;
 				std::this_thread::sleep_for(1ms);
-				//InnerModelPlane *pn = inner->newPlane(paux->getId(), paux->parent, paux->texture, paux->width, paux->height, paux->depth, paux->repeat);
+				//InnerModelPlane *pn = inner->newPlane(paux->getId(), paux->parent, paux->getTexture(), paux->getWidth(), 
+				//									  paux->getHeight(), paux->getDepth(), paux->getRepeat());
 				//paux->parent->addChild(pn);
 				delete paux;
 			}
 		}
 };
-
 
 class SpecificWorker : public GenericWorker
 {
