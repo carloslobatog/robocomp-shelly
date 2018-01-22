@@ -43,14 +43,16 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	int IDS = 0;
 	int UP = 15;
 	int TR = 15;
+	int DE = 1;
 	
-	std::thread threadsR[R], threadsIDS[IDS], threadsUpdate[UP], threadsTransform[TR];
+	std::thread threadsR[R], threadsIDS[IDS], threadsUpdate[UP], threadsTransform[TR], threadsDelete[DE];;
 	
 	/// Threads
 	Traverser traverser;
 	WriterIDS writer;
 	WriterTransforms writertransforms;
 	WriterUpdates writerupdates;
+	WriterDeletes writerdeletes;
 	
     for (int i = 0; i < R; ++i)
 	{
@@ -68,7 +70,10 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	{
 		threadsUpdate[i] = std::thread(&WriterUpdates::run, writerupdates, innermodel);
     }
-    
+    for (int i = 0; i < DE; ++i)
+	{
+		threadsDelete[i] = std::thread(&WriterDeletes::run, writerdeletes, innermodel);
+    }
     
 	for (int i = 0; i < R; ++i)
 		threadsR[i].join();
@@ -78,6 +83,8 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 		threadsTransform[i].join();
 	for (int i =0; i < UP; ++i)
 		threadsUpdate[i].join();
+	for (int i =0; i < DE; ++i)
+		threadsDelete[i].join();
 	
     qDebug() << __FILE__ << __FUNCTION__ << "All finished";
 	exit(-1);
@@ -88,6 +95,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 
 void SpecificWorker::compute()
 {
+	
 }
 
 

@@ -29,6 +29,8 @@
 
 #include <genericworker.h>
 #include <innermodel/innermodel.h>
+#include <innermodel/innermodelnode.h>
+#include <innermodel/innermodelplane.h>
 #include <thread>
 #include <random>
 
@@ -100,9 +102,14 @@ class WriterTransforms
 			std::uniform_int_distribution<int> uniform_dist(0, keys.size()-1);
 			
 			QString dest = keys[uniform_dist(e1)];
-			QString orig = keys[uniform_dist(e1)];			
-			QVec v = inner->transform(dest, QVec::vec6(3,4,5,0,0,0), orig);
-			qDebug() << "Transform: " << orig << dest << v;
+			QString orig = keys[uniform_dist(e1)];	
+			
+			try
+			{ 
+				QVec v = inner->transform(dest, QVec::vec6(3,4,5,0,0,0), orig); 
+				qDebug() << "Transform: " << orig << dest << v;
+			}
+			catch(const InnerModelException &e){ std::cout << e.what() << std::endl; };
 		}
 };
 
@@ -125,16 +132,60 @@ class WriterUpdates
 			std::default_random_engine e1(r());
 			std::uniform_int_distribution<int> uniform_dist(0, keys.size()-1);
 			std::uniform_int_distribution<int> vs(-1000, 1000);
-			
 			QString parent = keys[uniform_dist(e1)];
 			QString id = keys[uniform_dist(e1)];
 			qDebug() << "Updates:" << id;
-			inner->updateTransformValues(id, vs(e1), vs(e1), vs(e1), vs(e1), vs(e1), vs(e1), parent);
+			try
+			{
+				inner->updateTransformValues(id, vs(e1), vs(e1), vs(e1), vs(e1), vs(e1), vs(e1), parent);
+			}
+			catch(const InnerModelException &e){ std::cout << e.what() << std::endl; };
 			
 			if( inner->getNode<InnerModelJoint>(id) != nullptr)
 				inner->updateJointValue(id, vs(e1), false);
 		}
 };
+
+class WriterDeletes
+{
+	public: 
+		WriterDeletes(){};
+		void run(std::shared_ptr<InnerModel> inner)
+		{
+			while(true)
+			{
+				//if(innerReload())
+				//	inner = reloadInner();
+				updates(inner);
+				std::this_thread::sleep_for(1ms);
+			}
+		}
+		void updates(std::shared_ptr<InnerModel> inner)
+		{
+			QList<QString> keys = inner->getIDKeys();
+			std::random_device r;
+			std::default_random_engine e1(r());
+			std::uniform_int_distribution<int> uniform_dist(0, keys.size()-1);
+			std::uniform_int_distribution<int> vs(-1000, 1000);
+			
+			QString id = keys[uniform_dist(e1)];
+			if(id == "root") return;
+			qDebug() << "Deletes:" << id;
+			InnerModelMesh *p = inner->getNode<InnerModelMesh>(id);
+			if(p != nullptr) 
+			{	
+				InnerModelPlane *paux = dynamic_cast<InnerModelPlane*>(p->copyNode(inner->hash, p->parent));
+				QStringList l;
+				inner->removeSubTree(p, &l);
+				qDebug() << "LISTA" <<  l;
+				std::this_thread::sleep_for(1ms);
+				//InnerModelPlane *pn = inner->newPlane(paux->getId(), paux->parent, paux->texture, paux->width, paux->height, paux->depth, paux->repeat);
+				//paux->parent->addChild(pn);
+				delete paux;
+			}
+		}
+};
+
 
 class SpecificWorker : public GenericWorker
 {

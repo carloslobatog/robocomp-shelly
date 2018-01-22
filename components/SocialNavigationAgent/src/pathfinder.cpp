@@ -112,7 +112,7 @@ void PathFinder::innerModelChanged ( InnerModelMgr &innerModel_, bool structural
 		structuralchange = true;
 		qDebug()<<__FUNCTION__<< "--------------ESPERANDO GET ROAD -----------------------";
 		
-		Road &road = getRoad(); //to block the threads
+		Road &road = getRoad(); 									//to block the threads. El problema es que el viewer no se bloquea.
 			qDebug()<<"reloadInnerModel PATHPLANNER";
 			pathplanner.reloadInnerModel(innerModel) ;  
 		
@@ -122,7 +122,7 @@ void PathFinder::innerModelChanged ( InnerModelMgr &innerModel_, bool structural
 
 			//controller.reloadInnerModel( innerModel );
 			qDebug()<<"reloadInnerModel VIEWER";
-			viewer->reloadInnerModel(innerModel);
+			viewer->reloadInnerModel(innerModel);				//OJO el viewer no se para con el getRoad
 			
 		releaseRoad();
 		
