@@ -160,6 +160,7 @@ class WriterDeletes
 		}
 		void updates(std::shared_ptr<InnerModel> inner)
 		{
+			static int a=0;
 			QList<QString> keys = inner->getIDKeys();
 			std::random_device r;
 			std::default_random_engine e1(r());
@@ -169,18 +170,27 @@ class WriterDeletes
 			QString id = keys[uniform_dist(e1)];
 			if(id == "root") return;
 			qDebug() << "Deletes:" << id;
-			InnerModelMesh *p = inner->getNode<InnerModelMesh>(id);
-			if(p != nullptr) 
+			InnerModelNode *p = inner->getNode<InnerModelNode>(id);
+			QStringList l;
+			inner->removeSubTree(p, &l);
+			qDebug() << "LISTA BORRADA" <<  l;
+			std::this_thread::sleep_for(1ms);
+					
+			id = keys[uniform_dist(e1)];
+			if(id == "root") return;
+			InnerModelTransform *pp = inner->getNode<InnerModelTransform>(id);
+			if(pp != nullptr) 
 			{	
-				InnerModelPlane *paux = dynamic_cast<InnerModelPlane*>(p->copyNode(inner->hash, p->parent));
-				QStringList l;
-				inner->removeSubTree(p, &l);
-				qDebug() << "LISTA" <<  l;
-				std::this_thread::sleep_for(1ms);
-				//InnerModelPlane *pn = inner->newPlane(paux->getId(), paux->parent, paux->getTexture(), paux->getWidth(), 
-				//									  paux->getHeight(), paux->getDepth(), paux->getRepeat());
+				//InnerModelPlane *paux = dynamic_cast<InnerModelPlane*>(p->copyNode(inner->hash, p->parent));
+				//QStringList l;
+				//inner->removeSubTree(p, &l);
+				//InnerModelPlane *pn = inner->newPlane(paux->getId(), paux->parent, paux->getTexture(), paux->getWidth(), paux->getHeight(), paux->getDepth(), 
+				//									  paux->getRepeat(), 0, 0, 0, 0, 0, 0, false);
+				QString name = "prueba" + QString::number(a++);
+				qDebug() << "ADDED node" << name;
+				InnerModelTransform* pn = inner->newTransform(name, "", pp, 0, 0, 0, 0, 0, 0, 0);
 				//paux->parent->addChild(pn);
-				delete paux;
+				//delete paux;
 			}
 		}
 };
