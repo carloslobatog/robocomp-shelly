@@ -52,9 +52,9 @@ class Traverser
 			QMat r = node->getRTS(); QVec t = node->getTrTS();
 			//qDebug() << "Reader:" << node->getIdTS();
 			//r.print("rot"); t.print("t");
-			for (int i=0; i<node->children.size(); i++)
+			for (int i=0; i<node->children->size(); i++)
 			{
-				traverse(node->children[i]);
+				traverse(node->children->value(i));
 			}
 		}
 };
@@ -77,8 +77,8 @@ class WriterIDS
 			node->setId("cacafasdfasdfasdfasdfasdfasdf");
 			//std::this_thread::sleep_for(20ms);
 			node->setId(a);
-			for (int i=0; i<node->children.size(); i++)
-				traverse(node->children[i]);
+			for (int i=0; i<node->children->size(); i++)
+				traverse(node->children->value(i));
 		}
 };
 
@@ -156,6 +156,7 @@ class WriterDeletes
 				//	inner = reloadInner();
 				updates(inner);
 				std::this_thread::sleep_for(1ms);
+				
 			}
 		}
 		void updates(std::shared_ptr<InnerModel> inner)
@@ -172,6 +173,7 @@ class WriterDeletes
 			qDebug() << "Deletes:" << id;
 			InnerModelNode *p = inner->getNode<InnerModelNode>(id);
 			QStringList l;
+			
 			inner->removeSubTree(p, &l);
 			qDebug() << "LISTA BORRADA" <<  l;
 			std::this_thread::sleep_for(1ms);
@@ -185,10 +187,12 @@ class WriterDeletes
 				//QStringList l;
 				//inner->removeSubTree(p, &l);
 				//InnerModelPlane *pn = inner->newPlane(paux->getId(), paux->parent, paux->getTexture(), paux->getWidth(), paux->getHeight(), paux->getDepth(), 
-				//									  paux->getRepeat(), 0, 0, 0, 0, 0, 0, false);
-				QString name = "prueba" + QString::number(a++);
-				qDebug() << "ADDED node" << name;
-				InnerModelTransform* pn = inner->newTransform(name, "", pp, 0, 0, 0, 0, 0, 0, 0);
+				//									  paux->getRepeat(), 0, 0, 0, 0, 0, 0, false)
+				;
+// 				QString name = "prueba" + QString::number(a++);
+// 				qDebug() << "ADDED node" << name;
+// 				InnerModelTransform* pn = inner->newTransform(name, "", pp, 0, 0, 0, 0, 0, 0, 0);
+				
 				//paux->parent->addChild(pn);
 				//delete paux;
 			}
