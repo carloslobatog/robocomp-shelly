@@ -47,10 +47,10 @@ class Traverser
 				qDebug() << "Reader:";
 			}
 		}
-		void traverse(InnerModelNode *node)
+		void traverse(InnerModel::NodePtr node)
 		{	
 			QMat r = node->getRTS(); QVec t = node->getTrTS();
-			//qDebug() << "Reader:" << node->getIdTS();
+			qDebug() << "Reader:" << node->getId();
 			//r.print("rot"); t.print("t");
 			for (int i=0; i<node->children->size(); i++)
 			{
@@ -71,7 +71,7 @@ class WriterIDS
 				std::this_thread::sleep_for(1ms);
 			}
 		}
-		void traverse(InnerModelNode *node)
+		void traverse(InnerModel::NodePtr node)
 		{	
 			QString a = node->getId();
 			node->setId("cacafasdfasdfasdfasdfasdfasdf");
@@ -171,7 +171,7 @@ class WriterDeletes
 			QString id = keys[uniform_dist(e1)];
 			if(id == "root") return;
 			qDebug() << "Deletes:" << id;
-			InnerModelNode *p = inner->getNode<InnerModelNode>(id);
+			InnerModel::NodePtr p = inner->getNode<InnerModelNode>(id);
 			QStringList l;
 			
 			inner->removeSubTree(p, &l);
@@ -180,7 +180,7 @@ class WriterDeletes
 					
 			id = keys[uniform_dist(e1)];
 			if(id == "root") return;
-			InnerModelTransform *pp = inner->getNode<InnerModelTransform>(id);
+			InnerModel::TransformPtr pp = inner->getNode<InnerModelTransform>(id);
 			if(pp != nullptr) 
 			{	
 				//InnerModelPlane *paux = dynamic_cast<InnerModelPlane*>(p->copyNode(inner->hash, p->parent));

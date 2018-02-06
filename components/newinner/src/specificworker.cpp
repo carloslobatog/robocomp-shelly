@@ -39,11 +39,11 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	innermodel = std::make_shared<InnerModel>(InnerModel("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml"));
 	//innermodel->print("inner");
 	
-	int R = 15;
+	int R = 1;
 	int IDS = 0;
-	int UP = 15;
-	int TR = 15;
-	int DE = 1;
+	int UP = 0;
+	int TR = 0;
+	int DE = 0;
 	
 	std::thread threadsR[R], threadsIDS[IDS], threadsUpdate[UP], threadsTransform[TR], threadsDelete[DE];;
 	
