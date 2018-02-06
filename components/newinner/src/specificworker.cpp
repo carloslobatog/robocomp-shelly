@@ -37,7 +37,10 @@ SpecificWorker::~SpecificWorker()
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 {
 	innermodel = std::make_shared<InnerModel>(InnerModel("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml"));
-	//innermodel->print("inner");
+	
+	qDebug() << "holaaaaaaaaaaaa";
+	
+	innermodel->print("inner");
 	
 	int R = 1;
 	int IDS = 0;
