@@ -22,8 +22,6 @@
        @author authorname
 */
 
-
-
 #ifndef SPECIFICWORKER_H
 #define SPECIFICWORKER_H
 
@@ -38,7 +36,7 @@ class Traverser
 {
 	public:
 		Traverser(){};
-		void run(std::shared_ptr<InnerModel> inner)
+		void run(const std::shared_ptr<InnerModel> &inner)
 		{
 			while(true)
 			{
@@ -50,7 +48,7 @@ class Traverser
 		void traverse(InnerModel::NodePtr node)
 		{	
 			QMat r = node->getRTS(); QVec t = node->getTrTS();
-			qDebug() << "Reader:" << node->getId();
+			//qDebug() << "Reader:" << node->getId();
 			//r.print("rot"); t.print("t");
 			for (int i=0; i<node->children->size(); i++)
 			{
@@ -139,8 +137,8 @@ class WriterUpdates
 			try{ inner->updateTransformValues(id, vs(e1), vs(e1), vs(e1), vs(e1), vs(e1), vs(e1), parent); }
 			catch(const InnerModelException &e){ std::cout << e.what() << std::endl; };
 			
-			if( inner->getNode<InnerModelJoint>(id) != nullptr)
-				inner->updateJointValue(id, vs(e1), false);
+// 			if( inner->getNode<InnerModelJoint>(id) != nullptr)
+// 				inner->updateJointValue(id, vs(e1), false);
 		}
 };
 
