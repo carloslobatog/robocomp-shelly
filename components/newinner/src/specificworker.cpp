@@ -45,7 +45,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	int TR = 0;
 	int DE = 0;
 	
-	std::thread threadsR[R], threadsIDS[IDS], threadsUpdate[UP], threadsTransform[TR], threadsDelete[DE];;
+	std::future<void> threadsR[R], threadsIDS[IDS], threadsUpdate[UP], threadsTransform[TR], threadsDelete[DE];
 	
 	/// Threads
 	Traverser traverser;
@@ -56,35 +56,35 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	
     for (int i = 0; i < R; ++i)
 	{
-		threadsR[i] = std::thread(&Traverser::run, traverser, innermodel);
+		threadsR[i] = std::async(std::launch::async, &Traverser::run, traverser, innermodel);
     }
 	for (int i = 0; i < IDS; ++i)
 	{
-		threadsIDS[i] = std::thread(&WriterIDS::run, writer, innermodel);
+		threadsIDS[i] = std::async(std::launch::async, &WriterIDS::run, writer, innermodel);
     }
     for (int i = 0; i < TR; ++i)
 	{
-		threadsTransform[i] = std::thread(&WriterTransforms::run, writertransforms, innermodel);
+		threadsTransform[i] = std::async(std::launch::async, &WriterTransforms::run, writertransforms, innermodel);
     }
     for (int i = 0; i < UP; ++i)
 	{
-		threadsUpdate[i] = std::thread(&WriterUpdates::run, writerupdates, innermodel);
+		threadsUpdate[i] = std::async(std::launch::async, &WriterUpdates::run, writerupdates, innermodel);
     }
     for (int i = 0; i < DE; ++i)
 	{
-		threadsDelete[i] = std::thread(&WriterDeletes::run, writerdeletes, innermodel);
+		threadsDelete[i] = std::async(std::launch::async, &WriterDeletes::run, writerdeletes, innermodel);
     }
     
 	for (int i = 0; i < R; ++i)
-		threadsR[i].join();
+		threadsR[i].wait();
 	for (int i =0; i < IDS; ++i)
-		threadsIDS[i].join();
+		threadsIDS[i].wait();
 	for (int i =0; i < TR; ++i)
-		threadsTransform[i].join();
+		threadsTransform[i].wait();
 	for (int i =0; i < UP; ++i)
-		threadsUpdate[i].join();
+		threadsUpdate[i].wait();
 	for (int i =0; i < DE; ++i)
-		threadsDelete[i].join();
+		threadsDelete[i].wait();
 	
     qDebug() << __FILE__ << __FUNCTION__ << "All finished";
 	exit(-1);

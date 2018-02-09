@@ -31,6 +31,7 @@
 #include <innermodel/innermodelplane.h>
 #include <thread>
 #include <random>
+#include <future>
 
 class Traverser
 {
