@@ -113,7 +113,6 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	rDebug2(("NavigationAgent started"));
 
 	
-	
 	Period = 200;
 	timer.start(Period);
 	

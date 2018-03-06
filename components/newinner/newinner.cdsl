@@ -1,0 +1,9 @@
+
+Component NewInner
+{
+	Communications
+	{
+	};
+	language Cpp;
+};
+
