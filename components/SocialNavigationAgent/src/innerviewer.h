@@ -44,7 +44,9 @@ class InnerViewer: public QThread
 		mutable std::mutex mutex;
 	
 		void reloadInnerModel(InnerModelMgr other);
-	
+		
+		bool stop,stopped;
+		
 		/////////////////////////////
 		// NOT thread safe interface
 		/////////////////////////////

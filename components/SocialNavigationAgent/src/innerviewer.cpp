@@ -20,7 +20,9 @@
 #include "innerviewer.h"
 
 InnerViewer::InnerViewer( InnerModelMgr innerModel_, const std::string &name_, uint period_, QObject *parent ) : period(period_)
-{
+{	
+	stop = stopped = false;
+	
 	QGLFormat fmt;
 	fmt.setDoubleBuffer(true);
 	QGLFormat::setDefaultFormat(fmt);
@@ -45,15 +47,19 @@ InnerViewer::InnerViewer( InnerModelMgr innerModel_, const std::string &name_, u
 	qDebug() << "----------------------------------In viewer" << innerModel_->getNode<InnerModelJoint>("armX1")->getAngle();
 	
 	InnerModelMgr in = innerModel_.deepcopy();
-
-	qDebug() << "----------------------------------In viewer" << in->getNode<InnerModelJoint>("armX1")->getAngle();
-	if (innerModel_->getNode<InnerModelJoint>("armX1")->getAngle() != in->getNode<InnerModelJoint>("armX1")->getAngle())
-		qFatal("Me cago en el Fary");
-	
-//	qDebug() << "-----------------------------------------In viewer" << innerModel_->getNode<InnerModelJoint>("armX1")->getAngle();
 	innerModel = innerModel_.deepcopy();
-//	qDebug() << "-----------------------------------------In viewer" << innerModel->getNode<InnerModelJoint>("armX1")->getAngle();
- 	
+	
+	qDebug() << "---------------------------------In innerModel_" << innerModel_->getNode<InnerModelJoint>("armX1")->getAngle();
+	
+	qDebug() << "---------------------------------In innerModel" << innerModel->getNode<InnerModelJoint>("armX1")->getAngle();
+ 		
+	qDebug() << "----------------------------------In  in" << in->getNode<InnerModelJoint>("armX1")->getAngle();
+	
+	if (innerModel_->getNode<InnerModelJoint>("armX1")->getAngle() != innerModel->getNode<InnerModelJoint>("armX1")->getAngle())
+		//qFatal("Me cago en el Fary");
+	
+	
+	
 	innerModelViewer = new InnerModelViewer(innerModel, "root", root, true);
 	viewer.setSceneData(root);
 	
@@ -79,14 +85,23 @@ InnerViewer::InnerViewer( InnerModelMgr innerModel_, const std::string &name_, u
 
 void InnerViewer::run()
 {
-	while( true)
+	while(true)
 	{
 		{
 			guard gl(mutex);
 			innerModelViewer->update();   //accesses local InnerModel for reading and the osg scenegraph
 			viewer.frame();
 		}
-		usleep(period);
+		
+		usleep(period);	
+
+		while (stop)
+		{
+			stopped = true;
+			usleep(period);	
+		}
+		stopped = false;
+		
 	}
 }
 
@@ -98,12 +113,12 @@ void InnerViewer::reloadInnerModel(InnerModelMgr other)
 	qDebug()<<"reloadInnerModel-----------1-----------";
  	innerModelViewer-> innerModel = other.deepcopy(); 	
 	qDebug()<<"reloadInnerModel-----------2-----------";
- 	innerModelViewer->innerModel->print("");
-	qDebug()<<"reloadInnerModel-----------2.5-----------";
- 	//innerModelViewer->update();  
-	qDebug()<<"reloadInnerModel-----------3-----------";
-	//viewer.frame();
-	qDebug()<<"reloadInnerModel-----------4-----------";
+ 	//innerModelViewer->innerModel->print("");
+	qDebug()<<"reloadInnerModel-----------2.5-----------"<< stopped;
+//  	innerModelViewer->update();  
+// 	qDebug()<<"reloadInnerModel-----------3-----------";
+// 	viewer.frame();
+// 	qDebug()<<"reloadInnerModel-----------4-----------";
 }
 
 void InnerViewer::updateTransformValues(const QString item, const QVec &pos, const QString &parent)

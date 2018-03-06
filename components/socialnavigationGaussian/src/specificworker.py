@@ -32,7 +32,7 @@ from scipy.spatial import ConvexHull
 from normal import Normal
 import GaussianMix as GM
 import checkboundaries as ck
-from PySide.QtCore import QRect, QRectF, Qt, QSize, QSizeF, QPointF
+from PySide.QtCore import QRect, QRectF, Qt, QSize, QSizeF, QPointF, QLineF
 from PySide.QtGui import QTransform, QPainter, QPolygonF
 
 
@@ -293,9 +293,9 @@ class SpecificWorker(GenericWorker):
         for p in persons:
             pn = Person(p.x, p.z, p.angle)
             #print('Pose x', pn.x, 'Pose z', pn.y, 'Rotacion', pn.th)
-            pn.draw(4,2,2*4/3,pi/2 - pn.th, drawPersonalSpace=dibujar)
+            pn.draw(2.,1,4./3.,pi/2 - pn.th, drawPersonalSpace=dibujar)
             #normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 2.0, 2.0, 2.0], elliptical=True))
-            normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 4, 2, 2*4/3], elliptical=True))
+            normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th + pi/2, 2, 1, 4./3], elliptical=True))
         #print ("numero de gaussianas",len(normals))
 
         #h = 0.4
@@ -315,7 +315,7 @@ class SpecificWorker(GenericWorker):
 
         if (dibujar):
            # plt.figure()
-            plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+          #  plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
             plt.xlabel('X')
             plt.ylabel('Y')
             plt.axis('equal')
@@ -371,7 +371,7 @@ class SpecificWorker(GenericWorker):
             pn.draw((50/((7*pn.vel/50)+43)*4), (50/((7*pn.vel/50)+43)*4)/2, 2*(50/((7*pn.vel/50)+43)*4)/3,pi/2-pn.th, drawPersonalSpace=dibujar)
             pn.draw(4, 1.5, 10/3, pi - pn.th, drawPersonalSpace=dibujar)
 
-            normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, (50/((7*pn.vel/50)+43)*4), (50/((7*pn.vel/50)+43)*4)/2, 2*(50/((7*pn.vel/50)+43)*4)/3], elliptical=True))
+            normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th + pi/2, (50/((7*pn.vel/50)+43)*4), (50/((7*pn.vel/50)+43)*4)/2, 2*(50/((7*pn.vel/50)+43)*4)/3], elliptical=True))
             normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th , 4, 1.5, 10/3], elliptical=True))
 
 

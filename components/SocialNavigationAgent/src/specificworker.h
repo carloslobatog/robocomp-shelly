@@ -171,7 +171,7 @@ private:
 	std::string robotname = "robot";
 	RoboCompGenericBase::TBaseState bState;
 	InnerModelMgr innerModel;
-	std::atomic_shared_ptr<InnerModel> inner;
+	//std::atomic_shared_ptr<InnerModel> inner;
 	
 //CHECK
 	//void updateRobotsCognitiveLocation();

@@ -54,7 +54,7 @@ void PathFinder::initialize( const InnerModelMgr &innerModel_,
 	currenttarget = std::make_shared<CurrentTarget>();
 	
 	#ifdef USE_QTGUI
-		viewer = new InnerViewer( innerModel, "Social Navigation");  //InnerViewer copies internally innerModel so it has to be resynchronized
+		viewer = new InnerViewer(innerModel, "Social Navigation");  //InnerViewer copies internally innerModel so it has to be resynchronized
 		viewer->start();	
 	#endif
 	
@@ -122,7 +122,10 @@ void PathFinder::innerModelChanged ( InnerModelMgr &innerModel_, bool structural
 
 			//controller.reloadInnerModel( innerModel );
 			qDebug()<<"reloadInnerModel VIEWER";
+			viewer->stop = true;
+			while (not viewer->stopped) usleep(10000);
 			viewer->reloadInnerModel(innerModel);
+			viewer->stop = false;
 			
 		releaseRoad();
 		
