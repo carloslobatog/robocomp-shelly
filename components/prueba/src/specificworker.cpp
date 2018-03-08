@@ -53,20 +53,27 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	innerModel->getNode<InnerModelJoint>("armX1")->setAngle(-1);
 	innerModel->getNode<InnerModelJoint>("armX2")->setAngle(2.5);
 
-
+	qDebug();
+	qDebug() << __FILE__ << __FUNCTION__ << "Now creating viewer";
+	
 	
 	viewer = new InnerViewer(innerModel, "Social Navigation");  //InnerViewer copies internally innerModel so it has to be resynchronized
 	viewer->start();	
 
-	timer.start(Period);
-	
-
-
+	timer.start(500);
 	return true;
 }
 
 void SpecificWorker::compute()
 {
+	//Check thread-safe interface to change viewer's innermodel
+	
+	//Stop viewer and reload innermodel
+	qDebug() << __FILE__ << __FUNCTION__ << "Reloading viewer";
+	viewer->stop.store(true);
+	while(viewer->stopped.load() != true);
+	viewer->reloadInnerModel(innerModel);
+	viewer->stop.store(false);
 	
 
 	

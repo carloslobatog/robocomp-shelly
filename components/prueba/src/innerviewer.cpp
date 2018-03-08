@@ -21,8 +21,6 @@
 
 InnerViewer::InnerViewer( InnerModelMgr innerModel_, const std::string &name_, uint period_, QObject *parent ) : period(period_)
 {	
-	stop = stopped = false;
-	
 	QGLFormat fmt;
 	fmt.setDoubleBuffer(true);
 	QGLFormat::setDefaultFormat(fmt);
@@ -43,30 +41,13 @@ InnerViewer::InnerViewer( InnerModelMgr innerModel_, const std::string &name_, u
 	viewer.getLight()->setAmbient(osg::Vec4(0.2, 0.2, 0.2, 1.0));
 	//viewer.getLight()->setDiffuse(osg::Vec4(0.7, 0.4, 0.6, 1.0));
 	viewer.getLight()->setSpecular(osg::Vec4(1.0, 1.0, 1.0, 1.0));
-
-	qDebug() << "----------------------------------In viewer" << innerModel_->getNode<InnerModelJoint>("armX1")->getAngle();
 	
-	//InnerModelMgr in = innerModel_.deepcopy();
 	innerModel = innerModel_.deepcopy();
 	
-	qDebug() << "---------------------------------In innerModel_" << innerModel_->getNode<InnerModelJoint>("armX1")->getAngle();
-	
-	qDebug() << "---------------------------------In innerModel" << innerModel->getNode<InnerModelJoint>("armX1")->getAngle();
- 		
-	//qDebug() << "----------------------------------In  in" << in->getNode<InnerModelJoint>("armX1")->getAngle();
-	
-// 	if (innerModel_->getNode<InnerModelJoint>("armX1")->getAngle() != innerModel->getNode<InnerModelJoint>("armX1")->getAngle())
-// 		//qFatal("Me cago en el Fary");
-// 	
-// 	
-	
 	innerModelViewer = new InnerModelViewer(innerModel, "root", root, true);
-	qDebug() << "hola" ;
 	
 	viewer.setSceneData(root);
-	
-	qDebug() << "hola" ;
-	
+		
 	//////////////////////////
 	//RESTORE FORMER VIEW					QUEDA CAPTURAR EL EVENTO DE CIERRE DE LA VENTANA PARA GUARDAR LA MATRIZ ACTUAL
 	/////////////////////////
@@ -91,38 +72,23 @@ void InnerViewer::run()
 {
 	while(true)
 	{
+		if(!stop.load())
 		{
+			stopped.store(false);
 			guard gl(mutex);
 			innerModelViewer->update();   //accesses local InnerModel for reading and the osg scenegraph
 			viewer.frame();
+		    std::this_thread::sleep_for(std::chrono::microseconds(period));
 		}
-		
-		usleep(period);	
-
-		while (stop)
-		{
-			stopped = true;
-			usleep(period);	
-		}
-		stopped = false;
-		
+		else
+			stopped.store(true);
 	}
 }
 
 void InnerViewer::reloadInnerModel(InnerModelMgr other)
 {	
-
-	qDebug()<<"reloadInnerModel-----------0-----------";
 	guard gl(mutex);
-	qDebug()<<"reloadInnerModel-----------1-----------";
- 	innerModelViewer-> innerModel = other.deepcopy(); 	
-	qDebug()<<"reloadInnerModel-----------2-----------";
- 	//innerModelViewer->innerModel->print("");
-	qDebug()<<"reloadInnerModel-----------2.5-----------"<< stopped;
-//  	innerModelViewer->update();  
-// 	qDebug()<<"reloadInnerModel-----------3-----------";
-// 	viewer.frame();
-// 	qDebug()<<"reloadInnerModel-----------4-----------";
+	innerModelViewer-> innerModel = other.deepcopy(); 	
 }
 
 void InnerViewer::updateTransformValues(const QString item, const QVec &pos, const QString &parent)

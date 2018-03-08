@@ -45,7 +45,8 @@ class InnerViewer: public QThread
 	
 		void reloadInnerModel(InnerModelMgr other);
 		
-		bool stop,stopped;
+		//bool stop,stopped;
+		std::atomic<bool> stop{false}, stopped{false};
 		
 		/////////////////////////////
 		// NOT thread safe interface
