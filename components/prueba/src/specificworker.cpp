@@ -66,7 +66,9 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 
 void SpecificWorker::compute()
 {
-	//Check thread-safe interface to change viewer's innermodel
+	//Use thread-safe interface to change viewer's innermodel
+	//viewer->addTransform_ignoreExisting(const QString &item_, const QString &parent_, const QVec &pos = QVec::zeros(6));
+	//void updateTransformValues(const QString item_, const QVec &pos, const QString &parent = "");
 	
 	//Stop viewer and reload innermodel
 	qDebug() << __FILE__ << __FUNCTION__ << "Reloading viewer";
@@ -74,9 +76,6 @@ void SpecificWorker::compute()
 	while(viewer->stopped.load() != true);
 	viewer->reloadInnerModel(innerModel);
 	viewer->stop.store(false);
-	
-
-	
 }
 
 
