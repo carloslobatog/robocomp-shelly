@@ -38,11 +38,9 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 
 	//Timed slot to read TrajectoryRobot2D state
 	connect(&trajReader, SIGNAL(timeout()), &aE, SLOT(readTrajState()));
-
 	connect(gaussiana,SIGNAL(clicked()),&sr, SLOT(gauss()));
 	connect(por,SIGNAL(clicked()),&sr, SLOT(PassOnRight()));
 	connect(objint,SIGNAL(clicked()),&sr, SLOT(objectInteraction()));
-	
 	connect(datos,SIGNAL(clicked()),this, SLOT(savedata()));
 	//trajReader.start(1000);
 
@@ -50,9 +48,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	connect (proximidad,SIGNAL(valueChanged(int)),&sr,SLOT(changevalue(int)));
 	//connect (proximidad,SIGNAL(sliderMoved()),this,SLOT(sliderM()));
 
-	
 	proximidad->QSlider::setMinimum (10);
-
 	proximidad->QSlider::setMaximum (90);	
 	proximidad->QSlider::setTracking (false);	
 	proximidad->QSlider::setValue (50);
@@ -95,18 +91,16 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	
 	
 		
-// 	qDebug()<<"PATH FINDER INNERMODEL CHANGE";
-// 	innerModel->print("");
-// 	pathfinder.innerModelChanged(innerModel,true,pn); 
-// 	qDebug()<<"----------------------------";
-// 	
-	
+	// 	qDebug()<<"PATH FINDER INNERMODEL CHANGE";
+	// 	innerModel->print("");
+	// 	pathfinder.innerModelChanged(innerModel,true,pn); 
+	// 	qDebug()<<"----------------------------";
+	// 	
 	//qFatal("Fary");
 
 	qLog::getInstance()->setProxy("both", logger_proxy);
 	rDebug2(("NavigationAgent started"));
 
-	
 	Period = 200;
 	timer.start(Period);
 	
@@ -114,16 +108,12 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	//aE.logger_proxy = logger_proxy;
 	//aE.agmexecutive_proxy = agmexecutive_proxy;
 	//aE.omnirobot_proxy = omnirobot_proxy;
-	
 	//aE.trajectoryn2d_proxy = trajectoryrobot2d_proxy;
 	
-	
 	//Proxies for SocialRules
-	
 	sr.socialnavigationgaussian_proxy=socialnavigationgaussian_proxy;
 	sr.agmexecutive_proxy=agmexecutive_proxy;
 	sr.mux=mutex;
-	
 	sr.objectInteraction(false);
 	
 	return true;
@@ -161,23 +151,17 @@ void SpecificWorker::compute()
 		innerModel->updateTransformValues("robot", bState.x,0,bState.z,0,bState.alpha,0);
 	//innerModel.unlock();
 	
-		
-	//qDebug() << SpecificWorker::compute";
 	bool sendChangesAGM = false;
 	
-
 	AGMModel::SPtr newM(new AGMModel(worldModel));	
 	
 	//Check if the person is in the model
-
  	for (int i=0;i<pn.size();i++)
 	{
-
 		if (pn[i]==false)
 		{	
 			std::string type = "person" + std::to_string(i+1);
 			std::string name = "fakeperson" + std::to_string(i+1);
-			
 			int idx=0;
 			while ((personSymbolId = newM->getIdentifierByType(type, idx++)) != -1)
 			{
@@ -195,7 +179,6 @@ void SpecificWorker::compute()
 
 		
 //If a person has moved its pose it is updated reading it from the AGM again.
-
 	if (changepos)
 	{
 		totalpersons.clear();
@@ -229,7 +212,6 @@ void SpecificWorker::compute()
 						movperson = true;
 			
 					totalaux[ind]=person;  	  
-					
 				}
 				
 				/////////////////////checking if the person is looking at the robot /////////////////////////
@@ -252,8 +234,6 @@ void SpecificWorker::compute()
 // 				}
 			}
 		}
-		
-		
 		
 		robotSymbolId = newM->getIdentifierByType("robot");
 		AGMModelSymbol::SPtr robotparent = newM->getParentByLink(robotSymbolId, "RT");
@@ -321,10 +301,6 @@ void SpecificWorker::compute()
 
 }
 	 	
-	 	
-
-
-
 
 void SpecificWorker::savedata()
 {

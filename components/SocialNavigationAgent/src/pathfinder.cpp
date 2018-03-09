@@ -101,18 +101,15 @@ void PathFinder::run()
 	}
 }
 
-
-
-void PathFinder::innerModelChanged ( InnerPtr &innerModel_, bool structural,vector <bool> pn )
+void PathFinder::innerModelChanged ( InnerPtr &innerModel_, bool structural, vector<bool> pn )
 {
 	innerModel = innerModel_;
-	
 	if(structural) //replace all objects with copies of InnerModel. Broadcast a signal to subscribed objects
 	{
 		structuralchange = true;
 		qDebug()<<__FUNCTION__<< "--------------ESPERANDO GET ROAD -----------------------";
 		
-		Road &road = getRoad(); 									//to block the threads. El problema es que el viewer no se bloquea.
+		Road &road = getRoad(); 									
 			qDebug()<<"reloadInnerModel PATHPLANNER";
 			pathplanner.reloadInnerModel(innerModel) ;  
 		
@@ -126,16 +123,10 @@ void PathFinder::innerModelChanged ( InnerPtr &innerModel_, bool structural,vect
 			viewer->reloadInnerModel(innerModel);
 			
 		releaseRoad();
-		
 		qDebug()<<__FUNCTION__<< "--------------TERMINA GET ROAD -----------------------";
-		
-
-
 	}
-	
 	else
 	{	
-		
 		#ifdef USE_QTGUI
 			
 			if(viewer != nullptr)
@@ -155,11 +146,8 @@ void PathFinder::innerModelChanged ( InnerPtr &innerModel_, bool structural,vect
 						}
 						
 					}	
-						
-						
 				releaseRoad();
 			}
-			
 		#endif
 	}
 }
