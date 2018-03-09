@@ -12,6 +12,6 @@ SET ( HEADERS
 )
 
 ADD_DEFINITIONS( -std=c++17 )
-SET (LIBS ${LIBS} -L/usr/local/lib/ pthread osg osgViewer)
+SET (LIBS ${LIBS} -L/usr/local/lib/ pthread osg osgViewer osgDB)
 
 

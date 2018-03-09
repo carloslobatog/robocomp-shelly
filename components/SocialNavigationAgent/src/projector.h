@@ -47,14 +47,15 @@
 class Projector
 {
 	public:
+		using InnerPtr = std::shared_ptr<InnerModel>;
 		Projector() = default;
-		void initialize(const InnerModelMgr &innerModel_, 
+		void initialize(const InnerPtr &innerModel_, 
 						const std::shared_ptr<CurrentTarget> &currenttarget_,
 						const std::shared_ptr<NavigationState> &state_,
 						const std::shared_ptr<RoboCompCommonBehavior::ParameterList > &configparams_, 
 						LaserPrx laser_proxy_);
 		void run(std::function<Road&()> getRoad, std::function<void()> releaseRoad);
-		void reloadInnerModel(InnerModelMgr &innerModel_);
+		void reloadInnerModel(const InnerPtr &innerModel_);
 		bool addPoints(Road& road);
 		RoboCompLaser::TLaserData unionpoligonos (RoboCompLaser::TLaserData laserData, SafePolyList &safePolyList);
 		
@@ -133,7 +134,7 @@ class Projector
 		float REPULSION_FORCE_COEFFICIENT;
 		
 		//Local copies
-		InnerModelMgr innerModel;
+		InnerPtr innerModel;
 		std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams;
 		std::shared_ptr<CurrentTarget> currenttarget;
 		SafePolyList safePolyList;

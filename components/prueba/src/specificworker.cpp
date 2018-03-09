@@ -44,9 +44,11 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 // 		innermodel_path = par.value;
 		
 // 		innerModel = new InnerModel("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml");
-		innerModel = InnerModelMgr(std::make_shared<InnerModel>("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml"));
+//		innerModel = InnerModelMgr(std::make_shared<InnerModel>("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml"));
+		innerModel = std::make_shared<InnerModel>("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml");
 	}
-	catch(std::exception e) { qFatal("Error reading config params"); }
+	catch(std::exception e) 
+	{ qFatal("Error reading config params"); }
 
 		// Fold arm
 
@@ -59,24 +61,46 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	
 	viewer = new InnerViewer(innerModel, "Social Navigation");  //InnerViewer copies internally innerModel so it has to be resynchronized
 	viewer->start();	
+	
+	std::future<void> th1, th2;
 
-	timer.start(500);
+	th1 = std::async(std::launch::async, &SpecificWorker::changeInner, this);
+	th2 = std::async(std::launch::async, &SpecificWorker::compute, this);
+	
+	th1.wait();
+	th2.wait();
+	
+// 	connect(&timer2, SIGNAL(timeout()), this, SLOT(changeInner()));
+// 	timer.start(3000);
+// 	timer2.start(300);
 	return true;
 }
 
 void SpecificWorker::compute()
 {
-	//Use thread-safe interface to change viewer's innermodel
-	//viewer->addTransform_ignoreExisting(const QString &item_, const QString &parent_, const QVec &pos = QVec::zeros(6));
-	//void updateTransformValues(const QString item_, const QVec &pos, const QString &parent = "");
-	
-	//Stop viewer and reload innermodel
-	qDebug() << __FILE__ << __FUNCTION__ << "Reloading viewer";
-	viewer->stop.store(true);
-	while(viewer->stopped.load() != true);
-	viewer->reloadInnerModel(innerModel);
-	viewer->stop.store(false);
+	while(true)
+	{
+		qDebug() << __FILE__ << __FUNCTION__ << "Reloading viewer";
+		viewer->reloadInnerModel(innerModel);
+		std::this_thread::sleep_for(3000ms);
+	}		
 }
 
+void SpecificWorker::changeInner()
+{
+	while(true)
+	{
+		qDebug() << __FILE__ << __FUNCTION__ << "Changing inner";
+		std::random_device r;
+		std::default_random_engine e1(r());
+		std::uniform_int_distribution<int> unif_dist(-3000, 3000);
+		QList<QString> keys = innerModel->getIDKeys();
+		std::uniform_int_distribution<int> keys_dist(0, keys.size()-1);
+		auto id = keys.at(keys_dist(e1));
+		std::cout << __FILE__ << __FUNCTION__ << "id " << id.toStdString() << std::endl;
+		viewer->ts_updateTransformValues(id, QVec::vec6(unif_dist(e1),0,unif_dist(e1),0, unif_dist(e1),0));
+		std::this_thread::sleep_for(200ms);
+	}	
+}
 
 

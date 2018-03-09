@@ -20,7 +20,7 @@
 
 using namespace std::chrono_literals;
 
-void Projector::initialize( const InnerModelMgr &innerModel_, 
+void Projector::initialize( const InnerPtr &innerModel_, 
 							const shared_ptr< CurrentTarget> &currenttarget_,
 							const std::shared_ptr<NavigationState> &state_,
 							const shared_ptr< RoboCompCommonBehavior::ParameterList> &configparams_, 
@@ -148,9 +148,9 @@ bool Projector::update(Road &road,
  * 
  * @param innerModel_ p_innerModel_:...
  */
-void Projector::reloadInnerModel( InnerModelMgr &innerModel_)
+void Projector::reloadInnerModel(const InnerPtr &innerModel_)
 {
-	innerModel.reset(innerModel_);
+	innerModel.reset(innerModel_.get());
 }
 
 /**

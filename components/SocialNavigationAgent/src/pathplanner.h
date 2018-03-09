@@ -95,16 +95,17 @@ class PathPlanner
 			};	
 			
 	public:
+		using InnerPtr = std::shared_ptr<InnerModel>;
 		PathPlanner() = default;
 		~PathPlanner() = default;
 		void initialize(const std::shared_ptr<CurrentTarget> &currentarget_,
-						InnerModelMgr innerModel, 
+						const InnerPtr &innerModel, 
 						const std::shared_ptr<NavigationState> &state_,
 						const std::shared_ptr<RoboCompCommonBehavior::ParameterList> &configparams);
 		void run(std::function<Road&()> handler, std::function<void()> releaseRoad);
-		bool get_map_dirty_bit() const 						{return map_dirty_bit;};  
-		void set_map_dirty_bit(bool v)						{map_dirty_bit = true;};
-		void reloadInnerModel(InnerModelMgr &innerModel_);
+		bool get_map_dirty_bit() const 							{return map_dirty_bit;};  
+		void set_map_dirty_bit(bool v=true)						{map_dirty_bit = v;};
+		void reloadInnerModel(const InnerPtr &innerModel_);
 	
 		typedef	std::unordered_map<PathPlanner::Key, PathPlanner::Value, PathPlanner::KeyHasher> FMap;	
 	
@@ -112,7 +113,7 @@ class PathPlanner
 	
 	private:
 		std::shared_ptr<CurrentTarget> currenttarget;
-		InnerModelMgr innerModel;
+		InnerPtr innerModel;
 		std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams;
 		std::string robotname = "robot";
 		bool map_dirty_bit = true;

@@ -81,20 +81,14 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 		
 	//innerModel = InnerModelMgr(std::make_shared<InnerModel>("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml"));
 
-	// Fold arm
-	innerModel.lock();
-		innerModel->getNode<InnerModelJoint>("armX1")->setAngle(-1);
-		innerModel->getNode<InnerModelJoint>("armX2")->setAngle(2.5);
-	innerModel.unlock();
-
+	innerModel->getNode<InnerModelJoint>("armX1")->setAngle(-1);
+	innerModel->getNode<InnerModelJoint>("armX2")->setAngle(2.5);
+	
 	std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams = std::make_shared<RoboCompCommonBehavior::ParameterList>(paramsL);
 	
-	
 	// Initializing PathFinder
-	
 	pathfinder.initialize(innerModel, configparams, laser_proxy, omnirobot_proxy);
 
-	
 	// releasing pathfinder
 	thread_pathfinder = std::thread(&robocomp::pathfinder::PathFinder::run, &pathfinder);
 	rDebug2(("Pathfinder up and running"));
@@ -162,10 +156,10 @@ void SpecificWorker::compute()
 	}	
 	
 	//We need to secure access to InnerModel 
-	QMutexLocker l(mutex);
-	innerModel.lock();
+	//QMutexLocker l(mutex);
+	//innerModel.lock();
 		innerModel->updateTransformValues("robot", bState.x,0,bState.z,0,bState.alpha,0);
-	innerModel.unlock();
+	//innerModel.unlock();
 	
 		
 	//qDebug() << SpecificWorker::compute";
@@ -408,9 +402,9 @@ void SpecificWorker::savedata()
  */
  void SpecificWorker::updateRobotPosition()
  {
-	innerModel.lock(); 
+	//innerModel.lock(); 
 		innerModel->updateTransformValues("robot", bState.x,0,bState.z,0,bState.alpha,0);
-	innerModel.unlock();
+	//innerModel.unlock();
 	
 	pathfinder.innerModelChanged(innerModel, false,pn);
  }
@@ -569,8 +563,8 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 	
         AGMModelConverter::fromIceToInternal(modification, worldModel);
 	
-	innerModel=AGMInner::extractInnerModel(worldModel, "world", false);
-	
+	InnerModel *inner = AGMInner::extractInnerModel(worldModel, "world", false);
+	innerModel.reset(inner);
 	
         if (firsttime==true)
         {

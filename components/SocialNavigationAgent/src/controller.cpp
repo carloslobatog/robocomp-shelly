@@ -220,7 +220,7 @@ std::vector<float> Controller::computeRobotOffsets( InnerModel* innerModel, cons
 	QVec p(3,0.f);
 	int k;
 
-	if(	innerModel->getNode("robot") == false or innerModel->getNode("laser") == false)	
+	if(	innerModel->getNode<InnerModel>("robot") == nullptr or innerModel->getNode<InnerModelNode>("laser") == nullptr)	
 	{
 		qDebug() << __FUNCTION__ << "No laser or robot nodes in InnerModel. Aborting";
 		throw;

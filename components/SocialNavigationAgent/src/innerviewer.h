@@ -35,17 +35,13 @@
  */
 class InnerViewer: public QThread
 {
-	public:
-		typedef std::lock_guard<std::mutex> guard;
-		InnerViewer(InnerModelMgr innerModel_, const std::string &name_ = "unknown", uint period = 100000, QObject *parent = 0);
-		void run();
-		inline void lock(){ mutex.lock(); };
-		inline void unlock(){ mutex.unlock(); };
-		mutable std::mutex mutex;
+	using InnerPtr = std::shared_ptr<InnerModel>;
 	
-		void reloadInnerModel(InnerModelMgr other);
-		
-		bool stop,stopped;
+	public:
+		typedef std::lock_guard<std::recursive_mutex> guard;
+		InnerViewer(InnerPtr innerModel_, const std::string &name_ = "unknown", uint period = 100000, QObject *parent = 0);
+		void run();
+		void reloadInnerModel(InnerPtr other);
 		
 		/////////////////////////////
 		// NOT thread safe interface
@@ -54,10 +50,16 @@ class InnerViewer: public QThread
 		void addTransform_ignoreExisting(const QString &item_, const QString &parent_, const QVec &pos = QVec::zeros(6));
 		void addTransform(const QString &item_, const QString &parent_, const QVec &pos = QVec::zeros(6));
 		void drawLine(const QString &item_, const QString &parent_, const QVec &center, const QVec &normal, float length, float width, const QString &texture = "#550000");
+		void drawLine2Points(const QString &name, const QString &parent, const QVec &p1, const QVec &p2, float width, const QString &texture);
 		void addPlane_ignoreExisting(const QString &item_, const QString &parent_, const QVec &center, const QVec &normal, const QString &texture, const QVec &size);
 		void addPlane_notExisting(const QString &item_, const QString &parent_, const QVec &center, const QVec &normal, const QString &texture, const QVec &size);
 		void updateTransformValues(const QString item_, const QVec &pos, const QString &parent = "");
-	
+		bool setPlaneTexture(const QString &item, const QString &texture);
+		bool addJoint(const QString &item, const QString &base, const QVec &t, const QVec &r, QString &axis);
+		bool setScale(const QString &item, float scaleX, float scaleY, float scaleZ);
+		void addMesh_ignoreExisting(const QString &item, const QString &base, const QVec &t, const QVec &r, const QString &path, const QVec &scale);
+		bool removeObject(const QString &name);
+
 		//////////////////////////
 		/// thread safe interface
 		//////////////////////////
@@ -67,11 +69,16 @@ class InnerViewer: public QThread
 		void ts_drawLine(const QString &item_, const QString &parent_, const QVec &center, const QVec &normal, float length, float width, const QString &texture = "#550000"){guard gl(mutex); drawLine(item_, parent_, center, normal, length, width, texture);};
 		void ts_addPlane_ignoreExisting(const QString &item_, const QString &parent_, const QVec &center, const QVec &normal, const QString &texture, const QVec &size){guard gl(mutex); addPlane_ignoreExisting(item_, parent_, center, normal, texture, size);};
 		void ts_addPlane_notExisting(const QString &item_, const QString &parent_, const QVec &center, const QVec &normal, const QString &texture, const QVec &size){guard gl(mutex);addPlane_notExisting(item_, parent_, center, normal, texture, size);};
-		void ts_updateTransformValues(const QString item_, const QVec &pos, const QString &parent = "");
+		void ts_updateTransformValues(const QString item_, const QVec &pos, const QString &parent = "")
+		{guard gl(mutex); updateTransformValues(item_, pos, parent);};
+		
+		mutable std::recursive_mutex mutex;
 		
 	private:
-		InnerModelViewer *innerModelViewer;
-		InnerModelMgr innerModel;
+		
+		std::atomic<bool> stop{false}, stopped{false};
+		std::unique_ptr<InnerModelViewer> innerModelViewer;
+		InnerPtr innerModel;
 		osgViewer::Viewer viewer;
 		void createWindow(osgViewer::Viewer& viewer, const std::string &name);
 		QSettings *settings ;

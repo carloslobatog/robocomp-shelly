@@ -20,7 +20,7 @@
 using namespace std::chrono_literals;
 
 void PathPlanner::initialize(const std::shared_ptr<CurrentTarget> &currenttarget_, 
-							 InnerModelMgr innerModel_, 
+							 const InnerPtr &innerModel_, 
 							 const std::shared_ptr<NavigationState> &state_, 
 							 const std::shared_ptr<RoboCompCommonBehavior::ParameterList> &configparams_)
 {
@@ -86,12 +86,12 @@ void PathPlanner::run(std::function<Road&()> getRoad, std::function<void()> rele
 	}
 }
 
-void PathPlanner::reloadInnerModel(InnerModelMgr &innerModel_)
+void PathPlanner::reloadInnerModel(const InnerPtr &innerModel_)
 {
 	sampler.lock();
 		sampler.reloadInnerModel(innerModel_);
 	sampler.unlock();
-	innerModel.reset(innerModel_);
+	innerModel.reset(innerModel_.get());
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

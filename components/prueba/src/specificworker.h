@@ -27,13 +27,19 @@
 #ifndef SPECIFICWORKER_H
 #define SPECIFICWORKER_H
 
+#include <random>
+#include <thread>
+#include <future>
+#include <chrono>
 #include <genericworker.h>
 #include <innermodel/innermodel.h>
-#include <innermodel/innermodelmgr.h>
+//#include <innermodel/innermodelmgr.h>
 #include "innerviewer.h"
 
 class SpecificWorker : public GenericWorker
 {
+	using InnerPtr = std::shared_ptr<InnerModel>;
+
 Q_OBJECT
 public:
 	SpecificWorker(MapPrx& mprx);
@@ -43,10 +49,13 @@ public:
 
 public slots:
 	void compute();
+	void changeInner();
 	
 private:
-// 	InnerModel *innerModel;
-	InnerModelMgr innerModel;
+	QTimer timer2;
+	//InnerModelMgr innerModel;
+	InnerPtr innerModel;
+	
 };
 
 #endif

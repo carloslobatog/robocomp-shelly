@@ -54,6 +54,7 @@ class SpecificWorker : public GenericWorker
 Q_OBJECT
 
 public:  
+	using InnerPtr = std::shared_ptr<InnerModel>;
 	SpecificWorker(MapPrx& mprx);
 	~SpecificWorker();
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
@@ -170,7 +171,7 @@ private:
  	#endif
 	std::string robotname = "robot";
 	RoboCompGenericBase::TBaseState bState;
-	InnerModelMgr innerModel;
+	InnerPtr innerModel;
 
 
 	

@@ -20,4 +20,4 @@ SET ( SOURCES
 
 ADD_DEFINITIONS( -std=c++14 -Wextra)
 INCLUDE_DIRECTORIES( /usr/include/libxml2 )
-SET (LIBS ${LIBS} -L/usr/local/lib/ pthread osg osgViewer fcl pointmatcher nabo )
+SET (LIBS ${LIBS} -L/usr/local/lib/ pthread osg osgViewer osgDB fcl pointmatcher nabo )

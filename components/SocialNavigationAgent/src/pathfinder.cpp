@@ -36,7 +36,7 @@ void PathFinder::go(float x, float z, const ParameterMap &parameters)
 };
 
 ///////////////////////////////////////////////////////////////////
-void PathFinder::initialize( const InnerModelMgr &innerModel_, 
+void PathFinder::initialize( const InnerPtr &innerModel_, 
 							 const shared_ptr< RoboCompCommonBehavior::ParameterList > &configparams_, 
 							 LaserPrx laser_prx, OmniRobotPrx omnirobot_proxy )
 {
@@ -103,7 +103,7 @@ void PathFinder::run()
 
 
 
-void PathFinder::innerModelChanged ( InnerModelMgr &innerModel_, bool structural,vector <bool> pn )
+void PathFinder::innerModelChanged ( InnerPtr &innerModel_, bool structural,vector <bool> pn )
 {
 	innerModel = innerModel_;
 	
@@ -123,11 +123,7 @@ void PathFinder::innerModelChanged ( InnerModelMgr &innerModel_, bool structural
 			//controller.reloadInnerModel( innerModel );
 			qDebug()<<"reloadInnerModel VIEWER";
 
-			viewer->stop = true;
-			while (not viewer->stopped) usleep(10000);
 			viewer->reloadInnerModel(innerModel);
-			viewer->stop = false;
-
 			
 		releaseRoad();
 		
@@ -148,7 +144,7 @@ void PathFinder::innerModelChanged ( InnerModelMgr &innerModel_, bool structural
 					QVec robotpos = innerModel->transformS6D("world", robotname);
 					viewer->updateTransformValues(QString::fromStdString(robotname), robotpos);
 					//Actualizar en el viewer la posición de cada persona
-					for (int i=0;i<pn.size();i++)
+					for (uint i=0;i<pn.size();i++)
 					{
 						std::string personname = "fakeperson" + std::to_string(i+1);
 						
@@ -174,14 +170,14 @@ void PathFinder::innerModelChanged ( InnerModelMgr &innerModel_, bool structural
 Road& PathFinder::getRoad()
 {
 	mymutex.lock();
-	innerModel.lock();
+	//innerModel.lock();
 	
 	return road;	
 }
 
 void PathFinder::releaseRoad()
 {
-	innerModel.unlock();
+	//innerModel.unlock();
 	mymutex.unlock();
 }
 

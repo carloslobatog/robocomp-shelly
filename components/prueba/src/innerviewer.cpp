@@ -19,7 +19,7 @@
 
 #include "innerviewer.h"
 
-InnerViewer::InnerViewer( InnerModelMgr innerModel_, const std::string &name_, uint period_, QObject *parent ) : period(period_)
+InnerViewer::InnerViewer( InnerPtr innerModel_, const std::string &name_, uint period_, QObject *parent ) : period(period_)
 {	
 	QGLFormat fmt;
 	fmt.setDoubleBuffer(true);
@@ -42,9 +42,9 @@ InnerViewer::InnerViewer( InnerModelMgr innerModel_, const std::string &name_, u
 	//viewer.getLight()->setDiffuse(osg::Vec4(0.7, 0.4, 0.6, 1.0));
 	viewer.getLight()->setSpecular(osg::Vec4(1.0, 1.0, 1.0, 1.0));
 	
-	innerModel = innerModel_.deepcopy();
-	
-	innerModelViewer = new InnerModelViewer(innerModel, "root", root, true);
+	innerModel = std::shared_ptr<InnerModel>(innerModel_.get()->copy());
+	innerModelViewer = std::unique_ptr<InnerModelViewer>(new InnerModelViewer(innerModel, "root", root, true));
+	//innerModelViewer = new InnerModelViewer(innerModel, "root", root, true);
 	
 	viewer.setSceneData(root);
 		
@@ -74,9 +74,10 @@ void InnerViewer::run()
 	{
 		if(!stop.load())
 		{
-			stopped.store(false);
-			guard gl(mutex);
-			innerModelViewer->update();   //accesses local InnerModel for reading and the osg scenegraph
+			{ 
+				guard gl(mutex);
+				innerModelViewer->update(); 
+			} 
 			viewer.frame();
 		    std::this_thread::sleep_for(std::chrono::microseconds(period));
 		}
@@ -85,15 +86,19 @@ void InnerViewer::run()
 	}
 }
 
-void InnerViewer::reloadInnerModel(InnerModelMgr other)
+void InnerViewer::reloadInnerModel(InnerPtr other)
 {	
+	stop.store(true);
+	while(stopped.load() != true);
 	guard gl(mutex);
-	innerModelViewer-> innerModel = other.deepcopy(); 	
+		innerModel.reset(other.get()->copy()); 	
+		innerModelViewer->innerModel = innerModel;
+		stop.store(false);
+		stopped.store(false);
 }
 
 void InnerViewer::updateTransformValues(const QString item, const QVec &pos, const QString &parent)
 {
-	guard gl(mutex);
 	innerModel->updateTransformValues(item, pos.x(), pos.y(), pos.z(), pos.rx(), pos.ry(), pos.rz(), parent);
 }
 
@@ -216,6 +221,117 @@ void InnerViewer::addPlane_notExisting(const QString &item_, const QString &pare
 	parent->addChild(plane);
 	innerModelViewer->recursiveConstructor(plane, innerModelViewer->mts[parent->id], innerModelViewer->mts, innerModelViewer->meshHash);
 }
+
+void InnerViewer::addMesh_ignoreExisting(const QString &item, const QString &base, const QVec &t, const QVec &r, const QString &path, const QVec &scale)
+{
+	InnerModelTransform *parent = innerModel->getNode<InnerModelTransform>(base);
+	if( parent == nullptr)
+		return;
+	
+	if (innerModel->getNode<InnerModelNode>(item) != nullptr)
+	{
+		removeNode(item);
+	}
+
+	InnerModelMesh *mesh = innerModel->newMesh(
+		item,
+		parent,
+		path,
+		scale(0), scale(1), scale(2),
+		0,
+		t(0), t(1), t(2),
+		r(0), r(1), r(2));
+	mesh->setScale(scale(0), scale(1), scale(2));
+	parent->addChild(mesh);
+	innerModelViewer->recursiveConstructor(mesh, innerModelViewer->mts[parent->id], innerModelViewer->mts, innerModelViewer->meshHash);
+}
+
+bool InnerViewer::setScale(const QString &item, float scaleX, float scaleY, float scaleZ)
+{
+	InnerModelMesh *aux = innerModel->getNode<InnerModelMesh>(item);
+	if(aux == nullptr) 
+		return false;
+	aux->setScale(scaleX, scaleY, scaleZ);
+	return true;
+}
+
+bool InnerViewer::addJoint(const QString &item, const QString &base, const QVec &t, const QVec &r, QString &axis)
+{
+	if (axis == "")
+		axis = "z";
+
+	InnerModelTransform *parent = innerModel->getNode<InnerModelTransform>(base);
+	if(parent == nullptr)
+		return false;
+	InnerModelJoint *jN = innerModel->newJoint(item,
+					   parent,
+					   0,0,0,
+					   0,0,0,
+				           t(0), t(1), t(2),
+					   r(0), r(1), r(2),
+					   -1000, 1000,
+				           0,
+				           axis.toStdString());
+	parent->addChild(jN);
+	innerModelViewer->recursiveConstructor(jN, innerModelViewer->mts[parent->id], innerModelViewer->mts, innerModelViewer->meshHash);
+	return true;
+}
+
+bool InnerViewer::setPlaneTexture(const QString &item, const QString &texture)
+{
+	InnerModelPlane *aux = innerModel->getNode<InnerModelPlane>(item);
+	if(item == nullptr)
+		return false;
+	
+	aux->texture = texture;
+	bool constantColor = false;
+	if (texture.size() == 7)
+	{
+		if (texture[0] == '#')
+		{
+			constantColor = true;
+		}
+	}
+	if (not constantColor)
+	{
+	  osg::Image *image=NULL;
+		image = osgDB::readImageFile(texture.toStdString());
+		if (not image)
+		{
+			throw "Couldn't load texture.";
+		}
+		innerModelViewer->planesHash[aux->id]->image =image;
+		innerModelViewer->planesHash[aux->id]->texture->setImage(image);
+	}
+	else
+	{
+		innerModelViewer->planesHash[aux->id]->planeDrawable->setColor(htmlStringToOsgVec4(texture));
+	}
+	return true;
+}
+
+void InnerViewer::drawLine2Points(const QString &name, const QString &parent, const QVec& p1, const QVec& p2, float width, const QString &texture)
+{
+	QLine2D line( p1 , p2 );	
+	float dl = (p1-p2).norm2();
+	QVec center = p2 + ((p1 - p2)*(float)0.5);
+	this->drawLine(name, parent, line.getNormalForOSGLineDraw(), center, dl, width, "#0000ff");
+}
+
+bool InnerViewer::removeObject(const QString &name)
+{
+	if (innerModel->getNode<InnerModelNode>(name) != nullptr)
+	{
+		removeNode(name);
+		return true;
+	}
+	else
+	{
+		qDebug() << __FUNCTION__ << "Object " << name << "does not exist. Could not be removed";
+		return false;
+	}
+}
+
 ///////////////////////////////////////////////////////////////////////////////////77
 
 // UNTIL we know how to capture the close window signal from OSG/X11

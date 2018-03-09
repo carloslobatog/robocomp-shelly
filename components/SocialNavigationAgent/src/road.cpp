@@ -36,7 +36,7 @@ void Road::initialize(InnerModelMgr inner,
 /////////////////
 void Road::update()
 {
-	static QTime reloj = QTime::currentTime();
+	//static QTime reloj = QTime::currentTime();
 	
 	if(this->isEmpty())
 		return;
