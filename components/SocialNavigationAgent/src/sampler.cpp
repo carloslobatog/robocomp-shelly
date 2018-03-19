@@ -28,10 +28,10 @@
  * @param innerRegions_ List of QRectF polygons delimiting forbidden regions inside robot's workspace
  * @return void
  */
-void Sampler::initialize(InnerModelMgr inner, std::shared_ptr<RoboCompCommonBehavior::ParameterList> params_)
+void Sampler::initialize(const std::shared_ptr<InnerModel> &inner, std::shared_ptr<RoboCompCommonBehavior::ParameterList> params_)
 {
 	qDebug() << "Sampler::" << __FUNCTION__;
-	innerModelSampler = inner.deepcopy();    
+	innerModelSampler = inner;    
 	
 	/// Processing configuration parameters
 	try{ robotname = params_->at("RobotName").value;} catch(const std::exception &e){ std::cout << e.what() << " Sampler::initialize - No Robot name defined in config. Using default 'robot' " << std::endl;}

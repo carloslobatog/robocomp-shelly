@@ -55,7 +55,7 @@ namespace robocomp
 			public:
 				using InnerPtr = std::shared_ptr<InnerModel>;
 				PathFinder() = default;
-				void initialize(const InnerPtr &innerModel_,
+				void initialize(const std::shared_ptr<InnerModel> &innerModel_,
 								const shared_ptr< RoboCompCommonBehavior::ParameterList > &configparams_,
 								LaserPrx laser_prx,
 								OmniRobotPrx omnirobot_proxy);
@@ -69,7 +69,7 @@ namespace robocomp
 			////////////////////////////
 			void go(float x, float z, const ParameterMap &parameters = ParameterMap());
 			//void setInnerModel(InnerModel* innerModel_){ innerModel = innerModel_; };
-			void innerModelChanged(InnerPtr &innerModel_, bool structural = false, vector <bool> pn = {false,false,false,false,false,false} ); //Le estoy metiendo el vector de personas para actualizar su posición
+			void innerModelChanged(const std::shared_ptr<InnerModel> &innerModel_, bool structural = false, vector <bool> pn = {false,false,false,false,false,false} ); //Le estoy metiendo el vector de personas para actualizar su posición
 			
 			#ifdef USE_QTGUI
 				InnerViewer *viewer = nullptr;

@@ -26,7 +26,8 @@
 #include <osgViewer/Viewer>
 #include <innermodel/innermodelviewer.h>
 #include <innermodel/innermodeldraw.h>
-#include <innermodel/innermodelmgr.h>
+// #include <innermodel/innermodelmgr.h>
+#include <thread>
 
 /**
  * @brief Threaded InnerModelViewer to be used inside components that visualize the model
@@ -34,14 +35,15 @@
  * The copy has to be resynchronized periodically to update the position of the robot, its body and any other changes occuring in it.
  */
 class InnerViewer: public QThread
-{
+{	
+	
 	using InnerPtr = std::shared_ptr<InnerModel>;
+	typedef std::lock_guard<std::recursive_mutex> guard;
 	
 	public:
-		typedef std::lock_guard<std::recursive_mutex> guard;
-		InnerViewer(InnerPtr innerModel_, const std::string &name_ = "unknown", uint period = 100000, QObject *parent = 0);
+		InnerViewer(const InnerPtr &innerModel_, const std::__cxx11::string& name_ = "unknown", unsigned int period_=100000);
 		void run();
-		void reloadInnerModel(InnerPtr other);
+		void reloadInnerModel( const InnerPtr &other);
 		
 		/////////////////////////////
 		// NOT thread safe interface
@@ -72,10 +74,8 @@ class InnerViewer: public QThread
 		void ts_updateTransformValues(const QString item_, const QVec &pos, const QString &parent = "")
 		{guard gl(mutex); updateTransformValues(item_, pos, parent);};
 		
-		mutable std::recursive_mutex mutex;
-		
 	private:
-		
+		mutable std::recursive_mutex mutex;
 		std::atomic<bool> stop{false}, stopped{false};
 		std::unique_ptr<InnerModelViewer> innerModelViewer;
 		InnerPtr innerModel;

@@ -27,11 +27,11 @@ void DrawRoad::draw(Road &road, InnerViewer *viewer,  std::shared_ptr<CurrentTar
 	if (road.isEmpty())
 		return;
 	
-	InnerViewer::guard gl(viewer->mutex);
-	//qDebug() << "In drawroad" << viewer->innerModelViewer->innerModel->getNode<InnerModelJoint>("armX1")->getAngle();
+// 	InnerViewer::guard gl(viewer->ts_mutex);
+	//qDebug() << "In drawroad" << viewer->ts_innerModelViewer->innerModel->getNode<InnerModelJoint>("armX1")->getAngle();
  
-	try	{ viewer->removeNode("road");} catch(const QString &s){	qDebug() << s; };
-	try	{ viewer->addTransform_ignoreExisting("road","world");} catch(const QString &s){qDebug() << s; };
+	try	{ viewer->ts_removeNode("road");} catch(const QString &s){	qDebug() << s; };
+	try	{ viewer->ts_addTransform_ignoreExisting("road","world");} catch(const QString &s){qDebug() << s; };
 	
 	try
 	{
@@ -47,17 +47,17 @@ void DrawRoad::draw(Road &road, InnerViewer *viewer,  std::shared_ptr<CurrentTar
 			QVec normal = lp.getNormalForOSGLineDraw();  //3D vector
 			QVec tangent = road.getTangentAtClosestPoint().getNormalForOSGLineDraw();    
 			QString item = "p_" + QString::number(i);
-			viewer->addTransform_ignoreExisting(item, "road", QVec::vec6(w.pos.x(), 10, w.pos.z(), 0, 0, 0));
+			viewer->ts_addTransform_ignoreExisting(item, "road", QVec::vec6(w.pos.x(), 10, w.pos.z(), 0, 0, 0));
 		
 			if (i == (int)road.getIndexOfCurrentPoint() + 1)
 			{
 				// tangent to road 
-				viewer->drawLine(item + "_line", item, QVec::zeros(3), tangent, 600, 30, "#00FFFF"); 
+				viewer->ts_drawLine(item + "_line", item, QVec::zeros(3), tangent, 600, 30, "#00FFFF"); 
 			}
 			if (w.isVisible)
-				viewer->drawLine(item + "_point", item, QVec::zeros(3), normal, 500, 50, "#00FF00"); //TAKE WIDTH FROM PARAMS!!!
+				viewer->ts_drawLine(item + "_point", item, QVec::zeros(3), normal, 500, 50, "#00FF00"); //TAKE WIDTH FROM PARAMS!!!
 			else
-				viewer->drawLine(item + "_point", item, QVec::zeros(3), normal, 500, 50, "#FF0000");  //Morado
+				viewer->ts_drawLine(item + "_point", item, QVec::zeros(3), normal, 500, 50, "#FF0000");  //Morado
 				
 		}
 		if (currenttarget->hasRotation() == true)    //Draws an arrow indicating final desired orientation
@@ -67,7 +67,7 @@ void DrawRoad::draw(Road &road, InnerViewer *viewer,  std::shared_ptr<CurrentTar
 			QLine2D l(w.pos, w.pos + QVec::vec3((T) (500 * sin(rot)), 0, (T) (500 * cos(rot))));
 			QVec ln = l.getNormalForOSGLineDraw() + QVec::vec3(100,0,100);
 			QString item = "p_" + QString::number(road.size() - 1);
-			viewer->drawLine(item + "_line", item, QVec::zeros(3), ln, 600, 40, "#0044AA");
+			viewer->ts_drawLine(item + "_line", item, QVec::zeros(3), ln, 600, 40, "#0044AA");
 		}	
 	}
 	catch(const QString &s){qDebug() << s;}
@@ -78,10 +78,10 @@ void DrawRoad::drawmap(PathPlanner &pathplanner, InnerViewer *viewer, PathPlanne
 	if(pathplanner.get_map_dirty_bit()==false)
 		return;
 	
-	InnerViewer::guard gl(viewer->mutex);
 	
-	try	{ viewer->removeNode("IMV_fmap");} catch(const QString &s){	qDebug() << s; };
-	try	{ viewer->addTransform_ignoreExisting("IMV_fmap","world");} catch(const QString &s){qDebug() << s; };
+	
+	try	{ viewer->ts_removeNode("IMV_fmap");} catch(const QString &s){	qDebug() << s; };
+	try	{ viewer->ts_addTransform_ignoreExisting("IMV_fmap","world");} catch(const QString &s){qDebug() << s; };
 	
 	try
 	{
@@ -91,9 +91,9 @@ void DrawRoad::drawmap(PathPlanner &pathplanner, InnerViewer *viewer, PathPlanne
 		{
 			QString item = "IMV_fmap_point_" + QString::number(i);
 			if(it->second.free)
-				viewer->addPlane_ignoreExisting(item, "IMV_fmap", QVec::vec3(it->first.x, 20, it->first.z), QVec::vec3(1,0,0), "#00FF00", QVec::vec3(60,60,60));
+				viewer->ts_addPlane_ignoreExisting(item, "IMV_fmap", QVec::vec3(it->first.x, 20, it->first.z), QVec::vec3(1,0,0), "#00FF00", QVec::vec3(60,60,60));
 			else
-				viewer->addPlane_ignoreExisting(item, "IMV_fmap", QVec::vec3(it->first.x, 20, it->first.z), QVec::vec3(1,0,0), "#FF0000", QVec::vec3(60,60,60));		
+				viewer->ts_addPlane_ignoreExisting(item, "IMV_fmap", QVec::vec3(it->first.x, 20, it->first.z), QVec::vec3(1,0,0), "#FF0000", QVec::vec3(60,60,60));		
 			
 			pathplanner.set_map_dirty_bit(false);
 		}

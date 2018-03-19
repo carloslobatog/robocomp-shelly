@@ -74,6 +74,7 @@ void Projector::initialize( const InnerPtr &innerModel_,
 	// 	pointsMat(7,3) =  1.f;
 
 	pointsMat = pointsMat.transpose();
+	
 }
 
 void Projector::run(std::function<Road&()> getRoad, std::function<void()> releaseRoad)
@@ -150,7 +151,8 @@ bool Projector::update(Road &road,
  */
 void Projector::reloadInnerModel(const InnerPtr &innerModel_)
 {
-	innerModel.reset(innerModel_.get());
+// 	innerModel.reset(innerModel_.get());
+	innerModel=innerModel_;
 }
 
 /**

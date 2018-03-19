@@ -26,7 +26,7 @@
 #include <vector>
 #include <QFile>
 #include "pathfinder.h"
-#include <innermodel/innermodelmgr.h>
+// #include <innermodel/innermodelmgr.h>
 #include <actionexecution.h>
 #include <socialrules.h>
 

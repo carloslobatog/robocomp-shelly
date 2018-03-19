@@ -28,7 +28,7 @@
 #include <qmat/qline2d.h>
 #include "currenttarget.h"
 #include "navigationstate.h"
-#include <innermodel/innermodelmgr.h>
+// #include <innermodel/innermodelmgr.h>
 
 
 class WayPoint
@@ -58,18 +58,19 @@ class Road : public QList< WayPoint >
 {
 	public:
 		Road() = default;
-		void initialize( InnerModelMgr inner, 
+		void initialize( const std::shared_ptr<InnerModel> &inner, 
 						 const std::shared_ptr<NavigationState> &state_,
 						 const std::shared_ptr<RoboCompCommonBehavior::ParameterList> &params);
 		void reset();
 		void startRoad();
 		void endRoad();
-		void setThreshold(const float _threshold) 			{ /*QMutexLocker ml(&mutex);*/ threshold = _threshold;};
-		void readRoadFromFile(InnerModel *innerModel, std::string name);
+		void setThreshold(const float _threshold) 		{ /*QMutexLocker ml(&mutex);*/ threshold = _threshold;};
+		void readRoadFromFile(const std::shared_ptr<InnerModel> &innerModel, std::string name);
 		void readRoadFromList(QList<QVec> list);
 		void readRoadFromList(const std::list<QVec> &list);
-		void printRobotState(InnerModel* innerModel /*, const CurrentTarget& currentTarget*/);
+		void printRobotState(const std::shared_ptr<InnerModel> &innerModel /*, const CurrentTarget& currentTarget*/);
 		void print() const;
+		void reloadInnerModel(const std::shared_ptr<InnerModel> &innerModel_);
 		QList<QVec> backList;
 		
 		/**
@@ -85,14 +86,14 @@ class Road : public QList< WayPoint >
 		 * @param innerModel ...
 		 * @return float
 		*/
-		float robotDistanceToCurrentPoint(InnerModel *innerModel);
+		float robotDistanceToCurrentPoint(const std::shared_ptr<InnerModel> &innerModel);
 		
 		/**
 		 * @brief computes robot distance to the point after the current active one in the road
 		 * @param innerModel ...
 		 * @return float
 		*/
-		float robotDistanceToNextPoint(InnerModel *innerModel);
+		float robotDistanceToNextPoint(const std::shared_ptr<InnerModel> &innerModel);
 		
 		/**
 		 * @brief computes distance between two points along the road
@@ -106,7 +107,7 @@ class Road : public QList< WayPoint >
 		* @param innerModel ...
 		* @return QLine2D
 		*/
-		QLine2D getRobotZAxis(InnerModel* innerModel);
+		QLine2D getRobotZAxis(const std::shared_ptr<InnerModel> &innerModel);
 		
 		/**
 		* @brief Computes, for each point in the road, its distance in mm to the next point and stores it in the WayPoint variable initialDistanceToNext;
@@ -127,7 +128,7 @@ class Road : public QList< WayPoint >
 		* 	
 		* @return QLine2D in ROBOT system of reference
 		*/
-		QLine2D getTangentToCurrentPointInRobot(InnerModel *innerModel);
+		QLine2D getTangentToCurrentPointInRobot(const std::shared_ptr<InnerModel> &innerModel);
 		
 		/**
 		 * @brief returns a Road iterator to the closest point in the road to the robot
@@ -208,7 +209,7 @@ class Road : public QList< WayPoint >
 		float threshold = 20.f;  //Default tolerance on arrival
 		bool finish = false;
 		ulong estimatedTimeOfArrival = 0;
-		InnerModelMgr innerModel;
+		std::shared_ptr<InnerModel> innerModel;
 		QTime reloj;
 		float meanSpeed = 200;  
 		long elapsedTime = 0;

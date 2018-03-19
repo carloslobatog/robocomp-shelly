@@ -71,24 +71,29 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	{		
 		RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
 		structuralChange(w);
+		qDebug()<<"SALIMOS DE STRUCTURAL CHANGE";
 	}		
 	catch(...)
 	{	rDebug2(("The executive is probably not running, waiting for first AGM model publication...")); }
 		
-	//innerModel = InnerModelMgr(std::make_shared<InnerModel>("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml"));
+// 	innerModel = InnerModelMgr(std::make_shared<InnerModel>("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/				simulation.xml"));
+
+	innerModel = std::make_shared<InnerModel>("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml");
 
 	innerModel->getNode<InnerModelJoint>("armX1")->setAngle(-1);
 	innerModel->getNode<InnerModelJoint>("armX2")->setAngle(2.5);
 	
-	std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams = std::make_shared<RoboCompCommonBehavior::ParameterList>(paramsL);
+
 	
+	std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams = std::make_shared<RoboCompCommonBehavior::ParameterList>(paramsL);
+
 	// Initializing PathFinder
 	pathfinder.initialize(innerModel, configparams, laser_proxy, omnirobot_proxy);
 
 	// releasing pathfinder
 	thread_pathfinder = std::thread(&robocomp::pathfinder::PathFinder::run, &pathfinder);
 	rDebug2(("Pathfinder up and running"));
-	
+
 	
 		
 	// 	qDebug()<<"PATH FINDER INNERMODEL CHANGE";
@@ -126,6 +131,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
  */
 void SpecificWorker::compute()
 {
+		
  	static bool first=true;
  	if (first)
  	{	
@@ -148,7 +154,7 @@ void SpecificWorker::compute()
 	//We need to secure access to InnerModel 
 	//QMutexLocker l(mutex);
 	//innerModel.lock();
-		innerModel->updateTransformValues("robot", bState.x,0,bState.z,0,bState.alpha,0);
+	innerModel->updateTransformValues("robot", bState.x,0,bState.z,0,bState.alpha,0);
 	//innerModel.unlock();
 	
 	bool sendChangesAGM = false;
@@ -539,8 +545,11 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 	
         AGMModelConverter::fromIceToInternal(modification, worldModel);
 	
-	InnerModel *inner = AGMInner::extractInnerModel(worldModel, "world", false);
-	innerModel.reset(inner);
+	///¿DEBERÍA SEGUIR ASÍ?
+// 	InnerModel *inner = AGMInner::extractInnerModel(worldModel, "world", false);
+// 	innerModel.reset(inner);
+
+	
 	
         if (firsttime==true)
         {

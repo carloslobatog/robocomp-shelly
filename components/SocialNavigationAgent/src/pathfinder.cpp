@@ -36,7 +36,7 @@ void PathFinder::go(float x, float z, const ParameterMap &parameters)
 };
 
 ///////////////////////////////////////////////////////////////////
-void PathFinder::initialize( const InnerPtr &innerModel_, 
+void PathFinder::initialize( const std::shared_ptr<InnerModel> &innerModel_, 
 							 const shared_ptr< RoboCompCommonBehavior::ParameterList > &configparams_, 
 							 LaserPrx laser_prx, OmniRobotPrx omnirobot_proxy )
 {
@@ -65,7 +65,7 @@ void PathFinder::initialize( const InnerPtr &innerModel_,
 	projector.initialize(innerModel, currenttarget, state, configparams, laser_prx);
 
 	/// Initialize the low level controller that drives the robot on the road	
-	controller.initialize(innerModel.get(), laser_prx, configparams, omnirobot_proxy);
+	controller.initialize(innerModel, laser_prx, configparams, omnirobot_proxy);
 
 	rDebug2(("PathFinder: All objects initialized"));
 		
@@ -101,9 +101,9 @@ void PathFinder::run()
 	}
 }
 
-void PathFinder::innerModelChanged ( InnerPtr &innerModel_, bool structural, vector<bool> pn )
+void PathFinder::innerModelChanged (const std::shared_ptr<InnerModel> &innerModel_, bool structural, vector<bool> pn )
 {
-	innerModel = innerModel_;
+// 	innerModel = innerModel_;
 	if(structural) //replace all objects with copies of InnerModel. Broadcast a signal to subscribed objects
 	{
 		structuralchange = true;
@@ -111,16 +111,15 @@ void PathFinder::innerModelChanged ( InnerPtr &innerModel_, bool structural, vec
 		
 		Road &road = getRoad(); 									
 			qDebug()<<"reloadInnerModel PATHPLANNER";
-			pathplanner.reloadInnerModel(innerModel) ;  
-		
-			//road.reloadInnerModel( innerModel ) ;  
+			pathplanner.reloadInnerModel(innerModel_) ;  
+			qDebug()<<"reloadInnerModel ROAD";
+			road.reloadInnerModel( innerModel_ ) ;  
 			qDebug()<<"reloadInnerModel PROJECTOR";
-			projector.reloadInnerModel(innerModel) ;  
-
-			//controller.reloadInnerModel( innerModel );
+			projector.reloadInnerModel(innerModel_) ;  
+			qDebug()<<"reloadInnerModel CONTROLLER";
+ 			controller.reloadInnerModel( innerModel_ );
 			qDebug()<<"reloadInnerModel VIEWER";
-
-			viewer->reloadInnerModel(innerModel);
+			viewer->reloadInnerModel(innerModel_);
 			
 		releaseRoad();
 		qDebug()<<__FUNCTION__<< "--------------TERMINA GET ROAD -----------------------";

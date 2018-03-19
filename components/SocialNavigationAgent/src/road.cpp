@@ -17,7 +17,7 @@
 
 #include "road.h"
 
-void Road::initialize(InnerModelMgr inner, 
+void Road::initialize(const std::shared_ptr<InnerModel> &inner, 
 					  const std::shared_ptr<NavigationState> &state_,
 					  const std::shared_ptr<RoboCompCommonBehavior::ParameterList> &params)
 {
@@ -30,6 +30,14 @@ void Road::initialize(InnerModelMgr inner,
 	reset();
 	std::cout << __FUNCTION__ << "Road initialized correclty" << std::endl;
 }
+
+
+void Road::reloadInnerModel(const std::shared_ptr<InnerModel> &innerModel_)
+{
+// 	innerModel.reset(innerModel_.get());
+	innerModel = innerModel_;
+}
+
 
 //////////////////
 /// Main method
@@ -195,7 +203,7 @@ void Road::endRoad()
 	//We should save it now to disk
 }
 
-void Road::readRoadFromFile(InnerModel *innerModel, std::string name)
+void Road::readRoadFromFile(const std::shared_ptr<InnerModel> &innerModel, std::string name)
 {
 	clear();
 	std::ifstream file(name.c_str(), std::ios_base::in);
@@ -242,7 +250,7 @@ void Road::computeDistancesToNext()
 }
 
 
-QLine2D Road::getRobotZAxis(InnerModel *innerModel)
+QLine2D Road::getRobotZAxis(const std::shared_ptr<InnerModel> &innerModel)
 {
 	Q_ASSERT(currentPoint + 1 < road.size() and road.size() > 0);
 
@@ -251,12 +259,12 @@ QLine2D Road::getRobotZAxis(InnerModel *innerModel)
 	return QLine2D(robotPos, nose);
 }
 
-float Road::robotDistanceToCurrentPoint(InnerModel *innerModel)
+float Road::robotDistanceToCurrentPoint(const std::shared_ptr<InnerModel> &innerModel)
 {
 	return (innerModel->transformS("world", QVec::zeros(3), robotname) - (*this)[indexOfCurrentPoint].pos).norm2();
 }
 
-float Road::robotDistanceToNextPoint(InnerModel *innerModel)
+float Road::robotDistanceToNextPoint(const std::shared_ptr<InnerModel> &innerModel)
 {
 	return (innerModel->transformS("world", QVec::zeros(3), robotname) - (*this)[indexOfNextPoint].pos).norm2();
 }
@@ -274,7 +282,7 @@ QLine2D Road::getTangentToCurrentPoint()
 	return lineAnt;
 }
 
-QLine2D Road::getTangentToCurrentPointInRobot(InnerModel *innerModel)
+QLine2D Road::getTangentToCurrentPointInRobot(const std::shared_ptr<InnerModel> &innerModel)
 {
 	static QLine2D lineAnt=QLine2D();
 	if ((int)(indexOfCurrentPoint  + 1) < size() and size() > 0)
@@ -288,7 +296,7 @@ QLine2D Road::getTangentToCurrentPointInRobot(InnerModel *innerModel)
 	return lineAnt;
 }
 
-void Road::printRobotState(InnerModel *innerModel)
+void Road::printRobotState(const std::shared_ptr<InnerModel> &innerModel)
 {
 	QVec robot3DPos = innerModel->transformS("world", robotname);
 	qDebug() << "-------Road status report  ---------------------";

@@ -22,22 +22,24 @@
 
 using namespace std::chrono_literals;
 
-void Controller::initialize(InnerModel *innerModel_,
-							LaserPrx laser_prx, 
-							std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams,
-							OmniRobotPrx omnirobot_proxy_,
-							int delay/*secs*/)
+void Controller::initialize(const std::shared_ptr<InnerModel> &innerModel_,
+	LaserPrx laser_prx, 
+	std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams,
+	OmniRobotPrx omnirobot_proxy_,
+	int delay/*secs*/)
 {
 	innerModel = innerModel_;
 	omnirobot_proxy = omnirobot_proxy_;
 	this->time = QTime::currentTime();
 	this->delay = delay*1000;	//msecs
-
-	//compute offsets from laser center to the border of the robot base
-	RoboCompLaser::TLaserData laserData;
-	try{ laserData = laser_prx->getLaserData(); } catch(const Ice::Exception &e){ std::cout << e.what() << std::endl;}
-	baseOffsets = computeRobotOffsets(innerModel, laserData);
 	
+	//compute offsets from laser center to the border of the robot base
+
+	RoboCompLaser::TLaserData laserData;
+	try{ laserData = laser_prx->getLaserData(); }
+	catch(const Ice::Exception &e){ std::cout <<e.what()<< std::endl;}
+
+	baseOffsets = computeRobotOffsets(innerModel, laserData);
 	try
 	{
 		MAX_ADV_SPEED = QString::fromStdString(configparams->at("MaxZSpeed").value).toFloat();
@@ -70,7 +72,14 @@ void Controller::run(std::function<Road&()> getRoad, std::function<void()> relea
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool Controller::update(InnerModel *innerModel, RoboCompOmniRobot::OmniRobotPrx omnirobot_proxy, Road &road, bool print)
+void Controller::reloadInnerModel(const shared_ptr<InnerModel> &innerModel_)
+{
+// 	innerModel.reset(innerModel_.get());
+	innerModel = innerModel_;
+}
+
+
+bool Controller::update(const std::shared_ptr<InnerModel> &innerModel, RoboCompOmniRobot::OmniRobotPrx omnirobot_proxy, Road &road, bool print)
 {
 	static QTime reloj = QTime::currentTime();   //TO be used for a more accurate control (predictive).
 	long epoch = 100;
@@ -212,23 +221,24 @@ bool Controller::update(InnerModel *innerModel, RoboCompOmniRobot::OmniRobotPrx 
 //// Auxiliary functions
 ///////////////////////////////////////
 
-std::vector<float> Controller::computeRobotOffsets( InnerModel* innerModel, const RoboCompLaser::TLaserData &laserData )
+std::vector<float> Controller::computeRobotOffsets(const std::shared_ptr<InnerModel> &innerModel, const RoboCompLaser::TLaserData &laserData )
 {
 	//Base geometry GET FROM IM!!!
 	//QRectF base( QPointF(-200, 200), QPointF(200, -200));
 	std::vector<float> baseOffsets;
 	QVec p(3,0.f);
 	int k;
-
-	if(	innerModel->getNode<InnerModel>("robot") == nullptr or innerModel->getNode<InnerModelNode>("laser") == nullptr)	
+	
+	if(	innerModel->getNode<InnerModelNode>("robot") == nullptr or innerModel->getNode<InnerModelNode>("laser") == nullptr)	
 	{
 		qDebug() << __FUNCTION__ << "No laser or robot nodes in InnerModel. Aborting";
 		throw;
 	}
 
 	for(auto i : laserData)
+		
 	{
-		for(k = 10; k < 4000; k++)
+		for(k = 10; k < 4000; k++)   /// OJO PONER EN FUNCION DEL LASER REAL
 		{
 				p = innerModel->getNode<InnerModelLaser>("laser")->laserTo("robot", k, i.angle);
 				if( sqrt(p.x()*p.x() + p.z()*p.z()) - 250 >= 0) 

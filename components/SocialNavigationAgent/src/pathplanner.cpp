@@ -91,7 +91,8 @@ void PathPlanner::reloadInnerModel(const InnerPtr &innerModel_)
 	sampler.lock();
 		sampler.reloadInnerModel(innerModel_);
 	sampler.unlock();
-	innerModel.reset(innerModel_.get());
+// 	innerModel.reset(innerModel_.get());
+	innerModel = innerModel_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

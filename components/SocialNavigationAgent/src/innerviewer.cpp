@@ -19,7 +19,7 @@
 
 #include "innerviewer.h"
 
-InnerViewer::InnerViewer( InnerPtr innerModel_, const std::string &name_, uint period_, QObject *parent ) : period(period_)
+InnerViewer::InnerViewer( const InnerPtr &innerModel_, const std::string &name_, uint period_) : period(period_)
 {	
 	QGLFormat fmt;
 	fmt.setDoubleBuffer(true);
@@ -42,7 +42,7 @@ InnerViewer::InnerViewer( InnerPtr innerModel_, const std::string &name_, uint p
 	//viewer.getLight()->setDiffuse(osg::Vec4(0.7, 0.4, 0.6, 1.0));
 	viewer.getLight()->setSpecular(osg::Vec4(1.0, 1.0, 1.0, 1.0));
 	
-	innerModel = std::shared_ptr<InnerModel>(innerModel_.get()->copy());
+	innerModel = innerModel_;
 	innerModelViewer = std::unique_ptr<InnerModelViewer>(new InnerModelViewer(innerModel, "root", root, true));
 	//innerModelViewer = new InnerModelViewer(innerModel, "root", root, true);
 	
@@ -86,12 +86,13 @@ void InnerViewer::run()
 	}
 }
 
-void InnerViewer::reloadInnerModel(InnerPtr other)
+void InnerViewer::reloadInnerModel(const InnerPtr &other)
 {	
 	stop.store(true);
 	while(stopped.load() != true);
 	guard gl(mutex);
-		innerModel.reset(other.get()->copy()); 	
+		innerModel = other;
+//  		innerModel.reset(other.get()->copy()); 	
 		innerModelViewer->innerModel = innerModel;
 		stop.store(false);
 		stopped.store(false);

@@ -35,24 +35,24 @@ class Controller
 	public:
 		Controller() = default;
 		void run(std::function<Road&()> getRoad, std::function<void()> releaseRoad);
-		void initialize(InnerModel *innerModel_,
-										LaserPrx laser_prx, 
-										std::shared_ptr<RoboCompCommonBehavior::ParameterList> params,
-										OmniRobotPrx omnirobot_proxy_,
-									  int delay=2 /*secs*/);
-		bool update(InnerModel* innerModel,
-								RoboCompOmniRobot::OmniRobotPrx omnirobot_proxy, 
-							  Road& road, 
-							  bool print = false);
+		void initialize(const std::shared_ptr<InnerModel> &innerModel_,
+				LaserPrx laser_prx, 
+				std::shared_ptr<RoboCompCommonBehavior::ParameterList> params,
+				OmniRobotPrx omnirobot_proxy_,
+				int delay=2 /*secs*/);
+		bool update(const std::shared_ptr<InnerModel> &innerModel, RoboCompOmniRobot::OmniRobotPrx omnirobot_proxy, 
+					Road& road, 
+					bool print = false);
 		void stopTheRobot();
 		float angmMPI(float angle);
+		void reloadInnerModel(const std::shared_ptr<InnerModel> &innerModel_);
 		
 	private:
-		InnerModel *innerModel;
+		std::shared_ptr<InnerModel> innerModel;
 		OmniRobotPrx omnirobot_proxy;
 		QTime time;
 		int delay;
-		bool avoidanceControl(InnerModel* innerModel, const RoboCompLaser::TLaserData& laserData, float& vadvance, float& vrot);
+		bool avoidanceControl(const std::shared_ptr<InnerModel> &innerModel, const RoboCompLaser::TLaserData& laserData, float& vadvance, float& vrot);
 		std::vector<float> baseOffsets;
 		
 	  // Constants reassigned to the params values
@@ -79,7 +79,7 @@ class Controller
 		* @param laserData ...
 		* @return std::vector< float, std::allocator >
 		*/
-		std::vector<float> computeRobotOffsets(InnerModel *innerModel, const RoboCompLaser::TLaserData &laserData);
+		std::vector<float> computeRobotOffsets(const std::shared_ptr<InnerModel> &innerModel, const RoboCompLaser::TLaserData &laserData);
 	
 		template <typename T> int sgn(T val) { return (T(0) < val) - (val < T(0));}
 };

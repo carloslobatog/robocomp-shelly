@@ -26,7 +26,7 @@
 //#include <qmat/qline2d.h>
 
 #include <qmat/qline2d.h>
-#include <innermodel/innermodelmgr.h>
+// #include <innermodel/innermodelmgr.h>
 #include <assert.h>
 #include <stdio.h>    
 #include <mutex>
@@ -51,7 +51,7 @@ class Sampler
 
 		void lock(){mutex.lock();};
 		void unlock(){mutex.unlock();};
-		void initialize(InnerModelMgr inner, std::shared_ptr<RoboCompCommonBehavior::ParameterList> params_);
+		void initialize(const std::shared_ptr<InnerModel> &inner, std::shared_ptr<RoboCompCommonBehavior::ParameterList> params_);
 		std::tuple< bool, QString > checkRobotValidStateAtTarget(const QVec& targetPos, const QVec& targetRot) const;
 		std::tuple< bool, QString > checkRobotValidStateAtTarget(const QVec& target) const;
 		bool checkRobotValidStateAtTargetFast(const QVec &targetPos, const QVec &targetRot) const;
@@ -65,10 +65,11 @@ class Sampler
 		bool searchRobotValidStateCloseToTarget(QVec &target);
 		QRectF getOuterRegion() const { return outerRegion;};
 
-		void reloadInnerModel(InnerModelMgr other) { innerModelSampler = other.deepcopy();};	
+		void reloadInnerModel(const std::shared_ptr<InnerModel> &other) { innerModelSampler = other;};	
 		
 	private:
-		mutable InnerModelMgr innerModelSampler;
+		//¿TIENE QUE SER MUTABLE?
+		mutable std::shared_ptr<InnerModel> innerModelSampler;
 		mutable std::mutex mutex;
 		std::vector<QString> robotNodes;
 		std::vector<QString> restNodes;

@@ -21,7 +21,7 @@
 #include <CommonBehavior.h>
 #include <qmat/QMatAll>
 #include <innermodel/innermodel.h>
-#include <innermodel/innermodelmgr.h>
+// #include <innermodel/innermodelmgr.h>
 #include <innermodeldraw.h>
 #include <genericworker.h>
 #include <Laser.h>
