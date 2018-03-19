@@ -44,7 +44,6 @@ InnerViewer::InnerViewer( const InnerPtr &innerModel_, const std::string &name_,
 	
 	innerModel = innerModel_;
 	innerModelViewer = std::unique_ptr<InnerModelViewer>(new InnerModelViewer(innerModel, "root", root, true));
-	//innerModelViewer = new InnerModelViewer(innerModel, "root", root, true);
 	
 	viewer.setSceneData(root);
 		

@@ -54,6 +54,7 @@ class Projector
 						const std::shared_ptr<NavigationState> &state_,
 						const std::shared_ptr<RoboCompCommonBehavior::ParameterList > &configparams_, 
 						LaserPrx laser_proxy_);
+		void update(Road &road);
 		void run(std::function<Road&()> getRoad, std::function<void()> releaseRoad);
 		void reloadInnerModel(const InnerPtr &innerModel_);
 		bool addPoints(Road& road);

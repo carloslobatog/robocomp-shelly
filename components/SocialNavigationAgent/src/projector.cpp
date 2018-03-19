@@ -77,6 +77,13 @@ void Projector::initialize( const InnerPtr &innerModel_,
 	
 }
 
+void Projector::update(Road &road)
+{
+	RoboCompLaser::TLaserData laserData;
+	try{ laserData  = laser_proxy->getLaserData();} catch(const Ice::Exception &e){std::cout << e.what() << std::endl;};
+	update(road, laserData, safePolyList, 0);
+}
+
 void Projector::run(std::function<Road&()> getRoad, std::function<void()> releaseRoad)
 {
 	std::cout << "Projector running" << std::endl;

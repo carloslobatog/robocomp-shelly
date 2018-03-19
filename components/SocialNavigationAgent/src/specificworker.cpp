@@ -67,24 +67,21 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	try{ robotname = paramsL.at("RobotName").value;} 
 	catch(const std::exception &e){ std::cout << e.what() << "SpecificWorker::SpecificWorker - Robot name defined in config. Using default 'robot' " << std::endl;}
 	
-	try
+	/*try
 	{		
 		RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
 		structuralChange(w);
-		qDebug()<<"SALIMOS DE STRUCTURAL CHANGE";
+		rDebug2(("Leaving Structural Change"));
 	}		
 	catch(...)
 	{	rDebug2(("The executive is probably not running, waiting for first AGM model publication...")); }
-		
-// 	innerModel = InnerModelMgr(std::make_shared<InnerModel>("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/				simulation.xml"));
-
+	*/	
 	innerModel = std::make_shared<InnerModel>("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml");
 
 	innerModel->getNode<InnerModelJoint>("armX1")->setAngle(-1);
 	innerModel->getNode<InnerModelJoint>("armX2")->setAngle(2.5);
 	
 
-	
 	std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams = std::make_shared<RoboCompCommonBehavior::ParameterList>(paramsL);
 
 	// Initializing PathFinder
@@ -116,10 +113,12 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	//aE.trajectoryn2d_proxy = trajectoryrobot2d_proxy;
 	
 	//Proxies for SocialRules
-	sr.socialnavigationgaussian_proxy=socialnavigationgaussian_proxy;
-	sr.agmexecutive_proxy=agmexecutive_proxy;
-	sr.mux=mutex;
-	sr.objectInteraction(false);
+// 	sr.socialnavigationgaussian_proxy = socialnavigationgaussian_proxy;
+// 	sr.agmexecutive_proxy = agmexecutive_proxy;
+// 	sr.mux = mutex;
+// 	sr.objectInteraction(false);
+	
+	rDebug2(("Leaving setParams"));
 	
 	return true;
 }

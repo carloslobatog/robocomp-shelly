@@ -47,8 +47,33 @@ void PathPlanner::initialize(const std::shared_ptr<CurrentTarget> &currenttarget
 	vmin = std::min(outerRegion.top(), outerRegion.bottom());
 	vmax = std::max(outerRegion.top(), outerRegion.bottom());
 	
+	rDebug2(("PathPlanner building graph......"));
+	auto start = clock::now();
+	sampler.lock();
+		constructGraph(fmap, TILE_SIZE);
+	sampler.unlock();
+	auto end = clock::now();
+  	std::cout << __FILE__ << __FUNCTION__ << " Graph building time " << duration_cast<milliseconds>(end-start).count() << "ms\n";
+	rDebug2(("PathPlanner graph finished!"));
+	
 	rDebug2(("PathPlanner finished initializing"));
 	Log() << __FILE__ << __FUNCTION__ << "-------------------------------------------------";
+}
+
+void PathPlanner::update(Road &road)
+{
+	if( road.getRequiresReplanning() )
+	{
+		state->state = "PLANNING";
+		std::list<QVec> currentPath = computePath(road, currenttarget);
+		qDebug() << __FILE__ << __FUNCTION__ << " CurrentPath length:" << currentPath.size();
+		for(auto &p : currentPath) p.print("p");
+		if(currentPath.empty() == false)
+			road.readRoadFromList(currentPath);
+		else
+			std::cout << __FILE__ << __FUNCTION__ << " No path found!!" << std::endl;
+		road.setRequiresReplanning(false);
+	}
 }
 
 void PathPlanner::run(std::function<Road&()> getRoad, std::function<void()> releaseRoad)

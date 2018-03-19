@@ -103,6 +103,7 @@ class PathPlanner
 						const std::shared_ptr<NavigationState> &state_,
 						const std::shared_ptr<RoboCompCommonBehavior::ParameterList> &configparams);
 		void run(std::function<Road&()> handler, std::function<void()> releaseRoad);
+		void update(Road &road);
 		bool get_map_dirty_bit() const 							{return map_dirty_bit;};  
 		void set_map_dirty_bit(bool v=true)						{map_dirty_bit = v;};
 		void reloadInnerModel(const InnerPtr &innerModel_);

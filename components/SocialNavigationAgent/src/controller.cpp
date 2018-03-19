@@ -56,6 +56,13 @@ void Controller::initialize(const std::shared_ptr<InnerModel> &innerModel_,
 	
 }
 
+void Controller::update(Road &road)
+{
+	if(road.isNotEmpty())
+		update(innerModel, omnirobot_proxy, road);
+}
+
+
 void Controller::run(std::function<Road&()> getRoad, std::function<void()> releaseRoad)
 {
 	std::cout << "Controller running" << std::endl;

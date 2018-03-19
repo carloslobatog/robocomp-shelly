@@ -70,11 +70,11 @@ void PathFinder::initialize( const std::shared_ptr<InnerModel> &innerModel_,
 	rDebug2(("PathFinder: All objects initialized"));
 		
 	/// Threads
-	thread_planner = std::thread(&PathPlanner::run, &pathplanner, std::bind(&PathFinder::getRoad, this), std::bind(&PathFinder::releaseRoad, this));
+	//thread_planner = std::thread(&PathPlanner::run, &pathplanner, std::bind(&PathFinder::getRoad, this), std::bind(&PathFinder::releaseRoad, this));
 	
-	thread_projector = std::thread(&Projector::run, &projector, std::bind(&PathFinder::getRoad, this), std::bind(&PathFinder::releaseRoad, this));
+	//thread_projector = std::thread(&Projector::run, &projector, std::bind(&PathFinder::getRoad, this), std::bind(&PathFinder::releaseRoad, this));
 	
-	thread_controller = std::thread(&Controller::run, &controller, std::bind(&PathFinder::getRoad, this), std::bind(&PathFinder::releaseRoad, this));
+	//thread_controller = std::thread(&Controller::run, &controller, std::bind(&PathFinder::getRoad, this), std::bind(&PathFinder::releaseRoad, this));
 	
 	std::cout << __FUNCTION__ << "PathFinder: All threads initialized" << std::endl;
 	rDebug2(("PathFinder: All threads initialized"));
@@ -84,22 +84,41 @@ void PathFinder::run()
 {
  	while(true)
 	{	
-		Road &road = getRoad();
-			QVec robotpos = innerModel->transformS6D("world", robotname);
-			viewer->updateTransformValues(QString::fromStdString(robotname), robotpos);
-			road.update();
-// 			if( road.isBlocked())
-// 				road.reset();
-// 				road.setRequiresReplanning(true);
-			drawroad.draw(road, viewer, currenttarget);
-			drawroad.drawmap(pathplanner, viewer, pathplanner.fmap);
+		QVec robotpos = innerModel->transformS6D("world", robotname);
+		viewer->ts_updateTransformValues(QString::fromStdString(robotname), robotpos);
+		road.update();
+		projector.update(road);
+		controller.update(road);
+		pathplanner.update(road);
+
+		drawroad.draw(road, viewer, currenttarget);
+		drawroad.drawmap(pathplanner, viewer, pathplanner.fmap);
 			
-		releaseRoad();
 	
 		std::this_thread::sleep_for(200ms);
 	
 	}
 }
+
+
+// void PathFinder::run()
+// {
+//  	while(true)
+// 	{	
+// 		Road &road = getRoad();
+// 			QVec robotpos = innerModel->transformS6D("world", robotname);
+// 			viewer->ts_updateTransformValues(QString::fromStdString(robotname), robotpos);
+// 			road.update();
+// 
+// 			drawroad.draw(road, viewer, currenttarget);
+// 			drawroad.drawmap(pathplanner, viewer, pathplanner.fmap);
+// 			
+// 		releaseRoad();
+// 	
+// 		std::this_thread::sleep_for(200ms);
+// 	
+// 	}
+// }
 
 void PathFinder::innerModelChanged (const std::shared_ptr<InnerModel> &innerModel_, bool structural, vector<bool> pn )
 {
