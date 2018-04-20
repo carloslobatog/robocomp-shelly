@@ -40,12 +40,12 @@ void PathFinder::initialize( const std::shared_ptr<InnerModel> &innerModel_,
 							 const shared_ptr< RoboCompCommonBehavior::ParameterList > &configparams_, 
 							 LaserPrx laser_prx, OmniRobotPrx omnirobot_proxy )
 {
+	//shared copy of innermodel
 	innerModel = innerModel_;
 	configparams = configparams_;
 	
 	//Initialize global state class 
 	state = std::make_shared<NavigationState>();
-	
 	
 	/// Initialize the elastic road
 	road.initialize(innerModel, state, configparams);
@@ -55,7 +55,7 @@ void PathFinder::initialize( const std::shared_ptr<InnerModel> &innerModel_,
 	
 	#ifdef USE_QTGUI
 		viewer = new InnerViewer(innerModel, "Social Navigation");  //InnerViewer copies internally innerModel so it has to be resynchronized
-		viewer->start();	
+		//viewer->start();	
 	#endif
 	
 	/// Initialize the Planner
@@ -82,7 +82,7 @@ void PathFinder::initialize( const std::shared_ptr<InnerModel> &innerModel_,
 
 void PathFinder::run()
 {
- 	while(true)
+ 	//while(true)
 	{	
 		QVec robotpos = innerModel->transformS6D("world", robotname);
 		viewer->ts_updateTransformValues(QString::fromStdString(robotname), robotpos);
@@ -93,10 +93,10 @@ void PathFinder::run()
 
 		drawroad.draw(road, viewer, currenttarget);
 		drawroad.drawmap(pathplanner, viewer, pathplanner.fmap);
+		
+		viewer->run();
 			
-	
-		std::this_thread::sleep_for(200ms);
-	
+	//	std::this_thread::sleep_for(200ms);
 	}
 }
 

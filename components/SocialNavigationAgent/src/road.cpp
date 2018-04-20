@@ -119,13 +119,12 @@ void Road::update()
 		{
 			qDebug() <<"Road::" <<__FUNCTION__ <<"BLOCKED" << "distanceToLastVisible" << getRobotDistanceToLastVisible();
 			setBlocked(true);
-			
 		}	
 		else
 			setBlocked(false);
 	}
 	
-	//printRobotState(innerModel);
+	printRobotState(innerModel);
 	//print();
 }
 

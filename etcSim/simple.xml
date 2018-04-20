@@ -110,7 +110,6 @@
  <node alias="socialnavigA" endpoint="agmcommonbehavior:tcp -h localhost -p 10330">
   <!--<dependence alias="executive" />-->
   <dependence alias="base" />
-  <dependence alias="socialnavigG" />
   <workingDir path="/home/robocomp/" />
   <upCommand command="rcremote localhost socialnavAgnt /home/robocomp/robocomp/components/robocomp-araceli/components/SocialNavigationAgent ./bin/SocialNavigationAgent /home/robocomp/robocomp/components/robocomp-araceli/etcSim/socialnavigationAgent.conf" />
   <downCommand command="killall -9 SocialNavigationAgent" />

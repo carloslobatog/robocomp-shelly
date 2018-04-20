@@ -498,8 +498,8 @@ float Projector::computeForces(Road &road, const RoboCompLaser::TLaserData &lase
 			// ATRACTION_FORCE_COEFFICIENT negative values between 0 and -1. The bigger in magnitude, the stiffer the road becomes PARAM
 			// REPULSION_FORCE_COEFFICIENT Positive values between 0 and 1	 The bigger in magnitude, more separation from obstacles
 
-			ATRACTION_FORCE_COEFFICIENT = -0.3;  //PARAMS
-			REPULSION_FORCE_COEFFICIENT = 1.;
+			ATRACTION_FORCE_COEFFICIENT = -0.7;  //PARAMS
+			REPULSION_FORCE_COEFFICIENT = 0.7;
 		
 			QVec change = (atractionForce * ATRACTION_FORCE_COEFFICIENT) + (repulsionForce * REPULSION_FORCE_COEFFICIENT);
 		

@@ -42,7 +42,7 @@ InnerViewer::InnerViewer( const InnerPtr &innerModel_, const std::string &name_,
 	//viewer.getLight()->setDiffuse(osg::Vec4(0.7, 0.4, 0.6, 1.0));
 	viewer.getLight()->setSpecular(osg::Vec4(1.0, 1.0, 1.0, 1.0));
 	
-	innerModel = innerModel_;
+	innerModel = std::make_shared<InnerModel>(*innerModel_);
 	innerModelViewer = std::unique_ptr<InnerModelViewer>(new InnerModelViewer(innerModel, "root", root, true));
 	
 	viewer.setSceneData(root);
@@ -69,16 +69,16 @@ InnerViewer::InnerViewer( const InnerPtr &innerModel_, const std::string &name_,
 
 void InnerViewer::run()
 {
-	while(true)
+	//while(true)
 	{
 		if(!stop.load())
 		{
 			{ 
 				guard gl(mutex);
 				innerModelViewer->update(); 
-			} 
+			}
 			viewer.frame();
-		    std::this_thread::sleep_for(std::chrono::microseconds(period));
+			std::this_thread::sleep_for(std::chrono::microseconds(period));
 		}
 		else
 			stopped.store(true);

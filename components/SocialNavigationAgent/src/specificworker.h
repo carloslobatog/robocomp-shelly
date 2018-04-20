@@ -29,7 +29,7 @@
 // #include <innermodel/innermodelmgr.h>
 #include <actionexecution.h>
 #include <socialrules.h>
-
+#include "safe_ptr.h"
 
 //PROBLEMA: con python 3.5 da error al compilar
 
@@ -55,6 +55,7 @@ Q_OBJECT
 
 public:  
 	using InnerPtr = std::shared_ptr<InnerModel>;
+	
 	SpecificWorker(MapPrx& mprx);
 	~SpecificWorker();
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
@@ -129,8 +130,8 @@ public:
 	float go(const TargetPose &target){ 
 		//innerModel->print("");
 // 		qDebug()<<"------------FIN------------------";
-		pathfinder.innerModelChanged(innerModel,true,pn); 
-		pathfinder.go(target.x, -target.z);  
+//		pathfinder.innerModelChanged(innerModel,true,pn); 
+		pathfinder.go(target.x, target.z);  
 		return 0.0;};
 	//float go(const TargetPose &target){pathfinder.go(target.x, -target.z);  return 0.0;};
 
@@ -149,14 +150,12 @@ private:
 	bool active;
 	void sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel,std::string m);
 	
-private:
 	std::string action;
 	ParameterMap params;
 	AGMModel::SPtr worldModel;
-	//InnerModel *innerModel = nullptr;
+	
 	bool haveTarget;
 	QTimer trajReader;
-	//InnerModel *inner;
 	AGMModel::SPtr world;	
 	RoboCompTrajectoryRobot2D::NavState planningState;
 	// Target info

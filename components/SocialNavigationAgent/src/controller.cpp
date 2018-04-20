@@ -118,7 +118,7 @@ bool Controller::update(const std::shared_ptr<InnerModel> &innerModel, RoboCompO
 // 		stopTheRobot();
 // 		return false;
 // 	}
-		
+// 		
 	/////////////////////////////////////////////////
 	//////  CHECK CPU AVAILABILITY. If lagging reduces speed  CURRENTLY DISBLED!!!!!!!!!!!!!
 	/////////////////////////////////////////////////
@@ -150,7 +150,7 @@ bool Controller::update(const std::shared_ptr<InnerModel> &innerModel, RoboCompO
 	if( (road.getRobotDistanceToTarget() > ROBOT_RADIUS_MM *3) or 
 		(road.getRobotDistanceToTarget() > ROBOT_RADIUS_MM and road.last().hasRotation and (angmMPI(road.last().rot(1) - robotRot.y()) > M_PI/2.0)))// No rotation if target is close so small translational movements are allowed
 	{
-		vrot = 0.7 * road.getAngleWithTangentAtClosestPoint();
+		vrot = 0.8 * road.getAngleWithTangentAtClosestPoint();
  		if(vrot > MAX_ROT_SPEED) vrot = MAX_ROT_SPEED;
  		if(vrot < -MAX_ROT_SPEED) vrot = -MAX_ROT_SPEED;
 	}
@@ -184,7 +184,7 @@ bool Controller::update(const std::shared_ptr<InnerModel> &innerModel, RoboCompO
 	radialDir = radialDir * (T)-modulus;
 	
 	//Next, decompose it into vadvance and vside componentes by projecting on robot's Z and X axis
-	float vside = radialDir * QVec::vec2(0.4,0.);
+	float vside = (radialDir * QVec::vec2(1.0,0.)) * 0.6;
 	
 	//vside += road.getRobotPerpendicularDistanceToRoad()*0.2;
 	float vadvance = radialDir * QVec::vec2(0.,1.);
