@@ -127,26 +127,27 @@ bool Projector::update(Road &road,
 	//qDebug() << "Projector::addPoints";
 	addPoints(road);
 
-	/////////////////////////////////////////////
+    /////////////////////////////////////////////
 	//Remove point too close to each other
 	/////////////////////////////////////////////
 	//qDebug() << "Projector::cleanPoints";
 	cleanPoints(road);
 
-	/////////////////////////////////////////////
+    /////////////////////////////////////////////
 	//Compute the scalar magnitudes
 	/////////////////////////////////////////////
 	//qDebug() << "Projector::computeForces";
-	computeForces(road, laserData);
+//TODO
+    //computeForces(road, laserData);
 
-	/////////////////////////////////////////////
+    /////////////////////////////////////////////
 	//Delete half the tail behind, if greater than 6, to release resources
 	/////////////////////////////////////////////
 	if (road.getIndexOfClosestPointToRobot() > 2)
 	{
 		for (auto it = road.begin(); it != road.begin() + (road.getIndexOfCurrentPoint() / 2); ++it)
 			road.backList.append(it->pos);
-		road.erase(road.begin(), road.begin() + (road.getIndexOfCurrentPoint() / 2));
+        road.erase(road.begin(), road.begin() + (road.getIndexOfCurrentPoint() / 2));
 	}
 	return true;
 }
@@ -195,6 +196,7 @@ bool Projector::shortCut(Road &road, const RoboCompLaser::TLaserData &laserData)
 		else
 			break;
 	}
+//TODO
 	if (best != road.begin() and (robot + 1) != road.end())
 		road.erase(robot + 1, best);
 	return false;
@@ -414,7 +416,8 @@ bool Projector::addPoints(Road &road)
 		{
 			float l = 0.9 * ROAD_STEP_SEPARATION / dist;   //Crucial que el punto se ponga mas cerca que la condición de entrada
 			WayPoint wNew((w.pos * (1 - l)) + (wNext.pos * l));
-			road.insert(i + 1, wNew);
+			if (fabs(wNew.pos[0]- wNext.pos[0]) > (ROAD_STEP_SEPARATION/3.f) or fabs(wNew.pos[2]- wNext.pos[2]) > (ROAD_STEP_SEPARATION/3.f) )   //avoid inserting same point
+                road.insert(i + 1, wNew);
 		}
 	}
 	return true;
@@ -431,12 +434,10 @@ bool Projector::cleanPoints(Road &road)
 
 	for (i = 0; i < road.size() - offset; i++)
 	{
-		if (road[i].isVisible == false)
-			break;
 		WayPoint &w = road[i];
 		WayPoint &wNext = road[i + 1];
 
-		float dist = (w.pos - wNext.pos).norm2();
+		float dist = (wNext.pos - w.pos).norm2();
 		if (dist < ROAD_STEP_SEPARATION / 2.)									//TAKE TO PARAMS
 		{
 			road.removeAt(i + 1);
@@ -498,8 +499,8 @@ float Projector::computeForces(Road &road, const RoboCompLaser::TLaserData &lase
 			// ATRACTION_FORCE_COEFFICIENT negative values between 0 and -1. The bigger in magnitude, the stiffer the road becomes PARAM
 			// REPULSION_FORCE_COEFFICIENT Positive values between 0 and 1	 The bigger in magnitude, more separation from obstacles
 
-			ATRACTION_FORCE_COEFFICIENT = -0.7;  //PARAMS
-			REPULSION_FORCE_COEFFICIENT = 0.7;
+			ATRACTION_FORCE_COEFFICIENT = -0.2;  //PARAMS
+			REPULSION_FORCE_COEFFICIENT = 0.2;
 		
 			QVec change = (atractionForce * ATRACTION_FORCE_COEFFICIENT) + (repulsionForce * REPULSION_FORCE_COEFFICIENT);
 		
@@ -513,11 +514,13 @@ float Projector::computeForces(Road &road, const RoboCompLaser::TLaserData &lase
 			//Now we remove the tangencial component of the force to avoid recirculation of band points
 			//QVec pp = road.getTangentToCurrentPoint().getPerpendicularVector();
 			//QVec nChange = pp * (pp * change);
-
-			w1.pos = w1.pos - change;
-			totalChange = totalChange + change.norm2();
+			if (change.norm2() < 200.f)
+            {
+                w1.pos = w1.pos - change;
+                totalChange = totalChange + change.norm2();
+            }
 		}
-	}
+	}  
 	return totalChange;
 }
 

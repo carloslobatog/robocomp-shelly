@@ -30,6 +30,7 @@ AGMExecutiveTopicI::~AGMExecutiveTopicI()
 
 void AGMExecutiveTopicI::structuralChange(const RoboCompAGMWorldModel::World  &w, const Ice::Current&)
 {
+	printf("XXXXX          %d\n", __LINE__);
 	worker->structuralChange(w);
 }
 

@@ -29,7 +29,7 @@
 // #include <innermodel/innermodelmgr.h>
 #include <actionexecution.h>
 #include <socialrules.h>
-#include "safe_ptr.h"
+//#include "safe_ptr.h"
 
 //PROBLEMA: con python 3.5 da error al compilar
 
@@ -55,6 +55,9 @@ Q_OBJECT
 
 public:  
 	using InnerPtr = std::shared_ptr<InnerModel>;
+	#ifdef USE_QTGUI
+ 		using InnerViewerPtr = std::shared_ptr<InnerViewer>;
+ 	#endif
 	
 	SpecificWorker(MapPrx& mprx);
 	~SpecificWorker();
@@ -135,6 +138,7 @@ public:
 		return 0.0;};
 	//float go(const TargetPose &target){pathfinder.go(target.x, -target.z);  return 0.0;};
 
+	void checkNewPersonInModel();
 	
 public slots:
  	void compute();
@@ -145,7 +149,6 @@ public slots:
 	void UpdateInnerModel(SNGPolylineSeq seq);
 
 private:
-	void updateRobotPosition();
 	bool setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated);
 	bool active;
 	void sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel,std::string m);
@@ -165,14 +168,13 @@ private:
 	robocomp::pathfinder::PathFinder pathfinder;
 	std::thread thread_pathfinder;
  	
-	#ifdef USE_QTGUI
- 		InnerViewer *viewer = nullptr;
- 	#endif
+	
 	std::string robotname = "robot";
 	RoboCompGenericBase::TBaseState bState;
 	InnerPtr innerModel;
-
-
+	#ifdef USE_QTGUI
+		InnerViewerPtr viewer;
+	#endif
 	
 //CHECK
 	//void updateRobotsCognitiveLocation();

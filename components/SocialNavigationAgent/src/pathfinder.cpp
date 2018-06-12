@@ -36,12 +36,14 @@ void PathFinder::go(float x, float z, const ParameterMap &parameters)
 };
 
 ///////////////////////////////////////////////////////////////////
-void PathFinder::initialize( const std::shared_ptr<InnerModel> &innerModel_, 
+void PathFinder::initialize( const std::shared_ptr<InnerModel> &innerModel_,
+							 const std::shared_ptr<InnerViewer> &viewer_, 
 							 const shared_ptr< RoboCompCommonBehavior::ParameterList > &configparams_, 
 							 LaserPrx laser_prx, OmniRobotPrx omnirobot_proxy )
 {
 	//shared copy of innermodel
 	innerModel = innerModel_;
+	viewer = viewer_;
 	configparams = configparams_;
 	
 	//Initialize global state class 
@@ -52,11 +54,6 @@ void PathFinder::initialize( const std::shared_ptr<InnerModel> &innerModel_,
 	
 	/// Initialize currentarget
 	currenttarget = std::make_shared<CurrentTarget>();
-	
-	#ifdef USE_QTGUI
-		viewer = new InnerViewer(innerModel, "Social Navigation");  //InnerViewer copies internally innerModel so it has to be resynchronized
-		//viewer->start();	
-	#endif
 	
 	/// Initialize the Planner
 	pathplanner.initialize(currenttarget, innerModel, state, configparams);
@@ -84,90 +81,36 @@ void PathFinder::run()
 {
  	//while(true)
 	{	
-		QVec robotpos = innerModel->transformS6D("world", robotname);
-		viewer->ts_updateTransformValues(QString::fromStdString(robotname), robotpos);
 		road.update();
 		projector.update(road);
 		controller.update(road);
 		pathplanner.update(road);
-
-		drawroad.draw(road, viewer, currenttarget);
-		drawroad.drawmap(pathplanner, viewer, pathplanner.fmap);
+//TODO Revisar para pasar un shared_ptr
+		drawroad.draw(road, viewer.get(), currenttarget);
+		drawroad.drawmap(pathplanner, viewer.get(), pathplanner.fmap);
 		
-		viewer->run();
-			
 	//	std::this_thread::sleep_for(200ms);
 	}
 }
 
 
-// void PathFinder::run()
-// {
-//  	while(true)
-// 	{	
-// 		Road &road = getRoad();
-// 			QVec robotpos = innerModel->transformS6D("world", robotname);
-// 			viewer->ts_updateTransformValues(QString::fromStdString(robotname), robotpos);
-// 			road.update();
-// 
-// 			drawroad.draw(road, viewer, currenttarget);
-// 			drawroad.drawmap(pathplanner, viewer, pathplanner.fmap);
-// 			
-// 		releaseRoad();
-// 	
-// 		std::this_thread::sleep_for(200ms);
-// 	
-// 	}
-// }
-
-void PathFinder::innerModelChanged (const std::shared_ptr<InnerModel> &innerModel_, bool structural, vector<bool> pn )
+void PathFinder::innerModelChanged (const std::shared_ptr<InnerModel> &innerModel_)
 {
-// 	innerModel = innerModel_;
-	if(structural) //replace all objects with copies of InnerModel. Broadcast a signal to subscribed objects
-	{
-		structuralchange = true;
-		qDebug()<<__FUNCTION__<< "--------------ESPERANDO GET ROAD -----------------------";
-		
-		Road &road = getRoad(); 									
-			qDebug()<<"reloadInnerModel PATHPLANNER";
-			pathplanner.reloadInnerModel(innerModel_) ;  
-			qDebug()<<"reloadInnerModel ROAD";
-			road.reloadInnerModel( innerModel_ ) ;  
-			qDebug()<<"reloadInnerModel PROJECTOR";
-			projector.reloadInnerModel(innerModel_) ;  
-			qDebug()<<"reloadInnerModel CONTROLLER";
- 			controller.reloadInnerModel( innerModel_ );
-			qDebug()<<"reloadInnerModel VIEWER";
-			viewer->reloadInnerModel(innerModel_);
-			
-		releaseRoad();
-		qDebug()<<__FUNCTION__<< "--------------TERMINA GET ROAD -----------------------";
-	}
-	else
-	{	
-		#ifdef USE_QTGUI
-			
-			if(viewer != nullptr)
-			{
-				Road &road = getRoad(); //to block the threads
-					QVec robotpos = innerModel->transformS6D("world", robotname);
-					viewer->updateTransformValues(QString::fromStdString(robotname), robotpos);
-					//Actualizar en el viewer la posición de cada persona
-					for (uint i=0;i<pn.size();i++)
-					{
-						std::string personname = "fakeperson" + std::to_string(i+1);
-						
-						if (pn[i])
-						{	
-							QVec personpose = innerModel->transformS6D("world",personname);
-							viewer->updateTransformValues(QString::fromStdString(personname), personpose);
-						}
-						
-					}	
-				releaseRoad();
-			}
-		#endif
-	}
+	innerModel = innerModel_;
+	qDebug()<<__FUNCTION__<< "--------------ESPERANDO GET ROAD -----------------------";
+	
+	Road &road = getRoad(); 
+		qDebug()<<"reloadInnerModel PATHPLANNER";
+		pathplanner.reloadInnerModel(innerModel_) ;  
+		qDebug()<<"reloadInnerModel ROAD";
+		road.reloadInnerModel( innerModel_ ) ;  
+		qDebug()<<"reloadInnerModel PROJECTOR";
+		projector.reloadInnerModel(innerModel_) ;  
+		qDebug()<<"reloadInnerModel CONTROLLER";
+		controller.reloadInnerModel( innerModel_ );
+		qDebug()<<"reloadInnerModel VIEWER";
+	releaseRoad();
+	qDebug()<<__FUNCTION__<< "--------------TERMINA GET ROAD -----------------------";
 }
 
 

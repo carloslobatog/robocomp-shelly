@@ -125,7 +125,7 @@ void Road::update()
 	}
 	
 	printRobotState(innerModel);
-	//print();
+	print();
 }
 
 	//////////////////////////////////////////////	
@@ -251,8 +251,6 @@ void Road::computeDistancesToNext()
 
 QLine2D Road::getRobotZAxis(const std::shared_ptr<InnerModel> &innerModel)
 {
-	Q_ASSERT(currentPoint + 1 < road.size() and road.size() > 0);
-
 	QVec robotPos = innerModel->transformS("world", QVec::zeros(3), robotname);
 	QVec nose = innerModel->transformS("world", QVec::vec3(0, 0, 1000), robotname);
 	return QLine2D(robotPos, nose);
@@ -329,11 +327,11 @@ void Road::printRobotState(const std::shared_ptr<InnerModel> &innerModel)
 
 void Road::print() const
 {
-	qDebug() << __FUNCTION__ << "Printing Road";
+	qDebug() << __FUNCTION__ << "Printing Road"<<"Size"<<this->size();
 	for (int i = 0; i < this->size(); i++)
 	{
 		const WayPoint &w = (*this)[i];
-		qDebug() << "		-" << w.pos << w.rot << i << "Visible" << w.isVisible;
+		qDebug() << "		-"<< i << w.pos << w.rot << i << "Visible" << w.isVisible;
 		qDebug() << "		" << "laser ang visibility" << w.visibleLaserAngle << "laser dist visibility"
 		         << w.visibleLaserDist << "in robot frame" << w.posInRobotFrame;
 	}
@@ -370,19 +368,18 @@ Road::iterator Road::computeClosestPointToRobot(const QVec &robot)
 	for (it = this->begin(); it != this->end(); ++it, ++count)
 	{
 		float d = (it->pos - robot).norm2();
-		if (d < min)
-		{
-			min = d;
-			res = it;
-			index = count;
-		}
+        if (d < min)
+        {
+            min = d;
+            res = it;
+            index = count;
+        }
 	}
-
-	robotDistanceToClosestPoint = min;
-	indexOfCurrentPoint = index;  
-	indexOfClosestPointToRobot = index;
-	iterToClosestPointToRobot = res; 
-	return res;
+    robotDistanceToClosestPoint = min;
+    indexOfCurrentPoint = index;  
+    indexOfClosestPointToRobot = index;
+    iterToClosestPointToRobot = res; 
+    return res;
 }
 
 QLine2D Road::computeTangentAt(Road::iterator w) const
@@ -398,7 +395,18 @@ QLine2D Road::computeTangentAt(Road::iterator w) const
 	Road::iterator ant, post;
 	const float MIN_DISTANCE_ALLOWED = 10.f;
 
-	if (w == this->begin())
+    if (w + 1 == this->end())
+	{
+        ant = w - 1;
+        post = w;
+    }
+    else
+    {
+		ant = w ;
+        post = w + 1;
+    }
+
+/*	if (w == this->begin())
 		ant = w;
 	else
 		ant = w - 1;
@@ -407,7 +415,7 @@ QLine2D Road::computeTangentAt(Road::iterator w) const
 		post = w;
 	else
 		post = w + 1;
-
+*/
 	//Now check if the points are too close
 	if ((post->pos - ant->pos).norm2() < MIN_DISTANCE_ALLOWED)
 		return antLine;
@@ -444,8 +452,9 @@ float Road::computeDistanceToLastVisible(Road::iterator closestPoint, const QVec
 		return 0;
 	for (it = closestPoint; it != end() - 1; ++it)
 	{
-		if ((it+1)->isVisible == true)
-			dist += (it->pos - (it + 1)->pos).norm2();
+        Road::iterator nextPoint = std::next(it);
+		if (nextPoint->isVisible == true)
+			dist += (it->pos - nextPoint->pos).norm2();
 		else
 			break;
 	}
@@ -467,9 +476,9 @@ float Road::computeDistanceToTarget(Road::iterator closestPoint, const QVec &rob
 	
 	for (it = closestPoint; it != end() - 1; ++it)
 	{
-		dist += (it->pos - (it + 1)->pos).norm2();
+		dist += (it->pos - std::next(it)->pos).norm2();
 	}
-	
+qDebug()<<"Closest point"<<indexOfClosestPointToRobot<<size();	
 	float distE = (robotPos - it->pos).norm2();  //Euclidean distance to last point to detect the robot going away from the target
 	robotDistanceVariationToTarget = distE - antDist;
 	antDist = distE;

@@ -77,13 +77,14 @@ class InnerViewer: public QThread
 	private:
 		mutable std::recursive_mutex mutex;
 		std::atomic<bool> stop{false}, stopped{false};
-		std::unique_ptr<InnerModelViewer> innerModelViewer;
+		InnerModelViewer* innerModelViewer;
 		InnerPtr innerModel;
 		osgViewer::Viewer viewer;
 		void createWindow(osgViewer::Viewer& viewer, const std::string &name);
 		QSettings *settings ;
 		osgGA::TrackballManipulator *tb;
 		uint period;
+         osg::Group *root;
 };
 
 #endif

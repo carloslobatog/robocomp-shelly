@@ -32,25 +32,24 @@
 #include <innermodel/innermodel.h>
 #include <qjoystick/qjoystick.h>
 
+#define HUMANADVVEL 50
+#define HUMANROTVEL 0.1
+
 
 class SpecificWorker : public GenericWorker
 {
 Q_OBJECT
 
- 
-struct TButton {
-bool up =false;
-bool down =false;
-bool right =false;
-bool left =false;
-bool rotacion=false;
-};
-
-TButton tbutton;
-int valorgiro;
-
-
-
+	struct TPerson {
+		int personSymbolId;
+		std::string name;
+		RoboCompInnerModelManager::Pose3D pose;
+	};
+	std::map<int, TPerson> personMap;
+	bool moveFlag = false;
+	bool setPoseFlag = false;
+	RoboCompInnerModelManager::coord3D coordInItem;
+	float valorgiro;
 public:
   
 	void move();
@@ -58,7 +57,14 @@ public:
 	SpecificWorker(MapPrx& mprx);
 	~SpecificWorker();
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
-
+	void initializeUI();
+	bool includeInRCIS(int id, const RoboCompInnerModelManager::Pose3D &pose, std::string mesh);
+	bool removeFromRCIS(int id);
+	int includeInAGM(int id,const RoboCompInnerModelManager::Pose3D &pose, std::string mesh);
+	bool removeFromAGM(int id);
+	
+	bool setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated);
+	void sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel);
 	bool reloadConfigAgent();
 	bool activateAgent(const ParameterMap &prs);
 	bool setAgentParameters(const ParameterMap &prs);
@@ -75,8 +81,11 @@ public:
 
 public slots:
 	void compute();
+	void setPose();
 	//void receivedJoyStickEvent(int value, int type, int number);
 	
+	void addPerson();
+	void delPerson();
 	void upP ();
 	void upR ();
 	void downP ();
@@ -90,27 +99,14 @@ public slots:
 	void giroR();
 
 private:
-  
-	RoboCompInnerModelManager::Pose3D pose;
 	InnerModel *innerModel;
 	std::string action;
 	ParameterMap params;
 	AGMModel::SPtr worldModel;
 	bool active;
-	bool setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated);
-	void sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel);
-	
-	
-	void includeInRCIS();
-	void includeInAGM();
-	
-	
-	int32_t personSymbolId;
 	
 	QTime lastJoystickEvent;
 	QJoyStick *joystick;
-	float humanAdvVel, humanRotVel;
-	float humanRot;
 };
 
 #endif

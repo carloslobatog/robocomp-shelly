@@ -53,7 +53,9 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	proximidad->QSlider::setTracking (false);	
 	proximidad->QSlider::setValue (50);
 
-}		
+	
+
+}
 /**
  * \brief Default destructor
  */
@@ -77,7 +79,10 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	{	rDebug2(("The executive is probably not running, waiting for first AGM model publication...")); }
 	*/	
 	innerModel = std::make_shared<InnerModel>("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml");
-	
+	#ifdef USE_QTGUI
+		viewer = std::make_shared<InnerViewer>(innerModel, "Social Navigation");  //InnerViewer copies internally innerModel so it has to be resynchronized
+		//viewer->start();	
+	#endif
 
 	innerModel->getNode<InnerModelJoint>("armX1")->setAngle(-1);
 	innerModel->getNode<InnerModelJoint>("armX2")->setAngle(2.5);
@@ -86,20 +91,12 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams = std::make_shared<RoboCompCommonBehavior::ParameterList>(paramsL);
 
 	// Initializing PathFinder
-	pathfinder.initialize(innerModel, configparams, laser_proxy, omnirobot_proxy);
+	pathfinder.initialize(innerModel,viewer, configparams, laser_proxy, omnirobot_proxy);
 
 	// releasing pathfinder
 	//thread_pathfinder = std::thread(&robocomp::pathfinder::PathFinder::run, &pathfinder);
 	//rDebug2(("Pathfinder up and running"));
 
-	
-		
-	// 	qDebug()<<"PATH FINDER INNERMODEL CHANGE";
-	// 	innerModel->print("");
-	// 	pathfinder.innerModelChanged(innerModel,true,pn); 
-	// 	qDebug()<<"----------------------------";
-	// 	
-	//qFatal("Fary");
 
 	qLog::getInstance()->setProxy("both", logger_proxy);
 	rDebug2(("NavigationAgent started"));
@@ -144,46 +141,26 @@ void SpecificWorker::compute()
 	try 
 	{
 		omnirobot_proxy->getBaseState(bState);
+		innerModel->updateTransformValues("robot", bState.x,0,bState.z,0,bState.alpha,0);
 	//	qDebug() << "SpecificWorker::compute" << bState.x << bState.z << bState.alpha;
 	}
 	catch(const Ice::Exception &ex)
-	{	printf("The executive is probably not running, waiting for first AGM model publication...");
+	{
+		printf("The executive is probably not running, waiting for first AGM model publication...");
 		std::cout << ex << std::endl;
-	}	
+	}
 	
-	//We need to secure access to InnerModel 
-	//QMutexLocker l(mutex);
-
-	innerModel->updateTransformValues("robot", bState.x,0,bState.z,0,bState.alpha,0);
 	pathfinder.run();
+
+	//update viewer
+	QVec robotpos = innerModel->transformS6D("world", robotname);
+	viewer->ts_updateTransformValues(QString::fromStdString(robotname), robotpos);
+	viewer->run();
+	
+	
 	
 // 	bool sendChangesAGM = false;
 // 	
-// 	AGMModel::SPtr newM(new AGMModel(worldModel));	
-// 	
-// 	//Check if the person is in the model
-//  	for (int i=0;i<pn.size();i++)
-// 	{
-// 		if (pn[i]==false)
-// 		{	
-// 			std::string type = "person" + std::to_string(i+1);
-// 			std::string name = "fakeperson" + std::to_string(i+1);
-// 			int idx=0;
-// 			while ((personSymbolId = newM->getIdentifierByType(type, idx++)) != -1)
-// 			{
-// 				if (idx > 4) exit(0);
-// 				if (newM->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
-// 				{
-// 					pSymbolId[i]=personSymbolId;
-// 					changepos=true;
-// 					pn[i]=true;
-// 					break;
-// 				}	  
-// 			}			
-// 		}
-// 	}
-// 
-// 		
 // //If a person has moved its pose it is updated reading it from the AGM again.
 // 	if (changepos)
 // 	{
@@ -199,11 +176,11 @@ void SpecificWorker::compute()
 // 				person.x = str2float(edgeRT.attributes["tx"])/1000;
 // 				person.z = str2float(edgeRT.attributes["tz"])/1000;
 // 				person.angle = str2float(edgeRT.attributes["ry"]);
-// 	 			//person.vel=str2float(edgeRT.attributes["velocity"]);			
+// 	 			//person.vel=str2float(edgeRT.attributes["velocity"]);
 // 				person.vel=0;
-// 				totalpersons.push_back(person);	
+// 				totalpersons.push_back(person);
 // 				
-// 				qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << "Rotacion "<< person.angle;			
+// 				qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << "Rotacion "<< person.angle;
 // 				
 // 				if (totalaux.empty())
 // 				{
@@ -217,7 +194,7 @@ void SpecificWorker::compute()
 // 					if ((totalaux[ind].x!=person.x)or(totalaux[ind].z!=person.z)or(totalaux[ind].angle!=person.angle))
 // 						movperson = true;
 // 			
-// 					totalaux[ind]=person;  	  
+// 					totalaux[ind]=person;
 // 				}
 // 				
 // 				/////////////////////checking if the person is looking at the robot /////////////////////////
@@ -255,7 +232,7 @@ void SpecificWorker::compute()
 // 		if (poserobot.size()==0)
 // 			poserobot.push_back(point);
 // 	  
-// 		else if ((poserobot[poserobot.size()-1].x!=point.x)or(poserobot[poserobot.size()-1].z!=point.z))		  
+// 		else if ((poserobot[poserobot.size()-1].x!=point.x)or(poserobot[poserobot.size()-1].z!=point.z))
 // 		{  
 // 		  float  dist=sqrt((point.x - poserobot[poserobot.size()-1].x)*(point.x - poserobot[poserobot.size()-1].x)
 // 				+(point.z - poserobot[poserobot.size()-1].z)*(point.z - poserobot[poserobot.size()-1].z));
@@ -264,10 +241,10 @@ void SpecificWorker::compute()
 // 		  qDebug()<<"Distancia calculada"<<dist<<"Distancia total"<<totaldist;
 // 		    
 // 		  poserobot.push_back(point);  
-// 		}		 	
+// 		}
 // 		
 // 		first = false;
-// 		changepos=false;	
+// 		changepos=false;
 // 	}
 // 	
 // 		
@@ -276,7 +253,7 @@ void SpecificWorker::compute()
 // 	
 // 		try
 // 		{
-// 			SNGPolylineSeq list = sr.ApplySocialRules(totalpersons);			
+// 			SNGPolylineSeq list = sr.ApplySocialRules(totalpersons);
 // 			//UpdateInnerModel(list);
 // 		}
 // 		
@@ -303,14 +280,13 @@ void SpecificWorker::compute()
 // 		catch(...){}
 // 	}
 
-	//pathfinder.viewer->unlock();	
+	//pathfinder.viewer->unlock();
 
 }
-	 	
+
 
 void SpecificWorker::savedata()
 {
-
 	qDebug("Saving in robotpose.txt the robot's pose");
 	ofstream file("robotpose.txt", ofstream::out);
 	for (auto p:poserobot)
@@ -339,7 +315,7 @@ void SpecificWorker::savedata()
 			file3<< p.x << " " <<p.z<<" "<< endl;
 		}
 	}
-	file3.close();	
+	file3.close();
 
 	qDebug()<<"Saving in dist.txt the total distance"<<totaldist;
 	ofstream file4("dist.txt", ofstream::out);
@@ -379,19 +355,6 @@ void SpecificWorker::savedata()
 
 
 /**
- * @brief Updates the robot's position in viewer
- * 
- */
- void SpecificWorker::updateRobotPosition()
- {
-	//innerModel.lock(); 
-		innerModel->updateTransformValues("robot", bState.x,0,bState.z,0,bState.alpha,0);
-	//innerModel.unlock();
-	
-	pathfinder.innerModelChanged(innerModel, false,pn);
- }
-
-/**
  * \brief The innerModel is extracted from the AGM and the polylines are inserted on it as a set of planes.
  */
 
@@ -400,7 +363,7 @@ void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq)
 	QMutexLocker locker(mutex);
 	qDebug() << __FUNCTION__ << "UpdadeInnerModel";
 	
-	// Extract innerModel	
+	// Extract innerModel
 //	innerModel = AGMInner::extractInnerModel(worldModel, "world", false); 
 	
 			
@@ -410,7 +373,7 @@ void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq)
 // 
 // 	for (auto s:seq)
 // 	{
-// 		auto previousPoint = s[s.size()-1];	
+// 		auto previousPoint = s[s.size()-1];
 // 		for (auto currentPoint:s)
 // 		{
 // 			QString name = QString("polyline_obs_")+QString::number(count,10);
@@ -435,7 +398,7 @@ void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq)
 // 				catch(QString es){ qDebug() << "EXCEPCION" << es;}
 // 			}
 // 
-// 			InnerModelNode *parent = innerModel->getNode(QString("world"));			
+// 			InnerModelNode *parent = innerModel->getNode(QString("world"));
 // 			if (parent == NULL)
 // 				printf("%s: parent does not exist\n", __FUNCTION__);
 // 			else
@@ -456,16 +419,35 @@ void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq)
 // 	}
 // 
 
-	
-	
-	
-}	
+}
 
+void SpecificWorker::checkNewPersonInModel()
+{
+	//Check if the person is in the model
+ 	for (uint i=0;i<pn.size();i++)
+	{
+		if (pn[i]==false)
+		{	
+			std::string type = "person" + std::to_string(i+1);
+			std::string name = "fakeperson" + std::to_string(i+1);
+			int idx=0;
+			while ((personSymbolId = worldModel->getIdentifierByType(type, idx++)) != -1)
+			{
+				if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
+				{
+					pSymbolId[i]=personSymbolId;
+					pn[i]=true;
+					std::cout<<"Person found "<<type<<" "<<name<<" "<<personSymbolId<<std::endl;
+					break;
+				}
+			}
+		}
+	}
+}
 
-
-// *****************************************************************************************++
+// *****************************************************************************************
 // AGENT RELATED
-// **********************************************************************************************
+// *****************************************************************************************
 
 bool SpecificWorker::activateAgent(const ParameterMap& prs)
 {
@@ -538,36 +520,23 @@ bool SpecificWorker::reloadConfigAgent()
 
 void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modification)
 {
-	//pathfinder.viewer->lock();
-	static bool firsttime=true;
-        qDebug()<<"StructuralChange";
-        QMutexLocker l(mutex);
+	qDebug()<<"StructuralChange";
+	QMutexLocker l(mutex);
 	
-        AGMModelConverter::fromIceToInternal(modification, worldModel);
+    AGMModelConverter::fromIceToInternal(modification, worldModel);
+	//check if structural change include new Person
+	checkNewPersonInModel();
 	
-	///¿DEBERÍA SEGUIR ASÍ?
-// 	InnerModel *inner = AGMInner::extractInnerModel(worldModel, "world", false);
-// 	innerModel.reset(inner);
-
+	InnerModel *inner = AGMInner::extractInnerModel(worldModel, "world", false);
+	innerModel.reset(inner);
+	pathfinder.innerModelChanged(innerModel);
 	
-	
-        if (firsttime==true)
-        {
-                pathfinder.innerModelChanged(innerModel,false,pn);
-                firsttime = false;
-            
-        }
-        else
-	{
-                pathfinder.innerModelChanged(innerModel,true,pn);
-	}
-	
-      //  updateRobotPosition();
-        changepos=true;
-	//pathfinder.viewer->unlock();
+    //reload viewer
+	viewer->reloadInnerModel(innerModel);
+    innerModel->save("/home/robocomp/tmp/inner.xml");
 	printf("FIN structuralChange>>\n");
-	
 }
+
 
 void SpecificWorker::symbolUpdated(const RoboCompAGMWorldModel::Node& modification)
 {
@@ -578,7 +547,6 @@ void SpecificWorker::symbolUpdated(const RoboCompAGMWorldModel::Node& modificati
 
 void SpecificWorker::symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence &modifications)
 {
-
 	//qDebug()<<"symbolsUpdated";
 	QMutexLocker l(mutex);
 
@@ -588,18 +556,37 @@ void SpecificWorker::symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence &m
 
 
 void SpecificWorker::edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &modifications)
-{	
-	qDebug()<<"edgesUpdated";
-	changepos=true;
+{
+//	qDebug()<<"edgesUpdated";
 	QMutexLocker lockIM(mutex);
-
 	for (auto modification : modifications)
 	{
 		AGMModelConverter::includeIceModificationInInternalModel(modification, worldModel);
-		AGMModelEdge dst;
-		AGMModelConverter::fromIceToInternal(modification,dst);
-		AGMInner::updateImNodeFromEdge(worldModel, dst, innerModel.get());
-		updateRobotPosition();
+		AGMModelEdge edge;
+		AGMModelConverter::fromIceToInternal(modification, edge);
+//TODO Guardar si el cambio se refiere a una persona?¿
+		//Update InnerModel values
+		if (edge->getLabel()=="RT" )
+		{
+			try{
+				std::string songName= (worldModel->getSymbol( edge->getSymbolPair().second) )->getAttribute("imName");
+				
+				QVec vec = QVec::vec6();
+				vec[0] = str2float(edge->getAttribute("tx"));
+				vec[1] = str2float(edge->getAttribute("ty"));
+				vec[2] = str2float(edge->getAttribute("tz"));
+				vec[3] = str2float(edge->getAttribute("rx"));
+				vec[4] = str2float(edge->getAttribute("ry"));
+				vec[5] = str2float(edge->getAttribute("rz"));
+				innerModel->updateTransformValues(QString::fromStdString(songName), vec);
+				viewer->ts_updateTransformValues(QString::fromStdString(songName), vec);
+			}
+			catch (...)
+			{
+				qDebug()<<"EXCEPTION,RT label connect to a symbol without imName\n";
+				std::cout<<(worldModel->getSymbol( edge->getSymbolPair().second))->toString(true);
+			}
+		}
 	}
 }
 
@@ -607,18 +594,36 @@ void SpecificWorker::edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &mod
  * \brief ACTUALIZACION DEL ENLACE EN INNERMODEL
  */ 
 void SpecificWorker::edgeUpdated(const RoboCompAGMWorldModel::Edge& modification)
-{	
-	changepos=true;
-
-	qDebug() << "edgeUpdated";
+{
+//	qDebug() << "edgeUpdated";
 	QMutexLocker lockIM(mutex);
 	AGMModelConverter::includeIceModificationInInternalModel(modification, worldModel);
-	AGMModelEdge dst;
-	AGMModelConverter::fromIceToInternal(modification,dst);
-	AGMInner::updateImNodeFromEdge(worldModel, dst, innerModel.get());
-	updateRobotPosition();
+	AGMModelEdge edge;
+	AGMModelConverter::fromIceToInternal(modification, edge);
+//TODO Guardar si el cambio se refiere a una persona?¿
+	//Update InnerModel values
+	if (edge->getLabel()=="RT" )
+	{
+		try{
+			std::string songName= (worldModel->getSymbol( edge->getSymbolPair().second) )->getAttribute("imName");
+			
+			QVec vec = QVec::vec6();
+			vec[0] = str2float(edge->getAttribute("tx"));
+			vec[1] = str2float(edge->getAttribute("ty"));
+			vec[2] = str2float(edge->getAttribute("tz"));
+			vec[3] = str2float(edge->getAttribute("rx"));
+			vec[4] = str2float(edge->getAttribute("ry"));
+			vec[5] = str2float(edge->getAttribute("rz"));
+			innerModel->updateTransformValues(QString::fromStdString(songName), vec);
+			viewer->ts_updateTransformValues(QString::fromStdString(songName), vec);
+		}
+		catch (...)
+		{
+			qDebug()<<"EXCEPTION,RT label connect to a symbol without imName\n";
+			std::cout<<(worldModel->getSymbol( edge->getSymbolPair().second))->toString(true);
+		}
+	}
 }
-
 
 bool SpecificWorker::setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated)
 {
@@ -673,7 +678,7 @@ void SpecificWorker::sendModificationProposal(AGMModel::SPtr &newModel, AGMModel
 	QMutexLocker locker(mutex);
 	
 	try
-	{	
+	{
 		AGMMisc::publishModification(newModel, agmexecutive_proxy, std::string( "SocialnavigationAgent")+m);
 	}
 	catch(const RoboCompAGMExecutive::Locked &e)
@@ -691,5 +696,4 @@ void SpecificWorker::sendModificationProposal(AGMModel::SPtr &newModel, AGMModel
 	{
 		exit(1);
 	}
-	
 }

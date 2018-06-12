@@ -42,6 +42,8 @@ void DrawRoad::draw(Road &road, InnerViewer *viewer,  std::shared_ptr<CurrentTar
 		{
 			WayPoint &w = road[i];
 			WayPoint &wAnt = road[i - 1];
+            if (w.pos == wAnt.pos) //avoid calculations on equal points
+                continue;
 			QLine2D l(wAnt.pos, w.pos);
 			QLine2D lp = l.getPerpendicularLineThroughPoint(QVec::vec2(w.pos.x(), w.pos.z()));
 			QVec normal = lp.getNormalForOSGLineDraw();  //3D vector
@@ -53,6 +55,7 @@ void DrawRoad::draw(Road &road, InnerViewer *viewer,  std::shared_ptr<CurrentTar
 			{
 				// tangent to road 
 				viewer->ts_drawLine(item + "_line", item, QVec::zeros(3), tangent, 600, 30, "#00FFFF"); 
+                viewer->ts_drawLine(item + "_target", item, QVec::zeros(3), normal, 500, 80, "#FFFFFF");  
 			}
 			if (w.isVisible)
 				viewer->ts_drawLine(item + "_point", item, QVec::zeros(3), normal, 500, 50, "#00FF00"); //TAKE WIDTH FROM PARAMS!!!

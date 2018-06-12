@@ -35,11 +35,10 @@
 //#include <innermodel/innermodelmgr.h>
 #include <qlog/qlog.h>
 
-#define USE_QTGUI
-
 #ifdef USE_QTGUI
 	#include "innerviewer.h"
 #endif
+
 
 
 using namespace std;
@@ -48,57 +47,54 @@ namespace robocomp
 {
 	namespace pathfinder
 	{
-		typedef map<string, string> ParameterMap;		
+		typedef map<string, string> ParameterMap;
 		
 		class PathFinder
 		{
-			public:
+			private:
+				#ifdef USE_QTGUI
+					using InnerViewerPtr = std::shared_ptr<InnerViewer>;
+					InnerViewerPtr viewer;
+				#endif
 				using InnerPtr = std::shared_ptr<InnerModel>;
+				InnerPtr innerModel;
+				std::shared_ptr<NavigationState> state;
+				mutable std::mutex mymutex;
+
+				std::shared_ptr<CurrentTarget> currenttarget;
+				std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams;
+				
+				DrawRoad drawroad;
+				Projector projector;
+				Controller controller;
+				Road road;
+				PathPlanner pathplanner;
+				
+				std::thread thread_planner;
+				std::thread thread_projector;
+				std::thread thread_controller;
+
+			public:
 				PathFinder() = default;
 				void initialize(const std::shared_ptr<InnerModel> &innerModel_,
+								const std::shared_ptr<InnerViewer> &viewer_, 
 								const shared_ptr< RoboCompCommonBehavior::ParameterList > &configparams_,
 								LaserPrx laser_prx,
 								OmniRobotPrx omnirobot_proxy);
 				void releaseRoad();
 				Road& getRoad();
 				RoboCompTrajectoryRobot2D::NavState getState(){ return state->toIce(); };
-				bool structuralchange = false;
 				
-			/////////////////////////////
-			/// Interface
-			////////////////////////////
-			void go(float x, float z, const ParameterMap &parameters = ParameterMap());
-			//void setInnerModel(InnerModel* innerModel_){ innerModel = innerModel_; };
-			void innerModelChanged(const std::shared_ptr<InnerModel> &innerModel_, bool structural = false, vector <bool> pn = {false,false,false,false,false,false} ); //Le estoy metiendo el vector de personas para actualizar su posición
-			
-			#ifdef USE_QTGUI
-				InnerViewer *viewer = nullptr;
-			#endif
-			
-			void run();
-			///////////////////////////
-			
-			private:
-				std::shared_ptr<NavigationState> state;
-				mutable std::mutex mymutex;
-				Road road;
-				PathPlanner pathplanner;
-				std::shared_ptr<CurrentTarget> currenttarget;
-				std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams;
-				
-				std::string robotname = "robot";  ///OJO
-				
-				DrawRoad drawroad;
-				Projector projector;
-				Controller controller;
-			
-				InnerPtr innerModel;
-				
-				std::thread thread_planner;
-				std::thread thread_projector;
-				std::thread thread_controller;
-				
-		};	
+				/////////////////////////////
+				/// Interface
+				////////////////////////////
+				void go(float x, float z, const ParameterMap &parameters = ParameterMap());
+				//void setInnerModel(InnerModel* innerModel_){ innerModel = innerModel_; };
+				void innerModelChanged(const std::shared_ptr<InnerModel> &innerModel_);
+						
+				void run();
+				///////////////////////////
+		};
 	} //path
 } //robocomp
 

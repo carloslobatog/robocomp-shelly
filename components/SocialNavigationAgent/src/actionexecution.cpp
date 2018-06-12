@@ -22,7 +22,7 @@ ActionExecution::ActionExecution()
 
   	worldModel = AGMModel::SPtr(new AGMModel());
 	worldModel->name = "worldModel";
-	innerModel = new InnerModel();
+	innerModel = std::make_shared<InnerModel>(InnerModel());
 	haveTarget = false;	
 }
 
@@ -1088,8 +1088,10 @@ void ActionExecution::structuralChange(const RoboCompAGMWorldModel::World& modif
 	//if (roomsPolygons.size()==0 and worldModel->numberOfSymbols()>0)
 		//roomsPolygons = extractPolygonsFromModel(worldModel);
 
-	if (innerModel) delete innerModel;
-	innerModel = AGMInner::extractInnerModel(worldModel, "world", true);
+	//if (innerModel) delete innerModel;
+	//innerModel = AGMInner::extractInnerModel(worldModel, "world", true);
+	InnerModel *inner = AGMInner::extractInnerModel(worldModel, "world", true);
+	innerModel.reset(inner);
 	printf("structuralChange>>\n");
 }
 
