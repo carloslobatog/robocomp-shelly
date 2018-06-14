@@ -85,8 +85,8 @@ void InnerViewer::run()
 
 void InnerViewer::reloadInnerModel(const InnerPtr &other)
 {	
-	stop.store(true);
-	while(stopped.load() != true);
+//	stop.store(true);
+//	while(stopped.load() != true);
 	guard gl(mutex);
 	innerModel.reset(other.get()->copy());
 

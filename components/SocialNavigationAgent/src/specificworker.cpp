@@ -33,7 +33,8 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	worldModel = AGMModel::SPtr(new AGMModel());
 	worldModel->name = "worldModel";
 	haveTarget = false;
-
+	innerModel = std::make_shared<InnerModel>();
+	
 	// 	world = AGMModel::SPtr(new AGMModel());
 
 	//Timed slot to read TrajectoryRobot2D state
@@ -69,7 +70,12 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	try{ robotname = paramsL.at("RobotName").value;} 
 	catch(const std::exception &e){ std::cout << e.what() << "SpecificWorker::SpecificWorker - Robot name defined in config. Using default 'robot' " << std::endl;}
 	
-	/*try
+	#ifdef USE_QTGUI
+		viewer = std::make_shared<InnerViewer>(innerModel, "Social Navigation");  //InnerViewer copies internally innerModel so it has to be resynchronized
+		//viewer->start();	
+	#endif
+	
+	try
 	{		
 		RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
 		structuralChange(w);
@@ -77,15 +83,12 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	}		
 	catch(...)
 	{	rDebug2(("The executive is probably not running, waiting for first AGM model publication...")); }
-	*/	
-	innerModel = std::make_shared<InnerModel>("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml");
-	#ifdef USE_QTGUI
-		viewer = std::make_shared<InnerViewer>(innerModel, "Social Navigation");  //InnerViewer copies internally innerModel so it has to be resynchronized
-		//viewer->start();	
-	#endif
+		
+	//innerModel = std::make_shared<InnerModel>("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml");
+	
 
-	innerModel->getNode<InnerModelJoint>("armX1")->setAngle(-1);
-	innerModel->getNode<InnerModelJoint>("armX2")->setAngle(2.5);
+//	innerModel->getNode<InnerModelJoint>("armX1")->setAngle(-1);
+//	innerModel->getNode<InnerModelJoint>("armX2")->setAngle(2.5);
 	
 
 	std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams = std::make_shared<RoboCompCommonBehavior::ParameterList>(paramsL);
@@ -533,7 +536,7 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 	
     //reload viewer
 	viewer->reloadInnerModel(innerModel);
-    innerModel->save("/home/robocomp/tmp/inner.xml");
+   
 	printf("FIN structuralChange>>\n");
 }
 
