@@ -417,7 +417,10 @@ void SpecificWorker::move()
 		TPerson person = personMap[person_cb->currentText().toInt()];
 		RoboCompInnerModelManager::coord3D coordInBase;
 		try{
-			innermodelmanager_proxy->transform("root", person.name, coordInItem, coordInBase);
+			if (setPoseFlag)
+				innermodelmanager_proxy->transform("root", "world", coordInItem, coordInBase);
+			else
+				innermodelmanager_proxy->transform("root", person.name, coordInItem, coordInBase);
 		}
 		catch (std::exception& e)
 		{
