@@ -433,7 +433,7 @@ void SpecificWorker::checkNewPersonInModel()
 		{	
 			std::string type = "person" + std::to_string(i+1);
 			std::string name = "fakeperson" + std::to_string(i+1);
-			int idx=0;
+			int idx = 0;
 			while ((personSymbolId = worldModel->getIdentifierByType(type, idx++)) != -1)
 			{
 				if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
