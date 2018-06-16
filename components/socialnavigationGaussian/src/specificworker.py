@@ -295,7 +295,7 @@ class SpecificWorker(GenericWorker):
             #print('Pose x', pn.x, 'Pose z', pn.y, 'Rotacion', pn.th)
             pn.draw(2.,1,4./3.,pi/2 - pn.th, drawPersonalSpace=dibujar)
             #normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 2.0, 2.0, 2.0], elliptical=True))
-            normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th + pi/2, 2, 1, 4./3], elliptical=True))
+            normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2., 2, 1, 4./3], elliptical=True))
         #print ("numero de gaussianas",len(normals))
 
         #h = 0.4
@@ -315,7 +315,7 @@ class SpecificWorker(GenericWorker):
 
         if (dibujar):
            # plt.figure()
-          #  plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+            plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
             plt.xlabel('X')
             plt.ylabel('Y')
             plt.axis('equal')
@@ -337,7 +337,7 @@ class SpecificWorker(GenericWorker):
                 polyline.append(punto)
             polylines.append(polyline)
 
-        """""
+
         if (dibujar):
             for ps in polylines:
               #  plt.figure()
@@ -348,7 +348,7 @@ class SpecificWorker(GenericWorker):
                     plt.ylabel('Y')
             plt.show()
 
-        """
+
         plt.show()
 
         return polylines

@@ -120,7 +120,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	sr.objectInteraction(false);
 	
 	rDebug2(("Leaving setParams"));
-	
+	checkMovement(true);
 	return true;
 }
 
@@ -165,6 +165,7 @@ void SpecificWorker::compute()
 // 	aE.Update(action,params);
 // 	
 	checkMovement();
+	checkRobotmov();
 	
 	first = false;
 }
@@ -192,7 +193,6 @@ void SpecificWorker::savedata()
 
 	qDebug("Saving poly.txt la polilinea");
 	ofstream file3("poly.txt", ofstream::out);
-
 	for (auto s:sequence)
 	{
 		for (auto p: s)
@@ -225,18 +225,33 @@ void SpecificWorker::savedata()
 }
 
 
-/**
- * \brief If the person is in the model it is added to a vector of persons wich is sent to the socialnavigationGaussian
- * to model its personal space. 
- * The function returns a sequence of polylines.
- */
+void SpecificWorker::checkRobotmov()
+{
+	robotSymbolId = worldModel->getIdentifierByType("robot");
+	AGMModelSymbol::SPtr robotparent = worldModel->getParentByLink(robotSymbolId, "RT");
+	AGMModelEdge &edgeRTrobot  = worldModel->getEdgeByIdentifiers(robotparent->identifier, robotSymbolId, "RT");
+		
+	robot.x=str2float(edgeRTrobot.attributes["tx"])/1000;
+	robot.z=str2float(edgeRTrobot.attributes["tz"])/1000;
+	robot.angle=str2float(edgeRTrobot.attributes["ry"]);
 
-// SNGPolylineSeq SpecificWorker::gauss(bool draw)
-// {
-// 	sequence.clear();
-// 	//sequence = socialnavigationgaussian_proxy-> getPersonalSpace(totalp, prox, draw);
-// 	return sequence;
-// }
+	point.x=robot.x;
+	point.z=robot.z;
+		 
+	if (poserobot.size()==0)
+		poserobot.push_back(point);
+	  
+	else if ((poserobot[poserobot.size()-1].x!=point.x)or(poserobot[poserobot.size()-1].z!=point.z))
+	{  
+		float  dist=sqrt((point.x - poserobot[poserobot.size()-1].x)*(point.x - poserobot[poserobot.size()-1].x)
+				+(point.z - poserobot[poserobot.size()-1].z)*(point.z - poserobot[poserobot.size()-1].z));
+		    
+		totaldist=totaldist + dist;
+		qDebug()<<"Distancia calculada"<<dist<<"Distancia total"<<totaldist;
+		    
+		poserobot.push_back(point);  
+	}
+}
 
 
 /**
@@ -249,68 +264,71 @@ void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq)
 	qDebug() << __FUNCTION__ << "UpdadeInnerModel";
 	
 	// Extract innerModel
-//	innerModel = AGMInner::extractInnerModel(worldModel, "world", false); 
-	
-			
-	//INSERT POLYLINES
+	InnerModel *inner  = AGMInner::extractInnerModel(worldModel, "world", false); 
 
-// 	int count = 0;
-// 
-// 	for (auto s:seq)
-// 	{
-// 		auto previousPoint = s[s.size()-1];
-// 		for (auto currentPoint:s)
-// 		{
-// 			QString name = QString("polyline_obs_")+QString::number(count,10);
-// 			qDebug() << __FUNCTION__ << "nombre"<<name;
-// 			QVec ppoint = QVec::vec3(previousPoint.x*1000, 1000, previousPoint.z*1000);
-// 			QVec cpoint = QVec::vec3(currentPoint.x*1000, 1000, currentPoint.z*1000);
-// 			QVec center = (cpoint + ppoint).operator*(0.5);
-// 
-// 			QVec normal = (cpoint-ppoint);
-// 			float dist=normal.norm2();	
-// 			float temp = normal(2);
-// 			normal(2) = normal(0);
-// 			normal(0) = -temp;
-// 
-// 			if (innerModel->getNode(name))
-// 			{
-// 				try
-// 				{
-// 					innerModel->removeNode(name);
-// 				}
-// 
-// 				catch(QString es){ qDebug() << "EXCEPCION" << es;}
-// 			}
-// 
-// 			InnerModelNode *parent = innerModel->getNode(QString("world"));
-// 			if (parent == NULL)
-// 				printf("%s: parent does not exist\n", __FUNCTION__);
-// 			else
-// 			{			
-// 				InnerModelPlane *plane;
-// 				try
-// 				{
-// 					plane  = innerModel->newPlane(name, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
-// 					parent->addChild(plane); 
-// 				}
-// 				catch(QString es)
-// 				{ 
-// 					qDebug() << "EXCEPCION" << es;}
-// 			}
-// 			count++;
-// 			previousPoint=currentPoint;
-// 		}
-// 	}
-// 
+	int count = 0;
+
+	for (auto s:seq)
+	{
+		auto previousPoint = s[s.size()-1];
+		for (auto currentPoint:s)
+		{
+			QString name = QString("polyline_obs_")+QString::number(count,10);
+			qDebug() << __FUNCTION__ << "nombre"<<name;
+			QVec ppoint = QVec::vec3(previousPoint.x*1000, 1000, previousPoint.z*1000);
+			QVec cpoint = QVec::vec3(currentPoint.x*1000, 1000, currentPoint.z*1000);
+			QVec center = (cpoint + ppoint).operator*(0.5);
+
+			QVec normal = (cpoint-ppoint);
+			float dist = normal.norm2();	
+			float temp = normal(2);
+			normal(2) = normal(0);
+			normal(0) = -temp;
+
+			if (inner->getNode(name))
+			{
+				try
+				{
+					inner->removeNode(name);
+				}
+
+				catch(QString es){ qDebug() << "EXCEPCION" << es;}
+			}
+
+			InnerModelNode *parent = inner->getNode(QString("world"));
+			if (parent == NULL)
+				printf("%s: parent does not exist\n", __FUNCTION__);
+			else
+			{			
+				InnerModelPlane *plane;
+				try
+				{
+					plane  = inner-> newPlane(name, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
+					parent->addChild(plane); 
+				}
+				catch(QString es)
+				{ 
+					qDebug() << "EXCEPCION" << es;}
+			}
+			count++;
+			previousPoint=currentPoint;
+		}
+	}
+	
+	innerModel.reset(inner);
+	pathfinder.innerModelChanged(innerModel);	
+	viewer->reloadInnerModel(innerModel);
+
 
 }
 
-void SpecificWorker::checkMovement()
+
+void SpecificWorker::checkMovement(bool newperson)
 {
 	AGMModel::SPtr newM(new AGMModel(worldModel));
 	bool sendChangesAGM = false;
-
+	
+	totalaux = totalpersons;
 	totalpersons.clear();
 		
 	for (int ind = 0; ind < pn.size(); ind++)
@@ -329,20 +347,14 @@ void SpecificWorker::checkMovement()
 			
 		/*	qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << "Rotacion "<< person.angle;
 		*/		
-			if (totalaux.empty())
-			{
-				//This must be changed. If the first human to be inserted is human2 it would be wrong
-				//totalaux.push_back(person);
-				totalaux[ind]=person;
-				movperson = true;
-			}
-			
-			else if  (movperson == false)
+			if  (!newperson)
 			{
 				if ((totalaux[ind].x!=person.x)or(totalaux[ind].z!=person.z)or(totalaux[ind].angle!=person.angle))
+				{
 					movperson = true;
-			
-				totalaux[ind]=person;
+					qDebug()<<"LA PERSONA SE HA MOVIDO";
+				}
+		
 			}
 				
 			/////////////////////checking if the person is looking at the robot /////////////////////////
@@ -365,41 +377,15 @@ void SpecificWorker::checkMovement()
 		}
 	}
 		
-	robotSymbolId = newM->getIdentifierByType("robot");
-	AGMModelSymbol::SPtr robotparent = newM->getParentByLink(robotSymbolId, "RT");
-	AGMModelEdge &edgeRTrobot  = newM->getEdgeByIdentifiers(robotparent->identifier, robotSymbolId, "RT");
 		
-	robot.x=str2float(edgeRTrobot.attributes["tx"])/1000;
-	robot.z=str2float(edgeRTrobot.attributes["tz"])/1000;
-	robot.angle=str2float(edgeRTrobot.attributes["ry"]);
-
-	point.x=robot.x;
-	point.z=robot.z;
-		 
-	if (poserobot.size()==0)
-		poserobot.push_back(point);
-	  
-	else if ((poserobot[poserobot.size()-1].x!=point.x)or(poserobot[poserobot.size()-1].z!=point.z))
-	{  
-		float  dist=sqrt((point.x - poserobot[poserobot.size()-1].x)*(point.x - poserobot[poserobot.size()-1].x)
-				+(point.z - poserobot[poserobot.size()-1].z)*(point.z - poserobot[poserobot.size()-1].z));
-		    
-		totaldist=totaldist + dist;
-		qDebug()<<"Distancia calculada"<<dist<<"Distancia total"<<totaldist;
-		    
-		poserobot.push_back(point);  
-	}
-		
-	
-	changepos=false;
-	
-		
-	if (movperson)
+	if (movperson or newperson)
 	{
 		try
 		{
 			SNGPolylineSeq list = sr.ApplySocialRules(totalpersons);
-			//UpdateInnerModel(list);
+			sequence.clear();
+			sequence = list;
+			UpdateInnerModel(list);
 		}
 		
 		catch( const Ice::Exception &e)
@@ -427,23 +413,26 @@ void SpecificWorker::checkNewPersonInModel()
 	//Check if the person is in the model
  	for (uint i=0; i<pn.size(); i++)
 	{
-		if (pn[i]==false)
-		{	
-			std::string type = "person" + std::to_string(i+1);
-			std::string name = "fakeperson" + std::to_string(i+1);
-			int idx = 0;
-			while ((personSymbolId = worldModel->getIdentifierByType(type, idx++)) != -1)
+		bool found = false;	
+		std::string type = "person" + std::to_string(i+1);
+		std::string name = "fakeperson" + std::to_string(i+1);
+		int idx = 0;
+		while ((personSymbolId = worldModel->getIdentifierByType(type, idx++)) != -1)
+		{
+			if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
 			{
-				if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
-				{
-					pSymbolId[i]=personSymbolId;
-					pn[i]=true;
-					std::cout<<"Person found "<<type<<" "<<name<<" "<<personSymbolId<<std::endl;
-					break;
-				}
+				pSymbolId[i]=personSymbolId;
+				pn[i] = true;
+				found = true;
+				std::cout<<"Person found "<<type<<" "<<name<<" "<<personSymbolId<<std::endl;
+				break;
 			}
 		}
+		
+		if (found == false) pn[i]=false;
+		
 	}
+	checkMovement(true);
 }
 
 // *****************************************************************************************
