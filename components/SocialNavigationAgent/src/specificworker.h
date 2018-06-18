@@ -26,16 +26,15 @@
 #include <vector>
 #include <QFile>
 #include "pathfinder.h"
-// #include <innermodel/innermodelmgr.h>
 #include <actionexecution.h>
 #include <socialrules.h>
-//#include "safe_ptr.h"
 
 //PROBLEMA: con python 3.5 da error al compilar
 
 #include <innermodel/innermodel.h>
 #include <boost/format.hpp>
 
+using namespace std;
 
 #define USE_QTGUI
 #ifdef USE_QTGUI
@@ -70,17 +69,14 @@ public:
 	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
 	
 	SNGPerson robot;	
-	vector <bool> pn = {false,false,false,false,false,false};  // to check if the person is in the world	
-	//vector <bool> ppn = {false,false,false,false,false,false};  // if the person is moving
+// 	vector <bool> pn = {};  // to check if the person is in the world	
+	
 	int32_t personSymbolId;
-	int32_t pSymbolId[6];
+	vector <int32_t> pSymbolId = {};
+
 	
 	SNGPerson person;
 	SNGPersonSeq totalpersons; 
-//	SNGPerson personaux;
-// 	SNGPersonSeq totalp; // quiet person
-// 	SNGPersonSeq totalpmov; //moving person
-	SNGPersonSeq totalaux = {person,person,person,person,person,person}; //to check if the person has changed its position
 	
 	//bool para saber si se ha movido alguna persona
 	bool movperson = false;

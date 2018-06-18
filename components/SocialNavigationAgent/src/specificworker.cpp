@@ -120,6 +120,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	sr.objectInteraction(false);
 	
 	rDebug2(("Leaving setParams"));
+
 	checkNewPersonInModel();
 	return true;
 }
@@ -164,9 +165,14 @@ void SpecificWorker::compute()
 // 	qDebug()<<"Update actionEx";
 // 	aE.Update(action,params);
 // 	
-	checkMovement();
-	checkRobotmov();
 	
+	if (changepos)
+	{
+		checkMovement();
+		checkRobotmov();
+	
+		changepos = false;
+	}
 	first = false;
 }
 
@@ -254,6 +260,102 @@ void SpecificWorker::checkRobotmov()
 }
 
 
+void SpecificWorker::checkNewPersonInModel()
+{	
+	pSymbolId.clear();
+	
+	//Check if the person is in the model
+ 	for (uint i=0; i < 100; i++)
+	{
+		std::string type = "person" + std::to_string(i+1);
+		std::string name = "fakeperson" + std::to_string(i+1);
+		int idx = 0;
+		while ((personSymbolId = worldModel->getIdentifierByType(type, idx++)) != -1)
+		{
+			if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
+			{
+				pSymbolId.push_back(personSymbolId);
+				std::cout<<"Person found "<<type<<" "<<name<<" "<<personSymbolId<<std::endl;
+				break;
+			}
+		}
+			
+	}
+
+	checkMovement();
+}
+
+void SpecificWorker::checkMovement()
+{
+	AGMModel::SPtr newM(new AGMModel(worldModel));
+	bool sendChangesAGM = false;
+	
+	totalpersons.clear();
+ 	
+	if (!pSymbolId.empty())
+	{
+		for (auto id: pSymbolId)
+		{
+			
+			AGMModelSymbol::SPtr personParent = newM->getParentByLink(id, "RT");
+			AGMModelEdge &edgeRT = newM->getEdgeByIdentifiers(personParent->identifier, id, "RT");
+				
+			person.x = str2float(edgeRT.attributes["tx"])/1000;
+			person.z = str2float(edgeRT.attributes["tz"])/1000;
+			person.angle = str2float(edgeRT.attributes["ry"]);
+			//person.vel=str2float(edgeRT.attributes["velocity"]);
+			person.vel = 0;
+			totalpersons.push_back(person);
+				
+		/*	qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << Rotacion "<< person.angle;
+			*/		
+					
+			/////////////////////checking if the person is looking at the robot /////////////////////////
+	// 		try
+	// 		{	
+	// 			qDebug()<<"------------------------------------------------";
+	// 			if (sr.checkHRI(person,ind+1,innerModel.get(),newM) == true)
+	// 			{	
+	// 				qDebug()<<"SEND MODIFICATION PROPOSAL";
+	//					sendChangesAGM = true;
+	// 				
+	// 			}
+	// 			else 
+	// 				qDebug()<<"NO HAY MODIFICACION";
+	// 		}
+	//		catch(...)
+	// 		{	
+	// 		}
+			
+		}
+	}
+ 	
+		
+	try
+	{
+		qDebug()<<"NUMERO DE PERSONAS "<< totalpersons.size();
+		SNGPolylineSeq list = sr.ApplySocialRules(totalpersons);
+		sequence.clear();
+		sequence = list;
+		UpdateInnerModel(list);
+	}
+		
+	catch( const Ice::Exception &e)
+	{ 
+//		std::cout << e << std::endl;
+	}
+
+	if (sendChangesAGM)
+	{	
+		try
+		{
+			sendModificationProposal(newM,worldModel,"-");
+		}
+		catch(...){}
+	}
+}
+
+
 /**
  * \brief The innerModel is extracted from the AGM and the polylines are inserted on it as a set of planes.
  */
@@ -320,124 +422,6 @@ void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq)
 	viewer->reloadInnerModel(innerModel);
 
 
-}
-
-
-void SpecificWorker::checkMovement()
-{
-	AGMModel::SPtr newM(new AGMModel(worldModel));
-	bool sendChangesAGM = false;
-	
-	totalpersons.clear();
- 		
- 	for (int ind = 0; ind < pn.size(); ind++)
- 	{
- 		if (pn[ind])
- 		{	
- 			AGMModelSymbol::SPtr personParent = newM->getParentByLink(pSymbolId[ind], "RT");
- 			AGMModelEdge &edgeRT = newM->getEdgeByIdentifiers(personParent->identifier, pSymbolId[ind], "RT");
- 				
- 			person.x = str2float(edgeRT.attributes["tx"])/1000;
- 			person.z = str2float(edgeRT.attributes["tz"])/1000;
- 			person.angle = str2float(edgeRT.attributes["ry"]);
- 			//person.vel=str2float(edgeRT.attributes["velocity"]);
- 			person.vel = 0;
- 			totalpersons.push_back(person);
- 			
- 		/*	qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << Rotacion "<< person.angle;
-		*/		
-			if (totalaux.empty())
-			{
-				//This must be changed. If the first human to be inserted is human2 it would be wrong
-				//totalaux.push_back(person);
-				totalaux[ind]=person;
-				movperson = true;
-			}
-			
-			else if  (movperson == false)
-			{
-				if ((totalaux[ind].x!=person.x)or(totalaux[ind].z!=person.z)or(totalaux[ind].angle!=person.angle))
-					movperson = true;
-			
-				totalaux[ind]=person;
-			}
-				
-			/////////////////////checking if the person is looking at the robot /////////////////////////
-// 			try
-// 			{	
-// 				qDebug()<<"------------------------------------------------";
-// 				if (sr.checkHRI(person,ind+1,innerModel.get(),newM) == true)
-// 				{	
-// 					qDebug()<<"SEND MODIFICATION PROPOSAL";
-//						sendChangesAGM = true;
-// 					
-// 				}
-// 				else 
-// 					qDebug()<<"NO HAY MODIFICACION";
-// 			}
-// 			catch(...)
-// 			{
-// 		
-// 			}
-		}
-	}
-		
-		
-	if (movperson)
-	{
-		try
-		{
-			SNGPolylineSeq list = sr.ApplySocialRules(totalpersons);
-			sequence.clear();
-			sequence = list;
-			UpdateInnerModel(list);
-		}
-		
-		catch( const Ice::Exception &e)
-		{ 
-//			std::cout << e << std::endl;
-		}
-		
-		movperson=false;
-	}	
-	
-	
-	if (sendChangesAGM)
-	{	
-		try
-		{
-			sendModificationProposal(newM,worldModel,"-");
-		}
-		catch(...){}
-	}
-}
-
-
-void SpecificWorker::checkNewPersonInModel()
-{
-	//Check if the person is in the model
- 	for (uint i=0; i<pn.size(); i++)
-	{
-		bool found = false;	
-		std::string type = "person" + std::to_string(i+1);
-		std::string name = "fakeperson" + std::to_string(i+1);
-		int idx = 0;
-		while ((personSymbolId = worldModel->getIdentifierByType(type, idx++)) != -1)
-		{
-			if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
-			{
-				pSymbolId[i]=personSymbolId;
-				pn[i] = true;
-				found = true;
-				std::cout<<"Person found "<<type<<" "<<name<<" "<<personSymbolId<<std::endl;
-				break;
-			}
-		}
-		
-		if (found == false) pn[i]=false;
-		
-	}
-	checkMovement();
 }
 
 // *****************************************************************************************
@@ -553,6 +537,7 @@ void SpecificWorker::symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence &m
 void SpecificWorker::edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &modifications)
 {
 // 	qDebug()<<"edgesUpdated";
+	changepos=true;
 	QMutexLocker lockIM(mutex);
 	for (auto modification : modifications)
 	{
@@ -591,6 +576,7 @@ void SpecificWorker::edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &mod
 void SpecificWorker::edgeUpdated(const RoboCompAGMWorldModel::Edge& modification)
 {
 // 	qDebug() << "edgeUpdated";
+	changepos=true;
 	QMutexLocker lockIM(mutex);
 	AGMModelConverter::includeIceModificationInInternalModel(modification, worldModel);
 	AGMModelEdge edge;

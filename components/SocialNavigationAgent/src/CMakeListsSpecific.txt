@@ -18,6 +18,6 @@ SET ( SOURCES
   socialrules.cpp
 )
 
-ADD_DEFINITIONS( -g -std=c++17 )
+ADD_DEFINITIONS( -g -std=c++17)
 INCLUDE_DIRECTORIES( /usr/include/libxml2 )
 SET (LIBS ${LIBS} -L/usr/local/lib/ pthread osg osgViewer osgDB fcl  )
