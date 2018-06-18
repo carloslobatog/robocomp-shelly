@@ -120,7 +120,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	sr.objectInteraction(false);
 	
 	rDebug2(("Leaving setParams"));
-	checkMovement(true);
+	checkNewPersonInModel();
 	return true;
 }
 
@@ -323,38 +323,43 @@ void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq)
 }
 
 
-void SpecificWorker::checkMovement(bool newperson)
+void SpecificWorker::checkMovement()
 {
 	AGMModel::SPtr newM(new AGMModel(worldModel));
 	bool sendChangesAGM = false;
 	
-	totalaux = totalpersons;
 	totalpersons.clear();
-		
-	for (int ind = 0; ind < pn.size(); ind++)
-	{
-		if (pn[ind])
-		{	
-			AGMModelSymbol::SPtr personParent = newM->getParentByLink(pSymbolId[ind], "RT");
-			AGMModelEdge &edgeRT = newM->getEdgeByIdentifiers(personParent->identifier, pSymbolId[ind], "RT");
-				
-			person.x = str2float(edgeRT.attributes["tx"])/1000;
-			person.z = str2float(edgeRT.attributes["tz"])/1000;
-			person.angle = str2float(edgeRT.attributes["ry"]);
-			//person.vel=str2float(edgeRT.attributes["velocity"]);
-			person.vel = 0;
-			totalpersons.push_back(person);
-			
-		/*	qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << "Rotacion "<< person.angle;
+ 		
+ 	for (int ind = 0; ind < pn.size(); ind++)
+ 	{
+ 		if (pn[ind])
+ 		{	
+ 			AGMModelSymbol::SPtr personParent = newM->getParentByLink(pSymbolId[ind], "RT");
+ 			AGMModelEdge &edgeRT = newM->getEdgeByIdentifiers(personParent->identifier, pSymbolId[ind], "RT");
+ 				
+ 			person.x = str2float(edgeRT.attributes["tx"])/1000;
+ 			person.z = str2float(edgeRT.attributes["tz"])/1000;
+ 			person.angle = str2float(edgeRT.attributes["ry"]);
+ 			//person.vel=str2float(edgeRT.attributes["velocity"]);
+ 			person.vel = 0;
+ 			totalpersons.push_back(person);
+ 			
+ 		/*	qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << Rotacion "<< person.angle;
 		*/		
-			if  (!newperson)
+			if (totalaux.empty())
+			{
+				//This must be changed. If the first human to be inserted is human2 it would be wrong
+				//totalaux.push_back(person);
+				totalaux[ind]=person;
+				movperson = true;
+			}
+			
+			else if  (movperson == false)
 			{
 				if ((totalaux[ind].x!=person.x)or(totalaux[ind].z!=person.z)or(totalaux[ind].angle!=person.angle))
-				{
 					movperson = true;
-					qDebug()<<"LA PERSONA SE HA MOVIDO";
-				}
-		
+			
+				totalaux[ind]=person;
 			}
 				
 			/////////////////////checking if the person is looking at the robot /////////////////////////
@@ -378,7 +383,7 @@ void SpecificWorker::checkMovement(bool newperson)
 	}
 		
 		
-	if (movperson or newperson)
+	if (movperson)
 	{
 		try
 		{
@@ -432,7 +437,7 @@ void SpecificWorker::checkNewPersonInModel()
 		if (found == false) pn[i]=false;
 		
 	}
-	checkMovement(true);
+	checkMovement();
 }
 
 // *****************************************************************************************

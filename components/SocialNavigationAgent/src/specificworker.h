@@ -139,7 +139,7 @@ public:
 	//float go(const TargetPose &target){pathfinder.go(target.x, -target.z);  return 0.0;};
 
 	void checkNewPersonInModel();
-	void checkMovement(bool newperson = false);
+	void checkMovement();
 	void checkRobotmov();
 	
 public slots:
