@@ -68,9 +68,7 @@ public:
 	SNGPolylineSeq sequence;
 	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
 	
-	SNGPerson robot;	
-// 	vector <bool> pn = {};  // to check if the person is in the world	
-	
+	SNGPerson robot;
 	int32_t personSymbolId;
 	vector <int32_t> pSymbolId = {};
 

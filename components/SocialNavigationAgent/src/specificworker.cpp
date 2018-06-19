@@ -363,7 +363,7 @@ void SpecificWorker::checkMovement()
 void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq)
 {
 	QMutexLocker locker(mutex);
-	qDebug() << __FUNCTION__ << "UpdadeInnerModel";
+	qDebug() << "----------------------"<< __FUNCTION__ << "----------------------";
 	
 	// Extract innerModel
 	InnerModel *inner  = AGMInner::extractInnerModel(worldModel, "world", false); 
@@ -503,16 +503,15 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 	QMutexLocker l(mutex);
 	
     AGMModelConverter::fromIceToInternal(modification, worldModel);
-	//check if structural change include new Person
-	checkNewPersonInModel();
-	
+
 	InnerModel *inner = AGMInner::extractInnerModel(worldModel, "world", false);
 	innerModel.reset(inner);
 	pathfinder.innerModelChanged(innerModel);
 	
-    //reload viewer
+	//reload viewer
 	viewer->reloadInnerModel(innerModel);
-   
+	//check if structural change include new Person
+	checkNewPersonInModel();
 	printf("FIN structuralChange>>\n");
 }
 
