@@ -501,17 +501,25 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 {
 	qDebug()<<"StructuralChange";
 	QMutexLocker l(mutex);
+	static bool first = true;
 	
     AGMModelConverter::fromIceToInternal(modification, worldModel);
 
-	InnerModel *inner = AGMInner::extractInnerModel(worldModel, "world", false);
-	innerModel.reset(inner);
-	pathfinder.innerModelChanged(innerModel);
+	if (first)
+	{
+		InnerModel *inner = AGMInner::extractInnerModel(worldModel, "world", false);
+		innerModel.reset(inner);
+		pathfinder.innerModelChanged(innerModel);
+		viewer->reloadInnerModel(innerModel);
+		first = false;
+	}
+	
+	checkNewPersonInModel();
 	
 	//reload viewer
-	viewer->reloadInnerModel(innerModel);
+	
 	//check if structural change include new Person
-	checkNewPersonInModel();
+	
 	printf("FIN structuralChange>>\n");
 }
 
