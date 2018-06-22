@@ -114,8 +114,7 @@ void PathPlanner::run(std::function<Road&()> getRoad, std::function<void()> rele
 void PathPlanner::reloadInnerModel(const InnerPtr &innerModel_)
 {
 	sampler.lock();
-		sampler.reloadInnerModel(innerModel_);
-/*		constructGraph(fmap, TILE_SIZE);*/		
+		sampler.reloadInnerModel(innerModel_);	
 	sampler.unlock();
 	
 // 	innerModel.reset(innerModel_.get());
@@ -315,9 +314,27 @@ void PathPlanner::constructGraph(FMap &fmap, uint tile_size)
 			bool free = sampler.checkRobotValidStateAtTargetFast(QVec::vec3(i,10,j),QVec::zeros(3));
 			fmap.emplace( Key(i,j),Value{k++,free,1}); 
  		}
+ 		
 // 	for(FMap::iterator iter = fmap.begin(); iter != fmap.end(); ++iter){
 // 		std::cout << iter->first << " " << iter->second.free << std::endl;
 // 	}
+	
+	static bool first = true;
+
+	if (first)
+	{
+		for(FMap::iterator iter = fmap.begin(); iter != fmap.end(); ++iter)
+		{
+			if (iter->second.free == false)
+			{
+				point.x = iter->first.x;
+				point.z = iter->first.z;
+				initialp_list.push_back(point);
+			}
+		}
+
+		first = false;
+	}
 
 	set_map_dirty_bit(true);
 		
@@ -327,27 +344,53 @@ void PathPlanner::constructGraph(FMap &fmap, uint tile_size)
 
 void PathPlanner::modifyGraph(FMap &fmap,LocalPolyLineList polylines)
 {
-	if (!polylines.empty())
+ 	occupied_list.clear();
+	
+	for (auto poly : polylines)
 	{
-		for (auto poly:polylines)
+		QPolygonF qp;					
+		for (auto p:poly)
 		{
-			QPolygonF qp;					
-			for (auto p:poly)
-			{
-				qp << QPointF(p.x,p.z);
-			}	
-		
-			for(FMap::iterator iter = fmap.begin(); iter != fmap.end(); ++iter)
-			{
-				if (qp.containsPoint(QPointF(iter->first.x,iter->first.z),Qt::OddEvenFill))	
-					iter->second.free = false;
-				else
-					iter->second.free = true;
-				
-				std::cout << iter->first << " " << iter->second.free << std::endl;
-			} 	
+			qp << QPointF(p.x,p.z);
 		}	
+		
+		for(FMap::iterator iter = fmap.begin(); iter != fmap.end(); ++iter)
+		{
+			if (qp.containsPoint(QPointF(iter->first.x,iter->first.z),Qt::OddEvenFill))
+			{
+				point.x = iter->first.x;
+				point.z = iter->first.z;
+				occupied_list.push_back(point);
+				
+				iter->second.free = false;
+			}
+		} 	
+	}	
+
+	for(FMap::iterator iter = fmap.begin(); iter != fmap.end(); ++iter)
+	{
+		point.x = iter->first.x;
+		point.z = iter->first.z;
+		
+		bool in_initial = false;
+		bool in_occupied = false;
+		
+		for (auto p : initialp_list)
+		{
+			if (p.x == point.x and p.z == point.z)
+				in_initial = true;
+		}
+		
+		for (auto p : occupied_list)
+		{
+			if (p.x == point.x and p.z == point.z)
+			in_occupied = true;
+		}
+		
+		  if (!in_initial and !in_occupied) iter->second.free = true;	
 	}
+	set_map_dirty_bit(true);
+	
 	
 }
 

@@ -115,6 +115,12 @@ class PathPlanner
 		typedef	std::unordered_map<PathPlanner::Key, PathPlanner::Value, PathPlanner::KeyHasher> FMap;	
 		FMap fmap;
 		
+		///////////////////////////////////////
+		struct Point { float x; float z;};
+		Point point;
+		vector <Point> initialp_list;
+		vector <Point> occupied_list;
+		//////////////////////////////////////
 		void modifyGraph(FMap &fmap,LocalPolyLineList polylines);
 			
 	private:
