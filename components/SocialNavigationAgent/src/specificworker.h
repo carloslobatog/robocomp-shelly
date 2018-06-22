@@ -28,6 +28,7 @@
 #include "pathfinder.h"
 #include <actionexecution.h>
 #include <socialrules.h>
+#include "safepolylist.h"
 
 //PROBLEMA: con python 3.5 da error al compilar
 
@@ -67,6 +68,8 @@ public:
 	
 	SNGPolylineSeq sequence;
 	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
+	
+ 	LocalPolyLineList polyLineList;
 	
 	SNGPerson robot;
 	int32_t personSymbolId;
@@ -171,6 +174,7 @@ private:
 	#ifdef USE_QTGUI
 		InnerViewerPtr viewer;
 	#endif
+		
 	
 //CHECK
 	//void updateRobotsCognitiveLocation();

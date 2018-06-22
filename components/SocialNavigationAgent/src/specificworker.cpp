@@ -66,6 +66,7 @@ SpecificWorker::~SpecificWorker()
 
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 {
+
 	//Extract robot name 
 	try{ robotname = paramsL.at("RobotName").value;} 
 	catch(const std::exception &e){ std::cout << e.what() << "SpecificWorker::SpecificWorker - Robot name defined in config. Using default 'robot' " << std::endl;}
@@ -84,7 +85,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	catch(...)
 	{	rDebug2(("The executive is probably not running, waiting for first AGM model publication...")); }
 		
-	//innerModel = std::make_shared<InnerModel>("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml");
+// 	innerModel = std::make_shared<InnerModel>("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml");
 	
 
 //	innerModel->getNode<InnerModelJoint>("armX1")->setAngle(-1);
@@ -335,9 +336,24 @@ void SpecificWorker::checkMovement()
 	{
 		qDebug()<<"NUMERO DE PERSONAS "<< totalpersons.size();
 		SNGPolylineSeq list = sr.ApplySocialRules(totalpersons);
+		
 		sequence.clear();
 		sequence = list;
-		UpdateInnerModel(list);
+		
+		polyLineList.clear();
+		for (auto s: list)
+		{ 
+			LocalPolyLine poly;
+			for (auto p: s)
+			{
+				LocalPoint punto = {p.x*1000, p.z*1000};
+				poly.push_back(punto);
+			}
+			polyLineList.push_back(poly);
+		}
+				
+// 		UpdateInnerModel(list);
+		pathfinder.innerModelChanged(innerModel, polyLineList);
 	}
 		
 	catch( const Ice::Exception &e)
@@ -362,65 +378,67 @@ void SpecificWorker::checkMovement()
 
 void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq)
 {
-	QMutexLocker locker(mutex);
-	qDebug() << "----------------------"<< __FUNCTION__ << "----------------------";
+// 	QMutexLocker locker(mutex);
+// 	qDebug() << "----------------------"<< __FUNCTION__ << "----------------------";
+// 	
+// 	// Extract innerModel
+// 	InnerModel *inner  = AGMInner::extractInnerModel(worldModel, "world", false); 
+// 
+// 	int count = 0;
+// 
+// 	for (auto s:seq)
+// 	{
+// 		auto previousPoint = s[s.size()-1];
+// 		for (auto currentPoint:s)
+// 		{
+// 			QString name = QString("polyline_obs_")+QString::number(count,10);
+// 			qDebug() << __FUNCTION__ << "nombre"<<name;
+// 			QVec ppoint = QVec::vec3(previousPoint.x*1000, 1000, previousPoint.z*1000);
+// 			QVec cpoint = QVec::vec3(currentPoint.x*1000, 1000, currentPoint.z*1000);
+// 			QVec center = (cpoint + ppoint).operator*(0.5);
+// 
+// 			QVec normal = (cpoint-ppoint);
+// 			float dist = normal.norm2();	
+// 			float temp = normal(2);
+// 			normal(2) = normal(0);
+// 			normal(0) = -temp;
+// 
+// 			if (inner->getNode(name))
+// 			{
+// 				try
+// 				{
+// 					inner->removeNode(name);
+// 				}
+// 
+// 				catch(QString es){ qDebug() << "EXCEPCION" << es;}
+// 			}
+// 
+// 			InnerModelNode *parent = inner->getNode(QString("world"));
+// 			if (parent == NULL)
+// 				printf("%s: parent does not exist\n", __FUNCTION__);
+// 			else
+// 			{			
+// 				InnerModelPlane *plane;
+// 				try
+// 				{
+// 					plane  = inner-> newPlane(name, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
+// 					parent->addChild(plane); 
+// 				}
+// 				catch(QString es)
+// 				{ 
+// 					qDebug() << "EXCEPCION" << es;}
+// 			}
+// 			count++;
+// 			previousPoint=currentPoint;
+// 		}
+// 	}
+// 	
+// 	
+// 	innerModel.reset(inner);
+// 	pathfinder.innerModelChanged(innerModel, polyLineList);
+// 	
+// 	viewer->reloadInnerModel(innerModel);
 	
-	// Extract innerModel
-	InnerModel *inner  = AGMInner::extractInnerModel(worldModel, "world", false); 
-
-	int count = 0;
-
-	for (auto s:seq)
-	{
-		auto previousPoint = s[s.size()-1];
-		for (auto currentPoint:s)
-		{
-			QString name = QString("polyline_obs_")+QString::number(count,10);
-			qDebug() << __FUNCTION__ << "nombre"<<name;
-			QVec ppoint = QVec::vec3(previousPoint.x*1000, 1000, previousPoint.z*1000);
-			QVec cpoint = QVec::vec3(currentPoint.x*1000, 1000, currentPoint.z*1000);
-			QVec center = (cpoint + ppoint).operator*(0.5);
-
-			QVec normal = (cpoint-ppoint);
-			float dist = normal.norm2();	
-			float temp = normal(2);
-			normal(2) = normal(0);
-			normal(0) = -temp;
-
-			if (inner->getNode(name))
-			{
-				try
-				{
-					inner->removeNode(name);
-				}
-
-				catch(QString es){ qDebug() << "EXCEPCION" << es;}
-			}
-
-			InnerModelNode *parent = inner->getNode(QString("world"));
-			if (parent == NULL)
-				printf("%s: parent does not exist\n", __FUNCTION__);
-			else
-			{			
-				InnerModelPlane *plane;
-				try
-				{
-					plane  = inner-> newPlane(name, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
-					parent->addChild(plane); 
-				}
-				catch(QString es)
-				{ 
-					qDebug() << "EXCEPCION" << es;}
-			}
-			count++;
-			previousPoint=currentPoint;
-		}
-	}
-	
-	innerModel.reset(inner);
-	pathfinder.innerModelChanged(innerModel);	
-	viewer->reloadInnerModel(innerModel);
-
 
 }
 
@@ -501,18 +519,15 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 {
 	qDebug()<<"StructuralChange";
 	QMutexLocker l(mutex);
-	static bool first = true;
 	
     AGMModelConverter::fromIceToInternal(modification, worldModel);
 
-	if (first)
-	{
-		InnerModel *inner = AGMInner::extractInnerModel(worldModel, "world", false);
-		innerModel.reset(inner);
-		pathfinder.innerModelChanged(innerModel);
-		viewer->reloadInnerModel(innerModel);
-		first = false;
-	}
+	InnerModel *inner = AGMInner::extractInnerModel(worldModel, "world", false);
+	innerModel.reset(inner);
+	pathfinder.innerModelChanged(innerModel,polyLineList);
+	viewer->reloadInnerModel(innerModel);
+
+	
 	
 	checkNewPersonInModel();
 	

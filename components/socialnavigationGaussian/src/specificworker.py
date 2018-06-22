@@ -34,7 +34,7 @@ import GaussianMix as GM
 import checkboundaries as ck
 from PySide.QtCore import QRect, QRectF, Qt, QSize, QSizeF, QPointF, QLineF
 from PySide.QtGui import QTransform, QPainter, QPolygonF
-
+import ConcaveHull as CH
 
 import math
 
@@ -62,45 +62,13 @@ def getPolyline(grid, resolution, lx_inf, ly_inf):
             puntos[0] = puntos[0] * resolution + lx_inf
             puntos[1] = puntos[1] * resolution + ly_inf
 
-
         points = np.asarray(lista)
-        hull = ConvexHull(points)
-        ret.append(points[hull.vertices])
-        """""
-        # interpolar los puntos
-        threshold = 0.1
-        #print '-----------------', threshold
-        v = []
-        prev = points[hull.vertices][-1]
-        for curr in points[hull.vertices]:
-            dx = curr[0] - prev[0]
-            dy = curr[1] - prev[1]
-            dist = math.sqrt(dx * dx + dy * dy)
-         #   print prev, curr, dist
-
-            if dist > threshold:
-                iters = dist / threshold
-          #      print 'dentro', iters, 'dx', dx, 'dy', dy
-                for iter in xrange(int(iters)):
-                    wx = prev[0] + iter * dx / iters
-                    wy = prev[1] + iter * dy / iters
-           #         print '  ', wx, wy
-                    #dx2 = wx - curr[0]
-                    #dy2 = wy - curr[1]
-                    #dist2 = math.sqrt(dx2 * dx2 + dy2 * dy2)
-
-                    #if dist2 > threshold + 0.001:
-                    #v.append([wx, wy])
-
-                   # else:
-                    #    break
-
-                    v.append([wx, wy])
-            v.append(curr)
-            prev = curr
-
-        ret.append(v)
-        """
+        ##ConcaveHull --> Mas puntos pero la forma se aproxima mas
+        hull = CH.concaveHull(points,3)
+        ret.append(hull)
+        ## ConvexHull --> Menos puntos pero la forma es el contorno
+        # hull = ConvexHull(points)
+        # ret.append(points[hull.vertices])
 
     return ret
 
@@ -110,7 +78,6 @@ class Person(object):
     y = 0
     th = 0
     vel = 0
-
 
     _radius = 0.30
 
@@ -124,19 +91,6 @@ class Person(object):
 
 
     def draw(self, sigma_h,sigma_r,sigma_s,rot, drawPersonalSpace=False):
-        #numero de curvas de contorno
-        # nc = 10
-        # if v <= 20:
-        #     aprox = 0
-        # else:
-        #     if v == 100:
-        #         aprox = nc - 2
-        #     else:
-        #         aprox = int(v/10) - 1
-
-
-            #numero de curvas de contorno que se van a dibujar
-
             # define grid.
         npts = 50
         x = np.linspace(self.x - 4, self.x + 4, npts)
@@ -271,9 +225,9 @@ class SpecificWorker(GenericWorker):
         ##Limites de la representacion
 
         lx_inf = -6
-        lx_sup = 8
+        lx_sup = 10
         ly_inf = -6
-        ly_sup = 8
+        ly_sup = 10
         """""
         ##cambio los limites para los otros valores de sigma
         lx_inf = 0
@@ -323,8 +277,6 @@ class SpecificWorker(GenericWorker):
         np.savetxt('log.txt', grid, fmt='%i')
 
         ###########################LEO EL GRID Y SEPARO LAS POLILINEAS, DESPUES SE HACE CONVEXHULL####################################
-        ##el convex hull se hace para obtener los puntos de la polilinea ordenados ya que los necesitamos asi para el laser
-
         polylines = []
         totalpuntosorden = getPolyline(grid, resolution, lx_inf, ly_inf)
 

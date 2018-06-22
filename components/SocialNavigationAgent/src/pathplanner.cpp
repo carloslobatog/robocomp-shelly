@@ -115,9 +115,13 @@ void PathPlanner::reloadInnerModel(const InnerPtr &innerModel_)
 {
 	sampler.lock();
 		sampler.reloadInnerModel(innerModel_);
+/*		constructGraph(fmap, TILE_SIZE);*/		
 	sampler.unlock();
+	
 // 	innerModel.reset(innerModel_.get());
 	innerModel = innerModel_;
+
+	
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -311,11 +315,40 @@ void PathPlanner::constructGraph(FMap &fmap, uint tile_size)
 			bool free = sampler.checkRobotValidStateAtTargetFast(QVec::vec3(i,10,j),QVec::zeros(3));
 			fmap.emplace( Key(i,j),Value{k++,free,1}); 
  		}
-// 	for(FMap::iterator iter = fmap.begin(); iter != fmap.end(); ++iter)
-// 		std::cout << iter->first << " " << iter->second.id << std::endl;
+// 	for(FMap::iterator iter = fmap.begin(); iter != fmap.end(); ++iter){
+// 		std::cout << iter->first << " " << iter->second.free << std::endl;
+// 	}
 
 	set_map_dirty_bit(true);
+		
 	qDebug() << __FILE__ << __FUNCTION__ << "Map size: " << fmap.size();	
+}
+
+
+void PathPlanner::modifyGraph(FMap &fmap,LocalPolyLineList polylines)
+{
+	if (!polylines.empty())
+	{
+		for (auto poly:polylines)
+		{
+			QPolygonF qp;					
+			for (auto p:poly)
+			{
+				qp << QPointF(p.x,p.z);
+			}	
+		
+			for(FMap::iterator iter = fmap.begin(); iter != fmap.end(); ++iter)
+			{
+				if (qp.containsPoint(QPointF(iter->first.x,iter->first.z),Qt::OddEvenFill))	
+					iter->second.free = false;
+				else
+					iter->second.free = true;
+				
+				std::cout << iter->first << " " << iter->second.free << std::endl;
+			} 	
+		}	
+	}
+	
 }
 
 

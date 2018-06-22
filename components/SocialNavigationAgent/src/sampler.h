@@ -65,7 +65,12 @@ class Sampler
 		bool searchRobotValidStateCloseToTarget(QVec &target);
 		QRectF getOuterRegion() const { return outerRegion;};
 
-		void reloadInnerModel(const std::shared_ptr<InnerModel> &other) { innerModelSampler = other;};	
+		void reloadInnerModel(const std::shared_ptr<InnerModel> &other) 
+		{ 
+			innerModelSampler = other;
+// 			robotNodes.clear(); restNodes.clear(); 
+// 			recursiveIncludeMeshes(innerModelSampler->getRoot(), "robot", false, robotNodes, restNodes, excludedNodes);
+		};	
 		
 	private:
 		//¿TIENE QUE SER MUTABLE?

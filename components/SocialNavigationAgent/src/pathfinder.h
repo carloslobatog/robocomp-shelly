@@ -34,6 +34,7 @@
 #include "navigationstate.h"
 //#include <innermodel/innermodelmgr.h>
 #include <qlog/qlog.h>
+#include "safepolylist.h"
 
 #ifdef USE_QTGUI
 	#include "innerviewer.h"
@@ -90,7 +91,7 @@ namespace robocomp
 				////////////////////////////
 				void go(float x, float z, const ParameterMap &parameters = ParameterMap());
 				//void setInnerModel(InnerModel* innerModel_){ innerModel = innerModel_; };
-				void innerModelChanged(const std::shared_ptr<InnerModel> &innerModel_);
+				void innerModelChanged(const std::shared_ptr<InnerModel> &innerModel_, LocalPolyLineList polylines);
 						
 				void run();
 				///////////////////////////

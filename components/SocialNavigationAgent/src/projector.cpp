@@ -138,7 +138,7 @@ bool Projector::update(Road &road,
 	/////////////////////////////////////////////
 	//qDebug() << "Projector::computeForces";
 //TODO
-    //computeForces(road, laserData);
+//     computeForces(road, laserData);
 
     /////////////////////////////////////////////
 	//Delete half the tail behind, if greater than 6, to release resources
@@ -267,78 +267,78 @@ RoboCompLaser::TLaserData Projector::unionpoligonos(RoboCompLaser::TLaserData la
 	return laserCombined;
 } */
 
-RoboCompLaser::TLaserData Projector::unionpoligonos(RoboCompLaser::TLaserData laserData, SafePolyList &safePolyList)
-{
-//   QLine2D laserline(QVec::vec2(0,0), QVec::vec2(4,0));
-//   QVec intersection= laserline.intersectionPoint(QLine2D(QVec::vec2(2,2),QVec::vec2(2,-2)));
-//   qDebug()<<intersection;
-  
-	RoboCompLaser::TLaserData laserCombined; 
-	laserCombined = laserData;
-	
-	// For each polyline
-	LocalPolyLineList l = safePolyList.read(); 
-	
-	//Primero se pasa la polilinea a polares para sacar el minimo y el maximo
-	for (auto polyline : l)
-	{
-		float min = std::numeric_limits<float>::max();
-		float max = std::numeric_limits<float>::min(); 
-		
-		for (auto polylinePoint: polyline)
-		{
-			LocalPointPol lPol;
-			QVec pInLaser = innerModel->transform("laser", QVec::vec3(polylinePoint.x, 0, polylinePoint.z), "world");
-			lPol.dist  = sqrt(pInLaser.x()*pInLaser.x() + pInLaser.z()*pInLaser.z());
-			lPol.angle = atan2(pInLaser.x(), pInLaser.z());	
-			if( lPol.angle < min ) min = lPol.angle;
-			if( lPol.angle > max ) max = lPol.angle;
-		}
-	
-	//Recorremos todas las muestras del laser
-		for (auto &laserSample: laserCombined)
-		{ //Compruebo que la muestra del laser corta a la polilinea. Es decir si esta comprendida entre el maximo y el minimo de antes
-			if (laserSample.angle >= min and laserSample.angle <= max and fabs(max-min)<3.14) 
-			{
-				//QVec lasercart =innerModel->laserTo("laser", "laser", laserSample.dist, laserSample.angle);
-				QVec lasercart = innerModel->getNode<InnerModelLaser>("laser")->laserTo("laser", laserSample.dist, laserSample.angle);
-				
-				//recta que une el 0,0 con el punto del laser
-				QLine2D laserline(QVec::vec2(0,0), QVec::vec2(lasercart.x(), lasercart.z()));
-				
-				auto previousPoint = polyline[polyline.size()-1];
-				QVec previousPointInLaser = innerModel->transform("laser", (QVec::vec3(previousPoint.x, 0, previousPoint.z)), "world");	
-				// For each polyline's point
-				
-				for (auto polylinePoint: polyline)
-				{
-					QVec currentPointInLaser = innerModel->transform("laser", (QVec::vec3(polylinePoint.x, 0, polylinePoint.z)), "world");
-					QVec intersection= laserline.intersectionPoint(QLine2D(QVec::vec2(previousPointInLaser.x(),previousPointInLaser.z()),QVec::vec2(currentPointInLaser.x(),currentPointInLaser.z())));
-					
-					//Una vez sacada la interseccion se comprueba que esta dentro del segmento. Para ello se calculan los angulos de los puntos actual y previo
-					float pAngle = atan2(previousPointInLaser.x(), previousPointInLaser.z());
-					float cAngle = atan2(currentPointInLaser.x(), currentPointInLaser.z());
-					
-					const float m = std::min<float>(cAngle, pAngle);
-					const float M = std::max<float>(cAngle, pAngle);
-					//printf("angulo: %f   p:%f  c:%f\n", laserSample.angle, cAngle, pAngle);
-					
-					if (laserSample.angle >= m and laserSample.angle <= M and fabs(M-m)<3.14)
-					{
-						float distint=sqrt (pow(intersection.x(),2)+pow(intersection.y(),2));					
-						if (distint<laserSample.dist) laserSample.dist= distint;
-					}		
-						
-
-					
-				previousPointInLaser=currentPointInLaser;
-				
-				}
-			}
-		}
-	}
-	return laserCombined;
-} 
+// RoboCompLaser::TLaserData Projector::unionpoligonos(RoboCompLaser::TLaserData laserData, SafePolyList &safePolyList)
+// {
+// //   QLine2D laserline(QVec::vec2(0,0), QVec::vec2(4,0));
+// //   QVec intersection= laserline.intersectionPoint(QLine2D(QVec::vec2(2,2),QVec::vec2(2,-2)));
+// //   qDebug()<<intersection;
+//   
+// 	RoboCompLaser::TLaserData laserCombined; 
+// 	laserCombined = laserData;
+// 	
+// 	// For each polyline
+// 	LocalPolyLineList l = safePolyList.read(); 
+// 	
+// 	//Primero se pasa la polilinea a polares para sacar el minimo y el maximo
+// 	for (auto polyline : l)
+// 	{
+// 		float min = std::numeric_limits<float>::max();
+// 		float max = std::numeric_limits<float>::min(); 
+// 		
+// 		for (auto polylinePoint: polyline)
+// 		{
+// 			LocalPointPol lPol;
+// 			QVec pInLaser = innerModel->transform("laser", QVec::vec3(polylinePoint.x, 0, polylinePoint.z), "world");
+// 			lPol.dist  = sqrt(pInLaser.x()*pInLaser.x() + pInLaser.z()*pInLaser.z());
+// 			lPol.angle = atan2(pInLaser.x(), pInLaser.z());	
+// 			if( lPol.angle < min ) min = lPol.angle;
+// 			if( lPol.angle > max ) max = lPol.angle;
+// 		}
+// 	
+// 	//Recorremos todas las muestras del laser
+// 		for (auto &laserSample: laserCombined)
+// 		{ //Compruebo que la muestra del laser corta a la polilinea. Es decir si esta comprendida entre el maximo y el minimo de antes
+// 			if (laserSample.angle >= min and laserSample.angle <= max and fabs(max-min)<3.14) 
+// 			{
+// 				//QVec lasercart =innerModel->laserTo("laser", "laser", laserSample.dist, laserSample.angle);
+// 				QVec lasercart = innerModel->getNode<InnerModelLaser>("laser")->laserTo("laser", laserSample.dist, laserSample.angle);
+// 				
+// 				//recta que une el 0,0 con el punto del laser
+// 				QLine2D laserline(QVec::vec2(0,0), QVec::vec2(lasercart.x(), lasercart.z()));
+// 				
+// 				auto previousPoint = polyline[polyline.size()-1];
+// 				QVec previousPointInLaser = innerModel->transform("laser", (QVec::vec3(previousPoint.x, 0, previousPoint.z)), "world");	
+// 				// For each polyline's point
+// 				
+// 				for (auto polylinePoint: polyline)
+// 				{
+// 					QVec currentPointInLaser = innerModel->transform("laser", (QVec::vec3(polylinePoint.x, 0, polylinePoint.z)), "world");
+// 					QVec intersection= laserline.intersectionPoint(QLine2D(QVec::vec2(previousPointInLaser.x(),previousPointInLaser.z()),QVec::vec2(currentPointInLaser.x(),currentPointInLaser.z())));
+// 					
+// 					//Una vez sacada la interseccion se comprueba que esta dentro del segmento. Para ello se calculan los angulos de los puntos actual y previo
+// 					float pAngle = atan2(previousPointInLaser.x(), previousPointInLaser.z());
+// 					float cAngle = atan2(currentPointInLaser.x(), currentPointInLaser.z());
+// 					
+// 					const float m = std::min<float>(cAngle, pAngle);
+// 					const float M = std::max<float>(cAngle, pAngle);
+// 					//printf("angulo: %f   p:%f  c:%f\n", laserSample.angle, cAngle, pAngle);
+// 					
+// 					if (laserSample.angle >= m and laserSample.angle <= M and fabs(M-m)<3.14)
+// 					{
+// 						float distint=sqrt (pow(intersection.x(),2)+pow(intersection.y(),2));					
+// 						if (distint<laserSample.dist) laserSample.dist= distint;
+// 					}		
+// 						
+// 
+// 					
+// 				previousPointInLaser=currentPointInLaser;
+// 				
+// 				}
+// 			}
+// 		}
+// 	}
+// 	return laserCombined;
+// } 
 
 bool Projector::checkVisiblePoints(Road &road, const RoboCompLaser::TLaserData &laserData)
 {

@@ -30,6 +30,9 @@
 #include <boost/functional/hash.hpp>
 #include <qlog/qlog.h>
 #include "navigationstate.h"
+#include "safepolylist.h"
+#include <QPolygon>
+#include <QPoint>
 
  using std::chrono::duration_cast;
  using std::chrono::milliseconds;
@@ -107,11 +110,13 @@ class PathPlanner
 		bool get_map_dirty_bit() const 							{return map_dirty_bit;};  
 		void set_map_dirty_bit(bool v=true)						{map_dirty_bit = v;};
 		void reloadInnerModel(const InnerPtr &innerModel_);
-	
+		
+		
 		typedef	std::unordered_map<PathPlanner::Key, PathPlanner::Value, PathPlanner::KeyHasher> FMap;	
-	
 		FMap fmap;
-	
+		
+		void modifyGraph(FMap &fmap,LocalPolyLineList polylines);
+			
 	private:
 		std::shared_ptr<CurrentTarget> currenttarget;
 		InnerPtr innerModel;
@@ -142,6 +147,8 @@ class PathPlanner
 		 * 
 		 */
 		void constructGraph(FMap &fmap, unsigned tile_size);
+	
+		
 		Key pointToGrid(const QVec &p);
 		std::vector<std::pair<PathPlanner::Key,PathPlanner::Value> > neighboors(const Key &k) const;
 		std::list<QVec> djikstra(const FMap &graph, Key const& source, Key const& target);
