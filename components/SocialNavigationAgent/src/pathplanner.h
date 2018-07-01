@@ -17,7 +17,7 @@
 
 #ifndef PATHPLANNER_H
 #define PATHPLANNER_H
-
+#include <genericworker.h>
 #include <iostream>
 #include <thread>
 #include <memory>
@@ -77,7 +77,7 @@ class PathPlanner
 		{
 			uint id;
 			bool free;
-			int cost;
+			float cost;
 		};
 
 		struct KeyHasher
@@ -107,7 +107,7 @@ class PathPlanner
 						const std::shared_ptr<RoboCompCommonBehavior::ParameterList> &configparams);
 		void run(std::function<Road&()> handler, std::function<void()> releaseRoad);
 		void update(Road &road);
-		bool get_map_dirty_bit() const 							{return map_dirty_bit;};  
+		bool get_map_dirty_bit() const 						{return map_dirty_bit;};  
 		void set_map_dirty_bit(bool v=true)						{map_dirty_bit = v;};
 		void reloadInnerModel(const InnerPtr &innerModel_);
 		
@@ -121,7 +121,7 @@ class PathPlanner
 		vector <Point> initialp_list;
 		vector <Point> occupied_list;
 		//////////////////////////////////////
-		void modifyGraph(FMap &fmap,LocalPolyLineList polylines);
+		void modifyGraph(SNGPolylineSeq polylines);
 			
 	private:
 		std::shared_ptr<CurrentTarget> currenttarget;

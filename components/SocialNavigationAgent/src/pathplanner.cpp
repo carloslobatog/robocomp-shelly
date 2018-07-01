@@ -316,7 +316,7 @@ void PathPlanner::constructGraph(FMap &fmap, uint tile_size)
  		}
  		
 // 	for(FMap::iterator iter = fmap.begin(); iter != fmap.end(); ++iter){
-// 		std::cout << iter->first << " " << iter->second.free << std::endl;
+// 		std::cout << iter->first << " " << "COSTE " << iter->second.cost << std::endl;
 // 	}
 	
 	static bool first = true;
@@ -325,6 +325,7 @@ void PathPlanner::constructGraph(FMap &fmap, uint tile_size)
 	{
 		for(FMap::iterator iter = fmap.begin(); iter != fmap.end(); ++iter)
 		{
+			
 			if (iter->second.free == false)
 			{
 				point.x = iter->first.x;
@@ -342,7 +343,7 @@ void PathPlanner::constructGraph(FMap &fmap, uint tile_size)
 }
 
 
-void PathPlanner::modifyGraph(FMap &fmap,LocalPolyLineList polylines)
+void PathPlanner::modifyGraph(SNGPolylineSeq polylines)
 {
  	occupied_list.clear();
 	
@@ -351,7 +352,7 @@ void PathPlanner::modifyGraph(FMap &fmap,LocalPolyLineList polylines)
 		QPolygonF qp;					
 		for (auto p:poly)
 		{
-			qp << QPointF(p.x,p.z);
+			qp << QPointF(p.x*1000,p.z*1000);
 		}	
 		
 		for(FMap::iterator iter = fmap.begin(); iter != fmap.end(); ++iter)

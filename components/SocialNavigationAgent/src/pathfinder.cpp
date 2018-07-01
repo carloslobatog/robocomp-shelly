@@ -94,7 +94,7 @@ void PathFinder::run()
 }
 
 
-void PathFinder::innerModelChanged (const std::shared_ptr<InnerModel> &innerModel_,LocalPolyLineList polylines)
+void PathFinder::innerModelChanged (const std::shared_ptr<InnerModel> &innerModel_,SNGPolylineSeq sequence)
 {
 	innerModel = innerModel_;
 	qDebug()<<__FUNCTION__<< "--------------ESPERANDO GET ROAD -----------------------";
@@ -103,7 +103,7 @@ void PathFinder::innerModelChanged (const std::shared_ptr<InnerModel> &innerMode
 		qDebug()<<"reloadInnerModel PATHPLANNER";
 		pathplanner.reloadInnerModel(innerModel_) ;
 		qDebug()<<"reloadInnerModel MODIFYGRAPH";
-		pathplanner.modifyGraph(pathplanner.fmap, polylines);
+		pathplanner.modifyGraph(sequence);
 		
 		road.reloadInnerModel( innerModel_ ) ;  
 		projector.reloadInnerModel(innerModel_) ;  

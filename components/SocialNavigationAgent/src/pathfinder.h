@@ -17,7 +17,7 @@
 
 #ifndef PATHFINDER_H
 #define PATHFINDER_H
-
+#include <genericworker.h>
 #include <AGMCommonBehavior.h>
 #include <CommonBehavior.h>
 #include <thread>
@@ -91,7 +91,7 @@ namespace robocomp
 				////////////////////////////
 				void go(float x, float z, const ParameterMap &parameters = ParameterMap());
 				//void setInnerModel(InnerModel* innerModel_){ innerModel = innerModel_; };
-				void innerModelChanged(const std::shared_ptr<InnerModel> &innerModel_, LocalPolyLineList polylines);
+				void innerModelChanged(const std::shared_ptr<InnerModel> &innerModel_, SNGPolylineSeq sequence);
 						
 				void run();
 				///////////////////////////

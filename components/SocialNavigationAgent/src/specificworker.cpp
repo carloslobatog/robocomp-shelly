@@ -297,7 +297,6 @@ void SpecificWorker::checkMovement()
 	{
 		for (auto id: pSymbolId)
 		{
-			
 			AGMModelSymbol::SPtr personParent = newM->getParentByLink(id, "RT");
 			AGMModelEdge &edgeRT = newM->getEdgeByIdentifiers(personParent->identifier, id, "RT");
 				
@@ -329,46 +328,50 @@ void SpecificWorker::checkMovement()
 	// 		}
 			
 		}
+		
+		
+		try
+		{
+			qDebug()<<"NUMERO DE PERSONAS "<< totalpersons.size();
+			SNGPolylineSeq list = sr.ApplySocialRules(totalpersons);
+			
+			sequence.clear();
+			sequence = list;
+			
+	// 		polyLineList.clear();
+	// 		for (auto s: list)
+	// 		{ 
+	// 			LocalPolyLine poly;
+	// 			for (auto p: s)
+	// 			{
+	// 				LocalPoint punto = {p.x*1000, p.z*1000};
+	// 				poly.push_back(punto);
+	// 			}
+	// 			polyLineList.push_back(poly);
+	// 		}
+	// 				
+	// 		UpdateInnerModel(list);
+			pathfinder.innerModelChanged(innerModel, list);
+		}
+			
+		catch( const Ice::Exception &e)
+		{ 
+	//		std::cout << e << std::endl;
+		}
+
+		if (sendChangesAGM)
+		{	
+			try
+			{
+				sendModificationProposal(newM,worldModel,"-");
+			}
+			catch(...){}
+		}
+		
 	}
  	
 		
-	try
-	{
-		qDebug()<<"NUMERO DE PERSONAS "<< totalpersons.size();
-		SNGPolylineSeq list = sr.ApplySocialRules(totalpersons);
-		
-		sequence.clear();
-		sequence = list;
-		
-		polyLineList.clear();
-		for (auto s: list)
-		{ 
-			LocalPolyLine poly;
-			for (auto p: s)
-			{
-				LocalPoint punto = {p.x*1000, p.z*1000};
-				poly.push_back(punto);
-			}
-			polyLineList.push_back(poly);
-		}
-				
-// 		UpdateInnerModel(list);
-		pathfinder.innerModelChanged(innerModel, polyLineList);
-	}
-		
-	catch( const Ice::Exception &e)
-	{ 
-//		std::cout << e << std::endl;
-	}
-
-	if (sendChangesAGM)
-	{	
-		try
-		{
-			sendModificationProposal(newM,worldModel,"-");
-		}
-		catch(...){}
-	}
+	
 }
 
 
@@ -524,7 +527,7 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 
 	InnerModel *inner = AGMInner::extractInnerModel(worldModel, "world", false);
 	innerModel.reset(inner);
-	pathfinder.innerModelChanged(innerModel,polyLineList);
+	pathfinder.innerModelChanged(innerModel,sequence);
 	viewer->reloadInnerModel(innerModel);
 
 	

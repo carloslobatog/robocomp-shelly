@@ -66,7 +66,7 @@ def getPolyline(grid, resolution, lx_inf, ly_inf):
         ##ConcaveHull --> Mas puntos pero la forma se aproxima mas
         hull = CH.concaveHull(points,3)
         ret.append(hull)
-        ## ConvexHull --> Menos puntos pero la forma es el contorno
+        # ## ConvexHull --> Menos puntos pero la forma es el contorno
         # hull = ConvexHull(points)
         # ret.append(points[hull.vertices])
 
@@ -250,6 +250,7 @@ class SpecificWorker(GenericWorker):
             pn.draw(2.,1,4./3.,pi/2 - pn.th, drawPersonalSpace=dibujar)
             #normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2, 2.0, 2.0, 2.0], elliptical=True))
             normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi/2., 2, 1, 4./3], elliptical=True))
+            #normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th, 2, 1, 4. / 3], elliptical=True))
         #print ("numero de gaussianas",len(normals))
 
         #h = 0.4
@@ -267,12 +268,12 @@ class SpecificWorker(GenericWorker):
         #plt.figure()
         #plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
-        if (dibujar):
-           # plt.figure()
-            plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
-            plt.xlabel('X')
-            plt.ylabel('Y')
-            plt.axis('equal')
+        # if (dibujar):
+        #    # plt.figure()
+        #     plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
+        #     plt.xlabel('X')
+        #     plt.ylabel('Y')
+        #     plt.axis('equal')
 
         np.savetxt('log.txt', grid, fmt='%i')
 
@@ -292,7 +293,7 @@ class SpecificWorker(GenericWorker):
 
         if (dibujar):
             for ps in polylines:
-              #  plt.figure()
+                #plt.figure()
                 for p in ps:
                     plt.plot(p.x, p.z, "*r-")
                     plt.axis('equal')
