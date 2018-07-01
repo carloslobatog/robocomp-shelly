@@ -46,7 +46,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	//trajReader.start(1000);
 
 	//SLIDER
-	connect (proximidad,SIGNAL(valueChanged(int)),&sr,SLOT(changevalue(int)));
+	connect (proximidad,SIGNAL(valueChanged(float)),&sr,SLOT(changevalue(float)));
 	//connect (proximidad,SIGNAL(sliderMoved()),this,SLOT(sliderM()));
 
 	proximidad->QSlider::setMinimum (10);
@@ -332,26 +332,32 @@ void SpecificWorker::checkMovement()
 		
 		try
 		{
-			qDebug()<<"NUMERO DE PERSONAS "<< totalpersons.size();
-			SNGPolylineSeq list = sr.ApplySocialRules(totalpersons);
+			/////////////////////SOCIAL////////////////
+			sr.changevalue(0.1);
+			SNGPolylineSeq social = sr.ApplySocialRules(totalpersons);
 			
-			sequence.clear();
-			sequence = list;
+			social_seq.clear();
+ 			social_seq = social;
 			
-	// 		polyLineList.clear();
-	// 		for (auto s: list)
-	// 		{ 
-	// 			LocalPolyLine poly;
-	// 			for (auto p: s)
-	// 			{
-	// 				LocalPoint punto = {p.x*1000, p.z*1000};
-	// 				poly.push_back(punto);
-	// 			}
-	// 			polyLineList.push_back(poly);
-	// 		}
-	// 				
+			/////////////////////PERSONAL////////////////
+			sr.changevalue(0.4);
+			SNGPolylineSeq personal = sr.ApplySocialRules(totalpersons);
+			
+			personal_seq.clear();
+ 			personal_seq = personal;
+			
+			/////////////////////INTIMO////////////////
+			sr.changevalue(0.8);
+			SNGPolylineSeq intimate = sr.ApplySocialRules(totalpersons);
+		
+ 			intimate_seq.clear();
+ 			intimate_seq = intimate;
+
 	// 		UpdateInnerModel(list);
-			pathfinder.innerModelChanged(innerModel, list);
+			pathfinder.innerModelChanged(innerModel, intimate,personal,social);
+			
+			
+			
 		}
 			
 		catch( const Ice::Exception &e)
@@ -527,7 +533,7 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 
 	InnerModel *inner = AGMInner::extractInnerModel(worldModel, "world", false);
 	innerModel.reset(inner);
-	pathfinder.innerModelChanged(innerModel,sequence);
+	pathfinder.innerModelChanged(innerModel,intimate_seq,personal_seq,social_seq);
 	viewer->reloadInnerModel(innerModel);
 
 	

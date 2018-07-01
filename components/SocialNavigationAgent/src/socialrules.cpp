@@ -32,9 +32,9 @@ SocialRules::~SocialRules()
 /**
 * \brief Change the slider's value
 */
-void SocialRules::changevalue(int value)
+void SocialRules::changevalue(float value)
 {
-	prox=value;
+	prox = value;
 	qDebug()<<"Proximity"<<prox;
 }
 
@@ -201,7 +201,7 @@ SNGPolylineSeq SocialRules::ApplySocialRules(SNGPersonSeq tperson)
 	
 	for (auto p: totalperson)
 	{
-		if (p.vel>0)
+		if (p.vel > 0)
 			movperson.push_back(p);
 		else
 			quietperson.push_back(p);

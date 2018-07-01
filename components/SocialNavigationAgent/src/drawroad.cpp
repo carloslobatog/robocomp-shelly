@@ -95,9 +95,13 @@ void DrawRoad::drawmap(PathPlanner &pathplanner, InnerViewer *viewer, PathPlanne
 			QString item = "IMV_fmap_point_" + QString::number(i);
 			if(it->second.free)
 			{
-				if (it->second.cost == 2)
-					viewer->ts_addPlane_ignoreExisting(item, "IMV_fmap", QVec::vec3(it->first.x, 20, it->first.z), QVec::vec3(1,0,0), "#FFFF00", QVec::vec3(60,60,60));
+				if (it->second.cost == 1.5) //zona social
+					viewer->ts_addPlane_ignoreExisting(item, "IMV_fmap", QVec::vec3(it->first.x, 20, it->first.z), QVec::vec3(1,0,0), "#00BFFF", QVec::vec3(60,60,60));
+				
+				else if (it->second.cost == 2) //zona personal
+					viewer->ts_addPlane_ignoreExisting(item, "IMV_fmap", QVec::vec3(it->first.x, 20, it->first.z), QVec::vec3(1,0,0), "#BF00FF", QVec::vec3(60,60,60));
 					
+				
 				else
 					viewer->ts_addPlane_ignoreExisting(item, "IMV_fmap", QVec::vec3(it->first.x, 20, it->first.z), QVec::vec3(1,0,0), "#00FF00", QVec::vec3(60,60,60));
 			}

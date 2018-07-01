@@ -343,11 +343,72 @@ void PathPlanner::constructGraph(FMap &fmap, uint tile_size)
 }
 
 
-void PathPlanner::modifyGraph(SNGPolylineSeq polylines)
+void PathPlanner::modifyCost(SNGPolylineSeq personal, SNGPolylineSeq social)
+{
+	containedp_list.clear();
+	
+	for (auto poly : social)
+	{
+		QPolygonF qp_social;
+		
+		for (auto p: poly)
+			qp_social << QPointF(p.x*1000,p.z*1000);
+		
+		for(FMap::iterator iter = fmap.begin(); iter != fmap.end(); ++iter)
+		{
+			if (qp_social.containsPoint(QPointF(iter->first.x,iter->first.z),Qt::OddEvenFill))
+			{
+				point.x = iter->first.x;
+				point.z = iter->first.z;
+				containedp_list.push_back(point);
+				iter->second.cost = 1.5;
+			}
+		}
+		
+	}
+	
+	for (auto poly : personal)
+	{
+		QPolygonF qp_personal;
+		
+		for (auto p: poly)
+			qp_personal << QPointF(p.x*1000,p.z*1000);
+		
+			
+		for(FMap::iterator iter = fmap.begin(); iter != fmap.end(); ++iter)
+		{
+			if (qp_personal.containsPoint(QPointF(iter->first.x,iter->first.z),Qt::OddEvenFill))
+			{	
+				point.x = iter->first.x;
+				point.z = iter->first.z;
+				containedp_list.push_back(point);
+				iter->second.cost = 2.0;
+			} 
+		}
+		
+	}
+	
+	
+	for(FMap::iterator iter = fmap.begin(); iter != fmap.end(); ++iter)
+	{
+		bool modified = false;
+		for (auto p : containedp_list)
+		{
+			if (p.x == iter->first.x and p.z == iter->first.z)
+				modified = true;
+		}
+			
+		if (!modified)
+			iter->second.cost = 1.0;
+	}
+
+}
+
+void PathPlanner::modifyGraph(SNGPolylineSeq intimate, SNGPolylineSeq personal, SNGPolylineSeq social)
 {
  	occupied_list.clear();
 	
-	for (auto poly : polylines)
+	for (auto poly : intimate)
 	{
 		QPolygonF qp;					
 		for (auto p:poly)
@@ -390,6 +451,8 @@ void PathPlanner::modifyGraph(SNGPolylineSeq polylines)
 		
 		  if (!in_initial and !in_occupied) iter->second.free = true;	
 	}
+	
+	modifyCost(personal,social);
 	set_map_dirty_bit(true);
 	
 	

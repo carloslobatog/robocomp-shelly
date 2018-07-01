@@ -34,7 +34,7 @@ public:
 	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 	
-	int prox = 0; //reading the slider
+	float prox = 0; //reading the slider
 	QMutex *mux;
 
 	SNGPersonSeq quietperson; // quiet person
@@ -53,7 +53,7 @@ public:
 	bool checkHRI(SNGPerson p, int ind, InnerModel *i, AGMModel::SPtr w);
 	
 public slots:
-  	void changevalue(int value);
+  	void changevalue(float value);
 	SNGPolylineSeq gauss(bool draw=true);
 	SNGPolylineSeq PassOnRight(bool draw=true);
 	SNGPolylineSeq objectInteraction(bool d = true);

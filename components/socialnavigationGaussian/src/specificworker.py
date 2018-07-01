@@ -209,7 +209,7 @@ class SpecificWorker(GenericWorker):
     #
     # getPolyline
     #
-    def getPersonalSpace(self, persons, prox, dibujar):
+    def getPersonalSpace(self, persons, h, dibujar):
 
         plt.close('all')
        ##DESCOMENTAR EL FIGUREEE
@@ -253,8 +253,8 @@ class SpecificWorker(GenericWorker):
             #normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th, 2, 1, 4. / 3], elliptical=True))
         #print ("numero de gaussianas",len(normals))
 
-        #h = 0.4
-        h = prox/100
+        # h = 0.1
+        # h = prox/100
 
         resolution = 0.1
         limits = [[lx_inf, lx_sup], [ly_inf, ly_sup]]

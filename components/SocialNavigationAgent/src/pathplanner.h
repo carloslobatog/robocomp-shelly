@@ -120,8 +120,10 @@ class PathPlanner
 		Point point;
 		vector <Point> initialp_list;
 		vector <Point> occupied_list;
+		vector <Point> containedp_list;
 		//////////////////////////////////////
-		void modifyGraph(SNGPolylineSeq polylines);
+		void modifyGraph(SNGPolylineSeq intimate,SNGPolylineSeq personal, SNGPolylineSeq social);
+		void modifyCost(SNGPolylineSeq personal, SNGPolylineSeq social);
 			
 	private:
 		std::shared_ptr<CurrentTarget> currenttarget;

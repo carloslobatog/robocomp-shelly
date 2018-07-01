@@ -64,9 +64,14 @@ public:
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
 	
 //bool para indicar si se ha movido la persona, lo utilizare para imprimir la coordenada de la persona cada vez que se mueva
-	bool changepos=false;
+	bool changepos = false;
 	
 	SNGPolylineSeq sequence;
+	
+	SNGPolylineSeq intimate_seq;
+	SNGPolylineSeq personal_seq;
+	SNGPolylineSeq social_seq;
+	
 	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
 	
  	LocalPolyLineList polyLineList;
