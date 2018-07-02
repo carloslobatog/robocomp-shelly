@@ -361,7 +361,7 @@ void PathPlanner::modifyCost(SNGPolylineSeq personal, SNGPolylineSeq social)
 				point.x = iter->first.x;
 				point.z = iter->first.z;
 				containedp_list.push_back(point);
-				iter->second.cost = 1.5;
+				iter->second.cost = 2.0;
 			}
 		}
 		
@@ -382,7 +382,7 @@ void PathPlanner::modifyCost(SNGPolylineSeq personal, SNGPolylineSeq social)
 				point.x = iter->first.x;
 				point.z = iter->first.z;
 				containedp_list.push_back(point);
-				iter->second.cost = 2.0;
+				iter->second.cost = 4.0;
 			} 
 		}
 		
@@ -397,7 +397,6 @@ void PathPlanner::modifyCost(SNGPolylineSeq personal, SNGPolylineSeq social)
 			if (p.x == iter->first.x and p.z == iter->first.z)
 				modified = true;
 		}
-			
 		if (!modified)
 			iter->second.cost = 1.0;
 	}
@@ -474,7 +473,7 @@ std::vector<std::pair<PathPlanner::Key,PathPlanner::Value>> PathPlanner::neighbo
 		if( it != fmap.end() and it->second.free )
 		{
 			Value v(it->second);					// bacause iterator is const
-			if (*itx == *itz) v.cost = 1.41;		// if neighboor in diagonal, cost is sqrt(2)
+			if (abs(*itx)>0 and abs(*itz)>0) v.cost = v.cost * 1.41;		// if neighboor in diagonal, cost is sqrt(2)
 			neigh.push_back(std::make_pair(lk,v));
 		}
 	};

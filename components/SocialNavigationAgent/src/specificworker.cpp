@@ -346,6 +346,7 @@ void SpecificWorker::checkMovement()
 			personal_seq.clear();
  			personal_seq = personal;
 			
+			
 			/////////////////////INTIMO////////////////
 			sr.changevalue(0.8);
 			SNGPolylineSeq intimate = sr.ApplySocialRules(totalpersons);

@@ -261,7 +261,6 @@ class SpecificWorker(GenericWorker):
         _, z = Normal.makeGrid(normals, h, 2, limits=limits, resolution=resolution)
         grid = GM.filterEdges(z, h)
 
-
         #plt.figure()
         #plt.imshow(z, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
@@ -269,7 +268,7 @@ class SpecificWorker(GenericWorker):
         #plt.imshow(grid, shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
 
         # if (dibujar):
-        #    # plt.figure()
+        #     # plt.figure()
         #     plt.imshow(grid, extent=[lx_inf, lx_sup, ly_inf, ly_sup], shape=grid.shape, interpolation='none', aspect='equal', origin='lower', cmap='Greys', vmin=0, vmax=2)
         #     plt.xlabel('X')
         #     plt.ylabel('Y')
@@ -292,19 +291,97 @@ class SpecificWorker(GenericWorker):
 
 
         if (dibujar):
+            ##DIBUJO ZONA Social
+            _, z = Normal.makeGrid(normals, 0.1, 2, limits=limits, resolution=resolution)
+            grid = GM.filterEdges(z, 0.1)
+
+            polylines = []
+            totalpuntosorden = getPolyline(grid, resolution, lx_inf, ly_inf)
+
+            for pol in totalpuntosorden:
+                polyline = []
+                for pnt in pol:
+                    punto = SNGPoint2D()
+                    punto.x = pnt[0]
+                    punto.z = pnt[1]
+                    polyline.append(punto)
+                polylines.append(polyline)
+
             for ps in polylines:
                 #plt.figure()
                 for p in ps:
-                    plt.plot(p.x, p.z, "*r-")
+                    plt.plot(p.x, p.z, "oc-")
                     plt.axis('equal')
                     plt.xlabel('X')
                     plt.ylabel('Y')
-            plt.show()
+            # plt.show()
+
+            ###DIBUJO ZONA Personal
+            _, z = Normal.makeGrid(normals, 0.4, 2, limits=limits, resolution=resolution)
+            grid = GM.filterEdges(z, 0.4)
+
+            polylines = []
+            totalpuntosorden = getPolyline(grid, resolution, lx_inf, ly_inf)
+
+            for pol in totalpuntosorden:
+                polyline = []
+                for pnt in pol:
+                    punto = SNGPoint2D()
+                    punto.x = pnt[0]
+                    punto.z = pnt[1]
+                    polyline.append(punto)
+                polylines.append(polyline)
+
+
+            for ps in polylines:
+                 # plt.figure()
+                for p in ps:
+                    plt.plot(p.x, p.z, "om-")
+                    plt.axis('equal')
+                    plt.xlabel('X')
+                    plt.ylabel('Y')
+                # plt.show()
+
+
+            ###DIBUJO ZONA INTIMA
+            _, z = Normal.makeGrid(normals, 0.8, 2, limits=limits, resolution=resolution)
+            grid = GM.filterEdges(z, 0.8)
+
+            polylines = []
+            totalpuntosorden = getPolyline(grid, resolution, lx_inf, ly_inf)
+
+            for pol in totalpuntosorden:
+                polyline = []
+                for pnt in pol:
+                    punto = SNGPoint2D()
+                    punto.x = pnt[0]
+                    punto.z = pnt[1]
+                    polyline.append(punto)
+                polylines.append(polyline)
+
+
+            for ps in polylines:
+                # plt.figure()
+                for p in ps:
+                    plt.plot(p.x, p.z, "or-")
+                    plt.axis('equal')
+                    plt.xlabel('X')
+                    plt.ylabel('Y')
+                # plt.show()
+
 
 
         plt.show()
 
         return polylines
+
+
+
+
+
+
+
+
 
     def getPassOnRight(self, persons, prox, dibujar):
 
