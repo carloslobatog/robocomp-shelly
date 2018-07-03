@@ -99,7 +99,7 @@ public:
 	float totaldist=0;
 	
 	ActionExecution aE; //Class ActionExecution
-	SocialRules sr; //Class SocialRules
+	SocialRules socialrules; //Class SocialRules
 	
 	bool staticperson = false;
 	///////////////////////////////////////////////////////////////////////////

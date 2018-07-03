@@ -6,83 +6,103 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>239</width>
-    <height>157</height>
+    <width>314</width>
+    <height>194</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>navigationComp</string>
   </property>
-  <widget class="QSlider" name="proximidad">
+  <widget class="QPushButton" name="datos">
    <property name="geometry">
     <rect>
-     <x>120</x>
-     <y>110</y>
-     <width>101</width>
-     <height>29</height>
+     <x>180</x>
+     <y>60</y>
+     <width>111</width>
+     <height>61</height>
     </rect>
    </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
+   <property name="text">
+    <string> Guardar datos</string>
    </property>
-  </widget>
-  <widget class="QWidget" name="layoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>200</y>
-     <width>61</width>
-     <height>36</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout"/>
   </widget>
   <widget class="QWidget" name="gridLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>20</y>
-     <width>91</width>
-     <height>121</height>
+     <x>20</x>
+     <y>10</y>
+     <width>131</width>
+     <height>171</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="3" column="0">
+    <item row="12" column="1">
+     <widget class="QPushButton" name="gotoperson">
+      <property name="text">
+       <string>GO TO person</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="Line" name="line_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
      <widget class="QPushButton" name="por">
       <property name="text">
        <string>POR</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="0">
-     <widget class="QPushButton" name="gaussiana">
-      <property name="text">
-       <string>Space</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="0">
+    <item row="8" column="1">
      <widget class="QPushButton" name="objint">
       <property name="text">
        <string>Objects</string>
       </property>
      </widget>
     </item>
+    <item row="3" column="1">
+     <widget class="QPushButton" name="gaussiana">
+      <property name="text">
+       <string>Space</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="1" rowspan="2">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="9" column="1">
+     <widget class="Line" name="line_3">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
-  <widget class="QPushButton" name="datos">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>50</y>
-     <width>61</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string> Datos</string>
-   </property>
-  </widget>
+  <zorder>datos</zorder>
+  <zorder>gridLayoutWidget</zorder>
+  <zorder>gaussiana</zorder>
  </widget>
  <resources/>
  <connections/>

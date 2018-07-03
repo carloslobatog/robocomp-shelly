@@ -39,23 +39,13 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 
 	//Timed slot to read TrajectoryRobot2D state
 	connect(&trajReader, SIGNAL(timeout()), &aE, SLOT(readTrajState()));
-	connect(gaussiana,SIGNAL(clicked()),&sr, SLOT(gauss()));
-	connect(por,SIGNAL(clicked()),&sr, SLOT(PassOnRight()));
-	connect(objint,SIGNAL(clicked()),&sr, SLOT(objectInteraction()));
+	connect(gaussiana,SIGNAL(clicked()),&socialrules, SLOT(calculateGauss()));
+	connect(por,SIGNAL(clicked()),&socialrules, SLOT(PassOnRight()));
+	connect(objint,SIGNAL(clicked()),&socialrules, SLOT(objectInteraction()));
 	connect(datos,SIGNAL(clicked()),this, SLOT(savedata()));
-	//trajReader.start(1000);
-
-	//SLIDER
-	connect (proximidad,SIGNAL(valueChanged(float)),&sr,SLOT(changevalue(float)));
-	//connect (proximidad,SIGNAL(sliderMoved()),this,SLOT(sliderM()));
-
-	proximidad->QSlider::setMinimum (10);
-	proximidad->QSlider::setMaximum (90);	
-	proximidad->QSlider::setTracking (false);	
-	proximidad->QSlider::setValue (50);
-
 	
-
+	connect(gotoperson,SIGNAL(clicked()),&socialrules, SLOT(goToPerson()));
+	//trajReader.start(1000);
 }
 /**
  * \brief Default destructor
@@ -96,7 +86,9 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 
 	// Initializing PathFinder
 	pathfinder.initialize(innerModel,viewer, configparams, laser_proxy, omnirobot_proxy);
-
+	// Initializing SocialRules
+	socialrules.initialize(socialnavigationgaussian_proxy, agmexecutive_proxy, mutex, &pathfinder, worldModel, innerModel);
+	
 	// releasing pathfinder
 	//thread_pathfinder = std::thread(&robocomp::pathfinder::PathFinder::run, &pathfinder);
 	//rDebug2(("Pathfinder up and running"));
@@ -113,16 +105,12 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	//aE.agmexecutive_proxy = agmexecutive_proxy;
 	//aE.omnirobot_proxy = omnirobot_proxy;
 	//aE.trajectoryn2d_proxy = trajectoryrobot2d_proxy;
-	
-	//Proxies for SocialRules
-	sr.socialnavigationgaussian_proxy = socialnavigationgaussian_proxy;
-	sr.agmexecutive_proxy = agmexecutive_proxy;
-	sr.mux = mutex;
-	sr.objectInteraction(false);
+		
 	
 	rDebug2(("Leaving setParams"));
 
 	checkNewPersonInModel();
+	
 	return true;
 }
 
@@ -174,12 +162,14 @@ void SpecificWorker::compute()
 	
 		changepos = false;
 	}
+	
 	first = false;
 }
 
 
 void SpecificWorker::savedata()
-{
+{	
+
 	qDebug("Saving in robotpose.txt the robot's pose");
 	ofstream file("robotpose.txt", ofstream::out);
 	for (auto p:poserobot)
@@ -203,9 +193,7 @@ void SpecificWorker::savedata()
 	for (auto s:sequence)
 	{
 		for (auto p: s)
-		{
 			file3<< p.x << " " <<p.z<<" "<< endl;
-		}
 	}
 	file3.close();
 
@@ -282,7 +270,7 @@ void SpecificWorker::checkNewPersonInModel()
 		}
 			
 	}
-
+	socialrules.personSymbolId = pSymbolId;
 	checkMovement();
 }
 
@@ -314,7 +302,7 @@ void SpecificWorker::checkMovement()
 	// 		try
 	// 		{	
 	// 			qDebug()<<"------------------------------------------------";
-	// 			if (sr.checkHRI(person,ind+1,innerModel.get(),newM) == true)
+	// 			if (socialrules.checkHRI(person,ind+1,innerModel.get(),newM) == true)
 	// 			{	
 	// 				qDebug()<<"SEND MODIFICATION PROPOSAL";
 	//					sendChangesAGM = true;
@@ -333,23 +321,23 @@ void SpecificWorker::checkMovement()
 		try
 		{
 			/////////////////////SOCIAL////////////////
-			sr.changevalue(0.1);
-			SNGPolylineSeq social = sr.ApplySocialRules(totalpersons);
+			socialrules.change_hvalue(0.1);
+			SNGPolylineSeq social = socialrules.ApplySocialRules(totalpersons);
 			
 			social_seq.clear();
  			social_seq = social;
 			
 			/////////////////////PERSONAL////////////////
-			sr.changevalue(0.4);
-			SNGPolylineSeq personal = sr.ApplySocialRules(totalpersons);
+			socialrules.change_hvalue(0.4);
+			SNGPolylineSeq personal = socialrules.ApplySocialRules(totalpersons);
 			
 			personal_seq.clear();
  			personal_seq = personal;
 			
 			
 			/////////////////////INTIMO////////////////
-			sr.changevalue(0.8);
-			SNGPolylineSeq intimate = sr.ApplySocialRules(totalpersons);
+			socialrules.change_hvalue(0.8);
+			SNGPolylineSeq intimate = socialrules.ApplySocialRules(totalpersons);
 		
  			intimate_seq.clear();
  			intimate_seq = intimate;
@@ -537,8 +525,6 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 	pathfinder.innerModelChanged(innerModel,intimate_seq,personal_seq,social_seq);
 	viewer->reloadInnerModel(innerModel);
 
-	
-	
 	checkNewPersonInModel();
 	
 	//reload viewer

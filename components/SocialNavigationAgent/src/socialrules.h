@@ -21,20 +21,23 @@
 #include <innermodel/innermodel.h>
 #include <boost/format.hpp>
 #include <QObject>
-
+#include <vector>
+#include "pathfinder.h"
 
 
 class SocialRules :public QObject
 {
 Q_OBJECT
 public:
-	SocialRules();
-	~SocialRules();
+	using InnerPtr = std::shared_ptr<InnerModel>;
 	
+	void initialize(SocialNavigationGaussianPrx socialnavigationgaussian_proxy_,AGMExecutivePrx agmexecutive_proxy_,QMutex *mutex_,robocomp::pathfinder::PathFinder *pathfinder_,AGMModel::SPtr worldModel_, InnerPtr innerModel_);
+	
+
 	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 	
-	float prox = 0; //reading the slider
+	float h = 0.1; 
 	QMutex *mux;
 
 	SNGPersonSeq quietperson; // quiet person
@@ -43,24 +46,30 @@ public:
 	
 	SNGPolylineSeq sequence, sequence2, sequenceObj;
 	
-
 	SNGObjectSeq objects;
 	SNGPolylineSeq seq;
+	
 	int32_t objectSymbolId;
-
+	
+	SNGPerson person;
+	vector <int32_t> personSymbolId = {};
+	
 	SNGPolylineSeq ApplySocialRules(SNGPersonSeq tperson);
 	void  structuralChange(const RoboCompAGMWorldModel::World & modification);
-	bool checkHRI(SNGPerson p, int ind, InnerModel *i, AGMModel::SPtr w);
+	bool checkHRI(SNGPerson p, int ind, InnerPtr i, AGMModel::SPtr w);
+	void change_hvalue(float value);
 	
 public slots:
-  	void changevalue(float value);
-	SNGPolylineSeq gauss(bool draw=true);
-	SNGPolylineSeq PassOnRight(bool draw=true);
+	void goToPerson();
+	SNGPolylineSeq calculateGauss(bool draw = true);
+	SNGPolylineSeq PassOnRight(bool draw = true);
 	SNGPolylineSeq objectInteraction(bool d = true);
 	
 private:
 	AGMModel::SPtr worldModel;
-	InnerModel *innerModel;
+	InnerPtr innerModel;
+public:
+	robocomp::pathfinder::PathFinder *pathfinder;
 
 };
 

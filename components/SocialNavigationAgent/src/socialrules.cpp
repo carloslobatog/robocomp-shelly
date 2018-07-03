@@ -1,57 +1,42 @@
-/*
- * Copyright 2017 <copyright holder> <email>
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- */
 
 #include "socialrules.h"
 
-SocialRules::SocialRules()
-{
-	worldModel = AGMModel::SPtr(new AGMModel());
-	worldModel->name = "worldModel";
-	innerModel = new InnerModel();
 
+void SocialRules::initialize(SocialNavigationGaussianPrx socialnavigationgaussian_proxy_,AGMExecutivePrx agmexecutive_proxy_,QMutex *mutex_,robocomp::pathfinder::PathFinder *pathfinder_,AGMModel::SPtr worldModel_, InnerPtr innerModel_)
+{
+	socialnavigationgaussian_proxy = socialnavigationgaussian_proxy_;
+	agmexecutive_proxy = agmexecutive_proxy_;
+	mux = mutex_;
+	pathfinder = pathfinder_;
+	innerModel = innerModel_;
+	worldModel = worldModel_;
+	
+	objectInteraction(false);
 }
 
-SocialRules::~SocialRules()
-{
 
-}
 /**
-* \brief Change the slider's value
+* \brief Change the h value
 */
-void SocialRules::changevalue(float value)
+void SocialRules::change_hvalue(float value)
 {
-	prox = value;
-	qDebug()<<"Proximity"<<prox;
+	h = value;
+	qDebug()<<"h = "<<value;
+	
 }
-
 /**
 * \brief If the person is in the model it is added to a vector of persons wich is sent to the socialnavigationGaussian
 * to model its personal space. 
 * The function returns a sequence of polylines.
 */
 
-SNGPolylineSeq SocialRules::gauss(bool draw)
+SNGPolylineSeq SocialRules::calculateGauss(bool draw)
 {
-	
+	qDebug()<<__FUNCTION__;
 	if (!quietperson.empty())
 	{  	
 		sequence.clear();
-		sequence = socialnavigationgaussian_proxy-> getPersonalSpace(quietperson, prox, draw);
-	
+		sequence = socialnavigationgaussian_proxy-> getPersonalSpace(quietperson,h, draw);
 	}
 	return sequence;
 }
@@ -64,15 +49,13 @@ SNGPolylineSeq SocialRules::PassOnRight(bool draw)
 	if (!movperson.empty())
 	{
 		sequence2.clear();
-		sequence2 = socialnavigationgaussian_proxy-> getPassOnRight(movperson, prox, draw);
+		sequence2 = socialnavigationgaussian_proxy-> getPassOnRight(movperson, h, draw);
 	}	    
 	return sequence2;
 
 	
 }
  
-
-
 SNGPolylineSeq SocialRules::objectInteraction(bool d)
 {
 	qDebug()<<__FUNCTION__;
@@ -105,18 +88,55 @@ SNGPolylineSeq SocialRules::objectInteraction(bool d)
 	}
 	catch(...){}
 	
-
-	
-	
-
 	return sequenceObj;
 	
 }
 
+void SocialRules::goToPerson()
+{
+	qDebug()<<__FUNCTION__;
+	
+	if (personSymbolId.size() == 1)
+	{
+		auto id = personSymbolId[0];
+		
+		AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(id, "RT");
+		AGMModelEdge &edgeRT = worldModel->getEdgeByIdentifiers(personParent->identifier, id, "RT");
+		
+		person.x = str2float(edgeRT.attributes["tx"]);
+		person.z = str2float(edgeRT.attributes["tz"]);
+		person.angle = str2float(edgeRT.attributes["ry"]);
+		//person.vel=str2float(edgeRT.attributes["velocity"]);
+		person.vel = 0;
+		
+		qDebug()<<"PERSONA"<< person.x << " "<< person.z; 
+	
+		pathfinder->go(person.x+1000, person.z + 1500);
+	}
+	
+	else
+		qDebug()<<"Más de una persona en el modelo";
+	
+	
+	
+	
+// 	for (auto p:totalperson)
+// 		qDebug()<<"PERSONA" << p.x <<" " <<p.z<<" "<<p.angle;
+// 		
+// 	if (totalperson.size() != 1)
+// 		qDebug()<<"Más de una persona en el modelo";
+// 	else
+// 		
+		
+		
+	
+}
 
-bool SocialRules::checkHRI(SNGPerson p, int ind, InnerModel *i, AGMModel::SPtr w)
+
+bool SocialRules::checkHRI(SNGPerson p, int ind,InnerPtr i, AGMModel::SPtr w)
 {	
-
+	worldModel = w;
+	
 	bool changes = false;
 	/////////////////////Checking if the person is close and looking at the robot
 	std::string type = "person" + std::to_string(ind);
@@ -152,17 +172,17 @@ bool SocialRules::checkHRI(SNGPerson p, int ind, InnerModel *i, AGMModel::SPtr w
 	}	
 	///////////////////////Add edge interrupting////////////////////////
 	
-	int32_t Idperson = w->getIdentifierByType(type);
-	AGMModelSymbol::SPtr person = w->getSymbolByIdentifier(Idperson);
-	int32_t Idrobot = w->getIdentifierByType("robot");
-	AGMModelSymbol::SPtr robot = w->getSymbolByIdentifier(Idrobot);
+	int32_t Idperson = worldModel->getIdentifierByType(type);
+	AGMModelSymbol::SPtr person = worldModel->getSymbolByIdentifier(Idperson);
+	int32_t Idrobot = worldModel->getIdentifierByType("robot");
+	AGMModelSymbol::SPtr robot = worldModel->getSymbolByIdentifier(Idrobot);
 
 	if ((looking==true) and (close==true))
 	{
 		qDebug()<<"CERCA Y MIRANDO";
 		try
 		{		
-			w->addEdge(person,robot, "interrupting");
+			worldModel->addEdge(person,robot, "interrupting");
 			qDebug()<<"SE AÑADE EL ENLACE";
 			changes = true;
 		}
@@ -176,7 +196,7 @@ bool SocialRules::checkHRI(SNGPerson p, int ind, InnerModel *i, AGMModel::SPtr w
 	else 
 	{	try
 		{
-			w->removeEdge(person,robot,"interrupting");
+			worldModel->removeEdge(person,robot,"interrupting");
 			changes = true;
 		}
 		catch(...)
@@ -191,7 +211,7 @@ bool SocialRules::checkHRI(SNGPerson p, int ind, InnerModel *i, AGMModel::SPtr w
 
 SNGPolylineSeq SocialRules::ApplySocialRules(SNGPersonSeq tperson)
 {
-	//qDebug()<<__FUNCTION__;
+	qDebug()<<__FUNCTION__;
 	totalperson=tperson;
 	movperson.clear();
 	quietperson.clear();
@@ -208,13 +228,11 @@ SNGPolylineSeq SocialRules::ApplySocialRules(SNGPersonSeq tperson)
 		
 	}
 	
-	
-	
 	//RoboCompTrajectoryRobot2D::PolyLineList list;
 	
 	if (!quietperson.empty())
 	{
-		SNGPolylineSeq secuencia = gauss(false);
+		SNGPolylineSeq secuencia = calculateGauss(false);
 		
 		for(auto s: secuencia)
 		{	

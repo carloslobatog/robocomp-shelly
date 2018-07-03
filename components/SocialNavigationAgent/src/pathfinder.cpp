@@ -29,6 +29,7 @@ void PathFinder::go(float x, float z, const ParameterMap &parameters)
 	qDebug() << __FILE__ << __FUNCTION__ << "PathFinder::go New target arrived:" << x << z;
 	Road &road = getRoad();
 		controller.stopTheRobot();
+	
 		road.reset();
 		road.setRequiresReplanning(true);
 		currenttarget->setTranslation(QVec::vec3(x,0,z));
@@ -54,7 +55,7 @@ void PathFinder::initialize( const std::shared_ptr<InnerModel> &innerModel_,
 	
 	/// Initialize currentarget
 	currenttarget = std::make_shared<CurrentTarget>();
-	
+
 	/// Initialize the Planner
 	pathplanner.initialize(currenttarget, innerModel, state, configparams);
 	
@@ -86,7 +87,15 @@ void PathFinder::run()
 		controller.update(road);
 		pathplanner.update(road);
 //TODO Revisar para pasar un shared_ptr
+		void *pp1 = currenttarget.get();
 		drawroad.draw(road, viewer.get(), currenttarget);
+		void *pp2 = currenttarget.get();
+		if (pp1 != pp2)
+		{
+			printf("su puta madre\n");
+			exit(0);
+		}
+		
 		drawroad.drawmap(pathplanner, viewer.get(), pathplanner.fmap);
 		
 	//	std::this_thread::sleep_for(200ms);
