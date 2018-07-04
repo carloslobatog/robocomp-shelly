@@ -133,8 +133,14 @@ int SpecificWorker::includeInAGM(int id,const RoboCompInnerModelManager::Pose3D 
 	newModel->addEdge(person, personSt, "noReach");
 	newModel->addEdge(person, personSt, name);
 	
-	newModel->addEdgeByIdentifiers(person->identifier, 3, "in");
-
+	
+	//Add person in room ==> It has to be fixed to allow use it in different scenarios 
+	if (pose.z < 0 )
+	{
+		newModel->addEdgeByIdentifiers(person->identifier, 5, "in");
+	}else{
+		newModel->addEdgeByIdentifiers(person->identifier, 3, "in");
+	}
 
 	// Geometric part
 	std::map<std::string, std::string> edgeRTAtrs;
@@ -169,28 +175,52 @@ int SpecificWorker::includeInAGM(int id,const RoboCompInnerModelManager::Pose3D 
 
 	while (true)
 	{
-		try
+		if(sendModificationProposal(worldModel, newModel))
 		{
-			sendModificationProposal(worldModel, newModel);
-			newModel->save("/home/robocomp/tmp/newModel.xml");
 			break;
-		}
-		catch(const RoboCompAGMExecutive::Locked &e)
-		{
-			printf("agmexecutive locked...\n");
-		}
-		catch(const RoboCompAGMExecutive::OldModel &e)
-		{
-			printf("agmexecutive oldModel...\n");
-		}
-		catch(const RoboCompAGMExecutive::InvalidChange &e)
-		{ 
-			printf("agmexecutive InvalidChange...\n");
 		}
 		sleep(1);
 	}
 	printf("includeInAGM ends\n");
 	return personSymbolId;
+}
+
+//Change 
+void SpecificWorker::changePersonRoom(int personId, int roomId)
+{
+	std::cout<<"Change room: person "<<personId <<" new room: "<<roomId <<std::endl;
+	// Get current roomId
+	AGMModelSymbol::SPtr personAGM = worldModel->getSymbol(personId);
+	int actualRoomId = -1;
+	for (auto edge = personAGM->edgesBegin(worldModel); edge != personAGM->edgesEnd(worldModel); edge++)
+	{
+		const std::pair<int32_t, int32_t> symbolPair = edge->getSymbolPair();
+		if (edge->getLabel() == "in")
+		{
+			const string secondType = worldModel->getSymbol(symbolPair.second)->symbolType;
+			if (symbolPair.first == personId and secondType == "room")
+			{
+				actualRoomId = symbolPair.second;
+				break;
+			}
+		}
+	}
+	// Modify IN edge
+	try
+	{
+		AGMModel::SPtr newModel(new AGMModel(worldModel));
+		if (actualRoomId != -1)
+		{
+			std::cout<<"remove edge "<<actualRoomId<<std::endl;			
+			newModel->removeEdgeByIdentifiers(personId, actualRoomId, "in");
+		}
+		newModel->addEdgeByIdentifiers(personId, roomId, "in");
+ 		sendModificationProposal(worldModel, newModel);
+	}
+	catch (...)
+	{
+		printf("Can't update person in room... !!!\n");
+	}
 }
 
 bool SpecificWorker::removeFromAGM(int id)
@@ -249,7 +279,6 @@ bool SpecificWorker::removeFromAGM(int id)
 }*/
 
 void SpecificWorker::initializeUI(){
-	
 	//Teclado
 	//UP
 	connect(up,SIGNAL(pressed()),this,SLOT(upP()));
@@ -276,6 +305,15 @@ void SpecificWorker::initializeUI(){
 	connect(del_pb, SIGNAL(clicked()), this, SLOT(delPerson()));
 	connect(setPose_pb, SIGNAL(clicked()), this, SLOT(setPose()));
 	
+	connect(save_pb, SIGNAL(clicked()), this, SLOT(savePoints()));
+	connect(load_pb, SIGNAL(clicked()), this, SLOT(loadPoints()));
+	connect(person_cb, SIGNAL(currentIndexChanged()), this, SLOT(personChanged()));
+	connect(autoM_cb, SIGNAL(clicked()),this, SLOT(autoMovement()));
+	connect(busy_pb, SIGNAL(clicked()),this, SLOT(personBusy()));
+	connect(interact_pb, SIGNAL(clicked()),this, SLOT(personInteraction()));
+	connect(rinteraction_pb, SIGNAL(clicked()),this, SLOT(removeEdgeAGM()));
+//	connect(point_te, SIGNAL(textChanged()), this, SLOT(pointsChanged()));
+
 }
 
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
@@ -383,12 +421,15 @@ void SpecificWorker::addPerson()
 		if (personSymbolId != -1)
 		{
 			TPerson person;
+			person.autoMovement = false;
 			person.pose = pose;
 			person.personSymbolId = personSymbolId;
 			person.name = "fakeperson" + std::to_string(id);
 			personMap.insert(std::pair<int,TPerson>(personSymbolId,person));
 			//include in comboBox
 			person_cb->addItem(QString::number(personSymbolId));
+			int1_cb->addItem(QString::number(personSymbolId));
+			int2_cb->addItem(QString::number(personSymbolId));
 		}
 	}
 }
@@ -404,6 +445,9 @@ void SpecificWorker::delPerson()
 		removeFromRCIS(personId);
 		removeFromAGM(personId);
 		person_cb->removeItem(person_cb->currentIndex());
+		int1_cb->removeItem(int1_cb->findText(QString::number(personId)));
+		int2_cb->removeItem(int2_cb->findText(QString::number(personId)));
+		cleanListWidget(personId);
 	}
 }
 
@@ -414,54 +458,77 @@ void SpecificWorker::move()
 		std::cout<<"No selected person to move"<<std::endl;
 	}
 	else{
-		TPerson person = personMap[person_cb->currentText().toInt()];
-		RoboCompInnerModelManager::coord3D coordInBase;
-		try{
-			if (setPoseFlag)
-				innermodelmanager_proxy->transform("root", "world", coordInItem, coordInBase);
-			else
-				innermodelmanager_proxy->transform("root", person.name, coordInItem, coordInBase);
-		}
-		catch (std::exception& e)
-		{
-			std::cout<<"Exception retrieving transform from RCIS: "<<e.what()<<std::endl;
-			return;
-		}
-		
-		RoboCompInnerModelManager::Pose3D pose;
-		pose.x = coordInBase.x;
-		pose.y = coordInBase.y;
-		pose.z = coordInBase.z;
-		pose.rx = 0;
-		pose.ry = valorgiro;
-		pose.rz = 0;
-		//move in RCIS
-		try{
-			innermodelmanager_proxy->setPoseFromParent(person.name, pose);
-		}
-		catch (std::exception& e)
-		{
-			std::cout<<"Exception moving person in RCIS: "<<e.what()<<std::endl;
-			return;
-		}
-		//move in AGM
-		AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(person.personSymbolId, "RT");
-		AGMModelEdge &edgeRT  = worldModel->getEdgeByIdentifiers(personParent->identifier, person.personSymbolId, "RT");
-		edgeRT.attributes["tx"] = float2str(coordInBase.x);
-		edgeRT.attributes["ty"] = float2str(coordInBase.y);
-		edgeRT.attributes["tz"] = float2str(coordInBase.z);
-		edgeRT.attributes["rx"] = "0";
-		edgeRT.attributes["ry"] = float2str(valorgiro);
-		edgeRT.attributes["rz"] = "0";
+		TPerson *person = &personMap[person_cb->currentText().toInt()];
+		movePerson(person, coordInItem, setPoseFlag);
+	}
+}
 
-		try
-		{
-			AGMMisc::publishEdgeUpdate(edgeRT, agmexecutive_proxy);
+void SpecificWorker::movePerson(TPerson *person, RoboCompInnerModelManager::coord3D coordInItem ,bool global)
+{
+	bool changeRoom = false;
+	RoboCompInnerModelManager::coord3D coordInWorld;
+	try{
+		if (global)
+			innermodelmanager_proxy->transform("root", "world", coordInItem, coordInWorld);
+		else
+			innermodelmanager_proxy->transform("root", person->name, coordInItem, coordInWorld);
+	}
+	catch (std::exception& e)
+	{
+		std::cout<<"Exception retrieving transform from RCIS: "<<e.what()<<std::endl;
+		return;
+	}
+	//check room change
+	if ((coordInWorld.z < 0 and person->pose.z >= 0) or (coordInWorld.z >= 0 and person->pose.z < 0))
+	{
+		changeRoom = true;
+	}
+		
+	RoboCompInnerModelManager::Pose3D pose;
+	pose.x = coordInWorld.x;
+	pose.y = coordInWorld.y;
+	pose.z = coordInWorld.z;
+	pose.rx = 0;
+	pose.ry = valorgiro;
+	pose.rz = 0;
+	//store new position
+	person->pose = pose;
+	//move in RCIS
+	try{
+		innermodelmanager_proxy->setPoseFromParent(person->name, pose);
+	}
+	catch (std::exception& e)
+	{
+		std::cout<<"Exception moving person in RCIS: "<<e.what()<<std::endl;
+		return;
+	}
+	//move in AGM
+	AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(person->personSymbolId, "RT");
+	AGMModelEdge &edgeRT  = worldModel->getEdgeByIdentifiers(personParent->identifier, person->personSymbolId, "RT");
+	edgeRT.attributes["tx"] = float2str(coordInWorld.x);
+	edgeRT.attributes["ty"] = float2str(coordInWorld.y);
+	edgeRT.attributes["tz"] = float2str(coordInWorld.z);
+	edgeRT.attributes["rx"] = "0";
+	edgeRT.attributes["ry"] = float2str(valorgiro);
+	edgeRT.attributes["rz"] = "0";
+	try
+	{
+		AGMMisc::publishEdgeUpdate(edgeRT, agmexecutive_proxy);
+	}
+	catch(std::exception& e)
+	{
+		std::cout<<"Exception moving in AGM: "<<e.what()<<std::endl;
+	}
+	
+	//change room when needed
+	if(changeRoom)
+	{
+		int newRoom = 3;
+		//TODO ==> reevaluate to make it valid for any world
+		if (person->pose.z < 0 ){
+			newRoom = 5;
 		}
-		catch(std::exception& e)
-		{
-			std::cout<<"Exception moving in AGM: "<<e.what()<<std::endl;
-		}
+		changePersonRoom(person->personSymbolId, newRoom);
 	}
 }
 
@@ -474,6 +541,14 @@ void SpecificWorker::compute()
 		RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
 		structuralChange(w);
 		firstTime = false;
+		//add robot ID to interaction comboBox
+		try{
+			int robotID = worldModel->getIdentifierByType("robot");
+			int2_cb->addItem(QString::number(robotID));
+		}catch(...){
+			std::cout<<"No robot found in AGM model"<<std::endl;
+		}
+		
 	}
 	//static QTime lastCompute = QTime::currentTime();
 	
@@ -488,6 +563,17 @@ void SpecificWorker::compute()
     }
     catch(...){}
 
+	
+	//move person
+	for (auto iterator: personMap)
+	{
+		if (iterator.second.autoMovement)
+		{
+			RoboCompInnerModelManager::coord3D coordInItem = autoMovePerson(iterator.second);
+			movePerson(&iterator.second, coordInItem);
+		}
+	}
+	
 	
 	
 
@@ -703,24 +789,253 @@ bool SpecificWorker::setParametersAndPossibleActivation(const ParameterMap &prs,
 	return true;
 }
 
-void SpecificWorker::sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel)
+bool SpecificWorker::sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel)
 {
+	bool result = false;
 	try
 	{	qDebug()<<"Intentando sendModificationProposal";
 		AGMMisc::publishModification(newModel, agmexecutive_proxy, "fakeHumanAgentAgent");
 		qDebug()<<"sendModificationProposal";
+		result = true;
 	}
-/*	catch(const RoboCompAGMExecutive::Locked &e)
+	catch(const RoboCompAGMExecutive::Locked &e)
 	{
+		printf("agmexecutive locked...\n");
 	}
 	catch(const RoboCompAGMExecutive::OldModel &e)
-	
+	{
+		printf("agmexecutive oldModel...\n");
 	}
 	catch(const RoboCompAGMExecutive::InvalidChange &e)
-	{
-	}*/
+	{ 
+		printf("agmexecutive InvalidChange...\n");
+	}
 	catch(const Ice::Exception& e)
 	{
 		exit(1);
 	}
+	return result;
 }
+
+// save points into file
+void SpecificWorker::savePoints()
+{
+	QString nomFileH = QFileDialog::getSaveFileName(this, tr("File Name"), "",tr("Text file (*.txt)"));
+	if (nomFileH != "") {
+		QFile fileH(nomFileH);
+		if (fileH.open(QFile::WriteOnly)) {
+			QTextStream out(&fileH);
+			out << point_te->toPlainText();
+		}
+	}
+}
+// load points from file
+void SpecificWorker::loadPoints()
+{
+	if (person_cb->currentText() == ""){
+		QMessageBox::information(this, "No person selected", "You have to select any person to load points");
+	}
+	else{
+		QString nomFileH = QFileDialog::getOpenFileName(this, tr("File Name"), "",tr("Text file (*.txt)"));
+		if (nomFileH != "") {
+			QFile fileH(nomFileH);
+			if (fileH.open(QFile::ReadOnly)) {
+				QTextStream in(&fileH);
+				QString line = in.readAll();
+				point_te->clear();
+				point_te->append(line);
+			}
+		}
+	}
+}
+
+// Reload person information
+void SpecificWorker::personChanged()
+{
+	if (person_cb->currentText() == ""){
+		QMessageBox::information(this, "No person selected", "You have to select any person to delete");
+	}
+	else{
+		TPerson person = personMap[person_cb->currentText().toInt()];
+		point_te->clear();
+		for(const auto& s: person.points)
+		{
+			std::cout << s.x << std::endl;
+			//point_te->append(line);
+		}
+	}
+}
+//enable/disable person automovement
+void SpecificWorker::autoMovement()
+{
+	TPerson person = personMap[person_cb->currentText().toInt()];
+	person.autoMovement = autoM_cb->isChecked();	
+	
+	pointsChanged();
+}
+
+
+void SpecificWorker::pointsChanged()
+{
+	if (person_cb->currentText() == ""){
+		std::cout<<"No selected person to move"<<std::endl;
+	}
+	else{
+		autoM_cb->setChecked(false);
+		TPerson person = personMap[person_cb->currentText().toInt()];
+		person.points.clear();
+		RoboCompInnerModelManager::Pose3D pose;
+		QStringList data = point_te->toPlainText().split(QRegExp("[\n]"),QString::SkipEmptyParts);
+		for (auto line: data)
+		{
+			try
+			{
+				QStringList aux = line.split(QRegExp("[;]"),QString::SkipEmptyParts);
+				if (aux.size() == 3)
+				{
+					pose.x = aux[0].toFloat();
+					pose.z = aux[1].toFloat();
+					pose.y = 0;
+					pose.rx = 0;
+					pose.ry = 0;
+					pose.rz = 0;
+					person.points.push_back(pose);
+				}
+				else
+				{
+					std::cout << "Skipping no complete position: " << line.toStdString() << std::endl;
+				}
+			}catch(...)
+			{
+				std::cout << "Exception" << std::endl;
+			}
+		}
+	}
+}
+#define MIN_DISTANCE 100
+RoboCompInnerModelManager::coord3D SpecificWorker::autoMovePerson(TPerson person)
+{
+	std::cout << "Auto move person" << std::endl;
+	RoboCompInnerModelManager::coord3D nextPose;
+	//compute distance to next point
+	QVec current = QVec::vec2(person.points[person.currentPoint].x, person.points[person.currentPoint].z);
+	QVec actual = QVec::vec2(person.pose.x, person.pose.z);
+	
+	QVec next = (current - actual);
+	
+	
+	
+	// check if next point is already achieve
+	if ( (current - actual).norm2() < MIN_DISTANCE){
+		if (person.currentPoint == person.points.size()){
+			person.currentPoint = 0;
+		}else{
+			person.currentPoint++;
+		}
+	}
+	
+	
+	
+	// BASIC_PERIOD 
+	return nextPose;
+}
+//insert person isBusy edge in AGM
+void SpecificWorker::personBusy()
+{
+	if (int1_cb->currentText() == ""){
+		std::cout<<"No selected person"<<std::endl;
+	}
+	else{
+		QString text = int1_cb->currentText() + QString(" => isBusy");
+		QList<QListWidgetItem*> list = interaction_lw->findItems(text, Qt::MatchExactly);
+		if (list.size() > 0)
+		{
+			std::cout << "Interaction is already added" << std::endl;
+		}
+		else
+		{
+			int personID = int1_cb->currentText().toInt();
+			AGMModel::SPtr newModel(new AGMModel(worldModel));
+			newModel->addEdgeByIdentifiers(personID, personID, "isBusy");
+			if(sendModificationProposal(worldModel, newModel))
+			{
+				try{
+					AGMModelEdge edge = newModel->getEdgeByIdentifiers(personID, personID, "isBusy");
+					QListWidgetItem *item = new QListWidgetItem(text);
+					item->setData(Qt::UserRole, QVariant::fromValue<AGMModelEdge>(edge));
+					interaction_lw->addItem(item);
+				}catch(...)
+				{
+					std::cout << "Error retrieving isBusy edge from newModel" << std::endl;
+				}
+			}
+		}
+	}
+}
+//insert person interaction edge in AGM
+void SpecificWorker::personInteraction()
+{
+	if (int1_cb->currentText() == "" or int2_cb->currentText() == ""){
+		std::cout<<"No selected person"<<std::endl;
+	}
+	else{
+		int person1ID = int1_cb->currentText().toInt();
+		int person2ID = int2_cb->currentText().toInt();
+		if (person1ID == person2ID)
+		{
+			std::cout << "Person could not interact with himself" << std::endl;
+			return;
+		}
+		QString text = int1_cb->currentText() + QString(" => interacting => ") + int2_cb->currentText();
+		QList<QListWidgetItem*> list = interaction_lw->findItems(text, Qt::MatchExactly);
+		if (list.size() > 0)
+		{
+			std::cout << "Interaction is already added" << std::endl;
+		}
+		else
+		{
+			AGMModel::SPtr newModel(new AGMModel(worldModel));
+			newModel->addEdgeByIdentifiers(person1ID, person2ID, "interacting");
+			if(sendModificationProposal(worldModel, newModel))
+			{
+				try{
+					AGMModelEdge edge = newModel->getEdgeByIdentifiers(person1ID, person2ID, "interacting");
+					QListWidgetItem *item = new QListWidgetItem(text);
+					item->setData(Qt::UserRole, QVariant::fromValue<AGMModelEdge>(edge));
+					interaction_lw->addItem(item);
+				}catch(...)
+				{
+					std::cout << "Error retrieving interacting edge from newModel" << std::endl;
+				}
+			}
+		}
+	}
+}
+//Remove edge from AGM
+void SpecificWorker::removeEdgeAGM()
+{
+	std::cout << "Remove edge " << std::endl;
+	QListWidgetItem *item = interaction_lw->currentItem();
+	AGMModelEdge edge = item->data(Qt::UserRole).value<AGMModelEdge>();
+	AGMModel::SPtr newModel(new AGMModel(worldModel));
+	newModel->removeEdge(edge);
+	if(sendModificationProposal(worldModel, newModel))
+	{
+		std::cout << "remove item from list" << std::endl;
+		interaction_lw->removeItemWidget(item);
+		delete item;
+	}
+}
+
+//TODO ==> when person is removed all its interactions must be also removed
+//remove any entri related with personID (it is used when person is removed)
+void SpecificWorker::cleanListWidget(int personID)
+{
+	QList<QListWidgetItem*> list = interaction_lw->findItems(QString::number(personID), Qt::MatchContains);
+	for (auto item: list)
+	{
+		interaction_lw->removeItemWidget(item);
+		delete item;
+	}
+}
+
