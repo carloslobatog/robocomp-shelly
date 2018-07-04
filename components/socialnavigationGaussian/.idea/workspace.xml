@@ -26,8 +26,8 @@
       <file leaf-file-name="specificworker.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/specificworker.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="346" column="47" lean-forward="false" selection-start-line="346" selection-start-column="47" selection-end-line="346" selection-end-column="47" />
+            <state relative-caret-position="15">
+              <caret line="212" column="0" lean-forward="true" selection-start-line="212" selection-start-column="0" selection-end-line="212" selection-end-column="0" />
               <folding>
                 <element signature="e#735#766#0" expanded="true" />
               </folding>
@@ -46,7 +46,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>to</find>
       <find>space</find>
       <find>points</find>
       <find>plt.plot</find>
@@ -76,6 +75,7 @@
       <find>normal</find>
       <find>GM</find>
       <find>finishe</find>
+      <find>h</find>
     </findStrings>
     <replaceStrings>
       <replace>pn</replace>
@@ -130,6 +130,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -158,8 +160,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -654,8 +654,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/specificworker.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="346" column="47" lean-forward="false" selection-start-line="346" selection-start-column="47" selection-end-line="346" selection-end-column="47" />
+        <state relative-caret-position="15">
+          <caret line="212" column="0" lean-forward="true" selection-start-line="212" selection-start-column="0" selection-end-line="212" selection-end-column="0" />
           <folding>
             <element signature="e#735#766#0" expanded="true" />
           </folding>

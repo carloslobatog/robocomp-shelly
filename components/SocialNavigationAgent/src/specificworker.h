@@ -66,38 +66,6 @@ public:
 //bool para indicar si se ha movido la persona, lo utilizare para imprimir la coordenada de la persona cada vez que se mueva
 	bool changepos = false;
 	
-	SNGPolylineSeq sequence;
-	
-	SNGPolylineSeq intimate_seq;
-	SNGPolylineSeq personal_seq;
-	SNGPolylineSeq social_seq;
-	
-	//ESTRUCTURA PERSONA FORMADA POR ANGULO, POS X,POS Z
-	
- 	LocalPolyLineList polyLineList;
-	
-	SNGPerson robot;
-	int32_t personSymbolId;
-	vector <int32_t> pSymbolId = {};
-
-	
-	SNGPerson person;
-	SNGPersonSeq totalpersons; 
-	
-	//bool para saber si se ha movido alguna persona
-	bool movperson = false;
-	int32_t robotSymbolId;	
-    
-	struct Point { //PARA GUARDAR LOS DATOS EN UN ARCHIVO
-	  float x;
-	  float z;
-	};
-	Point point;
-	vector <Point> poserobot;
-	
-	//PARA GUARDAR LA DISTANCIA RECORRIDA
-	float totaldist=0;
-	
 	ActionExecution aE; //Class ActionExecution
 	SocialRules socialrules; //Class SocialRules
 	
@@ -140,17 +108,15 @@ public:
 		return 0.0;};
 	//float go(const TargetPose &target){pathfinder.go(target.x, -target.z);  return 0.0;};
 
-	void checkNewPersonInModel();
-	void checkMovement();
-	void checkRobotmov();
+
 	
 public slots:
  	void compute();
 	//void readTrajState();
 // 	SNGPolylineSeq gauss(bool draw=true);
 // 	void changevalue(int value);
-	void savedata();
-	void UpdateInnerModel(SNGPolylineSeq seq);
+
+
 
 private:
 	bool setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated);

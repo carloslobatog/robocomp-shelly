@@ -307,6 +307,8 @@ PathPlanner::Key PathPlanner::pointToGrid(const QVec &p)
  */
 void PathPlanner::constructGraph(FMap &fmap, uint tile_size)
 {
+	qDebug()<<__FUNCTION__;
+	
 	uint k=0;
  	for( long int i = hmin ; i < hmax ; i += tile_size)
  		for( long int j = vmin ; j < vmax ; j += tile_size)
@@ -345,6 +347,8 @@ void PathPlanner::constructGraph(FMap &fmap, uint tile_size)
 
 void PathPlanner::modifyCost(SNGPolylineSeq personal, SNGPolylineSeq social)
 {
+	
+	qDebug()<<__FUNCTION__;
 	containedp_list.clear();
 	
 	for (auto poly : social)
@@ -405,6 +409,7 @@ void PathPlanner::modifyCost(SNGPolylineSeq personal, SNGPolylineSeq social)
 
 void PathPlanner::modifyGraph(SNGPolylineSeq intimate, SNGPolylineSeq personal, SNGPolylineSeq social)
 {
+	qDebug()<<__FUNCTION__;
  	occupied_list.clear();
 	
 	for (auto poly : intimate)
@@ -452,6 +457,7 @@ void PathPlanner::modifyGraph(SNGPolylineSeq intimate, SNGPolylineSeq personal, 
 	}
 	
 	modifyCost(personal,social);
+	
 	set_map_dirty_bit(true);
 	
 	

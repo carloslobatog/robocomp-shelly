@@ -2,8 +2,16 @@
 #include "socialrules.h"
 
 
-void SocialRules::initialize(SocialNavigationGaussianPrx socialnavigationgaussian_proxy_,AGMExecutivePrx agmexecutive_proxy_,QMutex *mutex_,robocomp::pathfinder::PathFinder *pathfinder_,AGMModel::SPtr worldModel_, InnerPtr innerModel_)
+void SocialRules::initialize(SocialNavigationGaussianPrx socialnavigationgaussian_proxy_,
+			     AGMExecutivePrx agmexecutive_proxy_,
+			     QMutex *mutex_,
+			     robocomp::pathfinder::PathFinder *pathfinder_,
+			     AGMModel::SPtr worldModel_,
+			     const std::shared_ptr<InnerModel> &innerModel_)
+
 {
+	qDebug()<<__FUNCTION__;
+	
 	socialnavigationgaussian_proxy = socialnavigationgaussian_proxy_;
 	agmexecutive_proxy = agmexecutive_proxy_;
 	mux = mutex_;
@@ -14,46 +22,195 @@ void SocialRules::initialize(SocialNavigationGaussianPrx socialnavigationgaussia
 	objectInteraction(false);
 }
 
-
-/**
-* \brief Change the h value
-*/
-void SocialRules::change_hvalue(float value)
+void SocialRules::innerModelChanged(const std::shared_ptr<InnerModel> &innerModel_)
 {
-	h = value;
-	qDebug()<<"h = "<<value;
+	qDebug()<<__FUNCTION__;
 	
+	innerModel = innerModel_;
+	
+	printf("%s %d sr(%p) pf(%p) (%p)\n", __FILE__, __LINE__, this, pathfinder, innerModel.get());
+	pathfinder->innerModelChanged(innerModel, intimate_seq, personal_seq, social_seq);
 }
+
+
+void SocialRules::checkNewPersonInModel(AGMModel::SPtr worldModel_)
+{	
+	qDebug()<<__FUNCTION__;
+	worldModel = worldModel_;
+	
+	pSymbolId.clear();
+	//Check if the person is in the model
+ 	for (uint i=0; i < 100; i++)
+	{
+		std::string type = "person" + std::to_string(i+1);
+		std::string name = "fakeperson" + std::to_string(i+1);
+		int idx = 0;
+		while ((personSymbolId = worldModel->getIdentifierByType(type, idx++)) != -1)
+		{
+			if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
+			{
+				pSymbolId.push_back(personSymbolId);
+				std::cout<<"Person found "<<type<<" "<<name<<" "<<personSymbolId<<std::endl;
+				break;
+			}
+		}
+	}
+	
+	
+	if (!pSymbolId.empty())
+		checkMovement();
+	else
+		qDebug()<<"No persons found";
+}
+
+void SocialRules::checkMovement()
+{
+	qDebug()<<__FUNCTION__;
+	AGMModel::SPtr newM(new AGMModel(worldModel));
+// 	bool sendChangesAGM = false;
+	
+	totalpersons.clear();
+ 	
+	if (!pSymbolId.empty())
+	{
+		for (auto id: pSymbolId)
+		{
+			AGMModelSymbol::SPtr personParent = newM->getParentByLink(id, "RT");
+			AGMModelEdge &edgeRT = newM->getEdgeByIdentifiers(personParent->identifier, id, "RT");
+				
+			person.x = str2float(edgeRT.attributes["tx"])/1000;
+			person.z = str2float(edgeRT.attributes["tz"])/1000;
+			person.angle = str2float(edgeRT.attributes["ry"]);
+			//person.vel=str2float(edgeRT.attributes["velocity"]);
+			person.vel = 0;
+			
+			totalpersons.push_back(person);
+			
+		/*	qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << Rotacion "<< person.angle;
+			*/		
+			/////////////////////checking if the person is looking at the robot /////////////////////////
+	// 		try
+	// 		{	
+	// 			if (checkHRI(person,ind+1,innerModel.get(),newM) == true)
+	// 			{	
+	// 				qDebug()<<"SEND MODIFICATION PROPOSAL";
+	//					sendChangesAGM = true;
+	// 				
+	// 			}
+	// 		}
+	//		catch(...){}
+		}
+		
+		try
+		{
+			social_seq.clear();
+			social_seq = calculateGauss(false, 0.1); 
+			personal_seq.clear();
+			personal_seq = calculateGauss(false, 0.4);
+			intimate_seq.clear();
+			intimate_seq = calculateGauss(false, 0.8);
+	
+			pathfinder->innerModelChanged(innerModel, intimate_seq, personal_seq, social_seq);
+		}
+			
+		catch( const Ice::Exception &e)
+		{ 
+			std::cout << e << std::endl;
+		}
+
+		
+// 		if (sendChangesAGM)
+// 		{	
+// 			try
+// 			{
+// 				sendModificationProposal(newM,worldModel,"-");
+// 			}
+// 			catch(...){}
+// 		}
+		
+	}
+
+}
+
+SNGPolylineSeq SocialRules::ApplySocialRules()
+{
+	qDebug()<<__FUNCTION__;
+
+	movperson.clear();
+	quietperson.clear();
+	
+	SNGPolylineSeq seq;	
+	
+	if (person.vel > 0)
+		movperson.push_back(person);
+	else
+		quietperson.push_back(person);
+
+	if (!quietperson.empty())
+	{
+		SNGPolylineSeq secuencia = calculateGauss(false);
+		
+		for(auto s: secuencia)
+		{	
+			seq.push_back(s);
+		}			    
+	}
+	
+	if (!movperson.empty())
+	{
+		SNGPolylineSeq secuencia2 = PassOnRight(false);
+		for(auto s: secuencia2)
+		{	
+			seq.push_back(s);			
+		}
+		  
+	}
+
+	if (!objects.empty())	
+	{  
+
+		SNGPolylineSeq secuenciaobj = objectInteraction(false);
+		for(auto s: secuenciaobj)
+		{
+			seq.push_back(s);
+		}
+		
+	} 
+	
+	//SNGPolylineSeq seqpoints = socialnavigationgaussian_proxy->RemovePoints(seq);
+	
+	return seq;
+}
+
 /**
 * \brief If the person is in the model it is added to a vector of persons wich is sent to the socialnavigationGaussian
 * to model its personal space. 
 * The function returns a sequence of polylines.
 */
 
-SNGPolylineSeq SocialRules::calculateGauss(bool draw)
+SNGPolylineSeq SocialRules::calculateGauss(bool draw, float h)
 {
-	qDebug()<<__FUNCTION__;
-	if (!quietperson.empty())
-	{  	
-		sequence.clear();
-		sequence = socialnavigationgaussian_proxy-> getPersonalSpace(quietperson,h, draw);
+	
+	qDebug()<<__FUNCTION__ << "con h = " << h;
+	if (!totalpersons.empty())
+	{
+		seq.clear();
+		seq = socialnavigationgaussian_proxy-> getPersonalSpace(totalpersons, h, draw);
 	}
-	return sequence;
+	return seq;
 }
 
 
 SNGPolylineSeq SocialRules::PassOnRight(bool draw)
 {
-		
 	qDebug()<<__FUNCTION__;
 	if (!movperson.empty())
 	{
-		sequence2.clear();
-		sequence2 = socialnavigationgaussian_proxy-> getPassOnRight(movperson, h, draw);
-	}	    
-	return sequence2;
-
+		seq.clear();
+		seq = socialnavigationgaussian_proxy-> getPassOnRight(movperson, h, draw);
+	}
 	
+	return seq;	
 }
  
 SNGPolylineSeq SocialRules::objectInteraction(bool d)
@@ -64,7 +221,7 @@ SNGPolylineSeq SocialRules::objectInteraction(bool d)
 	AGMModelConverter::fromIceToInternal(w, worldModel);
 	
 	objects.clear();
-	sequenceObj.clear();
+	SNGPolylineSeq sequenceObj;
 	try
 	{
 		int idx=0;
@@ -84,7 +241,7 @@ SNGPolylineSeq SocialRules::objectInteraction(bool d)
 			qDebug()<<"Object"<<"Pose x"<<object.x<<"Pose z"<<object.z<<"Angle"<<object.angle<<"Space"<<object.space;
 		}
 		
-		sequenceObj = socialnavigationgaussian_proxy->getObjectInteraction(totalperson,objects,d);
+		sequenceObj = socialnavigationgaussian_proxy->getObjectInteraction(totalpersons,objects,d);
 	}
 	catch(...){}
 	
@@ -92,13 +249,164 @@ SNGPolylineSeq SocialRules::objectInteraction(bool d)
 	
 }
 
+
+void SocialRules::saveData()
+{	
+	qDebug("Saving in robotpose.txt the robot's pose");
+	ofstream file("robotpose.txt", ofstream::out);
+	for (auto p:poserobot)
+	{
+		file<< p.x << " " <<p.z<< endl;
+	}
+	file.close();
+
+	qDebug("Saving in personpose.txt the human's poses");
+	ofstream file2("personpose.txt", ofstream::out);
+	for (auto person:totalpersons)
+	{
+		file2<< person.x << " " <<person.z<<" "<<person.angle<< endl;
+	}
+	file2.close();	
+	poserobot.clear();
+
+
+	qDebug("Saving intimate polyline");
+	ofstream file3("polyline_intimate.txt", ofstream::out);
+	for (auto s:intimate_seq)
+	{
+		for (auto p: s)
+			file3<< p.x << " " <<p.z<<" "<< endl;
+	}
+	file3.close();
+	
+	qDebug("Saving personal polyline");
+	ofstream file4("polyline_personal.txt", ofstream::out);
+	for (auto s:personal_seq)
+	{
+		for (auto p: s)
+			file4<< p.x << " " <<p.z<<" "<< endl;
+	}
+	file4.close();
+	
+	qDebug("Saving social polyline");
+	ofstream file5("polyline_social.txt", ofstream::out);
+	for (auto s:social_seq)
+	{
+		for (auto p: s)
+			file5<< p.x << " " <<p.z<<" "<< endl;
+	}
+	file5.close();
+
+	qDebug()<<"Saving in dist.txt the total distance"<<totaldist;
+	ofstream file6("dist.txt", ofstream::out);
+	file6<< totaldist << endl;
+	totaldist = 0;
+	file6.close();
+}
+
+
+void SocialRules::checkRobotmov()
+{
+	robotSymbolId = worldModel->getIdentifierByType("robot");
+	AGMModelSymbol::SPtr robotparent = worldModel->getParentByLink(robotSymbolId, "RT");
+	AGMModelEdge &edgeRTrobot  = worldModel->getEdgeByIdentifiers(robotparent->identifier, robotSymbolId, "RT");
+		
+	robot.x=str2float(edgeRTrobot.attributes["tx"])/1000;
+	robot.z=str2float(edgeRTrobot.attributes["tz"])/1000;
+	robot.angle=str2float(edgeRTrobot.attributes["ry"]);
+
+	point.x=robot.x;
+	point.z=robot.z;
+		 
+	if (poserobot.size() == 0)
+		poserobot.push_back(point);
+	  
+	else if ((poserobot[poserobot.size()-1].x != point.x) or (poserobot[poserobot.size()-1].z !=point.z))
+	{  
+		float  dist=sqrt((point.x - poserobot[poserobot.size()-1].x)*(point.x - poserobot[poserobot.size()-1].x)
+				+(point.z - poserobot[poserobot.size()-1].z)*(point.z - poserobot[poserobot.size()-1].z));
+		    
+		totaldist=totaldist + dist;
+		qDebug()<<"Distancia calculada" << dist << "Distancia total" <<totaldist;
+		    
+		poserobot.push_back(point);  
+	}
+}
+
+/**
+ * \brief The innerModel is extracted from the AGM and the polylines are inserted on it as a set of planes.
+ */
+
+void SocialRules::UpdateInnerModel(SNGPolylineSeq seq)
+{
+// 	QMutexLocker locker(mutex);
+// 	qDebug() << "----------------------"<< __FUNCTION__ << "----------------------";
+// 	
+// 	// Extract innerModel
+// 	InnerModel *inner  = AGMInner::extractInnerModel(worldModel, "world", false); f
+// 
+// 	int count = 0;
+// 
+// 	for (auto s:seq)
+// 	{
+// 		auto previousPoint = s[s.size()-1];
+// 		for (auto currentPoint:s)
+// 		{
+// 			QString name = QString("polyline_obs_")+QString::number(count,10);
+// 			qDebug() << __FUNCTION__ << "nombre"<<name;
+// 			QVec ppoint = QVec::vec3(previousPoint.x*1000, 1000, previousPoint.z*1000);
+// 			QVec cpoint = QVec::vec3(currentPoint.x*1000, 1000, currentPoint.z*1000);
+// 			QVec center = (cpoint + ppoint).operator*(0.5);
+// 
+// 			QVec normal = (cpoint-ppoint);
+// 			float dist = normal.norm2();	
+// 			float temp = normal(2);
+// 			normal(2) = normal(0);
+// 			normal(0) = -temp;
+// 
+// 			if (inner->getNode(name))
+// 			{
+// 				try
+// 				{
+// 					inner->removeNode(name);
+// 				}
+// 
+// 				catch(QString es){ qDebug() << "EXCEPCION" << es;}
+// 			}
+// 
+// 			InnerModelNode *parent = inner->getNode(QString("world"));
+// 			if (parent == NULL)
+// 				printf("%s: parent does not exist\n", __FUNCTION__);
+// 			else
+// 			{			
+// 				InnerModelPlane *plane;
+// 				try
+// 				{
+// 					plane  = inner-> newPlane(name, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
+// 					parent->addChild(plane); 
+// 				}
+// 				catch(QString es)
+// 				{ 
+// 					qDebug() << "EXCEPCION" << es;}
+// 			}
+// 			count++;
+// 			previousPoint=currentPoint;
+// 		}
+// 	}
+
+// 	innerModel.reset(inner);
+// 	pathfinder.innerModelChanged(innerModel, polyLineList);
+// 	
+// 	viewer->reloadInnerModel(innerModel);
+}
+
 void SocialRules::goToPerson()
 {
 	qDebug()<<__FUNCTION__;
 	
-	if (personSymbolId.size() == 1)
+	if (pSymbolId.size() == 1)
 	{
-		auto id = personSymbolId[0];
+		auto id = pSymbolId[0];
 		
 		AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(id, "RT");
 		AGMModelEdge &edgeRT = worldModel->getEdgeByIdentifiers(personParent->identifier, id, "RT");
@@ -116,27 +424,13 @@ void SocialRules::goToPerson()
 	
 	else
 		qDebug()<<"Más de una persona en el modelo";
-	
-	
-	
-	
-// 	for (auto p:totalperson)
-// 		qDebug()<<"PERSONA" << p.x <<" " <<p.z<<" "<<p.angle;
-// 		
-// 	if (totalperson.size() != 1)
-// 		qDebug()<<"Más de una persona en el modelo";
-// 	else
-// 		
 		
-		
-	
 }
 
 
-bool SocialRules::checkHRI(SNGPerson p, int ind,InnerPtr i, AGMModel::SPtr w)
+bool SocialRules::checkHRI(SNGPerson p, int ind , InnerPtr &i, AGMModel::SPtr w)
 {	
 	worldModel = w;
-	
 	bool changes = false;
 	/////////////////////Checking if the person is close and looking at the robot
 	std::string type = "person" + std::to_string(ind);
@@ -146,7 +440,6 @@ bool SocialRules::checkHRI(SNGPerson p, int ind,InnerPtr i, AGMModel::SPtr w)
 
 	bool looking = false;
 	bool close = false;
-
 
 	mux->lock();
 	QVec pose = i->transform(QString::fromStdString(name),"robot");
@@ -159,19 +452,13 @@ bool SocialRules::checkHRI(SNGPerson p, int ind,InnerPtr i, AGMModel::SPtr w)
 	qDebug()<<"dist"<<dist<<"angle"<<abs(angle/0.0175);
 	
 	if (abs(angle)<20*0.0175)
-	{
-		qDebug()<<"LOOOKING";
 		looking = true;
-	}
-
 	
 	if (dist<2000.0)
-	{
-		qDebug()<<"CLOOOOSE";
 		close = true;
-	}	
-	///////////////////////Add edge interrupting////////////////////////
 	
+	///////////////////////Add edge interrupting////////////////////////
+
 	int32_t Idperson = worldModel->getIdentifierByType(type);
 	AGMModelSymbol::SPtr person = worldModel->getSymbolByIdentifier(Idperson);
 	int32_t Idrobot = worldModel->getIdentifierByType("robot");
@@ -207,76 +494,3 @@ bool SocialRules::checkHRI(SNGPerson p, int ind,InnerPtr i, AGMModel::SPtr w)
 	}
 	return changes;
 }
-
-
-SNGPolylineSeq SocialRules::ApplySocialRules(SNGPersonSeq tperson)
-{
-	qDebug()<<__FUNCTION__;
-	totalperson=tperson;
-	movperson.clear();
-	quietperson.clear();
-	seq.clear();
-	
-	//for each person check if the velocity is 0, if it is add to totalp, if not add to totalpmov
-	
-	for (auto p: totalperson)
-	{
-		if (p.vel > 0)
-			movperson.push_back(p);
-		else
-			quietperson.push_back(p);
-		
-	}
-	
-	//RoboCompTrajectoryRobot2D::PolyLineList list;
-	
-	if (!quietperson.empty())
-	{
-		SNGPolylineSeq secuencia = calculateGauss(false);
-		
-		for(auto s: secuencia)
-		{	
-			seq.push_back(s);
-		}			    
-	}
-	
-	if (!movperson.empty())
-	{
-		SNGPolylineSeq secuencia2 = PassOnRight(false);
-		for(auto s: secuencia2)
-		{	
-			seq.push_back(s);			
-		}
-		  
-	}
-
-	if (!objects.empty())	
-	{  
-
-		SNGPolylineSeq secuenciaobj = objectInteraction(false);
-		for(auto s: secuenciaobj)
-		{
-			seq.push_back(s);
-		}
-		
-	} 
-	
-	//SNGPolylineSeq seqpoints = socialnavigationgaussian_proxy->RemovePoints(seq);
-	
-/*	for(auto s: seq)
-		{			
-			RoboCompTrajectoryRobot2D::PolyLine poly;
-
-			for(auto p: s)
-			{
-				RoboCompTrajectoryRobot2D::PointL punto = {p.x, p.z};
-				poly.push_back(punto);
-			}
-			
-			list.push_back(poly);
-		}*/	
-	
-	return seq;
-}
-
-

@@ -86,16 +86,8 @@ void PathFinder::run()
 		projector.update(road);
 		controller.update(road);
 		pathplanner.update(road);
-//TODO Revisar para pasar un shared_ptr
-		void *pp1 = currenttarget.get();
-		drawroad.draw(road, viewer.get(), currenttarget);
-		void *pp2 = currenttarget.get();
-		if (pp1 != pp2)
-		{
-			printf("su puta madre\n");
-			exit(0);
-		}
-		
+		//TODO Revisar para pasar un shared_ptr
+		drawroad.draw(road, viewer.get(), currenttarget);		
 		drawroad.drawmap(pathplanner, viewer.get(), pathplanner.fmap);
 		
 	//	std::this_thread::sleep_for(200ms);
@@ -103,10 +95,13 @@ void PathFinder::run()
 }
 
 
-void PathFinder::innerModelChanged (const std::shared_ptr<InnerModel> &innerModel_,SNGPolylineSeq intimate,SNGPolylineSeq personal,SNGPolylineSeq social)
+void PathFinder::innerModelChanged (const std::shared_ptr<InnerModel> &innerModel_, SNGPolylineSeq intimate,SNGPolylineSeq personal,SNGPolylineSeq social)
 {
-	innerModel = innerModel_;
 	qDebug()<<__FUNCTION__<< "--------------ESPERANDO GET ROAD -----------------------";
+	printf("%s %d (%p) (%p)\n", __FILE__, __LINE__, this, innerModel_.get());
+	innerModel = innerModel_;
+	printf("%s %d (%p) (%p)\n", __FILE__, __LINE__, this, innerModel_.get());
+	qDebug()<<"--------------------------AQUI--------------------------";
 	
 	Road &road = getRoad(); 
 		qDebug()<<"reloadInnerModel PATHPLANNER";

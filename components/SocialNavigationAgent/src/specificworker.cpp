@@ -42,7 +42,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	connect(gaussiana,SIGNAL(clicked()),&socialrules, SLOT(calculateGauss()));
 	connect(por,SIGNAL(clicked()),&socialrules, SLOT(PassOnRight()));
 	connect(objint,SIGNAL(clicked()),&socialrules, SLOT(objectInteraction()));
-	connect(datos,SIGNAL(clicked()),this, SLOT(savedata()));
+	connect(datos,SIGNAL(clicked()),&socialrules, SLOT(saveData()));
 	
 	connect(gotoperson,SIGNAL(clicked()),&socialrules, SLOT(goToPerson()));
 	//trajReader.start(1000);
@@ -61,33 +61,32 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	try{ robotname = paramsL.at("RobotName").value;} 
 	catch(const std::exception &e){ std::cout << e.what() << "SpecificWorker::SpecificWorker - Robot name defined in config. Using default 'robot' " << std::endl;}
 	
+	
 	#ifdef USE_QTGUI
 		viewer = std::make_shared<InnerViewer>(innerModel, "Social Navigation");  //InnerViewer copies internally innerModel so it has to be resynchronized
 		//viewer->start();	
 	#endif
 	
+		
+	std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams = std::make_shared<RoboCompCommonBehavior::ParameterList>(paramsL);
+
+//   	innerModel = std::make_shared<InnerModel>("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml");
+// 	innerModel->getNode<InnerModelJoint>("armX1")->setAngle(-1);
+// 	innerModel->getNode<InnerModelJoint>("armX2")->setAngle(2.5);
+	
 	try
 	{		
 		RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
+		structuralChange(w);
+		// Initializing PathFinder
+		pathfinder.initialize(innerModel, viewer, configparams, laser_proxy, omnirobot_proxy);
+		// Initializing SocialRules
+		socialrules.initialize(socialnavigationgaussian_proxy, agmexecutive_proxy, mutex, &pathfinder, worldModel, innerModel);
 		structuralChange(w);
 		rDebug2(("Leaving Structural Change"));
 	}		
 	catch(...)
 	{	rDebug2(("The executive is probably not running, waiting for first AGM model publication...")); }
-		
-// 	innerModel = std::make_shared<InnerModel>("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml");
-	
-
-//	innerModel->getNode<InnerModelJoint>("armX1")->setAngle(-1);
-//	innerModel->getNode<InnerModelJoint>("armX2")->setAngle(2.5);
-	
-
-	std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams = std::make_shared<RoboCompCommonBehavior::ParameterList>(paramsL);
-
-	// Initializing PathFinder
-	pathfinder.initialize(innerModel,viewer, configparams, laser_proxy, omnirobot_proxy);
-	// Initializing SocialRules
-	socialrules.initialize(socialnavigationgaussian_proxy, agmexecutive_proxy, mutex, &pathfinder, worldModel, innerModel);
 	
 	// releasing pathfinder
 	//thread_pathfinder = std::thread(&robocomp::pathfinder::PathFinder::run, &pathfinder);
@@ -106,10 +105,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 	//aE.omnirobot_proxy = omnirobot_proxy;
 	//aE.trajectoryn2d_proxy = trajectoryrobot2d_proxy;
 		
-	
 	rDebug2(("Leaving setParams"));
-
-	checkNewPersonInModel();
 	
 	return true;
 }
@@ -157,8 +153,8 @@ void SpecificWorker::compute()
 	
 	if (changepos)
 	{
-		checkMovement();
-		checkRobotmov();
+		socialrules.checkMovement();
+		socialrules.checkRobotmov();
 	
 		changepos = false;
 	}
@@ -167,278 +163,6 @@ void SpecificWorker::compute()
 }
 
 
-void SpecificWorker::savedata()
-{	
-
-	qDebug("Saving in robotpose.txt the robot's pose");
-	ofstream file("robotpose.txt", ofstream::out);
-	for (auto p:poserobot)
-	{
-		file<< p.x << " " <<p.z<< endl;
-	}
-	file.close();
-
-	qDebug("Saving in personpose.txt the human's poses");
-	ofstream file2("personpose.txt", ofstream::out);
-	for (auto person:totalpersons)
-	{
-		file2<< person.x << " " <<person.z<<" "<<person.angle<< endl;
-	}
-	file2.close();	
-	poserobot.clear();
-
-
-	qDebug("Saving poly.txt la polilinea");
-	ofstream file3("poly.txt", ofstream::out);
-	for (auto s:sequence)
-	{
-		for (auto p: s)
-			file3<< p.x << " " <<p.z<<" "<< endl;
-	}
-	file3.close();
-
-	qDebug()<<"Saving in dist.txt the total distance"<<totaldist;
-	ofstream file4("dist.txt", ofstream::out);
-	file4<< totaldist << endl;
-	totaldist = 0;
-	file4.close();
-
-	/////Guardar cada polilinea por separado
-	int i = 0;
-	for (auto s:sequence)
-	{
-		QString name = QString("polyline")+QString::number(i,10)+QString(".txt");
-		ofstream file5(name.toUtf8().constData(), ofstream::out);
-		for (auto p: s)
-		{
-			file5<< p.x << " " <<p.z<<" "<< endl;
-		}
-		i++;
-		file5.close();
-	}
-
-}
-
-
-void SpecificWorker::checkRobotmov()
-{
-	robotSymbolId = worldModel->getIdentifierByType("robot");
-	AGMModelSymbol::SPtr robotparent = worldModel->getParentByLink(robotSymbolId, "RT");
-	AGMModelEdge &edgeRTrobot  = worldModel->getEdgeByIdentifiers(robotparent->identifier, robotSymbolId, "RT");
-		
-	robot.x=str2float(edgeRTrobot.attributes["tx"])/1000;
-	robot.z=str2float(edgeRTrobot.attributes["tz"])/1000;
-	robot.angle=str2float(edgeRTrobot.attributes["ry"]);
-
-	point.x=robot.x;
-	point.z=robot.z;
-		 
-	if (poserobot.size()==0)
-		poserobot.push_back(point);
-	  
-	else if ((poserobot[poserobot.size()-1].x!=point.x)or(poserobot[poserobot.size()-1].z!=point.z))
-	{  
-		float  dist=sqrt((point.x - poserobot[poserobot.size()-1].x)*(point.x - poserobot[poserobot.size()-1].x)
-				+(point.z - poserobot[poserobot.size()-1].z)*(point.z - poserobot[poserobot.size()-1].z));
-		    
-		totaldist=totaldist + dist;
-		qDebug()<<"Distancia calculada"<<dist<<"Distancia total"<<totaldist;
-		    
-		poserobot.push_back(point);  
-	}
-}
-
-
-void SpecificWorker::checkNewPersonInModel()
-{	
-	pSymbolId.clear();
-	
-	//Check if the person is in the model
- 	for (uint i=0; i < 100; i++)
-	{
-		std::string type = "person" + std::to_string(i+1);
-		std::string name = "fakeperson" + std::to_string(i+1);
-		int idx = 0;
-		while ((personSymbolId = worldModel->getIdentifierByType(type, idx++)) != -1)
-		{
-			if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
-			{
-				pSymbolId.push_back(personSymbolId);
-				std::cout<<"Person found "<<type<<" "<<name<<" "<<personSymbolId<<std::endl;
-				break;
-			}
-		}
-			
-	}
-	socialrules.personSymbolId = pSymbolId;
-	checkMovement();
-}
-
-void SpecificWorker::checkMovement()
-{
-	AGMModel::SPtr newM(new AGMModel(worldModel));
-	bool sendChangesAGM = false;
-	
-	totalpersons.clear();
- 	
-	if (!pSymbolId.empty())
-	{
-		for (auto id: pSymbolId)
-		{
-			AGMModelSymbol::SPtr personParent = newM->getParentByLink(id, "RT");
-			AGMModelEdge &edgeRT = newM->getEdgeByIdentifiers(personParent->identifier, id, "RT");
-				
-			person.x = str2float(edgeRT.attributes["tx"])/1000;
-			person.z = str2float(edgeRT.attributes["tz"])/1000;
-			person.angle = str2float(edgeRT.attributes["ry"]);
-			//person.vel=str2float(edgeRT.attributes["velocity"]);
-			person.vel = 0;
-			totalpersons.push_back(person);
-				
-		/*	qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << Rotacion "<< person.angle;
-			*/		
-					
-			/////////////////////checking if the person is looking at the robot /////////////////////////
-	// 		try
-	// 		{	
-	// 			qDebug()<<"------------------------------------------------";
-	// 			if (socialrules.checkHRI(person,ind+1,innerModel.get(),newM) == true)
-	// 			{	
-	// 				qDebug()<<"SEND MODIFICATION PROPOSAL";
-	//					sendChangesAGM = true;
-	// 				
-	// 			}
-	// 			else 
-	// 				qDebug()<<"NO HAY MODIFICACION";
-	// 		}
-	//		catch(...)
-	// 		{	
-	// 		}
-			
-		}
-		
-		
-		try
-		{
-			/////////////////////SOCIAL////////////////
-			socialrules.change_hvalue(0.1);
-			SNGPolylineSeq social = socialrules.ApplySocialRules(totalpersons);
-			
-			social_seq.clear();
- 			social_seq = social;
-			
-			/////////////////////PERSONAL////////////////
-			socialrules.change_hvalue(0.4);
-			SNGPolylineSeq personal = socialrules.ApplySocialRules(totalpersons);
-			
-			personal_seq.clear();
- 			personal_seq = personal;
-			
-			
-			/////////////////////INTIMO////////////////
-			socialrules.change_hvalue(0.8);
-			SNGPolylineSeq intimate = socialrules.ApplySocialRules(totalpersons);
-		
- 			intimate_seq.clear();
- 			intimate_seq = intimate;
-
-	// 		UpdateInnerModel(list);
-			pathfinder.innerModelChanged(innerModel, intimate,personal,social);
-			
-			
-			
-		}
-			
-		catch( const Ice::Exception &e)
-		{ 
-	//		std::cout << e << std::endl;
-		}
-
-		if (sendChangesAGM)
-		{	
-			try
-			{
-				sendModificationProposal(newM,worldModel,"-");
-			}
-			catch(...){}
-		}
-		
-	}
- 	
-		
-	
-}
-
-
-/**
- * \brief The innerModel is extracted from the AGM and the polylines are inserted on it as a set of planes.
- */
-
-void SpecificWorker::UpdateInnerModel(SNGPolylineSeq seq)
-{
-// 	QMutexLocker locker(mutex);
-// 	qDebug() << "----------------------"<< __FUNCTION__ << "----------------------";
-// 	
-// 	// Extract innerModel
-// 	InnerModel *inner  = AGMInner::extractInnerModel(worldModel, "world", false); 
-// 
-// 	int count = 0;
-// 
-// 	for (auto s:seq)
-// 	{
-// 		auto previousPoint = s[s.size()-1];
-// 		for (auto currentPoint:s)
-// 		{
-// 			QString name = QString("polyline_obs_")+QString::number(count,10);
-// 			qDebug() << __FUNCTION__ << "nombre"<<name;
-// 			QVec ppoint = QVec::vec3(previousPoint.x*1000, 1000, previousPoint.z*1000);
-// 			QVec cpoint = QVec::vec3(currentPoint.x*1000, 1000, currentPoint.z*1000);
-// 			QVec center = (cpoint + ppoint).operator*(0.5);
-// 
-// 			QVec normal = (cpoint-ppoint);
-// 			float dist = normal.norm2();	
-// 			float temp = normal(2);
-// 			normal(2) = normal(0);
-// 			normal(0) = -temp;
-// 
-// 			if (inner->getNode(name))
-// 			{
-// 				try
-// 				{
-// 					inner->removeNode(name);
-// 				}
-// 
-// 				catch(QString es){ qDebug() << "EXCEPCION" << es;}
-// 			}
-// 
-// 			InnerModelNode *parent = inner->getNode(QString("world"));
-// 			if (parent == NULL)
-// 				printf("%s: parent does not exist\n", __FUNCTION__);
-// 			else
-// 			{			
-// 				InnerModelPlane *plane;
-// 				try
-// 				{
-// 					plane  = inner-> newPlane(name, parent, QString("#FFFF00"), dist, 2000, 90, 1, normal(0), normal(1), normal(2), center(0), center(1), center(2), true);
-// 					parent->addChild(plane); 
-// 				}
-// 				catch(QString es)
-// 				{ 
-// 					qDebug() << "EXCEPCION" << es;}
-// 			}
-// 			count++;
-// 			previousPoint=currentPoint;
-// 		}
-// 	}
-// 	
-// 	
-// 	innerModel.reset(inner);
-// 	pathfinder.innerModelChanged(innerModel, polyLineList);
-// 	
-// 	viewer->reloadInnerModel(innerModel);
-	
-
-}
 
 // *****************************************************************************************
 // AGENT RELATED
@@ -517,19 +241,25 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 {
 	qDebug()<<"StructuralChange";
 	QMutexLocker l(mutex);
+	static bool first = true;
 	
-    AGMModelConverter::fromIceToInternal(modification, worldModel);
-
+	AGMModelConverter::fromIceToInternal(modification, worldModel);
 	InnerModel *inner = AGMInner::extractInnerModel(worldModel, "world", false);
 	innerModel.reset(inner);
-	pathfinder.innerModelChanged(innerModel,intimate_seq,personal_seq,social_seq);
-	viewer->reloadInnerModel(innerModel);
+ 
 
-	checkNewPersonInModel();
+	if (!first)
+	{
+		socialrules.checkNewPersonInModel(worldModel);
+		socialrules.innerModelChanged(innerModel);
+	}
+	else
+	{
+		first = false;
+	}
 	
-	//reload viewer
 	
-	//check if structural change include new Person
+	viewer->reloadInnerModel(innerModel);
 	
 	printf("FIN structuralChange>>\n");
 }

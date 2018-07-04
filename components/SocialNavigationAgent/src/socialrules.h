@@ -31,37 +31,61 @@ Q_OBJECT
 public:
 	using InnerPtr = std::shared_ptr<InnerModel>;
 	
-	void initialize(SocialNavigationGaussianPrx socialnavigationgaussian_proxy_,AGMExecutivePrx agmexecutive_proxy_,QMutex *mutex_,robocomp::pathfinder::PathFinder *pathfinder_,AGMModel::SPtr worldModel_, InnerPtr innerModel_);
-	
-
 	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 	
-	float h = 0.1; 
+	float h = 0.1; //umbral
 	QMutex *mux;
-
+	
+	int32_t robotSymbolId;	
+	int32_t objectSymbolId;
+	int32_t personSymbolId;
+	vector <int32_t> pSymbolId = {};
+	
+	SNGPerson robot;
+	SNGPerson person;
+	SNGPersonSeq totalpersons; 
 	SNGPersonSeq quietperson; // quiet person
 	SNGPersonSeq movperson; //moving person
-	SNGPersonSeq totalperson;
-	
-	SNGPolylineSeq sequence, sequence2, sequenceObj;
 	
 	SNGObjectSeq objects;
+	////////////////////////////
 	SNGPolylineSeq seq;
+	SNGPolylineSeq intimate_seq;
+	SNGPolylineSeq personal_seq;
+	SNGPolylineSeq social_seq;
+    
+	//PARA GUARDAR LOS DATOS EN UN ARCHIVO
+	struct Point {float x;float z;};
+	Point point;
+	vector <Point> poserobot;
 	
-	int32_t objectSymbolId;
+	//PARA GUARDAR LA DISTANCIA RECORRIDA
+	float totaldist = 0;
 	
-	SNGPerson person;
-	vector <int32_t> personSymbolId = {};
+public:
+	void initialize(SocialNavigationGaussianPrx socialnavigationgaussian_proxy_,
+			AGMExecutivePrx agmexecutive_proxy_,
+			QMutex *mutex_, 
+			robocomp::pathfinder::PathFinder *pathfinder_,
+			AGMModel::SPtr worldModel_, 
+			const std::shared_ptr<InnerModel> &innerModel_);
 	
-	SNGPolylineSeq ApplySocialRules(SNGPersonSeq tperson);
+	void innerModelChanged(const std::shared_ptr<InnerModel> &innerModel_);
+	
+	SNGPolylineSeq ApplySocialRules();
 	void  structuralChange(const RoboCompAGMWorldModel::World & modification);
-	bool checkHRI(SNGPerson p, int ind, InnerPtr i, AGMModel::SPtr w);
-	void change_hvalue(float value);
+	bool checkHRI(SNGPerson p, int ind, InnerPtr &i, AGMModel::SPtr w);
+
+	void checkNewPersonInModel(AGMModel::SPtr worldModel_);
+	void checkMovement();
+	void checkRobotmov();
 	
 public slots:
+	void saveData();
 	void goToPerson();
-	SNGPolylineSeq calculateGauss(bool draw = true);
+	void UpdateInnerModel(SNGPolylineSeq seq);
+	SNGPolylineSeq calculateGauss(bool draw = true, float h = 0.1);
 	SNGPolylineSeq PassOnRight(bool draw = true);
 	SNGPolylineSeq objectInteraction(bool d = true);
 	
