@@ -90,6 +90,8 @@ namespace robocomp
 				/// Interface
 				////////////////////////////
 				void go(float x, float z, const ParameterMap &parameters = ParameterMap());
+				void go_rot(float x, float z, float rot, const ParameterMap &parameters = ParameterMap());
+				
 				//void setInnerModel(InnerModel* innerModel_){ innerModel = innerModel_; };
 				void innerModelChanged(const std::shared_ptr<InnerModel> &innerModel_, SNGPolylineSeq intimate,SNGPolylineSeq personal,SNGPolylineSeq social);
 						

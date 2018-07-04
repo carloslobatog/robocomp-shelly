@@ -36,6 +36,22 @@ void PathFinder::go(float x, float z, const ParameterMap &parameters)
 	releaseRoad();
 };
 
+void PathFinder::go_rot(float x, float z, float rot, const ParameterMap &parameters)
+{
+	qDebug() << "--------------------------------------------------------------------------";
+	qDebug() << __FILE__ << __FUNCTION__ << "PathFinder::go New target arrived:" << x << z;
+	Road &road = getRoad();
+		controller.stopTheRobot();
+	
+		road.reset();
+		road.setRequiresReplanning(true);
+		currenttarget->setHasRotation(true);
+		currenttarget->setRotation(QVec::vec3(0,rot,0));
+		currenttarget->setTranslation(QVec::vec3(x,0,z));
+	releaseRoad();
+};
+
+
 ///////////////////////////////////////////////////////////////////
 void PathFinder::initialize( const std::shared_ptr<InnerModel> &innerModel_,
 							 const std::shared_ptr<InnerViewer> &viewer_, 
@@ -98,17 +114,10 @@ void PathFinder::run()
 void PathFinder::innerModelChanged (const std::shared_ptr<InnerModel> &innerModel_, SNGPolylineSeq intimate,SNGPolylineSeq personal,SNGPolylineSeq social)
 {
 	qDebug()<<__FUNCTION__<< "--------------ESPERANDO GET ROAD -----------------------";
-	printf("%s %d (%p) (%p)\n", __FILE__, __LINE__, this, innerModel_.get());
 	innerModel = innerModel_;
-	printf("%s %d (%p) (%p)\n", __FILE__, __LINE__, this, innerModel_.get());
-	qDebug()<<"--------------------------AQUI--------------------------";
-	
 	Road &road = getRoad(); 
-		qDebug()<<"reloadInnerModel PATHPLANNER";
 		pathplanner.reloadInnerModel(innerModel_) ;
-		qDebug()<<"reloadInnerModel MODIFYGRAPH";
-		pathplanner.modifyGraph(intimate,personal,social);
-		
+		pathplanner.modifyGraph(intimate,personal,social);		
 		road.reloadInnerModel( innerModel_ ) ;  
 		projector.reloadInnerModel(innerModel_) ;  
 		controller.reloadInnerModel( innerModel_ );
@@ -117,9 +126,7 @@ void PathFinder::innerModelChanged (const std::shared_ptr<InnerModel> &innerMode
 	qDebug()<<__FUNCTION__<< "--------------TERMINA GET ROAD -----------------------";
 }
 
-
 //////////////////////////////////////////////////
-
 Road& PathFinder::getRoad()
 {
 	mymutex.lock();

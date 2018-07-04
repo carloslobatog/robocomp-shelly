@@ -1,6 +1,7 @@
 
 #include "socialrules.h"
 
+#define PI M_PI
 
 void SocialRules::initialize(SocialNavigationGaussianPrx socialnavigationgaussian_proxy_,
 			     AGMExecutivePrx agmexecutive_proxy_,
@@ -50,7 +51,7 @@ void SocialRules::checkNewPersonInModel(AGMModel::SPtr worldModel_)
 			if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
 			{
 				pSymbolId.push_back(personSymbolId);
-				std::cout<<"Person found "<<type<<" "<<name<<" "<<personSymbolId<<std::endl;
+				std::cout<<"Person found "<<type<<" "<<name<<" "<<personSymbolId <<std::endl;
 				break;
 			}
 		}
@@ -150,31 +151,23 @@ SNGPolylineSeq SocialRules::ApplySocialRules()
 	{
 		SNGPolylineSeq secuencia = calculateGauss(false);
 		
-		for(auto s: secuencia)
-		{	
+		for(auto s: secuencia)	
 			seq.push_back(s);
-		}			    
+			    
 	}
 	
 	if (!movperson.empty())
 	{
 		SNGPolylineSeq secuencia2 = PassOnRight(false);
 		for(auto s: secuencia2)
-		{	
 			seq.push_back(s);			
-		}
-		  
 	}
 
 	if (!objects.empty())	
 	{  
-
 		SNGPolylineSeq secuenciaobj = objectInteraction(false);
 		for(auto s: secuenciaobj)
-		{
 			seq.push_back(s);
-		}
-		
 	} 
 	
 	//SNGPolylineSeq seqpoints = socialnavigationgaussian_proxy->RemovePoints(seq);
@@ -249,60 +242,33 @@ SNGPolylineSeq SocialRules::objectInteraction(bool d)
 	
 }
 
-
-void SocialRules::saveData()
-{	
-	qDebug("Saving in robotpose.txt the robot's pose");
-	ofstream file("robotpose.txt", ofstream::out);
-	for (auto p:poserobot)
-	{
-		file<< p.x << " " <<p.z<< endl;
-	}
-	file.close();
-
-	qDebug("Saving in personpose.txt the human's poses");
-	ofstream file2("personpose.txt", ofstream::out);
-	for (auto person:totalpersons)
-	{
-		file2<< person.x << " " <<person.z<<" "<<person.angle<< endl;
-	}
-	file2.close();	
-	poserobot.clear();
-
-
-	qDebug("Saving intimate polyline");
-	ofstream file3("polyline_intimate.txt", ofstream::out);
-	for (auto s:intimate_seq)
-	{
-		for (auto p: s)
-			file3<< p.x << " " <<p.z<<" "<< endl;
-	}
-	file3.close();
+void SocialRules::goToPerson()
+{
+	qDebug()<<__FUNCTION__;
+	int32_t id;
 	
-	qDebug("Saving personal polyline");
-	ofstream file4("polyline_personal.txt", ofstream::out);
-	for (auto s:personal_seq)
+	if (pSymbolId.size() == 1)
 	{
-		for (auto p: s)
-			file4<< p.x << " " <<p.z<<" "<< endl;
+		id = pSymbolId[0];
+		
+		AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(id, "RT");
+		AGMModelEdge &edgeRT = worldModel->getEdgeByIdentifiers(personParent->identifier, id, "RT");
+		
+		person.x = str2float(edgeRT.attributes["tx"]);
+		person.z = str2float(edgeRT.attributes["tz"]);
+		person.angle = str2float(edgeRT.attributes["ry"]);
+		//person.vel=str2float(edgeRT.attributes["velocity"]);
+		person.vel = 0;
 	}
-	file4.close();
-	
-	qDebug("Saving social polyline");
-	ofstream file5("polyline_social.txt", ofstream::out);
-	for (auto s:social_seq)
-	{
-		for (auto p: s)
-			file5<< p.x << " " <<p.z<<" "<< endl;
-	}
-	file5.close();
 
-	qDebug()<<"Saving in dist.txt the total distance"<<totaldist;
-	ofstream file6("dist.txt", ofstream::out);
-	file6<< totaldist << endl;
-	totaldist = 0;
-	file6.close();
+	else
+		qDebug()<<"More than one person in the model";
+		
+	auto angle = M_PI/2 - person.angle;
+	auto rotation = person.angle + M_PI;
+	pathfinder->go_rot(person.x + 1200*cos(angle) , person.z +1200*sin(angle), rotation);	
 }
+
 
 
 void SocialRules::checkRobotmov()
@@ -400,32 +366,62 @@ void SocialRules::UpdateInnerModel(SNGPolylineSeq seq)
 // 	viewer->reloadInnerModel(innerModel);
 }
 
-void SocialRules::goToPerson()
-{
-	qDebug()<<__FUNCTION__;
-	
-	if (pSymbolId.size() == 1)
+
+
+void SocialRules::saveData()
+{	
+	qDebug("Saving in robotpose.txt the robot's pose");
+	ofstream file("robotpose.txt", ofstream::out);
+	for (auto p:poserobot)
 	{
-		auto id = pSymbolId[0];
-		
-		AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(id, "RT");
-		AGMModelEdge &edgeRT = worldModel->getEdgeByIdentifiers(personParent->identifier, id, "RT");
-		
-		person.x = str2float(edgeRT.attributes["tx"]);
-		person.z = str2float(edgeRT.attributes["tz"]);
-		person.angle = str2float(edgeRT.attributes["ry"]);
-		//person.vel=str2float(edgeRT.attributes["velocity"]);
-		person.vel = 0;
-		
-		qDebug()<<"PERSONA"<< person.x << " "<< person.z; 
-	
-		pathfinder->go(person.x+1000, person.z + 1500);
+		file<< p.x << " " <<p.z<< endl;
 	}
+	file.close();
+
+	qDebug("Saving in personpose.txt the human's poses");
+	ofstream file2("personpose.txt", ofstream::out);
+	for (auto person:totalpersons)
+	{
+		file2<< person.x << " " <<person.z<<" "<<person.angle<< endl;
+	}
+	file2.close();	
+	poserobot.clear();
+
+
+	qDebug("Saving intimate polyline");
+	ofstream file3("polyline_intimate.txt", ofstream::out);
+	for (auto s:intimate_seq)
+	{
+		for (auto p: s)
+			file3<< p.x << " " <<p.z<<" "<< endl;
+	}
+	file3.close();
 	
-	else
-		qDebug()<<"Más de una persona en el modelo";
-		
+	qDebug("Saving personal polyline");
+	ofstream file4("polyline_personal.txt", ofstream::out);
+	for (auto s:personal_seq)
+	{
+		for (auto p: s)
+			file4<< p.x << " " <<p.z<<" "<< endl;
+	}
+	file4.close();
+	
+	qDebug("Saving social polyline");
+	ofstream file5("polyline_social.txt", ofstream::out);
+	for (auto s:social_seq)
+	{
+		for (auto p: s)
+			file5<< p.x << " " <<p.z<<" "<< endl;
+	}
+	file5.close();
+
+	qDebug()<<"Saving in dist.txt the total distance"<<totaldist;
+	ofstream file6("dist.txt", ofstream::out);
+	file6<< totaldist << endl;
+	totaldist = 0;
+	file6.close();
 }
+
 
 
 bool SocialRules::checkHRI(SNGPerson p, int ind , InnerPtr &i, AGMModel::SPtr w)
