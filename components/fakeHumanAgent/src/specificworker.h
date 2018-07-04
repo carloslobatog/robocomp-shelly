@@ -35,12 +35,17 @@
 #define HUMANADVVEL 50
 #define HUMANROTVEL 0.1
 
+Q_DECLARE_METATYPE(AGMModelEdge)
 
 class SpecificWorker : public GenericWorker
 {
 Q_OBJECT
 
 	struct TPerson {
+		bool autoMovement;
+		int currentPoint;
+		int speed;
+		std::vector<RoboCompInnerModelManager::Pose3D> points;
 		int personSymbolId;
 		std::string name;
 		RoboCompInnerModelManager::Pose3D pose;
@@ -53,6 +58,8 @@ Q_OBJECT
 public:
   
 	void move();
+	void movePerson(TPerson *person, RoboCompInnerModelManager::coord3D coordInItem, bool global = false);
+	RoboCompInnerModelManager::coord3D autoMovePerson(TPerson person);
 	
 	SpecificWorker(MapPrx& mprx);
 	~SpecificWorker();
@@ -62,9 +69,11 @@ public:
 	bool removeFromRCIS(int id);
 	int includeInAGM(int id,const RoboCompInnerModelManager::Pose3D &pose, std::string mesh);
 	bool removeFromAGM(int id);
+	void changePersonRoom(int personID, int roomID);
+	void cleanListWidget(int personID);
 	
 	bool setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated);
-	void sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel);
+	bool sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel);
 	bool reloadConfigAgent();
 	bool activateAgent(const ParameterMap &prs);
 	bool setAgentParameters(const ParameterMap &prs);
@@ -84,8 +93,16 @@ public slots:
 	void setPose();
 	//void receivedJoyStickEvent(int value, int type, int number);
 	
+	void autoMovement();
 	void addPerson();
 	void delPerson();
+	void savePoints();
+	void loadPoints();
+	void personChanged();
+	void pointsChanged();
+	void personBusy();
+	void personInteraction();
+	void removeEdgeAGM();
 	void upP ();
 	void upR ();
 	void downP ();
