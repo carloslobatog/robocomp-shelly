@@ -313,13 +313,16 @@ void SpecificWorker::initializeUI(){
 	connect(rinteraction_pb, SIGNAL(clicked()),this, SLOT(removeEdgeAGM()));
 	connect(ainteraction_pb, SIGNAL(clicked()),this, SLOT(addInteraction()));
 //	connect(point_te, SIGNAL(textChanged()), this, SLOT(pointsChanged()));
+	
+	//disable interface elements 
 	interactionChanged(0);
 	updatePersonInterfaz(false);
+	rinteraction_pb->setEnabled(interaction_lw->count() > 0);
 }
 
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 {
-	try
+	try        
 	{
 		RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
 		structuralChange(w);
@@ -452,6 +455,7 @@ void SpecificWorker::delPerson()
 		cleanListWidget(personId);
 		personMap.erase(personId);
 		updatePersonInterfaz(personMap.size() > 0);
+		rinteraction_pb->setEnabled(interaction_lw->count() > 0);
 	}
 }
 
@@ -954,7 +958,7 @@ void SpecificWorker::addInteraction()
 	switch(option)
 	{
 		case isBusy:	edgeName = "isBusy";
-						id2 = int2_cb->currentText().toInt();
+						id2 = int1_cb->currentText().toInt();
 						listEntry = int1_cb->currentText() + QString(" => isBusy");
 						break;
 		case block:		id2 = robotID;
@@ -1000,6 +1004,7 @@ void SpecificWorker::addInteraction()
 				std::cout << "Error retrieving " << edgeName << " edge from newModel" << std::endl;
 			}
 		}
+		rinteraction_pb->setEnabled(interaction_lw->count() > 0);
 	}
 }
 //Remove edge from AGM
@@ -1007,15 +1012,23 @@ void SpecificWorker::removeEdgeAGM()
 {
 	std::cout << "Remove edge " << std::endl;
 	QListWidgetItem *item = interaction_lw->currentItem();
-	AGMModelEdge edge = item->data(Qt::UserRole).value<AGMModelEdge>();
-	AGMModel::SPtr newModel(new AGMModel(worldModel));
-	newModel->removeEdge(edge);
-	if(sendModificationProposal(worldModel, newModel))
+	if (item != NULL)
 	{
-		std::cout << "remove item from list" << std::endl;
-		interaction_lw->removeItemWidget(item);
-		delete item;
+		AGMModelEdge edge = item->data(Qt::UserRole).value<AGMModelEdge>();
+		AGMModel::SPtr newModel(new AGMModel(worldModel));
+		newModel->removeEdge(edge);
+		if(sendModificationProposal(worldModel, newModel))
+		{
+			std::cout << "remove item from list" << std::endl;
+			interaction_lw->removeItemWidget(item);
+			delete item;
+		}
 	}
+	else{
+		QMessageBox::information(this, "Interaction", "No interaction is selected");
+	}
+	// disable button is no interaction left
+	rinteraction_pb->setEnabled(interaction_lw->count() > 0);
 }
 
 //remove any entri related with personID (it is used when person is removed)
