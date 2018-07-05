@@ -129,6 +129,7 @@ std::list<QVec> PathPlanner::computePath(const Road &road, std::shared_ptr<Curre
 {
 	std::cout << "PathPlanner::compute path Planning for target:" << std::endl;
 	target->getTranslation().print("tr"); 
+	target->getRotation().print("rot"); 
 	
  	QVec robot = innerModel->transformS("world",robotname);
 // 	QVec robotRotation = innerModel->getRotationMatrixTo("world", "robot").extractAnglesR_min();

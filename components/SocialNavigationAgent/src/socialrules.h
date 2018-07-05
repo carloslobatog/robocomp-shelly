@@ -41,6 +41,7 @@ public:
 	int32_t objectSymbolId;
 	int32_t personSymbolId;
 	vector <int32_t> pSymbolId = {};
+	vector <vector<int32_t>> interactingId = {};
 	
 	SNGPerson robot;
 	SNGPerson person;
@@ -80,6 +81,7 @@ public:
 	void checkNewPersonInModel(AGMModel::SPtr worldModel_);
 	void checkMovement();
 	void checkRobotmov();
+	void checkInteraction();
 	
 public slots:
 	void saveData();

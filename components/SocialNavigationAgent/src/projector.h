@@ -58,7 +58,7 @@ class Projector
 		void run(std::function<Road&()> getRoad, std::function<void()> releaseRoad);
 		void reloadInnerModel(const InnerPtr &innerModel_);
 		bool addPoints(Road& road);
-		RoboCompLaser::TLaserData unionpoligonos (RoboCompLaser::TLaserData laserData, SafePolyList &safePolyList);
+		RoboCompLaser::TLaserData modifyLaser (RoboCompLaser::TLaserData laserData, SafePolyList &safePolyList);
 		
 
 	private:		

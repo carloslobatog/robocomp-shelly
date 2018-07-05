@@ -209,13 +209,16 @@ bool Projector::shortCut(Road &road, const RoboCompLaser::TLaserData &laserData)
  * @param road ...
  * @return void
  */
+
 /*
-RoboCompLaser::TLaserData Projector::unionpoligonos(RoboCompLaser::TLaserData laserData, SafePolyList &safePolyList, InnerModel *innerModel)
+RoboCompLaser::TLaserData Projector::modifyLaser(RoboCompLaser::TLaserData laserData, SafePolyList &safePolyList, InnerModel *innerModel)
 {
+	qDebug()<<__FUNCTION__;
+	
 	RoboCompLaser::TLaserData laserCombined; 
 	laserCombined = laserData;
 	
-	// For each polyline
+// 	For each polyline
 	LocalPolyLineList l = safePolyList.read(); 
 	
 
@@ -242,7 +245,7 @@ RoboCompLaser::TLaserData Projector::unionpoligonos(RoboCompLaser::TLaserData la
 				QVec previousPointInLaser = innerModel->transform("laser", (QVec::vec3(previousPoint.x, 0, previousPoint.z)), "world");
 				float pDist  = sqrt(previousPointInLaser.x()*previousPointInLaser.x() + previousPointInLaser.z()*previousPointInLaser.z());
 				float pAngle = atan2(previousPointInLaser.x(), previousPointInLaser.z());
-				// For each polyline's point
+				For each polyline's point
 				for (auto polylinePoint: polyline.p)
 				{
 					QVec currentPointInLaser = innerModel->transform("laser", (QVec::vec3(polylinePoint.x, 0, polylinePoint.z)), "world");
@@ -251,10 +254,10 @@ RoboCompLaser::TLaserData Projector::unionpoligonos(RoboCompLaser::TLaserData la
 
 					const float m = std::min<float>(cAngle, pAngle);
 					const float M = std::max<float>(cAngle, pAngle);
-					//printf("angulo: %f   p:%f  c:%f\n", laserSample.angle, cAngle, pAngle);
+					printf("angulo: %f   p:%f  c:%f\n", laserSample.angle, cAngle, pAngle);
 					if (laserSample.angle >= m and laserSample.angle <= M and fabs(M-m)<3.14)
 					{
-					//	printf("dentro\n");
+						printf("dentro\n");
 						float mean = (cDist + pDist) / 2.;
 						
 						if (mean<laserSample.dist) laserSample.dist = mean;

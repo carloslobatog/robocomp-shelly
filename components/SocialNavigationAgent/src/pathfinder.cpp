@@ -45,10 +45,11 @@ void PathFinder::go_rot(float x, float z, float rot, const ParameterMap &paramet
 	
 		road.reset();
 		road.setRequiresReplanning(true);
-		currenttarget->setHasRotation(true);
-		currenttarget->setRotation(QVec::vec3(0,rot,0));
 		currenttarget->setTranslation(QVec::vec3(x,0,z));
-	releaseRoad();
+		currenttarget->setRotation(QVec::vec3(0,rot,0));
+		currenttarget->setHasRotation(true);
+
+		releaseRoad();
 };
 
 
@@ -117,11 +118,10 @@ void PathFinder::innerModelChanged (const std::shared_ptr<InnerModel> &innerMode
 	innerModel = innerModel_;
 	Road &road = getRoad(); 
 		pathplanner.reloadInnerModel(innerModel_) ;
-		pathplanner.modifyGraph(intimate,personal,social);		
+		pathplanner.modifyGraph(intimate, personal,social);		
 		road.reloadInnerModel( innerModel_ ) ;  
 		projector.reloadInnerModel(innerModel_) ;  
 		controller.reloadInnerModel( innerModel_ );
-	
 	releaseRoad();
 	qDebug()<<__FUNCTION__<< "--------------TERMINA GET ROAD -----------------------";
 }

@@ -28,8 +28,7 @@ void SocialRules::innerModelChanged(const std::shared_ptr<InnerModel> &innerMode
 	qDebug()<<__FUNCTION__;
 	
 	innerModel = innerModel_;
-	
-	printf("%s %d sr(%p) pf(%p) (%p)\n", __FILE__, __LINE__, this, pathfinder, innerModel.get());
+/*	printf("%s %d sr(%p) pf(%p) (%p)\n", __FILE__, __LINE__, this, pathfinder, innerModel.get());*/
 	pathfinder->innerModelChanged(innerModel, intimate_seq, personal_seq, social_seq);
 }
 
@@ -43,25 +42,89 @@ void SocialRules::checkNewPersonInModel(AGMModel::SPtr worldModel_)
 	//Check if the person is in the model
  	for (uint i=0; i < 100; i++)
 	{
-		std::string type = "person" + std::to_string(i+1);
 		std::string name = "fakeperson" + std::to_string(i+1);
 		int idx = 0;
-		while ((personSymbolId = worldModel->getIdentifierByType(type, idx++)) != -1)
+		while ((personSymbolId = worldModel->getIdentifierByType("person", idx++)) != -1)
 		{
 			if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
 			{
 				pSymbolId.push_back(personSymbolId);
-				std::cout<<"Person found "<<type<<" "<<name<<" "<<personSymbolId <<std::endl;
+				std::cout<<"Person found "<< name <<" "<<personSymbolId <<std::endl;
 				break;
 			}
 		}
 	}
 	
-	
+
 	if (!pSymbolId.empty())
+	{
+		checkInteraction();
 		checkMovement();
+	}
 	else
 		qDebug()<<"No persons found";
+}
+
+void SocialRules::checkInteraction()
+{	
+	interactingId.clear();
+	
+	qDebug()<<__FUNCTION__;
+	for (auto id : pSymbolId)
+	{
+		AGMModelSymbol::SPtr personAGM = worldModel->getSymbol(id);
+		int32_t pairId = -1;
+		for (auto edge = personAGM->edgesBegin(worldModel); edge != personAGM->edgesEnd(worldModel); edge++)
+		{
+			const std::pair<int32_t, int32_t> symbolPair = edge->getSymbolPair();
+			if (edge->getLabel() == "interacting")
+			{
+				const string secondType = worldModel->getSymbol(symbolPair.second)->symbolType;
+				if (symbolPair.first == id and secondType == "person")
+				{
+					pairId = symbolPair.second;
+					qDebug()<<"INTERACTING" << symbolPair.first <<"AND " <<symbolPair.second;
+					break;
+				}
+			}
+		}
+		vector <int32_t> Ids;
+		bool already = false;
+		for (auto i : interactingId)
+		{
+			for (auto v : i)
+			{
+				if (v == id) already = true;
+			}
+		}
+		
+		if (!already)
+		{
+			if (pairId != -1)
+			{
+				Ids.push_back(id);
+				Ids.push_back(pairId);
+			}
+			else
+				Ids.push_back(id);
+			
+		
+			interactingId.push_back(Ids);
+		}
+		
+		
+	}
+	
+	for (auto i : interactingId)
+	{
+		qDebug()<<i.size();
+		for (auto v : i)
+			qDebug()<<"I_l" << v;
+		qDebug()<<"--------------------------------";
+	}
+
+	
+
 }
 
 void SocialRules::checkMovement()
@@ -86,20 +149,6 @@ void SocialRules::checkMovement()
 			person.vel = 0;
 			
 			totalpersons.push_back(person);
-			
-		/*	qDebug() <<"PERSONA " <<ind+1  <<" Coordenada x"<< person.x << "Coordenada z"<< person.z << Rotacion "<< person.angle;
-			*/		
-			/////////////////////checking if the person is looking at the robot /////////////////////////
-	// 		try
-	// 		{	
-	// 			if (checkHRI(person,ind+1,innerModel.get(),newM) == true)
-	// 			{	
-	// 				qDebug()<<"SEND MODIFICATION PROPOSAL";
-	//					sendChangesAGM = true;
-	// 				
-	// 			}
-	// 		}
-	//		catch(...){}
 		}
 		
 		try
@@ -115,24 +164,13 @@ void SocialRules::checkMovement()
 		}
 			
 		catch( const Ice::Exception &e)
-		{ 
+		{
 			std::cout << e << std::endl;
 		}
-
-		
-// 		if (sendChangesAGM)
-// 		{	
-// 			try
-// 			{
-// 				sendModificationProposal(newM,worldModel,"-");
-// 			}
-// 			catch(...){}
-// 		}
 		
 	}
 
 }
-
 SNGPolylineSeq SocialRules::ApplySocialRules()
 {
 	qDebug()<<__FUNCTION__;
