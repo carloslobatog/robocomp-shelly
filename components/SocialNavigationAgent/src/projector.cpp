@@ -138,7 +138,8 @@ bool Projector::update(Road &road,
 	/////////////////////////////////////////////
 	//qDebug() << "Projector::computeForces";
 //TODO
-//     computeForces(road, laserData);
+	
+	computeForces(road, laserData);
 
     /////////////////////////////////////////////
 	//Delete half the tail behind, if greater than 6, to release resources

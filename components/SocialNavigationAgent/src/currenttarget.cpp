@@ -73,11 +73,11 @@ QVec CurrentTarget::getRotation() const
  	return targetRot;
 }
  
-// void CurrentTarget::setRotation(const QVec& r)
-// {
-// 	QMutexLocker ml(&mutex);
-// 	targetRot = r;
-// }
+void CurrentTarget::setRotation(const QVec& r)
+{
+	guard gl(mutex); 
+	targetRot = r;
+}
 // 
 // QVec CurrentTarget::getFullPose() const
 // {
@@ -88,11 +88,11 @@ QVec CurrentTarget::getRotation() const
 // 	return r;
 // }
 // 
-// void CurrentTarget::setHasRotation(bool a)
-// {
-// 	QMutexLocker ml(&mutex);
-// 	doRotation = a;
-// }
+void CurrentTarget::setHasRotation(bool a)
+{
+	guard gl(mutex);
+	doRotation = a;
+}
  
  bool CurrentTarget::hasRotation() const
  {
