@@ -121,7 +121,7 @@ int SpecificWorker::includeInAGM(int id,const RoboCompInnerModelManager::Pose3D 
 	AGMModel::SPtr newModel(new AGMModel(worldModel));
 
 	// Symbolic part
-	AGMModelSymbol::SPtr person = newModel->newSymbol(name);
+	AGMModelSymbol::SPtr person = newModel->newSymbol("person");
 	personSymbolId = person->identifier;
 	printf("Got personSymbolId: %d\n", personSymbolId);
 	person->setAttribute("imName", imName);
