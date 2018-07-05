@@ -308,10 +308,10 @@ void SpecificWorker::initializeUI(){
 	connect(save_pb, SIGNAL(clicked()), this, SLOT(savePoints()));
 	connect(load_pb, SIGNAL(clicked()), this, SLOT(loadPoints()));
 	connect(person_cb, SIGNAL(currentIndexChanged()), this, SLOT(personChanged()));
+	connect(interaction_cb, SIGNAL(currentIndexChanged()), this, SLOT(interactionChanged()));
 	connect(autoM_cb, SIGNAL(clicked()),this, SLOT(autoMovement()));
-	connect(busy_pb, SIGNAL(clicked()),this, SLOT(personBusy()));
-	connect(interact_pb, SIGNAL(clicked()),this, SLOT(personInteraction()));
 	connect(rinteraction_pb, SIGNAL(clicked()),this, SLOT(removeEdgeAGM()));
+	connect(ainteraction_pb, SIGNAL(clicked()),this, SLOT(addInteraction()));
 //	connect(point_te, SIGNAL(textChanged()), this, SLOT(pointsChanged()));
 
 }
@@ -543,7 +543,7 @@ void SpecificWorker::compute()
 		firstTime = false;
 		//add robot ID to interaction comboBox
 		try{
-			int robotID = worldModel->getIdentifierByType("robot");
+			robotID = worldModel->getIdentifierByType("robot");
 			int2_cb->addItem(QString::number(robotID));
 		}catch(...){
 			std::cout<<"No robot found in AGM model"<<std::endl;
@@ -869,7 +869,7 @@ void SpecificWorker::personChanged()
 void SpecificWorker::autoMovement()
 {
 	TPerson person = personMap[person_cb->currentText().toInt()];
-	person.autoMovement = autoM_cb->isChecked();	
+	person.autoMovement = autoM_cb->isChecked();
 	
 	pointsChanged();
 }
@@ -933,80 +933,66 @@ RoboCompInnerModelManager::coord3D SpecificWorker::autoMovePerson(TPerson person
 			person.currentPoint++;
 		}
 	}
-	
-	
-	
 	// BASIC_PERIOD 
 	return nextPose;
 }
-//insert person isBusy edge in AGM
-void SpecificWorker::personBusy()
+
+//insert one person interaction edge in AGM
+void SpecificWorker::addInteraction()
 {
-	if (int1_cb->currentText() == ""){
-		std::cout<<"No selected person"<<std::endl;
+	int id1 = -1;
+	int id2 = -1;
+	std::string edgeName = "";
+	QString listEntry;
+	
+	TInteraction option = string2Interaction(interaction_cb->currentText().toStdString());
+	id1 = int1_cb->currentText().toInt();
+	switch(option)
+	{
+		case isBusy:	edgeName = "isBusy";
+						listEntry = int1_cb->currentText() + QString(" => isBusy");
+						break;
+		case block:		id2 = robotID;
+						edgeName = "block";
+						listEntry = int1_cb->currentText() + QString(" => block => ") + QString::number(robotID);
+						break;
+		case softBlock:	id2 = robotID;
+						edgeName = "softBlock";
+						listEntry = int1_cb->currentText() + QString(" => softBlock => ") + QString::number(robotID);
+						break;
+		case interacting:	id2 = int2_cb->currentText().toInt();
+							edgeName = "interacting";
+							listEntry = int1_cb->currentText() + QString(" => interacting => ") + int2_cb->currentText();
+							break;
+		case unknown:	std::cout <<"Unknown interaction selected, please check TInteraction valid values" <<std::endl;
+						return;
 	}
-	else{
-		QString text = int1_cb->currentText() + QString(" => isBusy");
-		QList<QListWidgetItem*> list = interaction_lw->findItems(text, Qt::MatchExactly);
-		if (list.size() > 0)
+	std::cout << id1 <<" " <<id2;
+	if (id1 == id2)
+	{
+		std::cout << "Person could not interact with himself" << std::endl;
+		return;
+	}
+	
+	QList<QListWidgetItem*> list = interaction_lw->findItems(listEntry, Qt::MatchExactly);
+	if (list.size() > 0)
+	{
+		std::cout << "Interaction is already added" << std::endl;
+	}
+	else
+	{
+		AGMModel::SPtr newModel(new AGMModel(worldModel));
+		newModel->addEdgeByIdentifiers(id1, id2, edgeName);
+		if(sendModificationProposal(worldModel, newModel))
 		{
-			std::cout << "Interaction is already added" << std::endl;
-		}
-		else
-		{
-			int personID = int1_cb->currentText().toInt();
-			AGMModel::SPtr newModel(new AGMModel(worldModel));
-			newModel->addEdgeByIdentifiers(personID, personID, "isBusy");
-			if(sendModificationProposal(worldModel, newModel))
+			try{
+				AGMModelEdge edge = newModel->getEdgeByIdentifiers(id1, id2, edgeName);
+				QListWidgetItem *item = new QListWidgetItem(listEntry);
+				item->setData(Qt::UserRole, QVariant::fromValue<AGMModelEdge>(edge));
+				interaction_lw->addItem(item);
+			}catch(...)
 			{
-				try{
-					AGMModelEdge edge = newModel->getEdgeByIdentifiers(personID, personID, "isBusy");
-					QListWidgetItem *item = new QListWidgetItem(text);
-					item->setData(Qt::UserRole, QVariant::fromValue<AGMModelEdge>(edge));
-					interaction_lw->addItem(item);
-				}catch(...)
-				{
-					std::cout << "Error retrieving isBusy edge from newModel" << std::endl;
-				}
-			}
-		}
-	}
-}
-//insert person interaction edge in AGM
-void SpecificWorker::personInteraction()
-{
-	if (int1_cb->currentText() == "" or int2_cb->currentText() == ""){
-		std::cout<<"No selected person"<<std::endl;
-	}
-	else{
-		int person1ID = int1_cb->currentText().toInt();
-		int person2ID = int2_cb->currentText().toInt();
-		if (person1ID == person2ID)
-		{
-			std::cout << "Person could not interact with himself" << std::endl;
-			return;
-		}
-		QString text = int1_cb->currentText() + QString(" => interacting => ") + int2_cb->currentText();
-		QList<QListWidgetItem*> list = interaction_lw->findItems(text, Qt::MatchExactly);
-		if (list.size() > 0)
-		{
-			std::cout << "Interaction is already added" << std::endl;
-		}
-		else
-		{
-			AGMModel::SPtr newModel(new AGMModel(worldModel));
-			newModel->addEdgeByIdentifiers(person1ID, person2ID, "interacting");
-			if(sendModificationProposal(worldModel, newModel))
-			{
-				try{
-					AGMModelEdge edge = newModel->getEdgeByIdentifiers(person1ID, person2ID, "interacting");
-					QListWidgetItem *item = new QListWidgetItem(text);
-					item->setData(Qt::UserRole, QVariant::fromValue<AGMModelEdge>(edge));
-					interaction_lw->addItem(item);
-				}catch(...)
-				{
-					std::cout << "Error retrieving interacting edge from newModel" << std::endl;
-				}
+				std::cout << "Error retrieving " << edgeName << " edge from newModel" << std::endl;
 			}
 		}
 	}
@@ -1027,7 +1013,6 @@ void SpecificWorker::removeEdgeAGM()
 	}
 }
 
-//TODO ==> when person is removed all its interactions must be also removed
 //remove any entri related with personID (it is used when person is removed)
 void SpecificWorker::cleanListWidget(int personID)
 {
@@ -1039,3 +1024,34 @@ void SpecificWorker::cleanListWidget(int personID)
 	}
 }
 
+//convert std::string to enum TInteraction
+SpecificWorker::TInteraction SpecificWorker::string2Interaction(std::string interaction)
+{
+	if (interaction == "isBusy") 		return isBusy;
+	if (interaction == "interacting") 	return interacting;
+	if (interaction == "block") 		return block;
+	if (interaction == "softBlock") 	return softBlock;
+	return unknown;
+}
+
+void SpecificWorker::interactionChanged()
+{
+	std::cout << "change";
+	TInteraction option = string2Interaction(interaction_cb->currentText().toStdString());
+	switch(option)
+	{
+		case isBusy:	int2_cb->setEnabled(false);
+						break;
+		case block:		int2_cb->setCurrentIndex(int2_cb->findText(QString::number(robotID),Qt::MatchExactly));
+						int2_cb->setEnabled(false);
+						break;
+		case softBlock:	int2_cb->setCurrentIndex(int2_cb->findText(QString::number(robotID),Qt::MatchExactly));
+						int2_cb->setEnabled(false);
+						break;
+		case interacting:	int2_cb->setEnabled(true);
+							break;
+		case unknown:	std::cout <<"Unknown interaction selected, please check TInteraction valid values" <<std::endl;
+						break;
+	}
+	
+}

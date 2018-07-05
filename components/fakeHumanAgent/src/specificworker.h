@@ -41,6 +41,14 @@ class SpecificWorker : public GenericWorker
 {
 Q_OBJECT
 
+	enum TInteraction {
+		isBusy, 
+		interacting,
+		block,
+		softBlock,
+		unknown
+	};
+
 	struct TPerson {
 		bool autoMovement;
 		int currentPoint;
@@ -55,6 +63,7 @@ Q_OBJECT
 	bool setPoseFlag = false;
 	RoboCompInnerModelManager::coord3D coordInItem;
 	float valorgiro;
+	int robotID;
 public:
   
 	void move();
@@ -87,7 +96,8 @@ public:
 	void edgeUpdated(const RoboCompAGMWorldModel::Edge &modification);
 	void symbolUpdated(const RoboCompAGMWorldModel::Node &modification);
 	void symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence &modification);
-
+	TInteraction string2Interaction(std::string interaction);
+	void pointsChanged();
 public slots:
 	void compute();
 	void setPose();
@@ -99,9 +109,8 @@ public slots:
 	void savePoints();
 	void loadPoints();
 	void personChanged();
-	void pointsChanged();
-	void personBusy();
-	void personInteraction();
+	void interactionChanged();
+	void addInteraction();
 	void removeEdgeAGM();
 	void upP ();
 	void upR ();
