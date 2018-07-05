@@ -307,13 +307,14 @@ void SpecificWorker::initializeUI(){
 	
 	connect(save_pb, SIGNAL(clicked()), this, SLOT(savePoints()));
 	connect(load_pb, SIGNAL(clicked()), this, SLOT(loadPoints()));
-	connect(person_cb, SIGNAL(currentIndexChanged()), this, SLOT(personChanged()));
-	connect(interaction_cb, SIGNAL(currentIndexChanged()), this, SLOT(interactionChanged()));
+	//connect(person_cb, SIGNAL(currentIndexChanged(int)), this, SLOT(personChanged(int)));
+	connect(interaction_cb, SIGNAL(currentIndexChanged(int)), this, SLOT(interactionChanged(int)));
 	connect(autoM_cb, SIGNAL(clicked()),this, SLOT(autoMovement()));
 	connect(rinteraction_pb, SIGNAL(clicked()),this, SLOT(removeEdgeAGM()));
 	connect(ainteraction_pb, SIGNAL(clicked()),this, SLOT(addInteraction()));
 //	connect(point_te, SIGNAL(textChanged()), this, SLOT(pointsChanged()));
-
+	interactionChanged(0);
+	updatePersonInterfaz(false);
 }
 
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
@@ -430,6 +431,7 @@ void SpecificWorker::addPerson()
 			person_cb->addItem(QString::number(personSymbolId));
 			int1_cb->addItem(QString::number(personSymbolId));
 			int2_cb->addItem(QString::number(personSymbolId));
+			updatePersonInterfaz(true);
 		}
 	}
 }
@@ -448,6 +450,8 @@ void SpecificWorker::delPerson()
 		int1_cb->removeItem(int1_cb->findText(QString::number(personId)));
 		int2_cb->removeItem(int2_cb->findText(QString::number(personId)));
 		cleanListWidget(personId);
+		personMap.erase(personId);
+		updatePersonInterfaz(personMap.size() > 0);
 	}
 }
 
@@ -850,7 +854,7 @@ void SpecificWorker::loadPoints()
 }
 
 // Reload person information
-void SpecificWorker::personChanged()
+void SpecificWorker::personChanged(int index)
 {
 	if (person_cb->currentText() == ""){
 		QMessageBox::information(this, "No person selected", "You have to select any person to delete");
@@ -950,6 +954,7 @@ void SpecificWorker::addInteraction()
 	switch(option)
 	{
 		case isBusy:	edgeName = "isBusy";
+						id2 = int2_cb->currentText().toInt();
 						listEntry = int1_cb->currentText() + QString(" => isBusy");
 						break;
 		case block:		id2 = robotID;
@@ -961,23 +966,23 @@ void SpecificWorker::addInteraction()
 						listEntry = int1_cb->currentText() + QString(" => softBlock => ") + QString::number(robotID);
 						break;
 		case interacting:	id2 = int2_cb->currentText().toInt();
+							if (id1 == id2)
+							{
+								std::cout << "Person could not interact with himself" << std::endl;
+								QMessageBox::information(this, "Interaction", "Person could not interact with himself");
+								return;
+							}
 							edgeName = "interacting";
 							listEntry = int1_cb->currentText() + QString(" => interacting => ") + int2_cb->currentText();
 							break;
 		case unknown:	std::cout <<"Unknown interaction selected, please check TInteraction valid values" <<std::endl;
 						return;
 	}
-	std::cout << id1 <<" " <<id2;
-	if (id1 == id2)
-	{
-		std::cout << "Person could not interact with himself" << std::endl;
-		return;
-	}
-	
 	QList<QListWidgetItem*> list = interaction_lw->findItems(listEntry, Qt::MatchExactly);
 	if (list.size() > 0)
 	{
-		std::cout << "Interaction is already added" << std::endl;
+		std::cout << "Interaction is already used" << std::endl;
+		QMessageBox::information(this, "Interaction", "Interaction is already used");
 	}
 	else
 	{
@@ -1034,9 +1039,8 @@ SpecificWorker::TInteraction SpecificWorker::string2Interaction(std::string inte
 	return unknown;
 }
 
-void SpecificWorker::interactionChanged()
+void SpecificWorker::interactionChanged(int index)
 {
-	std::cout << "change";
 	TInteraction option = string2Interaction(interaction_cb->currentText().toStdString());
 	switch(option)
 	{
@@ -1053,5 +1057,13 @@ void SpecificWorker::interactionChanged()
 		case unknown:	std::cout <<"Unknown interaction selected, please check TInteraction valid values" <<std::endl;
 						break;
 	}
-	
+}
+
+// enable/disable interface elements (used to disable all element when no person)
+void SpecificWorker::updatePersonInterfaz(bool enable)
+{
+	move_gb->setEnabled(enable);
+	interacion_gb->setEnabled(enable);
+	pose_gb->setEnabled(enable);
+	points_gb->setEnabled(enable);
 }

@@ -98,6 +98,8 @@ public:
 	void symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence &modification);
 	TInteraction string2Interaction(std::string interaction);
 	void pointsChanged();
+	void updatePersonInterfaz(bool enable);
+
 public slots:
 	void compute();
 	void setPose();
@@ -108,8 +110,8 @@ public slots:
 	void delPerson();
 	void savePoints();
 	void loadPoints();
-	void personChanged();
-	void interactionChanged();
+	void personChanged(int index);
+	void interactionChanged(int index);
 	void addInteraction();
 	void removeEdgeAGM();
 	void upP ();

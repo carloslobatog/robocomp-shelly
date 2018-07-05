@@ -75,7 +75,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QGroupBox" name="groupBox">
+      <widget class="QGroupBox" name="move_gb">
        <property name="title">
         <string>Move</string>
        </property>
@@ -133,7 +133,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_7">
      <item>
-      <widget class="QGroupBox" name="groupBox_4">
+      <widget class="QGroupBox" name="interacion_gb">
        <property name="title">
         <string>Interaction</string>
        </property>
@@ -216,7 +216,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <widget class="QGroupBox" name="groupBox_5">
+        <widget class="QGroupBox" name="pose_gb">
          <property name="title">
           <string>Pose</string>
          </property>
@@ -302,7 +302,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_3">
+        <widget class="QGroupBox" name="points_gb">
          <property name="title">
           <string>Points</string>
          </property>
@@ -377,14 +377,14 @@
     </layout>
    </item>
   </layout>
-  <zorder>groupBox_5</zorder>
-  <zorder>groupBox_3</zorder>
-  <zorder>groupBox_5</zorder>
-  <zorder>groupBox_4</zorder>
+  <zorder>pose_gb</zorder>
+  <zorder>points_gb</zorder>
+  <zorder>pose_gb</zorder>
+  <zorder>interacion_gb</zorder>
   <zorder>rinteraction_pb</zorder>
   <zorder>interaction_lv</zorder>
   <zorder>horizontalSpacer</zorder>
-  <zorder>groupBox</zorder>
+  <zorder>move_gb</zorder>
   <zorder>groupBox_2</zorder>
  </widget>
  <tabstops>
