@@ -131,35 +131,69 @@ void SocialRules::checkMovement()
 {
 	qDebug()<<__FUNCTION__;
 	AGMModel::SPtr newM(new AGMModel(worldModel));
-// 	bool sendChangesAGM = false;
-	
-	totalpersons.clear();
+	interactingpersons.clear();
+
  	
-	if (!pSymbolId.empty())
+	if (!interactingId.empty())
 	{
-		for (auto id: pSymbolId)
+		for (auto id_vect: interactingId)
 		{
-			AGMModelSymbol::SPtr personParent = newM->getParentByLink(id, "RT");
-			AGMModelEdge &edgeRT = newM->getEdgeByIdentifiers(personParent->identifier, id, "RT");
-				
-			person.x = str2float(edgeRT.attributes["tx"])/1000;
-			person.z = str2float(edgeRT.attributes["tz"])/1000;
-			person.angle = str2float(edgeRT.attributes["ry"]);
-			//person.vel=str2float(edgeRT.attributes["velocity"]);
-			person.vel = 0;
+			totalpersons.clear();
+			for (auto id : id_vect)
+			{
+				AGMModelSymbol::SPtr personParent = newM->getParentByLink(id, "RT");
+				AGMModelEdge &edgeRT = newM->getEdgeByIdentifiers(personParent->identifier, id, "RT");
+					
+				person.x = str2float(edgeRT.attributes["tx"])/1000;
+				person.z = str2float(edgeRT.attributes["tz"])/1000;
+				person.angle = str2float(edgeRT.attributes["ry"]);
+				//person.vel=str2float(edgeRT.attributes["velocity"]);
+				person.vel = 0;
 			
-			totalpersons.push_back(person);
+				totalpersons.push_back(person);
+				
+			}
+			
+			interactingpersons.push_back(totalpersons);
+			
 		}
+		
+			for (auto per : interactingpersons)
+			{
+				qDebug()<<per.size();
+				for (auto p : per)
+					qDebug()<<"Person" << p.x <<" " << p.z;
+				qDebug()<<"--------------------------------";
+			}
 		
 		try
 		{
 			social_seq.clear();
-			social_seq = calculateGauss(false, 0.1); 
 			personal_seq.clear();
-			personal_seq = calculateGauss(false, 0.4);
 			intimate_seq.clear();
-			intimate_seq = calculateGauss(false, 0.8);
 	
+			for (auto per: interactingpersons)
+			{
+				if (per.size() == 1)
+				{
+					seq = socialnavigationgaussian_proxy-> getPersonalSpace(per, 0.1, false);
+					for (auto s:seq) {social_seq.push_back(s);}
+					
+					seq = socialnavigationgaussian_proxy-> getPersonalSpace(per, 0.4, false);
+					for (auto s:seq) {personal_seq.push_back(s);}
+					 
+					seq = socialnavigationgaussian_proxy-> getPersonalSpace(per, 0.8, false);
+					for (auto s:seq) {intimate_seq.push_back(s);}
+
+				}
+				else if (per.size() >1)
+				{
+					seq = socialnavigationgaussian_proxy-> getPersonalSpace(per, 0.1, false);
+					for (auto s:seq) {intimate_seq.push_back(s);}
+				}
+			}
+			
+			
 			pathfinder->innerModelChanged(innerModel, intimate_seq, personal_seq, social_seq);
 		}
 			
@@ -223,10 +257,14 @@ SNGPolylineSeq SocialRules::calculateGauss(bool draw, float h)
 {
 	
 	qDebug()<<__FUNCTION__ << "con h = " << h;
-	if (!totalpersons.empty())
+	if (!interactingpersons.empty())
 	{
 		seq.clear();
-		seq = socialnavigationgaussian_proxy-> getPersonalSpace(totalpersons, h, draw);
+		for (auto per: interactingpersons)
+		{
+			seq = socialnavigationgaussian_proxy-> getPersonalSpace(per, h, draw);
+		}
+		
 	}
 	return seq;
 }
