@@ -110,10 +110,11 @@ class PathPlanner
 		bool get_map_dirty_bit() const 		{return map_dirty_bit;};  
 		void set_map_dirty_bit(bool v=true)	{map_dirty_bit = v;};
 		void reloadInnerModel(const InnerPtr &innerModel_);
-		
+		void checkHumanBlock(Road &road);
 		
 		typedef	std::unordered_map<PathPlanner::Key, PathPlanner::Value, PathPlanner::KeyHasher> FMap;	
 		FMap fmap;
+		FMap fmap_initial;
 		
 		///////////////////////////////////////
 		struct Point { float x; float z;};
@@ -124,6 +125,8 @@ class PathPlanner
 		//////////////////////////////////////
 		void modifyGraph(SNGPolylineSeq intimate,SNGPolylineSeq personal, SNGPolylineSeq social);
 		void modifyCost(SNGPolylineSeq personal, SNGPolylineSeq social);
+		SNGPolylineSeq polylines;
+        SNGPersonSeq persons;
 			
 	private:
 		std::shared_ptr<CurrentTarget> currenttarget;

@@ -40,6 +40,7 @@ class Controller
 				std::shared_ptr<RoboCompCommonBehavior::ParameterList> params,
 				OmniRobotPrx omnirobot_proxy_,
 				int delay=2 /*secs*/);
+
 		void update(Road &road);
 		bool update(const std::shared_ptr<InnerModel> &innerModel, RoboCompOmniRobot::OmniRobotPrx omnirobot_proxy, 
 					Road& road, 

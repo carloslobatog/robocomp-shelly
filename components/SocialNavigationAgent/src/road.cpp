@@ -112,7 +112,7 @@ void Road::update()
 		///////////////////////////////////////////
 		//Check for blocked road
 		///////////////////////////////////////////
-		qDebug() << "Road::" <<__FUNCTION__ << "ROAD: Robot distance to last visible" << getRobotDistanceToLastVisible() << (getIterToLastVisiblePoint() < this->end());
+// 		qDebug() << "Road::" <<__FUNCTION__ << "ROAD: Robot distance to last visible" << getRobotDistanceToLastVisible() << (getIterToLastVisiblePoint() < this->end());
 		//print();
 		if( getRobotDistanceToLastVisible() < 250  and   			//PARAMS
 			  getIterToLastVisiblePoint() < this->end())
@@ -124,8 +124,8 @@ void Road::update()
 			setBlocked(false);
 	}
 	
-	printRobotState(innerModel);
-	print();
+// 	printRobotState(innerModel);
+// 	print();
 }
 
 	//////////////////////////////////////////////	
@@ -355,7 +355,7 @@ Road::iterator Road::computeClosestPointToRobot(const QVec &robot)
 	QList<WayPoint>::iterator res = this->end();
 	uint count = 0, index = 0;
 	
-	qDebug() << "Road::computeClosestPointToRobot" << this->size();
+// 	qDebug() << "Road::computeClosestPointToRobot" << this->size();
 	if(it == res)
 	{
 		robotDistanceToClosestPoint = 0.0;
@@ -478,7 +478,8 @@ float Road::computeDistanceToTarget(Road::iterator closestPoint, const QVec &rob
 	{
 		dist += (it->pos - std::next(it)->pos).norm2();
 	}
-qDebug()<<"Closest point"<<indexOfClosestPointToRobot<<size();	
+	
+	// qDebug()<<"Closest point"<<indexOfClosestPointToRobot<<size();	
 	float distE = (robotPos - it->pos).norm2();  //Euclidean distance to last point to detect the robot going away from the target
 	robotDistanceVariationToTarget = distE - antDist;
 	antDist = distE;

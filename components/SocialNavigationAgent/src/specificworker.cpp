@@ -34,7 +34,9 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	worldModel->name = "worldModel";
 	haveTarget = false;
 	innerModel = std::make_shared<InnerModel>();
-	
+
+
+
 	// 	world = AGMModel::SPtr(new AGMModel());
 
 	//Timed slot to read TrajectoryRobot2D state
@@ -66,8 +68,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 		viewer = std::make_shared<InnerViewer>(innerModel, "Social Navigation");  //InnerViewer copies internally innerModel so it has to be resynchronized
 		//viewer->start();	
 	#endif
-	
-		
+
 	std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams = std::make_shared<RoboCompCommonBehavior::ParameterList>(paramsL);
 
 //   	innerModel = std::make_shared<InnerModel>("/home/robocomp/robocomp/components/robocomp-araceli/etcSim/simulation.xml");
@@ -82,6 +83,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 		pathfinder.initialize(innerModel, viewer, configparams, laser_proxy, omnirobot_proxy);
 		// Initializing SocialRules
 		socialrules.initialize(socialnavigationgaussian_proxy, agmexecutive_proxy, mutex, &pathfinder, worldModel, innerModel);
+	
 		structuralChange(w);
 		rDebug2(("Leaving Structural Change"));
 	}		
@@ -118,7 +120,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
 void SpecificWorker::compute()
 {
 		
- 	static bool first=true;
+ 	static bool first = true;
  	if (first)
  	{	
  		qLog::getInstance()->setProxy("both", logger_proxy);
@@ -254,9 +256,7 @@ void SpecificWorker::structuralChange(const RoboCompAGMWorldModel::World& modifi
 		socialrules.innerModelChanged(innerModel);
 	}
 	else
-	{
 		first = false;
-	}
 	
 	
 	viewer->reloadInnerModel(innerModel);

@@ -17,7 +17,7 @@
 
 #ifndef PROJECTOR_H
 #define PROJECTOR_H
-
+#include <genericworker.h>
 #include <CommonBehavior.h>
 #include <qmat/QMatAll>
 #include <innermodel/innermodel.h>
@@ -30,7 +30,6 @@
 #include <assert.h>
 #include "currenttarget.h"
 #include "linesimplifier/simplifyPath.h"
-#include "safepolylist.h"
 #include <intersection.h>
 #include "navigationstate.h"
 
@@ -47,6 +46,8 @@
 class Projector
 {
 	public:
+		
+		
 		using InnerPtr = std::shared_ptr<InnerModel>;
 		Projector() = default;
 		void initialize(const InnerPtr &innerModel_, 
@@ -58,11 +59,15 @@ class Projector
 		void run(std::function<Road&()> getRoad, std::function<void()> releaseRoad);
 		void reloadInnerModel(const InnerPtr &innerModel_);
 		bool addPoints(Road& road);
-		RoboCompLaser::TLaserData modifyLaser (RoboCompLaser::TLaserData laserData, SafePolyList &safePolyList);
+		
+		SNGPolylineSeq polyline;
+		void update_polyline (SNGPolylineSeq polyline_){ polyline = polyline_; }
+		typedef struct { float dist; float angle;} LocalPointPol;
+		RoboCompLaser::TLaserData modifyLaser (RoboCompLaser::TLaserData laserData,SNGPolylineSeq l);
 		
 
 	private:		
-		bool update(Road& road, const TLaserData& laserData, SafePolyList& safePolyList, uint iter = 1);
+		bool update(Road& road, const TLaserData& laserData, SNGPolylineSeq polyline, uint iter = 1);
 		
 		/**
 		* @brief Computes de numerical derivative of the laser force field wrt to the point, by perturbing it locally.
@@ -138,7 +143,7 @@ class Projector
 		InnerPtr innerModel;
 		std::shared_ptr<RoboCompCommonBehavior::ParameterList> configparams;
 		std::shared_ptr<CurrentTarget> currenttarget;
-		SafePolyList safePolyList;
+		
 		LaserPrx laser_proxy;
 		
 		//Global navigation state

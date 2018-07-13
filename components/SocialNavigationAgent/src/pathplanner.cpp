@@ -36,7 +36,7 @@ void PathPlanner::initialize(const std::shared_ptr<CurrentTarget> &currenttarget
 	
 	try{ robotname = configparams->at("RobotName").value;} 
 	catch(const std::exception &e){ std::cout << e.what() << " PathPlanner::initialize - No Robot name defined in config. Using default 'robot' " << std::endl;}
-	
+
 	//Get space bounding box from config file;
 	outerRegion = sampler.getOuterRegion();
 	std::ostringstream a; a << "horizontal limits " << outerRegion.left() << " " << outerRegion.right();
@@ -67,11 +67,14 @@ void PathPlanner::update(Road &road)
 		state->state = "PLANNING";
 		std::list<QVec> currentPath = computePath(road, currenttarget);
 		qDebug() << __FILE__ << __FUNCTION__ << " CurrentPath length:" << currentPath.size();
-		for(auto &p : currentPath) p.print("p");
+// 		for(auto &p : currentPath) p.print("p");
 		if(currentPath.empty() == false)
 			road.readRoadFromList(currentPath);
 		else
-			std::cout << __FILE__ << __FUNCTION__ << " No path found!!" << std::endl;
+		{
+			std::cout << __FILE__ << __FUNCTION__ << "No path found, checking if there are humans!" << std::endl;
+			checkHumanBlock(road);
+		}
 		road.setRequiresReplanning(false);
 	}
 }
@@ -96,12 +99,15 @@ void PathPlanner::run(std::function<Road&()> getRoad, std::function<void()> rele
 			releaseRoad();
 			std::list<QVec> currentPath = computePath(road, currenttarget);
 			qDebug() << __FILE__ << __FUNCTION__ << " CurrentPath length:" << currentPath.size();
-			for(auto &p : currentPath) p.print("p");
+// 			for(auto &p : currentPath) p.print("p");
 			Road &road = getRoad();
 			if(currentPath.empty() == false)
 				road.readRoadFromList(currentPath);
 			else
-				std::cout << __FILE__ << __FUNCTION__ << " No path found!!" << std::endl;
+			{
+				std::cout << __FILE__ << __FUNCTION__ << " No path found, checking if there are humans" << std::endl;
+				checkHumanBlock(road);
+			}
 			road.setRequiresReplanning(false);
 			releaseRoad();
 		}
@@ -121,6 +127,60 @@ void PathPlanner::reloadInnerModel(const InnerPtr &innerModel_)
 	innerModel = innerModel_;
 
 	
+}
+
+void PathPlanner::checkHumanBlock(Road &road)
+{
+    qDebug()<<__FUNCTION__;
+	FMap fmap_aux = fmap;
+	fmap = fmap_initial;
+
+	std::list<QVec> Path = computePath(road, currenttarget);
+
+	if(!Path.empty())
+    {
+		qDebug()<<"HUMANOS BLOQUEANDO EL CAMINO";
+        QPolygonF qp;
+		// se recorre una a una las polilineas añadiendolas al grafo y se vuelve a calcular el camino
+		for (auto poly : polylines)
+		{
+			qp.clear();
+			for (auto p:poly)
+				qp << QPointF(p.x * 1000, p.z * 1000);
+
+			for (FMap::iterator iter = fmap.begin(); iter != fmap.end(); ++iter)
+			{
+				if (qp.containsPoint(QPointF(iter->first.x, iter->first.z), Qt::OddEvenFill))
+				{
+					point.x = iter->first.x;
+					point.z = iter->first.z;
+					occupied_list.push_back(point);
+
+					iter->second.free = false;
+				}
+			}
+
+			Path = computePath(road, currenttarget);
+
+			if (Path.empty())
+				break;
+
+		}
+
+        qDebug()<<"Hay "<< persons.size()<<" persona en el mundo, comprobando cual bloquea al robot";
+        for (auto p:persons)
+        {
+            if (qp.containsPoint(QPointF(p.x* 1000, p.z* 1000), Qt::OddEvenFill))
+                qDebug () <<"La persona situada en " <<p.x*1000 << " "<< p.z*1000 << "bloquea el camino" ;
+        }
+
+	}
+
+
+
+
+
+	fmap = fmap_aux;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -336,7 +396,8 @@ void PathPlanner::constructGraph(FMap &fmap, uint tile_size)
 				initialp_list.push_back(point);
 			}
 		}
-
+		
+		fmap_initial = fmap;
 		first = false;
 	}
 
@@ -410,10 +471,12 @@ void PathPlanner::modifyCost(SNGPolylineSeq personal, SNGPolylineSeq social)
 
 void PathPlanner::modifyGraph(SNGPolylineSeq intimate, SNGPolylineSeq personal, SNGPolylineSeq social)
 {
+
 	qDebug()<<__FUNCTION__;
- 	occupied_list.clear();
+	polylines = personal;
+	occupied_list.clear();
 	
-	for (auto poly : intimate)
+	for (auto poly : personal)
 	{
 		QPolygonF qp;					
 		for (auto p:poly)
@@ -444,14 +507,12 @@ void PathPlanner::modifyGraph(SNGPolylineSeq intimate, SNGPolylineSeq personal, 
 		
 		for (auto p : initialp_list)
 		{
-			if (p.x == point.x and p.z == point.z)
-				in_initial = true;
+			if (p.x == point.x and p.z == point.z) in_initial = true;
 		}
 		
 		for (auto p : occupied_list)
 		{
-			if (p.x == point.x and p.z == point.z)
-			in_occupied = true;
+			if (p.x == point.x and p.z == point.z) in_occupied = true;
 		}
 		
 		  if (!in_initial and !in_occupied) iter->second.free = true;	

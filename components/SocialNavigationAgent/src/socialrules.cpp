@@ -29,7 +29,7 @@ void SocialRules::innerModelChanged(const std::shared_ptr<InnerModel> &innerMode
 	
 	innerModel = innerModel_;
 /*	printf("%s %d sr(%p) pf(%p) (%p)\n", __FILE__, __LINE__, this, pathfinder, innerModel.get());*/
-	pathfinder->innerModelChanged(innerModel, intimate_seq, personal_seq, social_seq);
+	pathfinder->innerModelChanged(innerModel, totalpersons, intimate_seq, personal_seq, social_seq);
 }
 
 
@@ -88,14 +88,13 @@ void SocialRules::checkInteraction()
 				}
 			}
 		}
+		
 		vector <int32_t> Ids;
 		bool already = false;
 		for (auto i : interactingId)
 		{
 			for (auto v : i)
-			{
 				if (v == id) already = true;
-			}
 		}
 		
 		if (!already)
@@ -115,16 +114,6 @@ void SocialRules::checkInteraction()
 		
 	}
 	
-	for (auto i : interactingId)
-	{
-		qDebug()<<i.size();
-		for (auto v : i)
-			qDebug()<<"I_l" << v;
-		qDebug()<<"--------------------------------";
-	}
-
-	
-
 }
 
 void SocialRules::checkMovement()
@@ -132,13 +121,13 @@ void SocialRules::checkMovement()
 	qDebug()<<__FUNCTION__;
 	AGMModel::SPtr newM(new AGMModel(worldModel));
 	interactingpersons.clear();
-
+	totalpersons.clear();
  	
 	if (!interactingId.empty())
 	{
 		for (auto id_vect: interactingId)
 		{
-			totalpersons.clear();
+			SNGPersonSeq persons;
 			for (auto id : id_vect)
 			{
 				AGMModelSymbol::SPtr personParent = newM->getParentByLink(id, "RT");
@@ -150,22 +139,54 @@ void SocialRules::checkMovement()
 				//person.vel=str2float(edgeRT.attributes["velocity"]);
 				person.vel = 0;
 			
+				persons.push_back(person);
 				totalpersons.push_back(person);
 				
 			}
 			
-			interactingpersons.push_back(totalpersons);
+			interactingpersons.push_back(persons);
 			
 		}
+		qDebug()<<__FUNCTION__<<"cuantas personas "<<totalpersons.size();
+		ApplySocialRules();
 		
-			for (auto per : interactingpersons)
-			{
-				qDebug()<<per.size();
-				for (auto p : per)
-					qDebug()<<"Person" << p.x <<" " << p.z;
-				qDebug()<<"--------------------------------";
-			}
+
 		
+	}
+
+}
+SNGPolylineSeq SocialRules::ApplySocialRules()
+{
+	qDebug()<<__FUNCTION__;
+
+// 	movperson.clear();
+// 	quietperson.clear();
+// 	
+// 	SNGPolylineSeq seq;	
+// 	
+// 	if (person.vel > 0)
+// 		movperson.push_back(person);
+// 	else
+// 		quietperson.push_back(person);
+// 
+// 	if (!quietperson.empty())
+// 	{
+// 		SNGPolylineSeq secuencia = calculateGauss(false);
+// 		
+// 		for(auto s: secuencia)	
+// 			seq.push_back(s);
+// 			    
+// 	}
+// 	
+// 	if (!movperson.empty())
+// 	{
+// 		SNGPolylineSeq secuencia2 = PassOnRight(false);
+// 		for(auto s: secuencia2)
+// 			seq.push_back(s);			
+// 	}
+	
+	if(!interactingpersons.empty())
+	{	
 		try
 		{
 			social_seq.clear();
@@ -186,61 +207,34 @@ void SocialRules::checkMovement()
 					for (auto s:seq) {intimate_seq.push_back(s);}
 
 				}
-				else if (per.size() >1)
+				else if (per.size() > 1)
 				{
 					seq = socialnavigationgaussian_proxy-> getPersonalSpace(per, 0.1, false);
+					for (auto s:seq) {social_seq.push_back(s);}
+
+					seq = socialnavigationgaussian_proxy-> getPersonalSpace(per, 0.4, false);
 					for (auto s:seq) {intimate_seq.push_back(s);}
 				}
+
+				
 			}
-			
-			
-			pathfinder->innerModelChanged(innerModel, intimate_seq, personal_seq, social_seq);
+	
 		}
-			
+
 		catch( const Ice::Exception &e)
 		{
 			std::cout << e << std::endl;
 		}
-		
-	}
-
-}
-SNGPolylineSeq SocialRules::ApplySocialRules()
-{
-	qDebug()<<__FUNCTION__;
-
-	movperson.clear();
-	quietperson.clear();
-	
-	SNGPolylineSeq seq;	
-	
-	if (person.vel > 0)
-		movperson.push_back(person);
-	else
-		quietperson.push_back(person);
-
-	if (!quietperson.empty())
-	{
-		SNGPolylineSeq secuencia = calculateGauss(false);
-		
-		for(auto s: secuencia)	
-			seq.push_back(s);
-			    
 	}
 	
-	if (!movperson.empty())
-	{
-		SNGPolylineSeq secuencia2 = PassOnRight(false);
-		for(auto s: secuencia2)
-			seq.push_back(s);			
-	}
-
 	if (!objects.empty())	
 	{  
 		SNGPolylineSeq secuenciaobj = objectInteraction(false);
 		for(auto s: secuenciaobj)
-			seq.push_back(s);
+			social_seq.push_back(s);
 	} 
+	
+	pathfinder->innerModelChanged(innerModel, totalpersons, intimate_seq, personal_seq, social_seq);
 	
 	//SNGPolylineSeq seqpoints = socialnavigationgaussian_proxy->RemovePoints(seq);
 	

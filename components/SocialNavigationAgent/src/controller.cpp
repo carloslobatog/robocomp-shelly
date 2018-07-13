@@ -36,7 +36,7 @@ void Controller::initialize(const std::shared_ptr<InnerModel> &innerModel_,
 	//compute offsets from laser center to the border of the robot base
 
 	RoboCompLaser::TLaserData laserData;
-	try{ laserData = laser_prx->getLaserData(); }
+	try{ laserData = laser_prx->getLaserData();}
 	catch(const Ice::Exception &e){ std::cout <<e.what()<< std::endl;}
 
 	baseOffsets = computeRobotOffsets(innerModel, laserData);
@@ -215,7 +215,7 @@ bool Controller::update(const std::shared_ptr<InnerModel> &innerModel, RoboCompO
 	////////////////////////////////////////////////
 	//////   EXECUTION
 	////////////////////////////////////////////////
-	
+
 	try { omnirobot_proxy->setSpeedBase(vside, vadvance, vrot);}
 	catch (const Ice::Exception &e) { std::cout << e << "Omni robot not responding" << std::endl; }
 
