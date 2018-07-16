@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017 by YOUR NAME HERE
+# Copyright (C) 2018 by YOUR NAME HERE
 #
 #    This file is part of RoboComp
 #
@@ -32,11 +32,11 @@ if len(ROBOCOMP)<1:
 additionalPathStr = ''
 icePaths = []
 try:
+	icePaths.append('/opt/robocomp/interfaces')
 	SLICE_PATH = os.environ['SLICE_PATH'].split(':')
 	for p in SLICE_PATH:
 		icePaths.append(p)
 		additionalPathStr += ' -I' + p + ' '
-	icePaths.append('/opt/robocomp/interfaces')
 except:
 	print 'SLICE_PATH environment variable was not exported. Using only the default paths'
 	pass
@@ -52,7 +52,7 @@ for p in icePaths:
 		ice_SocialNavigationGaussian = True
 		break
 if not ice_SocialNavigationGaussian:
-	print 'Couln\'t load SocialNavigationGaussian'
+	print 'Couldn\'t load SocialNavigationGaussian'
 	sys.exit(-1)
 from RoboCompSocialNavigationGaussian import *
 

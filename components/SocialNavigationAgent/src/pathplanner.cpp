@@ -141,7 +141,7 @@ void PathPlanner::checkHumanBlock(Road &road)
     {
 		qDebug()<<"HUMANOS BLOQUEANDO EL CAMINO";
         QPolygonF qp;
-		// se recorre una a una las polilineas añadiendolas al grafo y se vuelve a calcular el camino
+
 		for (auto poly : polylines)
 		{
 			qp.clear();
@@ -164,21 +164,23 @@ void PathPlanner::checkHumanBlock(Road &road)
 
 			if (Path.empty())
 				break;
-
 		}
 
-        qDebug()<<"Hay "<< persons.size()<<" persona en el mundo, comprobando cual bloquea al robot";
-        for (auto p:persons)
+        vector <int32_t> pId_blocking = {};
+
+		qDebug()<<"Hay "<< persons.size()<<" persona en el mundo, comprobando cual bloquea al robot";
+	for (auto p:persons)
         {
             if (qp.containsPoint(QPointF(p.x* 1000, p.z* 1000), Qt::OddEvenFill))
-                qDebug () <<"La persona situada en " <<p.x*1000 << " "<< p.z*1000 << "bloquea el camino" ;
+            {
+                qDebug () <<"La persona situada en " <<p.x*1000 << " "<< p.z*1000 << "bloquea el camino. CON ID" << p.id ;
+                pId_blocking.push_back(p.id);
+            }
         }
 
+        qDebug()<<"HAY "<< pId_blocking.size()<< " PERSONAS BLOQUEANDO EL CAMINO";
+
 	}
-
-
-
-
 
 	fmap = fmap_aux;
 }

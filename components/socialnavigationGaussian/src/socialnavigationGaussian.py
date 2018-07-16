@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #
-# Copyright (C) 2017 by YOUR NAME HERE
+# Copyright (C) 2018 by YOUR NAME HERE
 #
 #    This file is part of RoboComp
 #
@@ -60,7 +60,7 @@ import sys, traceback, IceStorm, subprocess, threading, time, Queue, os, copy
 # Ctrl+c handling
 import signal
 
-from PySide import *
+from PySide import QtGui, QtCore
 
 from specificworker import *
 

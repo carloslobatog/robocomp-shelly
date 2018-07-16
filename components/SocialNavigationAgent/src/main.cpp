@@ -1,5 +1,5 @@
 /*
- *    Copyright (C) 2017 by YOUR NAME HERE
+ *    Copyright (C) 2018 by YOUR NAME HERE
  *
  *    This file is part of RoboComp
  *
@@ -145,8 +145,8 @@ int ::SocialNavigationAgent::run(int argc, char* argv[])
 
 	OmniRobotPrx omnirobot_proxy;
 	LaserPrx laser_proxy;
-	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
 	LoggerPrx logger_proxy;
+	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 
 	string proxy, tmp;

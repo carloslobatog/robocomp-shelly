@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017 by YOUR NAME HERE
+# Copyright (C) 2018 by YOUR NAME HERE
 #
 #    This file is part of RoboComp
 #
@@ -17,7 +17,7 @@
 #    along with RoboComp.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys, Ice, os
-from PySide import *
+from PySide import QtGui, QtCore
 
 ROBOCOMP = ''
 try:

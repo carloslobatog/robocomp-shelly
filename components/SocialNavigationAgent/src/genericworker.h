@@ -1,5 +1,5 @@
 /*
- *    Copyright (C)2017 by YOUR NAME HERE
+ *    Copyright (C)2018 by YOUR NAME HERE
  *
  *    This file is part of RoboComp
  *
@@ -85,11 +85,10 @@ public:
 	bool isActive() { return active; }
 
 
-	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
-	LaserPrx laser_proxy;
-	LoggerPrx logger_proxy;
 	OmniRobotPrx omnirobot_proxy;
-
+	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
+	LoggerPrx logger_proxy;
+	LaserPrx laser_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 
 	virtual bool reloadConfigAgent() = 0;

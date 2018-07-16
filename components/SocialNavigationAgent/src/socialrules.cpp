@@ -132,12 +132,14 @@ void SocialRules::checkMovement()
 			{
 				AGMModelSymbol::SPtr personParent = newM->getParentByLink(id, "RT");
 				AGMModelEdge &edgeRT = newM->getEdgeByIdentifiers(personParent->identifier, id, "RT");
-					
-				person.x = str2float(edgeRT.attributes["tx"])/1000;
-				person.z = str2float(edgeRT.attributes["tz"])/1000;
-				person.angle = str2float(edgeRT.attributes["ry"]);
-				//person.vel=str2float(edgeRT.attributes["velocity"]);
-				person.vel = 0;
+
+                person.id = id;
+                person.x = str2float(edgeRT.attributes["tx"])/1000;
+                person.z = str2float(edgeRT.attributes["tz"])/1000;
+                person.angle = str2float(edgeRT.attributes["ry"]);
+                //person.vel=str2float(edgeRT.attributes["velocity"]);
+                person.vel = 0;
+
 			
 				persons.push_back(person);
 				totalpersons.push_back(person);
