@@ -152,11 +152,12 @@ void SpecificWorker::compute()
 // 	qDebug()<<"Update actionEx";
 // 	aE.Update(action,params);
 // 	
-	
+    socialrules.checkRobotmov();
+
 	if (changepos)
 	{
 		socialrules.checkMovement();
-		socialrules.checkRobotmov();
+
 	
 		changepos = false;
 	}
@@ -323,7 +324,7 @@ void SpecificWorker::edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &mod
  */ 
 void SpecificWorker::edgeUpdated(const RoboCompAGMWorldModel::Edge& modification)
 {
-// 	qDebug() << "edgeUpdated";
+ 	qDebug() << "edgeUpdated";
 	changepos=true;
 	QMutexLocker lockIM(mutex);
 	AGMModelConverter::includeIceModificationInInternalModel(modification, worldModel);

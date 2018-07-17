@@ -220,6 +220,7 @@ bool Controller::update(const std::shared_ptr<InnerModel> &innerModel, RoboCompO
 	catch (const Ice::Exception &e) { std::cout << e << "Omni robot not responding" << std::endl; }
 
 	epoch = reloj.restart();  //epoch time in ms
+
 	return false;
 }
 

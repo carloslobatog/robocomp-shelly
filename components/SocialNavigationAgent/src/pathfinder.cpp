@@ -26,30 +26,36 @@ using namespace robocomp::pathfinder;
 void PathFinder::go(float x, float z, const ParameterMap &parameters)
 {
 	qDebug() << "--------------------------------------------------------------------------";
-	qDebug() << __FILE__ << __FUNCTION__ << "PathFinder::go New target arrived:" << x << z;
+	qDebug() << __FUNCTION__ << "PathFinder::go New target arrived:" << x << z;
+
 	Road &road = getRoad();
 		controller.stopTheRobot();
-	
 		road.reset();
 		road.setRequiresReplanning(true);
 		currenttarget->setTranslation(QVec::vec3(x,0,z));
 	releaseRoad();
+
+
 };
 
 void PathFinder::go_rot(float x, float z, float rot, const ParameterMap &parameters)
 {
 	qDebug() << "--------------------------------------------------------------------------";
-	qDebug() << __FILE__ << __FUNCTION__ << "PathFinder::go New target arrived:" << x << z;
-	Road &road = getRoad();
-		controller.stopTheRobot();
-	
-		road.reset();
-		road.setRequiresReplanning(true);
-		currenttarget->setTranslation(QVec::vec3(x,0,z));
-		currenttarget->setRotation(QVec::vec3(0,rot,0));
-		currenttarget->setHasRotation(true);
+	qDebug() << __FUNCTION__ << "PathFinder::go New target arrived:" << x << z;
 
-		releaseRoad();
+    Road &road = getRoad();
+    controller.stopTheRobot();
+    road.reset();
+    road.setRequiresReplanning(true);
+    currenttarget->setTranslation(QVec::vec3(x,0,z));
+    currenttarget->setRotation(QVec::vec3(0,rot,0));
+    currenttarget->setHasRotation(true);
+
+    releaseRoad();
+
+
+
+
 };
 
 
@@ -114,7 +120,7 @@ void PathFinder::run()
 
 void PathFinder::innerModelChanged (const std::shared_ptr<InnerModel> &innerModel_, SNGPersonSeq persons_, SNGPolylineSeq intimate,SNGPolylineSeq personal,SNGPolylineSeq social)
 {
-	qDebug()<<__FUNCTION__<< "--------------ESPERANDO GET ROAD -----------------------";
+//	qDebug()<<__FUNCTION__<< "--------------ESPERANDO GET ROAD -----------------------";
 	innerModel = innerModel_;
 	pathplanner.persons = persons_;
 	Road &road = getRoad();
@@ -125,7 +131,7 @@ void PathFinder::innerModelChanged (const std::shared_ptr<InnerModel> &innerMode
 		projector.update_polyline(personal); //para el laser
 		controller.reloadInnerModel( innerModel_ );
 	releaseRoad();
-	qDebug()<<__FUNCTION__<< "--------------TERMINA GET ROAD -----------------------";
+//	qDebug()<<__FUNCTION__<< "--------------TERMINA GET ROAD -----------------------";
 }
 
 //////////////////////////////////////////////////

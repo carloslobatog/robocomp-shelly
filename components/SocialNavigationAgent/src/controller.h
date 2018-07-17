@@ -33,6 +33,8 @@
 class Controller
 {
 	public:
+
+
 		Controller() = default;
 		void run(std::function<Road&()> getRoad, std::function<void()> releaseRoad);
 		void initialize(const std::shared_ptr<InnerModel> &innerModel_,

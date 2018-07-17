@@ -372,7 +372,6 @@ class SpecificWorker(GenericWorker):
 
 
         plt.show()
-
         return polylines
 
 

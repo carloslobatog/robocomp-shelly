@@ -34,12 +34,10 @@
 #include "navigationstate.h"
 //#include <innermodel/innermodelmgr.h>
 #include <qlog/qlog.h>
-#include "safepolylist.h"
 
 #ifdef USE_QTGUI
 	#include "innerviewer.h"
 #endif
-
 
 
 using namespace std;
@@ -49,7 +47,7 @@ namespace robocomp
 	namespace pathfinder
 	{
 		typedef map<string, string> ParameterMap;
-		
+
 		class PathFinder
 		{
 			private:
@@ -76,7 +74,7 @@ namespace robocomp
 				std::thread thread_controller;
 
 			public:
-				PathFinder() = default;
+                PathFinder() = default;
 				void initialize(const std::shared_ptr<InnerModel> &innerModel_,
 								const std::shared_ptr<InnerViewer> &viewer_, 
 								const shared_ptr< RoboCompCommonBehavior::ParameterList > &configparams_,

@@ -30,6 +30,7 @@
 #include <socialrules.h>
 #include "safepolylist.h"
 
+
 //PROBLEMA: con python 3.5 da error al compilar
 
 #include <innermodel/innermodel.h>
@@ -53,22 +54,23 @@ class SpecificWorker : public GenericWorker
 {
 Q_OBJECT
 
-public:  
+public:
+
 	using InnerPtr = std::shared_ptr<InnerModel>;
 	#ifdef USE_QTGUI
  		using InnerViewerPtr = std::shared_ptr<InnerViewer>;
  	#endif
-	
+
 	SpecificWorker(MapPrx& mprx);
 	~SpecificWorker();
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
-	
+
 //bool para indicar si se ha movido la persona, lo utilizare para imprimir la coordenada de la persona cada vez que se mueva
 	bool changepos = false;
-	
+
 	ActionExecution aE; //Class ActionExecution
 	SocialRules socialrules; //Class SocialRules
-	
+
 	bool staticperson = false;
 	///////////////////////////////////////////////////////////////////////////
 	/// SERVANTS
@@ -81,7 +83,7 @@ public:
 	void  killAgent();
 	Ice::Int uptimeAgent();
 	bool reloadConfigAgent();
-	
+
 	void  structuralChange(const RoboCompAGMWorldModel::World & modification);
 	void  symbolUpdated(const RoboCompAGMWorldModel::Node& modification);
 	void  symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence & modification);
@@ -91,25 +93,22 @@ public:
 	//double agaussian(SNGPerson person, float x, float y);
 
 	NavState getState(){ return pathfinder.getState(); };
-	
+
 	void setHumanSpace(const PolyLineList &polyList){};
-	
+
 	//Trajectory
 	float goBackwards(const TargetPose &target){return 0.0;};
-	void stop(){};	
+	void stop(){};
 	float goReferenced(const TargetPose &target, const float xRef, const float zRef, const float threshold){return 0;};
 	float changeTarget(const TargetPose &target){return 0.0;};
 	void mapBasedTarget(const NavigationParameterMap &parameters){};
-	float go(const TargetPose &target){ 
-		//innerModel->print("");
-// 		qDebug()<<"------------FIN------------------";
-//		pathfinder.innerModelChanged(innerModel,true,pn); 
-		pathfinder.go(target.x, target.z);  
+	float go(const TargetPose &target){
+        pathfinder.go(target.x, target.z);
 		return 0.0;};
 	//float go(const TargetPose &target){pathfinder.go(target.x, -target.z);  return 0.0;};
 
 
-	
+
 public slots:
  	void compute();
 	//void readTrajState();
@@ -122,37 +121,37 @@ private:
 	bool setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated);
 	bool active;
 	void sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel,std::string m);
-	
+
 	std::string action;
 	ParameterMap params;
 	AGMModel::SPtr worldModel;
-	
+
 	bool haveTarget;
 	QTimer trajReader;
-	AGMModel::SPtr world;	
+	AGMModel::SPtr world;
 	RoboCompTrajectoryRobot2D::NavState planningState;
 	// Target info
 	RoboCompTrajectoryRobot2D::TargetPose currentTarget;
-	
+
 	// New TrajectoryRobot Class
 	robocomp::pathfinder::PathFinder pathfinder;
 	std::thread thread_pathfinder;
- 	
-	
+
+
 	std::string robotname = "robot";
 	RoboCompGenericBase::TBaseState bState;
 	InnerPtr innerModel;
 	#ifdef USE_QTGUI
 		InnerViewerPtr viewer;
 	#endif
-		
-	
+
+
 //CHECK
 	//void updateRobotsCognitiveLocation();
 //	std::map<int32_t, QPolygonF> roomsPolygons;
-//	std::map<int32_t, QPolygonF> extractPolygonsFromModel(AGMModel::SPtr &worldModel);	
+//	std::map<int32_t, QPolygonF> extractPolygonsFromModel(AGMModel::SPtr &worldModel);
 //	RoboCompOmniRobot::TBaseState bState;
-	
+
 };
 
 

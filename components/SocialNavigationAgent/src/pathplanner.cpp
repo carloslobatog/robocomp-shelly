@@ -109,6 +109,7 @@ void PathPlanner::run(std::function<Road&()> getRoad, std::function<void()> rele
 				checkHumanBlock(road);
 			}
 			road.setRequiresReplanning(false);
+            road.setFinished(true);
 			releaseRoad();
 		}
 		else
@@ -412,7 +413,7 @@ void PathPlanner::constructGraph(FMap &fmap, uint tile_size)
 void PathPlanner::modifyCost(SNGPolylineSeq personal, SNGPolylineSeq social)
 {
 	
-	qDebug()<<__FUNCTION__;
+//	qDebug()<<__FUNCTION__;
 	containedp_list.clear();
 	
 	for (auto poly : social)
@@ -474,11 +475,11 @@ void PathPlanner::modifyCost(SNGPolylineSeq personal, SNGPolylineSeq social)
 void PathPlanner::modifyGraph(SNGPolylineSeq intimate, SNGPolylineSeq personal, SNGPolylineSeq social)
 {
 
-	qDebug()<<__FUNCTION__;
+//	qDebug()<<__FUNCTION__;
 	polylines = personal;
 	occupied_list.clear();
 	
-	for (auto poly : personal)
+	for (auto poly : intimate)
 	{
 		QPolygonF qp;					
 		for (auto p:poly)

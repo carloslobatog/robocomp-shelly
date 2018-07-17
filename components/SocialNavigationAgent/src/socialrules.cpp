@@ -118,7 +118,7 @@ void SocialRules::checkInteraction()
 
 void SocialRules::checkMovement()
 {
-	qDebug()<<__FUNCTION__;
+//	qDebug()<<__FUNCTION__;
 	AGMModel::SPtr newM(new AGMModel(worldModel));
 	interactingpersons.clear();
 	totalpersons.clear();
@@ -140,7 +140,7 @@ void SocialRules::checkMovement()
                 //person.vel=str2float(edgeRT.attributes["velocity"]);
                 person.vel = 0;
 
-			
+//			    qDebug()<<"POSICION PERSONA "<< person.x <<" " <<person.z <<" " <<person.angle;
 				persons.push_back(person);
 				totalpersons.push_back(person);
 				
@@ -149,7 +149,6 @@ void SocialRules::checkMovement()
 			interactingpersons.push_back(persons);
 			
 		}
-		qDebug()<<__FUNCTION__<<"cuantas personas "<<totalpersons.size();
 		ApplySocialRules();
 		
 
@@ -159,7 +158,7 @@ void SocialRules::checkMovement()
 }
 SNGPolylineSeq SocialRules::ApplySocialRules()
 {
-	qDebug()<<__FUNCTION__;
+//	qDebug()<<__FUNCTION__;
 
 // 	movperson.clear();
 // 	quietperson.clear();
@@ -215,7 +214,10 @@ SNGPolylineSeq SocialRules::ApplySocialRules()
 					for (auto s:seq) {social_seq.push_back(s);}
 
 					seq = socialnavigationgaussian_proxy-> getPersonalSpace(per, 0.4, false);
-					for (auto s:seq) {intimate_seq.push_back(s);}
+					for (auto s:seq) {personal_seq.push_back(s);}
+
+                    seq = socialnavigationgaussian_proxy-> getPersonalSpace(per, 0.8, false);
+                    for (auto s:seq) {intimate_seq.push_back(s);}
 				}
 
 				
@@ -252,7 +254,7 @@ SNGPolylineSeq SocialRules::ApplySocialRules()
 SNGPolylineSeq SocialRules::calculateGauss(bool draw, float h)
 {
 	
-	qDebug()<<__FUNCTION__ << "con h = " << h;
+//	qDebug()<<__FUNCTION__ << "con h = " << h;
 	if (!interactingpersons.empty())
 	{
 		seq.clear();
@@ -268,7 +270,7 @@ SNGPolylineSeq SocialRules::calculateGauss(bool draw, float h)
 
 SNGPolylineSeq SocialRules::PassOnRight(bool draw)
 {
-	qDebug()<<__FUNCTION__;
+//	qDebug()<<__FUNCTION__;
 	if (!movperson.empty())
 	{
 		seq.clear();
@@ -280,7 +282,7 @@ SNGPolylineSeq SocialRules::PassOnRight(bool draw)
  
 SNGPolylineSeq SocialRules::objectInteraction(bool d)
 {
-	qDebug()<<__FUNCTION__;
+//	qDebug()<<__FUNCTION__;
 	
 	RoboCompAGMWorldModel::World w = agmexecutive_proxy->getModel();
 	AGMModelConverter::fromIceToInternal(w, worldModel);
@@ -303,7 +305,7 @@ SNGPolylineSeq SocialRules::objectInteraction(bool d)
 		
 			objects.push_back(object);
 			
-			qDebug()<<"Object"<<"Pose x"<<object.x<<"Pose z"<<object.z<<"Angle"<<object.angle<<"Space"<<object.space;
+//			qDebug()<<"Object"<<"Pose x"<<object.x<<"Pose z"<<object.z<<"Angle"<<object.angle<<"Space"<<object.space;
 		}
 		
 		sequenceObj = socialnavigationgaussian_proxy->getObjectInteraction(totalpersons,objects,d);
@@ -316,7 +318,7 @@ SNGPolylineSeq SocialRules::objectInteraction(bool d)
 
 void SocialRules::goToPerson()
 {
-	qDebug()<<__FUNCTION__;
+//	qDebug()<<__FUNCTION__;
 	int32_t id;
 	
 	if (pSymbolId.size() == 1)
@@ -366,9 +368,10 @@ void SocialRules::checkRobotmov()
 		    
 		totaldist=totaldist + dist;
 		qDebug()<<"Distancia calculada" << dist << "Distancia total" <<totaldist;
-		    
-		poserobot.push_back(point);  
 	}
+
+	poserobot.push_back(point);
+
 }
 
 /**
@@ -466,7 +469,10 @@ void SocialRules::saveData()
 	{
 		for (auto p: s)
 			file3<< p.x << " " <<p.z<<" "<< endl;
+
+	    file3<< " "<<endl;
 	}
+
 	file3.close();
 	
 	qDebug("Saving personal polyline");
@@ -475,6 +481,8 @@ void SocialRules::saveData()
 	{
 		for (auto p: s)
 			file4<< p.x << " " <<p.z<<" "<< endl;
+
+        file4<< " "<<endl;
 	}
 	file4.close();
 	
@@ -484,12 +492,14 @@ void SocialRules::saveData()
 	{
 		for (auto p: s)
 			file5<< p.x << " " <<p.z<<" "<< endl;
+
+        file5<< " "<<endl;
 	}
 	file5.close();
 
 	qDebug()<<"Saving in dist.txt the total distance"<<totaldist;
 	ofstream file6("dist.txt", ofstream::out);
-	file6<< totaldist << endl;
+	file6 <<" Distance " << totaldist << endl;
 	totaldist = 0;
 	file6.close();
 }
