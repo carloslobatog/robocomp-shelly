@@ -165,7 +165,18 @@ void SpecificWorker::compute()
 	first = false;
 }
 
-
+float SpecificWorker::go(const TargetPose &target)
+{
+	if (target.doRotation)
+	{
+		pathfinder.go_rot(target.x, target.z, target.ry);
+	}
+	else
+	{
+		pathfinder.go(target.x, target.z);
+	}
+	return 0.0;
+};
 
 // *****************************************************************************************
 // AGENT RELATED

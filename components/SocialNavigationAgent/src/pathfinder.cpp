@@ -30,32 +30,26 @@ void PathFinder::go(float x, float z, const ParameterMap &parameters)
 
 	Road &road = getRoad();
 		controller.stopTheRobot();
+	
 		road.reset();
 		road.setRequiresReplanning(true);
 		currenttarget->setTranslation(QVec::vec3(x,0,z));
 	releaseRoad();
-
-
 };
 
 void PathFinder::go_rot(float x, float z, float rot, const ParameterMap &parameters)
 {
 	qDebug() << "--------------------------------------------------------------------------";
-	qDebug() << __FUNCTION__ << "PathFinder::go New target arrived:" << x << z;
-
-    Road &road = getRoad();
-    controller.stopTheRobot();
-    road.reset();
-    road.setRequiresReplanning(true);
-    currenttarget->setTranslation(QVec::vec3(x,0,z));
-    currenttarget->setRotation(QVec::vec3(0,rot,0));
-    currenttarget->setHasRotation(true);
-
-    releaseRoad();
-
-
-
-
+	qDebug() << __FILE__ << __FUNCTION__ << "PathFinder::go_rot New target arrived:" << x << z << rot;
+	Road &road = getRoad();
+		controller.stopTheRobot();
+	
+		road.reset();
+		road.setRequiresReplanning(true);
+		currenttarget->setTranslation(QVec::vec3(x,0,z));
+		currenttarget->setRotation(QVec::vec3(0,rot,0));
+		currenttarget->setHasRotation(true);
+	releaseRoad();
 };
 
 
