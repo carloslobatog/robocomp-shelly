@@ -50,6 +50,7 @@ class Controller
 		void stopTheRobot();
 		float angmMPI(float angle);
 		void reloadInnerModel(const std::shared_ptr<InnerModel> &innerModel_);
+		bool finalRotation(RoboCompOmniRobot::OmniRobotPrx omnirobot_proxy, Road &road, bool print = false);
 		
 	private:
 		std::shared_ptr<InnerModel> innerModel;

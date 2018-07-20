@@ -99,11 +99,18 @@ bool Controller::update(const std::shared_ptr<InnerModel> &innerModel, RoboCompO
 	if ((((road.getIndexOfCurrentPoint()+1 == (uint)road.size()) and  (road.getRobotDistanceToTarget() < ARRIVAL_TOLERANCE))) or
 	    ((road.getIndexOfCurrentPoint()+1 == (uint)road.size()) and (road.getRobotDistanceVariationToTarget() > 0)))
 	{
-		road.setFinished(true);
- 		qDebug() << __FUNCTION__ << "CONTROLLER: road finished. Returning to main";
-		stopTheRobot();
-		road.reset();
-		return false;
+		if (road.last().hasRotation)
+		{
+			return finalRotation(omnirobot_proxy, road, true);
+		}
+		else
+		{
+			road.setFinished(true);
+			qDebug() << __FUNCTION__ << "CONTROLLER: road finished. Returning to main";
+			stopTheRobot();
+			road.reset();
+			return false;
+		}
 	}
 	
 	if(road.getRequiresReplanning() == true ) 
@@ -223,6 +230,50 @@ bool Controller::update(const std::shared_ptr<InnerModel> &innerModel, RoboCompO
 
 	return false;
 }
+
+
+// Rotation at the end of the road
+bool Controller::finalRotation(RoboCompOmniRobot::OmniRobotPrx omnirobot_proxy, Road &road, bool print)
+{
+	//qDebug() << __FUNCTION__ << "CONTROLLER: road finalRotation.";
+	QVec robotRot = innerModel->transform6D("world", "robot").subVector(3, 5);
+	
+	float vrot = 0.f;
+	float difference = angmMPI(road.last().rot(1) - robotRot.y());
+	if ( fabs(difference) < 0.1){
+		qDebug() << __FUNCTION__ << "CONTROLLER: road finished. Returning to main";
+		road.setFinished(true);
+		stopTheRobot();
+		road.reset();
+		return false;
+	}
+	
+	vrot = 0.8 * difference;
+	
+	if(vrot > MAX_ROT_SPEED) vrot = MAX_ROT_SPEED;
+ 	if(vrot < -MAX_ROT_SPEED) vrot = -MAX_ROT_SPEED;
+	
+	if( print )
+	{
+		qDebug() << "------------------Controller Final Rotation ---------------;";
+		qDebug() << "	Angle: " << road.last().rot(1);
+		qDebug() << "	Robot: " << robotRot.y();
+		qDebug() << "	Difference:" << difference;
+		qDebug() << "	vrot: " << vrot;
+		qDebug() << "---------------------------------------------------;";
+	}
+	
+	////////////////////////////////////////////////
+	//////   EXECUTION
+	////////////////////////////////////////////////
+	if(vrot > MAX_ROT_SPEED) vrot = MAX_ROT_SPEED;
+	if(vrot < -MAX_ROT_SPEED) vrot = -MAX_ROT_SPEED;
+	
+	try { omnirobot_proxy->setSpeedBase(0.f, 0.f, vrot);}
+	catch (const Ice::Exception &e) { std::cout << e << "Omni robot not responding" << std::endl; }
+	return true;
+}
+
 
 
 ////////////////////////////////////////

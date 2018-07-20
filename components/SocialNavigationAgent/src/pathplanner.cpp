@@ -68,12 +68,16 @@ void PathPlanner::update(Road &road)
 		std::list<QVec> currentPath = computePath(road, currenttarget);
 		qDebug() << __FILE__ << __FUNCTION__ << " CurrentPath length:" << currentPath.size();
 // 		for(auto &p : currentPath) p.print("p");
-		if(currentPath.empty() == false)
-			road.readRoadFromList(currentPath);
-		else
+//		if(currentPath.empty() == false)
+//			road.readRoadFromList(currentPath);
+//		else
 		{
-			std::cout << __FILE__ << __FUNCTION__ << "No path found, checking if there are humans!" << std::endl;
-			checkHumanBlock(road);
+			road.readRoadFromList(currentPath);
+			if (currenttarget->hasRotation())
+			{
+				road.last().rot = currenttarget->getRotation();
+				road.last().hasRotation = true;
+			}
 		}
 		road.setRequiresReplanning(false);
 	}

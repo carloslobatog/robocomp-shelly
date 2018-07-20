@@ -86,7 +86,7 @@ void Road::update()
 	setRobotDistanceToLastVisible(computeDistanceToLastVisible(closestPoint, robot3DPos));
 	
 	/// Compute robot angle in each point
-	for( Road::iterator it = this->begin(); it != this->end(); ++it )
+	for( Road::iterator it = this->begin(); it != this->end()-1; ++it )
 	{
 		QLine2D l = computeTangentAt(it);
 		QVec d = l.getDirectionVector();
@@ -124,7 +124,7 @@ void Road::update()
 			setBlocked(false);
 	}
 	
-// 	printRobotState(innerModel);
+ 	printRobotState(innerModel);
 // 	print();
 }
 
@@ -295,11 +295,11 @@ QLine2D Road::getTangentToCurrentPointInRobot(const std::shared_ptr<InnerModel> 
 
 void Road::printRobotState(const std::shared_ptr<InnerModel> &innerModel)
 {
-	QVec robot3DPos = innerModel->transformS("world", robotname);
+	QVec robot3DPos = innerModel->transform6D("world", QString::fromStdString(robotname));
 	qDebug() << "-------Road status report  ---------------------";
 	qDebug() << "	Robot position:" << robot3DPos;
 	//qDebug() << "	Target:" << currentTarget.getTranslation();
-	qDebug() << "	Target2:" << last().pos;
+	qDebug() << "	Target2:" << last().pos <<" Rotation:" << last().hasRotation << last().rot;
 	qDebug() << "	Num points:" << this->size();
 	qDebug() << "	Robot dist to closest point in road:" << getRobotDistanceToClosestPoint();
 	qDebug() << "	Robot perp. dist to road tangent at closest point:" << getRobotPerpendicularDistanceToRoad();

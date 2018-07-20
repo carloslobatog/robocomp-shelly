@@ -356,7 +356,7 @@ bool Projector::addPoints(Road &road)
 	if( road.size() < 2) 
 		return false;
 
-	int offset = 1;
+	int offset = 2;
 	for (int i = 0; i < road.size() - offset; i++)
 	{
 		if (i > 0 and road[i].isVisible == false)			//This might not work with visible detection
