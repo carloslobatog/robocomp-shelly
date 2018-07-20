@@ -88,30 +88,76 @@ void SocialRules::checkInteraction()
 				}
 			}
 		}
-		
+
 		vector <int32_t> Ids;
-		bool already = false;
+		bool p1found = false;
+		bool p2found = false;
+
 		for (auto i : interactingId)
 		{
 			for (auto v : i)
-				if (v == id) already = true;
-		}
-		
-		if (!already)
-		{
-			if (pairId != -1)
 			{
-				Ids.push_back(id);
-				Ids.push_back(pairId);
+				if (v == id) p1found = true;
+				if (v == pairId) p2found = true;
+
 			}
-			else
-				Ids.push_back(id);
-			
-		
-			interactingId.push_back(Ids);
 		}
-		
-		
+
+		if (pairId != -1)
+		{
+			if (!p1found and !p2found)
+			{
+				Ids.push_back(pairId);
+				Ids.push_back(id);
+                interactingId.push_back(Ids);
+			}
+
+			else if (p1found or p2found)
+			{
+				for (auto &i : interactingId)
+				{
+					for (auto v : i)
+					{
+						if (v == id) i.push_back(pairId);
+						if (v == pairId) i.push_back(id);
+					}
+				}
+			}
+
+		}
+
+		else if (!p1found)
+        {
+            Ids.push_back(id);
+            interactingId.push_back(Ids);
+        }
+
+
+
+//		bool already = false;
+//
+//        // tienen que estar interactuando las dos personas. Si solo interactua la persona 2  con la 1 se dibujan 2 polilineas en lugar de una
+//		for (auto i : interactingId)
+//		{
+//			for (auto v : i)
+//				if (v == id) already = true;
+//		}
+//
+//		if (!already)
+//		{
+//			if (pairId != -1)
+//			{
+//				Ids.push_back(id);
+//				Ids.push_back(pairId);
+//			}
+//			else
+//				Ids.push_back(id);
+//
+//
+//			interactingId.push_back(Ids);
+//		}
+
+
 	}
 	
 }
@@ -469,8 +515,7 @@ void SocialRules::saveData()
 	{
 		for (auto p: s)
 			file3<< p.x << " " <<p.z<<" "<< endl;
-
-	    file3<< " "<<endl;
+		file3 << " "<<endl ;
 	}
 
 	file3.close();
@@ -481,8 +526,7 @@ void SocialRules::saveData()
 	{
 		for (auto p: s)
 			file4<< p.x << " " <<p.z<<" "<< endl;
-
-        file4<< " "<<endl;
+        file4 << " "<<endl ;
 	}
 	file4.close();
 	
@@ -492,8 +536,7 @@ void SocialRules::saveData()
 	{
 		for (auto p: s)
 			file5<< p.x << " " <<p.z<<" "<< endl;
-
-        file5<< " "<<endl;
+		file5<<" "<<endl;
 	}
 	file5.close();
 
