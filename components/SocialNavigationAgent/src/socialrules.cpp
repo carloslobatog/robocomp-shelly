@@ -107,23 +107,32 @@ void SocialRules::checkInteraction()
 		{
 			if (!p1found and !p2found)
 			{
-				Ids.push_back(pairId);
 				Ids.push_back(id);
+                Ids.push_back(pairId);
                 interactingId.push_back(Ids);
 			}
 
-			else if (p1found or p2found)
+			else if (p1found and !p2found)
 			{
 				for (auto &i : interactingId)
 				{
 					for (auto v : i)
 					{
 						if (v == id) i.push_back(pairId);
-						if (v == pairId) i.push_back(id);
 					}
 				}
 			}
 
+			else if (!p1found and p2found)
+            {
+                for (auto &i : interactingId)
+                {
+                    for (auto v : i)
+                    {
+                        if (v == pairId) i.push_back(id);
+                    }
+                }
+            }
 		}
 
 		else if (!p1found)
@@ -132,32 +141,15 @@ void SocialRules::checkInteraction()
             interactingId.push_back(Ids);
         }
 
+	}
+    qDebug()<<"--------";
+	for (auto id: interactingId){
 
-
-//		bool already = false;
-//
-//        // tienen que estar interactuando las dos personas. Si solo interactua la persona 2  con la 1 se dibujan 2 polilineas en lugar de una
-//		for (auto i : interactingId)
-//		{
-//			for (auto v : i)
-//				if (v == id) already = true;
-//		}
-//
-//		if (!already)
-//		{
-//			if (pairId != -1)
-//			{
-//				Ids.push_back(id);
-//				Ids.push_back(pairId);
-//			}
-//			else
-//				Ids.push_back(id);
-//
-//
-//			interactingId.push_back(Ids);
-//		}
-
-
+	    for (auto v:id)
+        {
+            qDebug()<<" "<<v;
+        }
+        qDebug()<<"--------";
 	}
 	
 }
