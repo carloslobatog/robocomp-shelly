@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/specificworker.py" description="            # points = []&#10;            # for x in x..." line="500" />
+    <bookmark url="file://$PROJECT_DIR$/src/specificworker.py" description="            # points = []&#10;            # for x in x..." line="502" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa36ea70-3279-405c-90f6-1bb252189711" name="Default" comment="" />
@@ -26,22 +26,10 @@
       <file leaf-file-name="specificworker.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/specificworker.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-130">
-              <caret line="46" column="8" lean-forward="false" selection-start-line="46" selection-start-column="4" selection-end-line="46" selection-end-column="8" />
+            <state relative-caret-position="271">
+              <caret line="407" column="77" lean-forward="false" selection-start-line="407" selection-start-column="77" selection-end-line="407" selection-end-column="77" />
               <folding>
                 <element signature="e#735#766#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="koko.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/koko.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#10#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -153,7 +141,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -182,7 +170,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -666,20 +654,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/koko.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/koko.py" />
     <entry file="file://$PROJECT_DIR$/src/specificworker.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-130">
-          <caret line="46" column="8" lean-forward="false" selection-start-line="46" selection-start-column="4" selection-end-line="46" selection-end-column="8" />
+        <state relative-caret-position="271">
+          <caret line="407" column="77" lean-forward="false" selection-start-line="407" selection-start-column="77" selection-end-line="407" selection-end-column="77" />
           <folding>
             <element signature="e#735#766#0" expanded="true" />
           </folding>

@@ -33,7 +33,17 @@ public:
 	
 	SocialNavigationGaussianPrx socialnavigationgaussian_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
-	
+
+	QComboBox* idselected;
+    QCheckBox* follow;
+    QCheckBox* accompany;
+    QCheckBox* por;
+
+    bool followpulsed = false;
+    bool accompanypulsed = false;
+    bool porpulsed = false;
+
+
 	float h = 0.1; //umbral
 	QMutex *mux;
 	
@@ -85,8 +95,11 @@ public:
 	void checkInteraction();
 	
 public slots:
+    void checkstate();
 	void saveData();
 	void goToPerson();
+    void followPerson();
+    void accompanyPerson();
 	void UpdateInnerModel(SNGPolylineSeq seq);
 	SNGPolylineSeq calculateGauss(bool draw = true, float h = 0.1);
 	SNGPolylineSeq PassOnRight(bool draw = true);
@@ -97,6 +110,7 @@ private:
 	InnerPtr innerModel;
 public:
 	robocomp::pathfinder::PathFinder *pathfinder;
+
 
 };
 

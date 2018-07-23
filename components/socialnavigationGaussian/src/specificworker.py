@@ -382,7 +382,7 @@ class SpecificWorker(GenericWorker):
 
 
 
-    def getPassOnRight(self, persons, prox, dibujar):
+    def getPassOnRight(self, persons,h, dibujar):
 
         plt.close("all")
 
@@ -397,15 +397,17 @@ class SpecificWorker(GenericWorker):
         for p in persons:
             pn = Person(p.x, p.z, p.angle, p.vel)
 
-            pn.draw((50/((7*pn.vel/50)+43)*4), (50/((7*pn.vel/50)+43)*4)/2, 2*(50/((7*pn.vel/50)+43)*4)/3,pi/2-pn.th, drawPersonalSpace=dibujar)
-            pn.draw(4, 1.5, 10/3, pi - pn.th, drawPersonalSpace=dibujar)
-
-            normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th + pi/2, (50/((7*pn.vel/50)+43)*4), (50/((7*pn.vel/50)+43)*4)/2, 2*(50/((7*pn.vel/50)+43)*4)/3], elliptical=True))
-            normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th , 4, 1.5, 10/3], elliptical=True))
-
-
+            # pn.draw((50/((7*pn.vel/50)+43)*4), (50/((7*pn.vel/50)+43)*4)/2, 2*(50/((7*pn.vel/50)+43)*4)/3,pi/2-pn.th, drawPersonalSpace=dibujar)
+            # pn.draw(4, 1.5, 10/3, pi - pn.th, drawPersonalSpace=dibujar)
+            #
+            # normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th + pi/2, (50/((7*pn.vel/50)+43)*4), (50/((7*pn.vel/50)+43)*4)/2, 2*(50/((7*pn.vel/50)+43)*4)/3], elliptical=True))
+            # normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th , 4, 1.5, 10/3], elliptical=True))
+            pn.draw(2., 1, 4. / 3., pi / 2 - pn.th, drawPersonalSpace=dibujar)
+            pn.draw(2., 1, 4./3., pi  - pn.th, drawPersonalSpace=dibujar)
+            normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th - pi / 2., 2, 1, 4. / 3], elliptical=True))
+            normals.append(Normal(mu=[[pn.x], [pn.y]], sigma=[-pn.th, 2, 0.75, 4. / 3], elliptical=True))
         #h = 0.4
-        h = prox / 100
+        # h = prox / 100
         resolution = 0.1
         limits = [[lx_inf, lx_sup], [ly_inf, ly_sup]]
         _, z = Normal.makeGrid(normals, h, 2, limits=limits, resolution=resolution)

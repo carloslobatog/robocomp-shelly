@@ -42,12 +42,21 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	//Timed slot to read TrajectoryRobot2D state
 	connect(&trajReader, SIGNAL(timeout()), &aE, SLOT(readTrajState()));
 	connect(gaussiana,SIGNAL(clicked()),&socialrules, SLOT(calculateGauss()));
-	connect(por,SIGNAL(clicked()),&socialrules, SLOT(PassOnRight()));
+//	connect(por,SIGNAL(clicked()),&socialrules, SLOT(PassOnRight()));
 	connect(objint,SIGNAL(clicked()),&socialrules, SLOT(objectInteraction()));
 	connect(datos,SIGNAL(clicked()),&socialrules, SLOT(saveData()));
 	
 	connect(gotoperson,SIGNAL(clicked()),&socialrules, SLOT(goToPerson()));
 	//trajReader.start(1000);
+    connect(follow, SIGNAL (clicked()),&socialrules,SLOT(checkstate()));
+    connect(accompany, SIGNAL (clicked()),&socialrules,SLOT(checkstate()));
+    connect(por, SIGNAL (clicked()),&socialrules,SLOT(checkstate()));
+
+    socialrules.idselected = idselect;
+    socialrules.follow = follow;
+    socialrules.accompany = accompany;
+    socialrules.por = por;
+
 }
 /**
  * \brief Default destructor

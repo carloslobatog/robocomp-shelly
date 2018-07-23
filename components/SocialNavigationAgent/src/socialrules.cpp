@@ -19,7 +19,7 @@ void SocialRules::initialize(SocialNavigationGaussianPrx socialnavigationgaussia
 	pathfinder = pathfinder_;
 	innerModel = innerModel_;
 	worldModel = worldModel_;
-	
+
 	objectInteraction(false);
 }
 
@@ -37,7 +37,7 @@ void SocialRules::checkNewPersonInModel(AGMModel::SPtr worldModel_)
 {	
 	qDebug()<<__FUNCTION__;
 	worldModel = worldModel_;
-	
+	idselected->clear();
 	pSymbolId.clear();
 	//Check if the person is in the model
  	for (uint i=0; i < 100; i++)
@@ -49,6 +49,7 @@ void SocialRules::checkNewPersonInModel(AGMModel::SPtr worldModel_)
 			if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == name)
 			{
 				pSymbolId.push_back(personSymbolId);
+                idselected->addItem(QString::number(personSymbolId));
 				std::cout<<"Person found "<< name <<" "<<personSymbolId <<std::endl;
 				break;
 			}
@@ -140,18 +141,7 @@ void SocialRules::checkInteraction()
             Ids.push_back(id);
             interactingId.push_back(Ids);
         }
-
 	}
-    qDebug()<<"--------";
-	for (auto id: interactingId){
-
-	    for (auto v:id)
-        {
-            qDebug()<<" "<<v;
-        }
-        qDebug()<<"--------";
-	}
-	
 }
 
 void SocialRules::checkMovement()
@@ -234,19 +224,19 @@ SNGPolylineSeq SocialRules::ApplySocialRules()
 	
 			for (auto per: interactingpersons)
 			{
-				if (per.size() == 1)
+				if((per.size() == 1) and (porpulsed))
 				{
-					seq = socialnavigationgaussian_proxy-> getPersonalSpace(per, 0.1, false);
+					seq = socialnavigationgaussian_proxy->  getPassOnRight(per, 0.1, false);
 					for (auto s:seq) {social_seq.push_back(s);}
 					
-					seq = socialnavigationgaussian_proxy-> getPersonalSpace(per, 0.4, false);
+					seq = socialnavigationgaussian_proxy-> getPassOnRight(per, 0.4, false);
 					for (auto s:seq) {personal_seq.push_back(s);}
-					 
-					seq = socialnavigationgaussian_proxy-> getPersonalSpace(per, 0.8, false);
+
+					seq = socialnavigationgaussian_proxy-> getPassOnRight(per, 0.8, false);
 					for (auto s:seq) {intimate_seq.push_back(s);}
 
 				}
-				else if (per.size() > 1)
+				else
 				{
 					seq = socialnavigationgaussian_proxy-> getPersonalSpace(per, 0.1, false);
 					for (auto s:seq) {social_seq.push_back(s);}
@@ -257,11 +247,13 @@ SNGPolylineSeq SocialRules::ApplySocialRules()
                     seq = socialnavigationgaussian_proxy-> getPersonalSpace(per, 0.8, false);
                     for (auto s:seq) {intimate_seq.push_back(s);}
 				}
-
-				
 			}
+
+			if (followpulsed) followPerson();
+			if (accompanypulsed) accompanyPerson();
 	
 		}
+
 
 		catch( const Ice::Exception &e)
 		{
@@ -274,10 +266,11 @@ SNGPolylineSeq SocialRules::ApplySocialRules()
 		SNGPolylineSeq secuenciaobj = objectInteraction(false);
 		for(auto s: secuenciaobj)
 			social_seq.push_back(s);
-	} 
-	
+	}
 	pathfinder->innerModelChanged(innerModel, totalpersons, intimate_seq, personal_seq, social_seq);
-	
+
+
+
 	//SNGPolylineSeq seqpoints = socialnavigationgaussian_proxy->RemovePoints(seq);
 	
 	return seq;
@@ -288,6 +281,8 @@ SNGPolylineSeq SocialRules::ApplySocialRules()
 * to model its personal space. 
 * The function returns a sequence of polylines.
 */
+
+
 
 SNGPolylineSeq SocialRules::calculateGauss(bool draw, float h)
 {
@@ -354,33 +349,109 @@ SNGPolylineSeq SocialRules::objectInteraction(bool d)
 	
 }
 
+void SocialRules::checkstate()
+{
+//    qDebug()<<__FUNCTION__;
+
+    if (follow->checkState() == Qt::CheckState(2) and followpulsed == false)
+    	{
+			followpulsed = true;
+			accompanypulsed = false;
+			accompany->setCheckState(Qt::CheckState(0));
+            followPerson();
+
+		}
+
+    else if (accompany->checkState() == Qt::CheckState(2) and accompanypulsed == false)
+	{
+		accompanypulsed = true;
+		followpulsed = false;
+		follow->setCheckState(Qt::CheckState(0));
+        accompanyPerson();
+	}
+
+	if (follow->checkState() == Qt::CheckState(0))
+	    followpulsed = false;
+
+    if (accompany->checkState() == Qt::CheckState(0))
+        accompanypulsed = false;
+
+    if (por->checkState() == Qt::CheckState(2))
+        porpulsed = true;
+    else
+        porpulsed = false;
+}
+
+void SocialRules::followPerson()
+{
+    int32_t id = idselected->currentText().toInt();
+    qDebug()<<"Person selected" << id;
+
+    if (id != 0)
+    {
+        AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(id, "RT");
+        AGMModelEdge &edgeRT = worldModel->getEdgeByIdentifiers(personParent->identifier, id, "RT");
+
+        person.x = str2float(edgeRT.attributes["tx"]);
+        person.z = str2float(edgeRT.attributes["tz"]);
+        person.angle = str2float(edgeRT.attributes["ry"]);
+        //person.vel=str2float(edgeRT.attributes["velocity"]);
+        person.vel = 0;
+
+        auto angle = M_PI/2 - person.angle;
+        pathfinder->go(person.x - 900*cos(angle) , person.z -900*sin(angle));
+    }
+
+
+}
+
+
+void SocialRules::accompanyPerson()
+{
+    qDebug() <<__FUNCTION__;
+    int32_t id = idselected->currentText().toInt();
+
+    if (id != 0)
+    {
+        AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(id, "RT");
+        AGMModelEdge &edgeRT = worldModel->getEdgeByIdentifiers(personParent->identifier, id, "RT");
+
+        person.x = str2float(edgeRT.attributes["tx"]);
+        person.z = str2float(edgeRT.attributes["tz"]);
+        person.angle = str2float(edgeRT.attributes["ry"]);
+        //person.vel=str2float(edgeRT.attributes["velocity"]);
+        person.vel = 0;
+
+        qDebug()<<"Person selected "<< id<< "Pose (x,z) = ( "<<  person.x <<","<<person.z<<")";
+        auto angle = M_PI/2 - person.angle;
+
+    }
+
+}
+
 void SocialRules::goToPerson()
 {
-//	qDebug()<<__FUNCTION__;
-	int32_t id;
-	
-	if (pSymbolId.size() == 1)
+	qDebug()<<__FUNCTION__;
+	int32_t id = idselected->currentText().toInt();
+	qDebug()<<"Person selected" << id;
+
+	if (id != 0)
 	{
-		id = pSymbolId[0];
-		
 		AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(id, "RT");
 		AGMModelEdge &edgeRT = worldModel->getEdgeByIdentifiers(personParent->identifier, id, "RT");
-		
+
 		person.x = str2float(edgeRT.attributes["tx"]);
 		person.z = str2float(edgeRT.attributes["tz"]);
 		person.angle = str2float(edgeRT.attributes["ry"]);
 		//person.vel=str2float(edgeRT.attributes["velocity"]);
 		person.vel = 0;
+
+		auto angle = M_PI/2 - person.angle;
+		auto rotation = person.angle + M_PI;
+		pathfinder->go_rot(person.x + 1200*cos(angle) , person.z +1200*sin(angle), rotation);
 	}
 
-	else
-		qDebug()<<"More than one person in the model";
-		
-	auto angle = M_PI/2 - person.angle;
-	auto rotation = person.angle + M_PI;
-	pathfinder->go_rot(person.x + 1200*cos(angle) , person.z +1200*sin(angle), rotation);	
 }
-
 
 
 void SocialRules::checkRobotmov()
