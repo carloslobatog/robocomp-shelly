@@ -67,19 +67,24 @@ void PathPlanner::update(Road &road)
 		state->state = "PLANNING";
 		std::list<QVec> currentPath = computePath(road, currenttarget);
 		qDebug() << __FILE__ << __FUNCTION__ << " CurrentPath length:" << currentPath.size();
-// 		for(auto &p : currentPath) p.print("p");
-//		if(currentPath.empty() == false)
-//			road.readRoadFromList(currentPath);
-//		else
-		{
-			road.readRoadFromList(currentPath);
-			if (currenttarget->hasRotation())
+
+			if(currentPath.empty() == false)
+            {
+                pId_blocking.clear();
+                road.readRoadFromList(currentPath);
+                if (currenttarget->hasRotation())
+                {
+                    road.last().rot = currenttarget->getRotation();
+                    road.last().hasRotation = true;
+                }
+            }
+			else
 			{
-				road.last().rot = currenttarget->getRotation();
-				road.last().hasRotation = true;
+				std::cout << __FILE__ << __FUNCTION__ << " No path found, checking if there are humans" << std::endl;
+				checkHumanBlock(road);
 			}
-		}
-		road.setRequiresReplanning(false);
+			road.setRequiresReplanning(false);
+            road.setFinished(true);
 	}
 }
 
@@ -106,7 +111,10 @@ void PathPlanner::run(std::function<Road&()> getRoad, std::function<void()> rele
 // 			for(auto &p : currentPath) p.print("p");
 			Road &road = getRoad();
 			if(currentPath.empty() == false)
-				road.readRoadFromList(currentPath);
+            {
+                pId_blocking.clear();
+                road.readRoadFromList(currentPath);
+            }
 			else
 			{
 				std::cout << __FILE__ << __FUNCTION__ << " No path found, checking if there are humans" << std::endl;
@@ -139,6 +147,7 @@ void PathPlanner::checkHumanBlock(Road &road)
     qDebug()<<__FUNCTION__;
 	FMap fmap_aux = fmap;
 	fmap = fmap_initial;
+    pId_blocking.clear();
 
 	std::list<QVec> Path = computePath(road, currenttarget);
 
@@ -171,7 +180,7 @@ void PathPlanner::checkHumanBlock(Road &road)
 				break;
 		}
 
-        vector <int32_t> pId_blocking = {};
+
 
 		qDebug()<<"Hay "<< persons.size()<<" persona en el mundo, comprobando cual bloquea al robot";
 	for (auto p:persons)
@@ -483,7 +492,7 @@ void PathPlanner::modifyGraph(SNGPolylineSeq intimate, SNGPolylineSeq personal, 
 	polylines = personal;
 	occupied_list.clear();
 	
-	for (auto poly : intimate)
+	for (auto poly : personal)
 	{
 		QPolygonF qp;					
 		for (auto p:poly)

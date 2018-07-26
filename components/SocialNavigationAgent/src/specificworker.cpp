@@ -166,12 +166,89 @@ void SpecificWorker::compute()
 	if (changepos)
 	{
 		socialrules.checkMovement();
-
-	
 		changepos = false;
 	}
+
+	if (!socialrules.pSymbolId.empty() )
+    {
+        checkHumanBlock();
+    }
 	
 	first = false;
+}
+
+void SpecificWorker::checkHumanBlock()
+{
+    int robotID = -1;
+    std::string edgeName = "block";
+    AGMModel::SPtr newModel(new AGMModel(worldModel));
+
+    vector <int32_t> pId_blocking = pathfinder.getHumanBlocking();
+
+    if (previous_blockinglist != pId_blocking)
+    {
+        try
+        {
+            robotID = worldModel->getIdentifierByType("robot");
+        }
+
+        catch(...)
+        {
+            std::cout<<__FUNCTION__<<" No robot found in AGM model"<<std::endl;
+            return;
+        }
+
+        for (auto id1:previous_blockinglist)
+        {
+			try
+			{
+				newModel->removeEdgeByIdentifiers(id1, robotID, edgeName);
+				qDebug()<<"SE ELIMINA EL ENLACE ";
+			}
+
+			catch(...)
+			{
+				std::cout<<__FUNCTION__<<"NO HAY ENLACE"<<std::endl;
+
+			}
+        }
+
+
+        for (auto id1:pId_blocking)
+        {
+
+			try
+			{
+				newModel->addEdgeByIdentifiers(id1, robotID, edgeName);
+				qDebug ()<<"Se añade el enlace blocking a la persona  " << id1;
+			}
+
+			catch(...)
+			{
+				std::cout<<__FUNCTION__<<"No se puede añadir el enlace"<<std::endl;
+			}
+
+        }
+
+        try
+        {
+        	qDebug()<<"SE MANDA LA PROPUESTA";
+            sendModificationProposal(newModel,worldModel , "block");
+        }
+        catch(...)
+        {
+            std::cout<<"No se puede actualizar worldModel"<<std::endl;
+        }
+
+//        if (newModel != worldModel)
+//        {
+//            qDebug()<<"mierda puta";
+//            exit (-1);
+//        }
+    }
+
+    previous_blockinglist = pId_blocking;
+
 }
 
 float SpecificWorker::go(const TargetPose &target)

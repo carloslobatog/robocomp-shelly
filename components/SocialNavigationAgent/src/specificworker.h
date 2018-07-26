@@ -95,6 +95,8 @@ public:
 	NavState getState(){ return pathfinder.getState(); };
 
 	void setHumanSpace(const PolyLineList &polyList){};
+	void checkHumanBlock();
+	vector <int32_t> previous_blockinglist = {};
 
 	//Trajectory
 	float goBackwards(const TargetPose &target){return 0.0;};

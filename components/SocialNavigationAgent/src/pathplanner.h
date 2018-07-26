@@ -116,7 +116,8 @@ class PathPlanner
 		void set_map_dirty_bit(bool v=true)	{map_dirty_bit = v;};
 		void reloadInnerModel(const InnerPtr &innerModel_);
 		void checkHumanBlock(Road &road);
-		
+        vector <int32_t> pId_blocking = {};
+
 		typedef	std::unordered_map<PathPlanner::Key, PathPlanner::Value, PathPlanner::KeyHasher> FMap;	
 		FMap fmap;
 		FMap fmap_initial;
