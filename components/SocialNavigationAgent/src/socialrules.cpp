@@ -424,7 +424,7 @@ void SocialRules::accompanyPerson()
 
         qDebug()<<"Person selected "<< id<< "Pose (x,z) = ( "<<  person.x <<","<<person.z<<")";
         auto angle = M_PI/2 - person.angle;
-
+        pathfinder->go(person.x + 900*sin(angle) , person.z - cos(angle));
     }
 
 }

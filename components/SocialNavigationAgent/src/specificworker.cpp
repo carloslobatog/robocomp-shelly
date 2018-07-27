@@ -126,66 +126,62 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList paramsL)
  * Then, their pose is stored.
  * Everytime a person has moved, its position is updated
  */
-void SpecificWorker::compute()
-{
-		
- 	static bool first = true;
- 	if (first)
- 	{	
- 		qLog::getInstance()->setProxy("both", logger_proxy);
- 		rDebug2(("navigationAgent started"));
- 		first = false;
- 	}
+void SpecificWorker::compute() {
+
+	static bool first = true;
+	if (first) {
+		qLog::getInstance()->setProxy("both", logger_proxy);
+		rDebug2(("navigationAgent started"));
+		first = false;
+	}
 
 	// PROVISIONAL read robot position from proxy
-	try 
-	{
+	try {
 		omnirobot_proxy->getBaseState(bState);
-		innerModel->updateTransformValues("robot", bState.x,0,bState.z,0,bState.alpha,0);
-	//	qDebug() << "SpecificWorker::compute" << bState.x << bState.z << bState.alpha;
+		innerModel->updateTransformValues("robot", bState.x, 0, bState.z, 0, bState.alpha, 0);
+		//	qDebug() << "SpecificWorker::compute" << bState.x << bState.z << bState.alpha;
 	}
-	catch(const Ice::Exception &ex)
-	{
+	catch (const Ice::Exception &ex) {
 		printf("The executive is probably not running, waiting for first AGM model publication...");
 		std::cout << ex << std::endl;
 	}
-	
+
 	pathfinder.run();
 
 	//update viewer
 	QVec robotpos = innerModel->transformS6D("world", robotname);
 	viewer->ts_updateTransformValues(QString::fromStdString(robotname), robotpos);
 	viewer->run();
-	
-		
+
+
 // 	qDebug()<<"Update actionEx";
 // 	aE.Update(action,params);
 // 	
-    socialrules.checkRobotmov();
+	socialrules.checkRobotmov();
 
-	if (changepos)
-	{
+	if (changepos) {
 		socialrules.checkMovement();
 		changepos = false;
 	}
 
-	if (!socialrules.pSymbolId.empty() )
-    {
-        checkHumanBlock();
-    }
-	
+	if (!socialrules.pSymbolId.empty()) {
+		checkHumanBlock();
+	}
+
 	first = false;
+
 }
+
 
 void SpecificWorker::checkHumanBlock()
 {
     int robotID = -1;
-    std::string edgeName = "block";
     AGMModel::SPtr newModel(new AGMModel(worldModel));
 
     vector <int32_t> pId_blocking = pathfinder.getHumanBlocking();
+	vector <int32_t> pId_softblocking = pathfinder.getHumanSoftBlocking();
 
-    if (previous_blockinglist != pId_blocking)
+    if ((previous_blockinglist != pId_blocking) or (previous_softblockinglist != pId_softblocking))
     {
         try
         {
@@ -202,8 +198,8 @@ void SpecificWorker::checkHumanBlock()
         {
 			try
 			{
-				newModel->removeEdgeByIdentifiers(id1, robotID, edgeName);
-                qDebug ()<<"Se elimina el enlace blocking a la persona  " << id1;
+				newModel->removeEdgeByIdentifiers(id1, robotID, "block");
+                qDebug ()<<"Se elimina el enlace block a la persona  " << id1;
 			}
 
 			catch(...)
@@ -213,14 +209,13 @@ void SpecificWorker::checkHumanBlock()
 			}
         }
 
-
         for (auto id1:pId_blocking)
         {
 
 			try
 			{
-				newModel->addEdgeByIdentifiers(id1, robotID, edgeName);
-				qDebug ()<<"Se añade el enlace blocking a la persona  " << id1;
+				newModel->addEdgeByIdentifiers(id1, robotID, "block");
+				qDebug ()<<"Se añade el enlace block a la persona  " << id1;
 			}
 
 			catch(...)
@@ -229,6 +224,38 @@ void SpecificWorker::checkHumanBlock()
 			}
 
         }
+
+
+		for (auto id1:previous_softblockinglist)
+		{
+			try
+			{
+				newModel->removeEdgeByIdentifiers(id1, robotID, "softBlock");
+				qDebug ()<<"Se elimina el enlace softblock a la persona  " << id1;
+			}
+
+			catch(...)
+			{
+				std::cout<<__FUNCTION__<<"No existe el enlace"<<std::endl;
+
+			}
+		}
+
+		for (auto id1:pId_softblocking)
+		{
+
+			try
+			{
+				newModel->addEdgeByIdentifiers(id1, robotID,  "softBlock");
+				qDebug ()<<"Se añade el enlace softblock a la persona  " << id1;
+			}
+
+			catch(...)
+			{
+				std::cout<<__FUNCTION__<<"No se puede añadir el enlace"<<std::endl;
+			}
+
+		}
 
         try
         {
@@ -241,7 +268,7 @@ void SpecificWorker::checkHumanBlock()
     }
 
     previous_blockinglist = pId_blocking;
-
+	previous_softblockinglist = pId_softblocking;
 }
 
 float SpecificWorker::go(const TargetPose &target)

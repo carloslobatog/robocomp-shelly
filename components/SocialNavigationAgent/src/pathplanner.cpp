@@ -71,15 +71,19 @@ void PathPlanner::update(Road &road)
 			if(currentPath.empty() == false)
             {
                 pId_blocking.clear();
-                road.readRoadFromList(currentPath);
-                if (currenttarget->hasRotation())
+                if (!checkHumanSoftBlock(currentPath))
                 {
-                    road.last().rot = currenttarget->getRotation();
-                    road.last().hasRotation = true;
+                    road.readRoadFromList(currentPath);
+                    if (currenttarget->hasRotation())
+                    {
+                        road.last().rot = currenttarget->getRotation();
+                        road.last().hasRotation = true;
+                    }
                 }
             }
 			else
 			{
+				pId_softblocking.clear();
 				std::cout << __FILE__ << __FUNCTION__ << " No path found, checking if there are humans" << std::endl;
 				checkHumanBlock(road);
 			}
@@ -108,15 +112,19 @@ void PathPlanner::run(std::function<Road&()> getRoad, std::function<void()> rele
 			releaseRoad();
 			std::list<QVec> currentPath = computePath(road, currenttarget);
 			qDebug() << __FILE__ << __FUNCTION__ << " CurrentPath length:" << currentPath.size();
-// 			for(auto &p : currentPath) p.print("p");
+
 			Road &road = getRoad();
 			if(currentPath.empty() == false)
             {
                 pId_blocking.clear();
-                road.readRoadFromList(currentPath);
+                if (!checkHumanSoftBlock(currentPath))
+                {
+                    road.readRoadFromList(currentPath);
+                }
             }
 			else
 			{
+				pId_softblocking.clear();
 				std::cout << __FILE__ << __FUNCTION__ << " No path found, checking if there are humans" << std::endl;
 				checkHumanBlock(road);
 			}
@@ -138,9 +146,48 @@ void PathPlanner::reloadInnerModel(const InnerPtr &innerModel_)
 	
 // 	innerModel.reset(innerModel_.get());
 	innerModel = innerModel_;
-
-	
 }
+
+bool PathPlanner::checkHumanSoftBlock(std::list<QVec> currentPath) //devuelve true si hay alguna persona con softblock
+{
+    pId_softblocking.clear();
+    vector<QPolygonF> qp_list;
+
+    for (auto poly : polylines_softblock)
+    {
+        QPolygonF qp;
+        for (auto p:poly)
+            qp << QPointF(p.x * 1000, p.z * 1000);
+
+        for (auto p:currentPath)
+        {
+            if (qp.containsPoint(QPointF(p.x(), p.z()), Qt::OddEvenFill))
+            {
+                qp_list.push_back(qp);
+                break;
+            }
+        }
+    }
+
+    for (auto polygon : qp_list)
+    {
+        for (auto p:persons)
+        {
+            if (polygon.containsPoint(QPointF(p.x* 1000, p.z* 1000), Qt::OddEvenFill))
+            {
+                qDebug () <<"La persona situada en " <<p.x*1000 << " "<< p.z*1000 << "bloquea SUAVEMEEEEEENTE el camino. CON ID" << p.id ;
+                pId_softblocking.push_back(p.id);
+            }
+        }
+    }
+
+    qDebug()<<"NUMERO DE PERSONAS BLOQUEANDO SUAVEMENTE = "<<pId_softblocking.size();
+    if (pId_softblocking.size() > 0)
+        return true;
+    else
+        return false;
+}
+
 
 void PathPlanner::checkHumanBlock(Road &road)
 {
@@ -156,7 +203,7 @@ void PathPlanner::checkHumanBlock(Road &road)
 		qDebug()<<"HUMANOS BLOQUEANDO EL CAMINO";
         QPolygonF qp;
 
-		for (auto poly : polylines)
+		for (auto poly : polylines_block)
 		{
 			qp.clear();
 			for (auto p:poly)
@@ -180,8 +227,6 @@ void PathPlanner::checkHumanBlock(Road &road)
 				break;
 		}
 
-
-
 		qDebug()<<"Hay "<< persons.size()<<" persona en el mundo, comprobando cual bloquea al robot";
 	for (auto p:persons)
         {
@@ -198,6 +243,7 @@ void PathPlanner::checkHumanBlock(Road &road)
 
 	fmap = fmap_aux;
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -489,10 +535,11 @@ void PathPlanner::modifyGraph(SNGPolylineSeq intimate, SNGPolylineSeq personal, 
 {
 
 //	qDebug()<<__FUNCTION__;
-	polylines = personal;
+	polylines_block = intimate;
+	polylines_softblock = personal;
 	occupied_list.clear();
 	
-	for (auto poly : personal)
+	for (auto poly : intimate)
 	{
 		QPolygonF qp;					
 		for (auto p:poly)

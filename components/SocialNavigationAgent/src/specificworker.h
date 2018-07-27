@@ -97,6 +97,7 @@ public:
 	void setHumanSpace(const PolyLineList &polyList){};
 	void checkHumanBlock();
 	vector <int32_t> previous_blockinglist = {};
+	vector <int32_t> previous_softblockinglist = {};
 
 	//Trajectory
 	float goBackwards(const TargetPose &target){return 0.0;};

@@ -117,6 +117,8 @@ class PathPlanner
 		void reloadInnerModel(const InnerPtr &innerModel_);
 		void checkHumanBlock(Road &road);
         vector <int32_t> pId_blocking = {};
+		bool checkHumanSoftBlock(std::list<QVec> currentPath);
+		vector <int32_t> pId_softblocking = {};
 
 		typedef	std::unordered_map<PathPlanner::Key, PathPlanner::Value, PathPlanner::KeyHasher> FMap;	
 		FMap fmap;
@@ -131,7 +133,8 @@ class PathPlanner
 		//////////////////////////////////////
 		void modifyGraph(SNGPolylineSeq intimate,SNGPolylineSeq personal, SNGPolylineSeq social);
 		void modifyCost(SNGPolylineSeq personal, SNGPolylineSeq social);
-		SNGPolylineSeq polylines;
+		SNGPolylineSeq polylines_block;
+		SNGPolylineSeq polylines_softblock;
         SNGPersonSeq persons;
 			
 	private:
