@@ -16,13 +16,6 @@
 	<attribute key="z" value="500" />
 </symbol>
 <symbol id="4" type="roomSt"/>
-<symbol id="5" type="room">
-	<attribute key="imName" value="room_5" />
-	<attribute key="imType" value="transform" />
-	<attribute key="x" value="3300" />
-	<attribute key="z" value="-500" />
-</symbol>
-<symbol id="6" type="roomSt"/>
 <symbol id="101" type="transform">
 	<attribute key="engine" value="static" />
 	<attribute key="imName" value="floor" />
@@ -125,7 +118,7 @@
 	<attribute key="imType" value="plane" />
 	<attribute key="nx" value="0" />
 	<attribute key="ny" value="0" />
-	<attribute key="nz" value="-5000" />
+	<attribute key="nz" value="-500" />
 	<attribute key="px" value="0" />
 	<attribute key="py" value="0" />
 	<attribute key="pz" value="0" />
@@ -381,17 +374,13 @@
 	<linkAttribute key="y" value="0" />
 	<linkAttribute key="z" value="0" />
 </link>
-<link src="5" dst="6" label="room"/>
-<link src="1" dst="5" label="know"/>
-<link src="3" dst="5" label="transitable"/>
-<link src="5" dst="3" label="transitable"/>
 <link src="100" dst="101" label="RT">
 	<linkAttribute key="rx" value="0" />
 	<linkAttribute key="ry" value="0" />
 	<linkAttribute key="rz" value="0" />
 	<linkAttribute key="tx" value="0" />
 	<linkAttribute key="ty" value="0" />
-	<linkAttribute key="tz" value="0" />
+	<linkAttribute key="tz" value="4500" />
 </link>
 <link src="101" dst="102" label="RT">
 	<linkAttribute key="rx" value="0" />
@@ -415,7 +404,7 @@
 	<linkAttribute key="rz" value="0" />
 	<linkAttribute key="tx" value="-1000" />
 	<linkAttribute key="ty" value="950" />
-	<linkAttribute key="tz" value="0" />
+	<linkAttribute key="tz" value="4500" />
 </link>
 <link src="103" dst="104" label="RT">
 	<linkAttribute key="rx" value="0" />
@@ -431,7 +420,7 @@
 	<linkAttribute key="rz" value="0" />
 	<linkAttribute key="tx" value="0" />
 	<linkAttribute key="ty" value="950" />
-	<linkAttribute key="tz" value="5000" />
+	<linkAttribute key="tz" value="9500" />
 </link>
 <link src="105" dst="106" label="RT">
 	<linkAttribute key="rx" value="0" />
@@ -447,7 +436,7 @@
 	<linkAttribute key="rz" value="0" />
 	<linkAttribute key="tx" value="1000" />
 	<linkAttribute key="ty" value="950" />
-	<linkAttribute key="tz" value="0" />
+	<linkAttribute key="tz" value="4500" />
 </link>
 <link src="107" dst="108" label="RT">
 	<linkAttribute key="rx" value="0" />
@@ -463,7 +452,7 @@
 	<linkAttribute key="rz" value="0" />
 	<linkAttribute key="tx" value="0" />
 	<linkAttribute key="ty" value="950" />
-	<linkAttribute key="tz" value="-5000" />
+	<linkAttribute key="tz" value="-500" />
 </link>
 <link src="109" dst="110" label="RT">
 	<linkAttribute key="rx" value="0" />
