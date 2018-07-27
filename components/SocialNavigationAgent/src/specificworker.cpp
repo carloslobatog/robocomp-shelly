@@ -203,12 +203,12 @@ void SpecificWorker::checkHumanBlock()
 			try
 			{
 				newModel->removeEdgeByIdentifiers(id1, robotID, edgeName);
-				qDebug()<<"SE ELIMINA EL ENLACE ";
+                qDebug ()<<"Se elimina el enlace blocking a la persona  " << id1;
 			}
 
 			catch(...)
 			{
-				std::cout<<__FUNCTION__<<"NO HAY ENLACE"<<std::endl;
+				std::cout<<__FUNCTION__<<"No existe el enlace"<<std::endl;
 
 			}
         }
@@ -232,19 +232,12 @@ void SpecificWorker::checkHumanBlock()
 
         try
         {
-        	qDebug()<<"SE MANDA LA PROPUESTA";
             sendModificationProposal(newModel,worldModel , "block");
         }
         catch(...)
         {
             std::cout<<"No se puede actualizar worldModel"<<std::endl;
         }
-
-//        if (newModel != worldModel)
-//        {
-//            qDebug()<<"mierda puta";
-//            exit (-1);
-//        }
     }
 
     previous_blockinglist = pId_blocking;
