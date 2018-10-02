@@ -60,7 +60,8 @@ class Log
 };
 inline Log operator<<(Log log, const std::string &text){ log.prev << __FUNCTION__ << text; log.print(); return log; };
 
-class PathPlanner
+class
+PathPlanner
 {
 		typedef std::chrono::high_resolution_clock clock;
 		struct Key
@@ -131,8 +132,8 @@ class PathPlanner
 		vector <Point> occupied_list;
 		vector <Point> containedp_list;
 		//////////////////////////////////////
-		void modifyGraph(SNGPolylineSeq intimate,SNGPolylineSeq personal, SNGPolylineSeq social);
-		void modifyCost(SNGPolylineSeq personal, SNGPolylineSeq social);
+		void modifyGraph(SNGPolylineSeq intimate,SNGPolylineSeq personal, SNGPolylineSeq social, SNGPolylineSeq object);
+		void modifyCost(SNGPolylineSeq personal, SNGPolylineSeq social, SNGPolylineSeq object);
 		SNGPolylineSeq polylines_block;
 		SNGPolylineSeq polylines_softblock;
         SNGPersonSeq persons;

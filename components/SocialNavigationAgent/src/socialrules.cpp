@@ -29,7 +29,7 @@ void SocialRules::innerModelChanged(const std::shared_ptr<InnerModel> &innerMode
 	
 	innerModel = innerModel_;
 /*	printf("%s %d sr(%p) pf(%p) (%p)\n", __FILE__, __LINE__, this, pathfinder, innerModel.get());*/
-	pathfinder->innerModelChanged(innerModel, totalpersons, intimate_seq, personal_seq, social_seq);
+	pathfinder->innerModelChanged(innerModel, totalpersons, intimate_seq, personal_seq, social_seq, object_seq);
 }
 
 
@@ -221,6 +221,7 @@ SNGPolylineSeq SocialRules::ApplySocialRules()
 			social_seq.clear();
 			personal_seq.clear();
 			intimate_seq.clear();
+			object_seq.clear();
 	
 			for (auto per: interactingpersons)
 			{
@@ -262,12 +263,16 @@ SNGPolylineSeq SocialRules::ApplySocialRules()
 	}
 	
 	if (!objects.empty())	
-	{  
+	{
+        object_seq = socialnavigationgaussian_proxy->getObjectInteraction(totalpersons,objects,false,false);
+
 		SNGPolylineSeq secuenciaobj = objectInteraction(false);
 		for(auto s: secuenciaobj)
-			social_seq.push_back(s);
+			intimate_seq.push_back(s);
+
+
 	}
-	pathfinder->innerModelChanged(innerModel, totalpersons, intimate_seq, personal_seq, social_seq);
+	pathfinder->innerModelChanged(innerModel, totalpersons, intimate_seq, personal_seq, social_seq, object_seq);
 
 
 
@@ -340,8 +345,9 @@ SNGPolylineSeq SocialRules::objectInteraction(bool d)
 			
 //			qDebug()<<"Object"<<"Pose x"<<object.x<<"Pose z"<<object.z<<"Angle"<<object.angle<<"Space"<<object.space;
 		}
-		
-		sequenceObj = socialnavigationgaussian_proxy->getObjectInteraction(totalpersons,objects,d);
+
+		sequenceObj = socialnavigationgaussian_proxy->getObjectInteraction(totalpersons,objects,true,d);
+
 	}
 	catch(...){}
 	

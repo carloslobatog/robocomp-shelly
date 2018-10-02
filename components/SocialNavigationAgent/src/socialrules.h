@@ -66,8 +66,11 @@ public:
 	SNGPolylineSeq intimate_seq;
 	SNGPolylineSeq personal_seq;
 	SNGPolylineSeq social_seq;
-    
-	//PARA GUARDAR LOS DATOS EN UN ARCHIVO
+
+    SNGPolylineSeq object_seq;
+
+
+    //PARA GUARDAR LOS DATOS EN UN ARCHIVO
 	struct Point {float x;float z;};
 	Point point;
 	vector <Point> poserobot;

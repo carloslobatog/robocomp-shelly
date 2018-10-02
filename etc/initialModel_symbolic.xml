@@ -245,7 +245,8 @@
 
 	
 
-	<symbol id="1000" type="object_interaction">
+	
+	<!--<symbol id="1000" type="object_interaction">
 		<attribute key="imType" value="transform" />
 		<attribute key="imName" value="fridge" />
 		<attribute key="interaction" value="1.0" />
@@ -288,13 +289,13 @@
 	<link src="2000" dst="2001" label="interacting" > </link>
 
 	<link src="1" dst="2000" label="know" > </link>
-	<link src="2000" dst="2001" label="coffee" > </link>
+	<link src="2000" dst="2001" label="coffee" > </link>  -->
 	
 
 	<symbol id="3000" type="object_interaction">
 		<attribute key="imType" value="transform" />
 		<attribute key="imName" value="board" />
-		<attribute key="interaction" value="1.5" />
+		<attribute key="interaction" value="2.5" />
 	</symbol>
 	<symbol id="3001" type="objectSt" > </symbol>
 	<symbol id="3002" type="objectSt">
