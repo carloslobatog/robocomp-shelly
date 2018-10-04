@@ -440,26 +440,23 @@ bool Sampler::checkRobotValidDirectionToTargetOneShot(const QVec & origin , cons
 	qDebug()<< "alfa1" << alfa1 << "robot alfa:" << r1q.extractAnglesR_min().y() << "robot tr" << innerModelSampler->transform("world","robot") << MAX_LENGTH_ALONG_RAY; 
 	
 	// Create a tall box for robot body with center at zero and sides:
-	boost::shared_ptr<fcl::Box> robotBox(new fcl::Box(wRob, hRob, wRob));
-	
-	// Create a collision object
-	fcl::CollisionObject robotBoxCol(robotBox);
-	
-	//Create and fcl rotation matrix to orient the box with the robot
-	const fcl::Matrix3f R1( r1q(0,0), r1q(0,1), r1q(0,2), r1q(1,0), r1q(1,1), r1q(1,2), r1q(2,0), r1q(2,1), r1q(2,2) );
-		
+	std::shared_ptr<fcl::Box> robotBox(new fcl::Box(wRob, hRob, wRob));
+
 	//Check collision at maximum distance
 	float hitDistance = MAX_LENGTH_ALONG_RAY;
 	
+	//Create and fcl rotation matrix to orient the box with the robot
+	const fcl::Matrix3f R1( r1q(0,0), r1q(0,1), r1q(0,2), r1q(1,0), r1q(1,1), r1q(1,2), r1q(2,0), r1q(2,1), r1q(2,2) );
 	//Resize big box to enlarge it along the ray direction
 	robotBox->side = fcl::Vec3f(wRob, hRob, hitDistance);
 	
 	//Compute the coord of the tip of a "nose" going away from the robot (Z dir) up to hitDistance/2
 	const QVec boxBack = innerModelSampler->transformS("world", QVec::vec3(0, hRob/2, hitDistance/2), robotname);
 	
-	//move the big box so it is aligned with the robot and placed along the nose
-	robotBoxCol.setTransform(R1, fcl::Vec3f(boxBack(0), boxBack(1), boxBack(2)));
-		
+	// Create a collision object
+	fcl::CollisionObject robotBoxCol(robotBox, R1, fcl::Vec3f(boxBack(0), boxBack(1), boxBack(2)));
+	
+	
 	qDebug() << robotBoxCol.getTranslation()[0] <<robotBoxCol.getTranslation()[1]<<robotBoxCol.getTranslation()[2];
 	
 	

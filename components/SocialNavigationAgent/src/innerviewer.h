@@ -23,6 +23,7 @@
 #include <iostream>
 #include <fstream>
 #include <mutex>
+#include <atomic>
 #include <osgViewer/Viewer>
 #include <innermodel/innermodelviewer.h>
 #include <innermodel/innermodeldraw.h>
@@ -76,7 +77,8 @@ class InnerViewer: public QThread
 		
 	private:
 		mutable std::recursive_mutex mutex;
-		std::atomic<bool> stop{false}, stopped{false};
+		std::atomic<bool> stop{false};
+		std::atomic<bool> stopped{false};
 		InnerModelViewer* innerModelViewer;
 		InnerPtr innerModel;
 		osgViewer::Viewer viewer;

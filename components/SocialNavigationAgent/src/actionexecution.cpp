@@ -272,9 +272,9 @@ void ActionExecution::action_HandObject(bool newAction)
 				std::cout << "trajectoryrobot2d->go(" << currentTarget.x << ", " << currentTarget.z << ", " << currentTarget.ry << ", " << currentTarget.doRotation << ", " << graspRef.x() << ", " << graspRef.z() << " )\n";
 				haveTarget = true;
 			}
-			catch(const Ice::Exception &ex)
+			catch(const std::exception &ex)
 			{
-				std::cout <<"navigationAgent, action_HandObject: ERROR trajectoryrobot2d->go "<< ex << std::endl;
+				std::cout <<"navigationAgent, action_HandObject: ERROR trajectoryrobot2d->go "<< ex.what() << std::endl;
 				throw ex;
 			}
 		}
@@ -283,9 +283,9 @@ void ActionExecution::action_HandObject(bool newAction)
 		{
 			state = trajectoryrobot2d_proxy->getState().state;
 		}
-		catch(const Ice::Exception &ex)
+		catch(const std::exception &ex)
 		{
-			std::cout <<"navigationAgent, action_HandObject: trajectoryrobot2d->getState().state "<< ex << std::endl;
+			std::cout <<"navigationAgent, action_HandObject: trajectoryrobot2d->getState().state "<< ex.what() << std::endl;
 			throw ex;
 		}
 
@@ -308,9 +308,9 @@ void ActionExecution::action_HandObject(bool newAction)
 			}
 		}
 	}
-	catch(const Ice::Exception &ex)
+	catch(const std::exception &ex)
 	{
-		std::cout << ex << std::endl;
+		std::cout << ex.what() << std::endl;
 	}
 
 
@@ -433,14 +433,14 @@ void ActionExecution::action_HandObject_Offer(bool newAction)
 			std::cout << ex << " " << ex.text << std::endl;
 			throw;
 		}
-		catch(const Ice::Exception &ex)
+		catch(const std::exception &ex)
 		{
-			std::cout << ex << std::endl;
+			std::cout << ex.what() << std::endl;
 		}
 	}
-	catch(const Ice::Exception &ex)
+	catch(const std::exception &ex)
 	{
-		std::cout << ex << std::endl;
+		std::cout << ex.what() << std::endl;
 	}
 
 
@@ -582,9 +582,9 @@ void ActionExecution::action_SetObjectReach(bool newAction)
 				std::cout << ex << " " << ex.text << std::endl;
 				throw;
 			}
-			catch(const Ice::Exception &ex)
+			catch(const std::exception &ex)
 			{
-				std::cout << ex << std::endl;
+				std::cout << ex.what() << std::endl;
 			}
 		}
 		string state;
@@ -592,9 +592,9 @@ void ActionExecution::action_SetObjectReach(bool newAction)
 		{
 			state = trajectoryrobot2d_proxy->getState().state;
 		}
-		catch(const Ice::Exception &ex)
+		catch(const std::exception &ex)
 		{
-			std::cout <<"trajectoryrobot2d->getState().state "<< ex << std::endl;
+			std::cout <<"trajectoryrobot2d->getState().state "<< ex.what() << std::endl;
 			throw ex;
 		}
 
@@ -617,9 +617,9 @@ void ActionExecution::action_SetObjectReach(bool newAction)
 			}
 		}
 	}
-	catch(const Ice::Exception &ex)
+	catch(const std::exception &ex)
 	{
-		std::cout << ex << std::endl;
+		std::cout << ex.what() << std::endl;
 	}
 }
 
@@ -1046,9 +1046,9 @@ void ActionExecution::go(float x, float z, float alpha, bool rot, float xRef, fl
 	{
 		std::cout << ex.text << std::endl;
 	}
-	catch(const Ice::Exception &ex)
+	catch(const std::exception &ex)
 	{
-		std::cout << ex << std::endl;
+		std::cout << ex.what() << std::endl;
 	}
 	catch(...)
 	{
@@ -1063,9 +1063,9 @@ void ActionExecution::stop()
 	{
 		trajectoryrobot2d_proxy->stop();
 	}
-	catch(const Ice::Exception &ex)
+	catch(const std::exception &ex)
 	{
-		std::cout << ex << std::endl;
+		std::cout << ex.what() << std::endl;
 	}
 	catch(...)
 	{
@@ -1112,7 +1112,7 @@ void ActionExecution::sendModificationProposal(AGMModel::SPtr &newModel, AGMMode
 	catch(const RoboCompAGMExecutive::InvalidChange &e)
 	{
 	}
-	catch(const Ice::Exception& e)
+	catch(const std::exception& e)
 	{
 		exit(1);
 	}
