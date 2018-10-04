@@ -112,14 +112,14 @@ void PathFinder::run()
 }
 
 
-void PathFinder::innerModelChanged (const std::shared_ptr<InnerModel> &innerModel_, SNGPersonSeq persons_, SNGPolylineSeq intimate,SNGPolylineSeq personal,SNGPolylineSeq social)
+void PathFinder::innerModelChanged (const std::shared_ptr<InnerModel> &innerModel_, SNGPersonSeq persons_, SNGPolylineSeq intimate,SNGPolylineSeq personal,SNGPolylineSeq social,SNGPolylineSeq object)
 {
 //	qDebug()<<__FUNCTION__<< "--------------ESPERANDO GET ROAD -----------------------";
 	innerModel = innerModel_;
 	pathplanner.persons = persons_;
 	Road &road = getRoad();
 		pathplanner.reloadInnerModel(innerModel_) ;
-		pathplanner.modifyGraph(intimate, personal,social);
+		pathplanner.modifyGraph(intimate, personal,social, object);
 		road.reloadInnerModel( innerModel_ ) ;  
 		projector.reloadInnerModel(innerModel_) ;  
 		projector.update_polyline(personal); //para el laser

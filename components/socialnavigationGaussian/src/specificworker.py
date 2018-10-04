@@ -441,12 +441,13 @@ class SpecificWorker(GenericWorker):
     #
     # getObjectInteraction
     #
-    def getObjectInteraction(self, persons, objects, d):
+    def getObjectInteraction(self, persons, objects, interaction, d):
 
         # print("getObjectInteration")
         plt.close('all')
 
-        polylines = []
+        polylines_object = []
+        polylines_interacting = []
 
         for o in objects:
             obj = Object(o.x, o.z, o.angle, o.space)
@@ -463,7 +464,6 @@ class SpecificWorker(GenericWorker):
                 plt.gca().add_line(heading)
 
             w = 1.0
-
             #print (obj.x,obj.y)
             ##para calcular el rectangulo
             s = QRectF(QPointF(0, 0), QSizeF(w, obj.sp))
@@ -512,6 +512,8 @@ class SpecificWorker(GenericWorker):
                 p.z = point.y()
                 polyline.append(p)
 
+            polylines_object.append(polyline)
+
 
             for p in persons:
                 pn = Person(p.x, p.z, p.angle)
@@ -537,12 +539,12 @@ class SpecificWorker(GenericWorker):
                 ##CHECKING IF THE PERSON IS INSIDE THE POLYGON
                 if space.containsPoint(QPointF(pn.x,pn.y),Qt.OddEvenFill) and checkangle:
                     # print("DENTROOOOO Y MIRANDO")
-                    if not polyline in polylines:
-                        polylines.append(polyline)
+                    if not polyline in polylines_interacting:
+                        polylines_interacting.append(polyline)
 
 
         if d:
-            for ps in polylines:
+            for ps in polylines_interacting:
                 #  plt.figure()
                 for p in ps:
                     plt.plot(p.x, p.z, "ro")
@@ -551,7 +553,11 @@ class SpecificWorker(GenericWorker):
                     plt.ylabel('Y')
             plt.show()
         plt.show()
-        return polylines
+
+        if (interaction):
+            return polylines_interacting
+        else:
+            return polylines_object
 
 
 

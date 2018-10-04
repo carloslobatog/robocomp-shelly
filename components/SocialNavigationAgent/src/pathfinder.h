@@ -92,7 +92,7 @@ namespace robocomp
                 vector <int32_t> getHumanBlocking(){return pathplanner.pId_blocking;};
                 vector <int32_t> getHumanSoftBlocking(){return pathplanner.pId_softblocking;};
 				//void setInnerModel(InnerModel* innerModel_){ innerModel = innerModel_; };
-				void innerModelChanged(const std::shared_ptr<InnerModel> &innerModel_, SNGPersonSeq persons, SNGPolylineSeq intimate,SNGPolylineSeq personal,SNGPolylineSeq social);
+				void innerModelChanged(const std::shared_ptr<InnerModel> &innerModel_, SNGPersonSeq persons, SNGPolylineSeq intimate,SNGPolylineSeq personal,SNGPolylineSeq social, SNGPolylineSeq objects);
 						
 				void run();
 				///////////////////////////

@@ -26,11 +26,21 @@
       <file leaf-file-name="specificworker.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/specificworker.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="271">
-              <caret line="407" column="77" lean-forward="false" selection-start-line="407" selection-start-column="77" selection-end-line="407" selection-end-column="77" />
+            <state relative-caret-position="403">
+              <caret line="536" column="38" lean-forward="true" selection-start-line="536" selection-start-column="38" selection-end-line="536" selection-end-column="38" />
               <folding>
                 <element signature="e#735#766#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="specificworker.py.new" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/specificworker.py.new">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="362">
+              <caret line="101" column="65" lean-forward="false" selection-start-line="101" selection-start-column="53" selection-end-line="101" selection-end-column="65" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -56,7 +66,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>plt.figure</find>
       <find>valor</find>
       <find>xdot</find>
       <find>object</find>
@@ -86,6 +95,7 @@
       <find>lx_</find>
       <find>plt.show</find>
       <find>for</find>
+      <find>objects</find>
     </findStrings>
     <replaceStrings>
       <replace>pn</replace>
@@ -141,7 +151,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -170,6 +179,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -587,13 +597,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/specificworker.py.new">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1200">
-          <caret line="80" column="14" lean-forward="false" selection-start-line="80" selection-start-column="14" selection-end-line="80" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/checkboundaries.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
@@ -655,10 +658,18 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/koko.py" />
+    <entry file="file://$PROJECT_DIR$/src/specificworker.py.new">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="362">
+          <caret line="101" column="65" lean-forward="false" selection-start-line="101" selection-start-column="53" selection-end-line="101" selection-end-column="65" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/specificworker.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="271">
-          <caret line="407" column="77" lean-forward="false" selection-start-line="407" selection-start-column="77" selection-end-line="407" selection-end-column="77" />
+        <state relative-caret-position="403">
+          <caret line="536" column="38" lean-forward="true" selection-start-line="536" selection-start-column="38" selection-end-line="536" selection-end-column="38" />
           <folding>
             <element signature="e#735#766#0" expanded="true" />
           </folding>

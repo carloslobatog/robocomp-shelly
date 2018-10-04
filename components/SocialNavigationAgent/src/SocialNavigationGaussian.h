@@ -500,39 +500,39 @@ private:
     
 public:
 
-    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d)
+    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool interaction, bool d)
     {
-        return getObjectInteraction(persons, objects, d, 0);
+        return getObjectInteraction(persons, objects, interaction, d, 0);
     }
-    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::Context& __ctx)
+    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool interaction, bool d, const ::Ice::Context& __ctx)
     {
-        return getObjectInteraction(persons, objects, d, &__ctx);
+        return getObjectInteraction(persons, objects, interaction, d, &__ctx);
     }
 #ifdef ICE_CPP11
     ::Ice::AsyncResultPtr
-    begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool interaction, bool d, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return __begin_getObjectInteraction(persons, objects, d, 0, __response, __exception, __sent);
+        return __begin_getObjectInteraction(persons, objects, interaction, d, 0, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool interaction, bool d, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_getObjectInteraction(persons, objects, d, 0, ::Ice::newCallback(__completed, __sent), 0);
+        return begin_getObjectInteraction(persons, objects, interaction, d, 0, ::Ice::newCallback(__completed, __sent), 0);
     }
     ::Ice::AsyncResultPtr
-    begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool interaction, bool d, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return __begin_getObjectInteraction(persons, objects, d, &__ctx, __response, __exception, __sent);
+        return __begin_getObjectInteraction(persons, objects, interaction, d, &__ctx, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool interaction, bool d, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_getObjectInteraction(persons, objects, d, &__ctx, ::Ice::newCallback(__completed, __sent));
+        return begin_getObjectInteraction(persons, objects, interaction, d, &__ctx, ::Ice::newCallback(__completed, __sent));
     }
     
 private:
 
-    ::Ice::AsyncResultPtr __begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+    ::Ice::AsyncResultPtr __begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool interaction, bool d, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
     {
         class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
         {
@@ -568,48 +568,48 @@ private:
             
             ::std::function<void (const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&)> _response;
         };
-        return begin_getObjectInteraction(persons, objects, d, __ctx, new Cpp11CB(__response, __exception, __sent));
+        return begin_getObjectInteraction(persons, objects, interaction, d, __ctx, new Cpp11CB(__response, __exception, __sent));
     }
     
 public:
 #endif
 
-    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d)
+    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool interaction, bool d)
     {
-        return begin_getObjectInteraction(persons, objects, d, 0, ::IceInternal::__dummyCallback, 0);
+        return begin_getObjectInteraction(persons, objects, interaction, d, 0, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::Context& __ctx)
+    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool interaction, bool d, const ::Ice::Context& __ctx)
     {
-        return begin_getObjectInteraction(persons, objects, d, &__ctx, ::IceInternal::__dummyCallback, 0);
+        return begin_getObjectInteraction(persons, objects, interaction, d, &__ctx, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool interaction, bool d, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_getObjectInteraction(persons, objects, d, 0, __del, __cookie);
+        return begin_getObjectInteraction(persons, objects, interaction, d, 0, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool interaction, bool d, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_getObjectInteraction(persons, objects, d, &__ctx, __del, __cookie);
+        return begin_getObjectInteraction(persons, objects, interaction, d, &__ctx, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::RoboCompSocialNavigationGaussian::Callback_SocialNavigationGaussian_getObjectInteractionPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool interaction, bool d, const ::RoboCompSocialNavigationGaussian::Callback_SocialNavigationGaussian_getObjectInteractionPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_getObjectInteraction(persons, objects, d, 0, __del, __cookie);
+        return begin_getObjectInteraction(persons, objects, interaction, d, 0, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool d, const ::Ice::Context& __ctx, const ::RoboCompSocialNavigationGaussian::Callback_SocialNavigationGaussian_getObjectInteractionPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq& persons, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq& objects, bool interaction, bool d, const ::Ice::Context& __ctx, const ::RoboCompSocialNavigationGaussian::Callback_SocialNavigationGaussian_getObjectInteractionPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_getObjectInteraction(persons, objects, d, &__ctx, __del, __cookie);
+        return begin_getObjectInteraction(persons, objects, interaction, d, &__ctx, __del, __cookie);
     }
 
     ::RoboCompSocialNavigationGaussian::SNGPolylineSeq end_getObjectInteraction(const ::Ice::AsyncResultPtr&);
     
 private:
 
-    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq&, bool, const ::Ice::Context*);
-    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq&, bool, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq&, bool, bool, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq&, bool, bool, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
 
@@ -853,7 +853,7 @@ public:
 
     virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&) = 0;
 
-    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq&, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&) = 0;
+    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq&, bool, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&) = 0;
 
     virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq removePoints(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&, const ::Ice::Context*, ::IceInternal::InvocationObserver&) = 0;
 };
@@ -877,7 +877,7 @@ public:
 
     virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
 
-    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq&, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
+    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq&, bool, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
 
     virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq removePoints(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
 };
@@ -901,7 +901,7 @@ public:
 
     virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
 
-    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq&, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
+    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq&, bool, bool, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
 
     virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq removePoints(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&, const ::Ice::Context*, ::IceInternal::InvocationObserver&);
 };
@@ -931,7 +931,7 @@ public:
     virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getPassOnRight(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, ::Ice::Float, bool, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___getPassOnRight(::IceInternal::Incoming&, const ::Ice::Current&);
 
-    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq&, bool, const ::Ice::Current& = ::Ice::Current()) = 0;
+    virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq getObjectInteraction(const ::RoboCompSocialNavigationGaussian::SNGPersonSeq&, const ::RoboCompSocialNavigationGaussian::SNGObjectSeq&, bool, bool, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___getObjectInteraction(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::RoboCompSocialNavigationGaussian::SNGPolylineSeq removePoints(const ::RoboCompSocialNavigationGaussian::SNGPolylineSeq&, const ::Ice::Current& = ::Ice::Current()) = 0;
