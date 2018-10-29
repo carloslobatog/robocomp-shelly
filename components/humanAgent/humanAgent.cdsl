@@ -1,0 +1,12 @@
+Component humanAgent
+{
+	Communications
+	{
+
+	};
+	
+	language Cpp;
+	gui Qt(QWidget);
+	options agmagent, innermodelviewer;
+};
+

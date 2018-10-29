@@ -31,7 +31,7 @@ Ice.loadSlice(preStr+"CommonBehavior.ice")
 import RoboCompCommonBehavior
 
 additionalPathStr = ''
-icePaths = []
+icePaths = [ '/opt/robocomp/interfaces' ]
 try:
 	SLICE_PATH = os.environ['SLICE_PATH'].split(':')
 	for p in SLICE_PATH:
@@ -44,9 +44,7 @@ except:
 
 ice_SocialNavigationGaussian = False
 for p in icePaths:
-	print 'Trying', p, 'to load SocialNavigationGaussian.ice'
 	if os.path.isfile(p+'/SocialNavigationGaussian.ice'):
-		print 'Using', p, 'to load SocialNavigationGaussian.ice'
 		preStr = "-I/opt/robocomp/interfaces/ -I"+ROBOCOMP+"/interfaces/ " + additionalPathStr + " --all "+p+'/'
 		wholeStr = preStr+"SocialNavigationGaussian.ice"
 		Ice.loadSlice(wholeStr)
