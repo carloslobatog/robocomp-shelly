@@ -8,78 +8,78 @@
 		<Option virtualFolders="CMake Files\;CMake Files\src\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\..\opt\;CMake Files\..\..\..\..\..\..\..\opt\robocomp\;CMake Files\..\..\..\..\..\..\..\opt\robocomp\cmake\;CMake Files\..\..\..\..\..\..\..\opt\robocomp\cmake\modules\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent"/>
+				<Option working_dir="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="install/strip">
-				<Option working_dir="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent"/>
+				<Option working_dir="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 install/strip"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 install/strip"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="install/local">
-				<Option working_dir="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent"/>
+				<Option working_dir="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 install/local"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 install/local"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent"/>
+				<Option working_dir="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent"/>
+				<Option working_dir="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="list_install_components">
-				<Option working_dir="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent"/>
+				<Option working_dir="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 list_install_components"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 list_install_components"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="install">
-				<Option working_dir="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent"/>
+				<Option working_dir="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 install"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 install"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="humanAgent">
-				<Option output="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/bin/humanAgent" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/bin"/>
+				<Option output="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/bin/humanAgent" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/bin"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -89,13 +89,12 @@
 					<Add option="-DQT_GUI_LIB"/>
 					<Add option="-DQT_CORE_LIB"/>
 					<Add option="-DQT_OPENGL_LIB"/>
-					<Add directory="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/humanAgent_autogen/include"/>
-					<Add directory="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src"/>
-					<Add directory="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/."/>
+					<Add directory="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/humanAgent_autogen/include"/>
+					<Add directory="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src"/>
+					<Add directory="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/."/>
 					<Add directory="/opt/robocomp/include"/>
 					<Add directory="/classes"/>
-					<Add directory="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent"/>
-					<Add directory="/usr/lib/x86_64-linux-gnu"/>
+					<Add directory="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent"/>
 					<Add directory="/opt/robocomp/classes"/>
 					<Add directory="/opt/robocomp/libs"/>
 					<Add directory="/opt/robocomp/interfaces"/>
@@ -107,15 +106,15 @@
 					<Add directory="/usr/include/qt4/QtCore"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 humanAgent"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 humanAgent"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="humanAgent/fast">
-				<Option output="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/bin/humanAgent" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/bin"/>
+				<Option output="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/bin/humanAgent" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/bin"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -125,13 +124,12 @@
 					<Add option="-DQT_GUI_LIB"/>
 					<Add option="-DQT_CORE_LIB"/>
 					<Add option="-DQT_OPENGL_LIB"/>
-					<Add directory="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/humanAgent_autogen/include"/>
-					<Add directory="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src"/>
-					<Add directory="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/."/>
+					<Add directory="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/humanAgent_autogen/include"/>
+					<Add directory="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src"/>
+					<Add directory="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/."/>
 					<Add directory="/opt/robocomp/include"/>
 					<Add directory="/classes"/>
-					<Add directory="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent"/>
-					<Add directory="/usr/lib/x86_64-linux-gnu"/>
+					<Add directory="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent"/>
 					<Add directory="/opt/robocomp/classes"/>
 					<Add directory="/opt/robocomp/libs"/>
 					<Add directory="/opt/robocomp/interfaces"/>
@@ -143,120 +141,126 @@
 					<Add directory="/usr/include/qt4/QtCore"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 humanAgent/fast"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 humanAgent/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="humanAgent_autogen">
-				<Option working_dir="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src"/>
+				<Option working_dir="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 humanAgent_autogen"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 humanAgent_autogen"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMCommonBehavior.cpp">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMCommonBehavior.cpp">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMCommonBehavior.cpp.rule">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMCommonBehavior.cpp.rule">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMCommonBehavior.h">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMCommonBehavior.h">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMExecutive.cpp">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMExecutive.cpp">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMExecutive.cpp.rule">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMExecutive.cpp.rule">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMExecutive.h">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMExecutive.h">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMWorldModel.cpp">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMWorldModel.cpp">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMWorldModel.cpp.rule">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMWorldModel.cpp.rule">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMWorldModel.h">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMWorldModel.h">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/CommonBehavior.cpp">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/CommonBehavior.cpp">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/CommonBehavior.cpp.rule">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/CommonBehavior.cpp.rule">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/CommonBehavior.h">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/CommonBehavior.h">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/Planning.cpp">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/Planning.cpp">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/Planning.cpp.rule">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/Planning.cpp.rule">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/Planning.h">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/Planning.h">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/agmcommonbehaviorI.cpp">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/agmcommonbehaviorI.cpp">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/agmcommonbehaviorI.h">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/agmcommonbehaviorI.h">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/agmexecutivetopicI.cpp">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/agmexecutivetopicI.cpp">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/agmexecutivetopicI.h">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/agmexecutivetopicI.h">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/commonbehaviorI.cpp">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/bodyVisualizer.h">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/commonbehaviorI.h">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/commonbehaviorI.cpp">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/genericmonitor.cpp">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/commonbehaviorI.h">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/genericmonitor.h">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/genericmonitor.cpp">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/genericworker.cpp">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/genericmonitor.h">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/genericworker.h">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/genericworker.cpp">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/humanAgent_autogen/mocs_compilation.cpp">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/genericworker.h">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/main.cpp">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/humanAgent_autogen/mocs_compilation.cpp">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/mainUI.ui">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/main.cpp">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/specificmonitor.cpp">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/mainUI.ui">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/specificmonitor.h">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/sfLine.h">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/specificworker.cpp">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/specificmonitor.cpp">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/specificworker.h">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/specificmonitor.h">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/ui_mainUI.h">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/specificworker.cpp">
+			<Option target="humanAgent"/>
+		</Unit>
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/specificworker.h">
+			<Option target="humanAgent"/>
+		</Unit>
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/ui_mainUI.h">
 			<Option target="humanAgent"/>
 		</Unit>
 		<Unit filename="/opt/robocomp/classes/qlog/qlog.cpp">
@@ -277,22 +281,19 @@
 		<Unit filename="/opt/robocomp/classes/sigwatch/sigwatch.h">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/CMakeLists.txt">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/CMakeLists.txt">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\src\"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/CMakeListsSpecific.txt">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/src/CMakeListsSpecific.txt">
 			<Option virtualFolder="CMake Files\src\"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/../../../../../../../opt/robocomp/cmake/robocomp.cmake">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/../../../../../../../opt/robocomp/cmake/robocomp.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\opt\robocomp\cmake\"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/../../../../../../../opt/robocomp/cmake/modules/astra.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\opt\robocomp\cmake\modules\"/>
-		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/../../../../../../../opt/robocomp/cmake/modules/opencv.cmake">
+		<Unit filename="/home/araceli/robocomp/components/robocomp-araceli/components/humanAgent/../../../../../../../opt/robocomp/cmake/modules/astra.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\opt\robocomp\cmake\modules\"/>
 		</Unit>
 	</Project>

@@ -55,15 +55,6 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
     //////////////////////////////////
     astra::initialize();
 
-    astra::StreamSet sensor;
-    astra::StreamReader reader = sensor.create_reader();
-
-    reader.stream<astra::DepthStream>().start();
-
-    auto bodyStream = reader.stream<astra::BodyStream>();
-    bodyStream.start();
-
-    astra::SkeletonProfile profile = bodyStream.get_skeleton_profile();
 
     //////////////////////////////////
 #ifdef USE_QTGUI
@@ -90,17 +81,18 @@ void SpecificWorker::compute()
 {
 	QMutexLocker locker(mutex);
 
-	//computeCODE
-// 	try
-// 	{
-// 		camera_proxy->getYImage(0,img, cState, bState);
-// 		memcpy(image_gray.data, &img[0], m_width*m_height*sizeof(uchar));
-// 		searchTags(image_gray);
-// 	}
-// 	catch(const Ice::Exception &e)
-// 	{
-// 		std::cout << "Error reading from Camera" << e << std::endl;
-// 	}
+    astra::StreamSet sensor;
+    astra::StreamReader reader = sensor.create_reader();
+
+    BodyVisualizer listener;
+
+
+    auto bodyStream = reader.stream<astra::BodyStream>();
+    bodyStream.start();
+    reader.add_listener(listener);
+
+    astra_update();
+
 #ifdef USE_QTGUI
 	if (innerModelViewer) innerModelViewer->update();
 	osgView->frame();

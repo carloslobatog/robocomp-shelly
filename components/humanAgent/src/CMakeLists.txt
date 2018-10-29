@@ -28,7 +28,8 @@ SET ( SOURCES
   specificworker.cpp
   agmcommonbehaviorI.cpp
   agmexecutivetopicI.cpp
-)
+  bodyVisualizer.h
+  sfLine.h)
 
 
 

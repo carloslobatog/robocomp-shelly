@@ -9,9 +9,11 @@ SET ( SOURCES
 SET ( HEADERS
   specificworker.h
   specificmonitor.h
+  sfLine.h
+  bodyVisualizer.h
 )
 
 INCLUDE($ENV{ROBOCOMP}/cmake/modules/astra.cmake)
-INCLUDE($ENV{ROBOCOMP}/cmake/modules/opencv.cmake)
+#INCLUDE($ENV{ROBOCOMP}/cmake/modules/opencv.cmake)
 ADD_DEFINITIONS( -std=c++11 )
 

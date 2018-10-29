@@ -35,14 +35,14 @@
 	#include <innermodel/innermodelviewer.h>
     #include <SFML/Graphics.hpp>
     #include <astra/astra.hpp>
+	#include "bodyVisualizer.h"
+
 #endif
 
 class SpecificWorker : public GenericWorker
 {
 Q_OBJECT
 public:
-
-
 	SpecificWorker(MapPrx& mprx);
 	~SpecificWorker();
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
@@ -60,6 +60,23 @@ public:
 	void edgeUpdated(const RoboCompAGMWorldModel::Edge &modification);
 	void symbolUpdated(const RoboCompAGMWorldModel::Node &modification);
 	void symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence &modifications);
+    astra::DepthStream configure_depth(astra::StreamReader& reader)
+    {
+        auto depthStream = reader.stream<astra::DepthStream>();
+
+        //We don't have to set the mode to start the stream, but if you want to here is how:
+        astra::ImageStreamMode depthMode;
+
+        depthMode.set_width(640);
+        depthMode.set_height(480);
+        depthMode.set_pixel_format(astra_pixel_formats::ASTRA_PIXEL_FORMAT_DEPTH_MM);
+        depthMode.set_fps(30);
+
+        depthStream.set_mode(depthMode);
+
+        return depthStream;
+    };
+
 
 public slots:
 	void compute();
