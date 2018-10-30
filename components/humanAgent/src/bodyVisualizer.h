@@ -9,7 +9,7 @@
 #include <astra/astra.hpp>
 #include <iostream>
 #include <cstring>
-#include "sfLine.h"
+#include <sfLine.h>
 
 #endif //PROJECT_BODYVISUALIZER_H
 class BodyVisualizer : public astra::FrameListener
@@ -126,7 +126,7 @@ public:
         lastTimepoint_ = newTimepoint;
         double fps = 1.0 / frameDuration_;
 
-        printf("FPS: %3.1f (%3.4Lf ms)\n", fps, frameDuration_ * 1000);
+       // printf("FPS: %3.1f (%3.4Lf ms)\n", fps, frameDuration_ * 1000);
     }
 
     void processDepth(astra::Frame& frame)
