@@ -35,6 +35,9 @@
 										<transform id="rgbd_transform" tx="0" ty="0" tz="10"  rx="0" ry="0" rz="0">
 											<rgbd id="rgbd" width="640" height="480" focal="540" port="10096" ifconfig="10068,12238" noise="0" />
 										</transform>
+										<transform id="camera_transform" tx="0" ty="0" tz="30"  rx="-0.200000003" ry="0.01999999955" rz="0">
+											<camera id="camera" width="1280" height="720" focal="810" />
+										</transform>
 										<mesh id="sensorRGBD" file="/home/robocomp/robocomp/files/osgModels/basics/cube2.3ds" scale="100,21,30" tx="0" ty="0" tz="0" rx="0" ry="0" rz="0" collide="1" />
 									</transform>
 								</joint>

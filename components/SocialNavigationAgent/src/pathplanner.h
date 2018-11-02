@@ -116,10 +116,7 @@ PathPlanner
 		bool get_map_dirty_bit() const 		{return map_dirty_bit;};  
 		void set_map_dirty_bit(bool v=true)	{map_dirty_bit = v;};
 		void reloadInnerModel(const InnerPtr &innerModel_);
-		void checkHumanBlock(Road &road);
-        vector <int32_t> pId_blocking = {};
-		bool checkHumanSoftBlock(std::list<QVec> currentPath);
-		vector <int32_t> pId_softblocking = {};
+
 
 		typedef	std::unordered_map<PathPlanner::Key, PathPlanner::Value, PathPlanner::KeyHasher> FMap;	
 		FMap fmap;
@@ -132,12 +129,20 @@ PathPlanner
 		vector <Point> occupied_list;
 		vector <Point> containedp_list;
 		//////////////////////////////////////
-		void modifyGraph(SNGPolylineSeq intimate,SNGPolylineSeq personal, SNGPolylineSeq social, SNGPolylineSeq object);
+		void modifyGraph(SNGPolylineSeq intimate,SNGPolylineSeq personal, SNGPolylineSeq social, SNGPolylineSeq object,SNGPolylineSeq objectsblocking);
 		void modifyCost(SNGPolylineSeq personal, SNGPolylineSeq social, SNGPolylineSeq object);
 		SNGPolylineSeq polylines_block;
 		SNGPolylineSeq polylines_softblock;
+        SNGPolylineSeq polylines_aff;
         SNGPersonSeq persons;
-			
+
+        void checkHumanBlock(Road &road);
+        vector <int32_t> pId_blocking = {};
+        bool checkHumanSoftBlock(std::list<QVec> currentPath);
+        vector <int32_t> pId_softblocking = {};
+        bool checkAffordances(std::list<QVec> currentPath);
+        vector <int32_t> pId_affblocking = {};
+	/////////////////////////////////////////////////////////
 	private:
 		std::shared_ptr<CurrentTarget> currenttarget;
 		InnerPtr innerModel;
@@ -169,7 +174,7 @@ PathPlanner
 		 */
 		void constructGraph(FMap &fmap, unsigned tile_size);
 	
-		
+
 		Key pointToGrid(const QVec &p);
 		std::vector<std::pair<PathPlanner::Key,PathPlanner::Value> > neighboors(const Key &k) const;
 		std::list<QVec> djikstra(const FMap &graph, Key const& source, Key const& target);

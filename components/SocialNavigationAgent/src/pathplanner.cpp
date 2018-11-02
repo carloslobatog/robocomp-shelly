@@ -71,7 +71,7 @@ void PathPlanner::update(Road &road)
 			if(currentPath.empty() == false)
             {
                 pId_blocking.clear();
-                if (!checkHumanSoftBlock(currentPath))
+                if (!checkHumanSoftBlock(currentPath) and !checkAffordances(currentPath))
                 {
                     road.readRoadFromList(currentPath);
                     if (currenttarget->hasRotation())
@@ -84,6 +84,7 @@ void PathPlanner::update(Road &road)
 			else
 			{
 				pId_softblocking.clear();
+				pId_affblocking.clear();
 				std::cout << __FILE__ << __FUNCTION__ << " No path found, checking if there are humans" << std::endl;
 				checkHumanBlock(road);
 			}
@@ -117,7 +118,7 @@ void PathPlanner::run(std::function<Road&()> getRoad, std::function<void()> rele
 			if(currentPath.empty() == false)
             {
                 pId_blocking.clear();
-                if (!checkHumanSoftBlock(currentPath))
+                if (!checkHumanSoftBlock(currentPath) and !checkAffordances(currentPath))
                 {
                     road.readRoadFromList(currentPath);
                 }
@@ -125,6 +126,7 @@ void PathPlanner::run(std::function<Road&()> getRoad, std::function<void()> rele
 			else
 			{
 				pId_softblocking.clear();
+				pId_affblocking.clear();
 				std::cout << __FILE__ << __FUNCTION__ << " No path found, checking if there are humans" << std::endl;
 				checkHumanBlock(road);
 			}
@@ -147,6 +149,49 @@ void PathPlanner::reloadInnerModel(const InnerPtr &innerModel_)
 // 	innerModel.reset(innerModel_.get());
 	innerModel = innerModel_;
 }
+
+bool PathPlanner::checkAffordances(std::list<QVec> currentPath) //devuelve true si hay alguna persona con softblock
+{
+    qDebug()<<__FUNCTION__;
+    pId_affblocking.clear();
+    vector<QPolygonF> qp_list;
+
+    for (auto poly : polylines_aff)
+    {
+        QPolygonF qp;
+        for (auto p:poly)
+            qp << QPointF(p.x * 1000, p.z * 1000);
+
+        for (auto p:currentPath)
+        {
+            if (qp.containsPoint(QPointF(p.x(), p.z()), Qt::OddEvenFill))
+            {
+                qp_list.push_back(qp);
+                break;
+            }
+        }
+    }
+
+    for (auto polygon : qp_list)
+    {
+        for (auto p:persons)
+        {
+            if (polygon.containsPoint(QPointF(p.x* 1000, p.z* 1000), Qt::OddEvenFill))
+            {
+                qDebug () <<"La persona situada en " <<p.x*1000 << " "<< p.z*1000 << "bloquea al robot al estar en una AFFORDANCE. CON ID" << p.id ;
+                pId_affblocking.push_back(p.id);
+            }
+        }
+    }
+
+    qDebug()<<"NUMERO DE PERSONAS EN AFFORDANCE = "<<pId_affblocking.size();
+    if (pId_affblocking.size() > 0)
+        return true;
+    else
+        return false;
+}
+
+
 
 bool PathPlanner::checkHumanSoftBlock(std::list<QVec> currentPath) //devuelve true si hay alguna persona con softblock
 {
@@ -187,6 +232,9 @@ bool PathPlanner::checkHumanSoftBlock(std::list<QVec> currentPath) //devuelve tr
     else
         return false;
 }
+
+
+
 
 
 void PathPlanner::checkHumanBlock(Road &road)
@@ -551,12 +599,14 @@ void PathPlanner::modifyCost(SNGPolylineSeq personal, SNGPolylineSeq social, SNG
 
 }
 
-void PathPlanner::modifyGraph(SNGPolylineSeq intimate, SNGPolylineSeq personal, SNGPolylineSeq social, SNGPolylineSeq object)
+void PathPlanner::modifyGraph(SNGPolylineSeq intimate, SNGPolylineSeq personal, SNGPolylineSeq social, SNGPolylineSeq object, SNGPolylineSeq objectsblocking)
 {
 
 //	qDebug()<<__FUNCTION__;
 	polylines_block = intimate;
 	polylines_softblock = personal;
+    polylines_aff = objectsblocking;
+
 	occupied_list.clear();
 	
 	for (auto poly : intimate)

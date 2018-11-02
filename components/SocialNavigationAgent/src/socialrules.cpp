@@ -29,7 +29,7 @@ void SocialRules::innerModelChanged(const std::shared_ptr<InnerModel> &innerMode
 	
 	innerModel = innerModel_;
 /*	printf("%s %d sr(%p) pf(%p) (%p)\n", __FILE__, __LINE__, this, pathfinder, innerModel.get());*/
-	pathfinder->innerModelChanged(innerModel, totalpersons, intimate_seq, personal_seq, social_seq, object_seq);
+	pathfinder->innerModelChanged(innerModel, totalpersons, intimate_seq, personal_seq, social_seq, object_seq, objectblock_seq);
 }
 
 
@@ -222,6 +222,7 @@ SNGPolylineSeq SocialRules::ApplySocialRules()
 			personal_seq.clear();
 			intimate_seq.clear();
 			object_seq.clear();
+			objectblock_seq.clear();
 	
 			for (auto per: interactingpersons)
 			{
@@ -268,11 +269,10 @@ SNGPolylineSeq SocialRules::ApplySocialRules()
 
 		SNGPolylineSeq secuenciaobj = objectInteraction(false);
 		for(auto s: secuenciaobj)
-			intimate_seq.push_back(s);
-
+			objectblock_seq.push_back(s);
 
 	}
-	pathfinder->innerModelChanged(innerModel, totalpersons, intimate_seq, personal_seq, social_seq, object_seq);
+	pathfinder->innerModelChanged(innerModel, totalpersons, intimate_seq, personal_seq, social_seq, object_seq,objectblock_seq);
 
 
 

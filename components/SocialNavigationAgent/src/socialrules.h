@@ -68,6 +68,7 @@ public:
 	SNGPolylineSeq social_seq;
 
     SNGPolylineSeq object_seq;
+    SNGPolylineSeq objectblock_seq;
 
 
     //PARA GUARDAR LOS DATOS EN UN ARCHIVO

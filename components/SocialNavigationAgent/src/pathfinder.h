@@ -91,8 +91,11 @@ namespace robocomp
 				void go_rot(float x, float z, float rot, const ParameterMap &parameters = ParameterMap());
                 vector <int32_t> getHumanBlocking(){return pathplanner.pId_blocking;};
                 vector <int32_t> getHumanSoftBlocking(){return pathplanner.pId_softblocking;};
+                vector <int32_t> getAffordanceBlocking(){return pathplanner.pId_affblocking;};
+
+
 				//void setInnerModel(InnerModel* innerModel_){ innerModel = innerModel_; };
-				void innerModelChanged(const std::shared_ptr<InnerModel> &innerModel_, SNGPersonSeq persons, SNGPolylineSeq intimate,SNGPolylineSeq personal,SNGPolylineSeq social, SNGPolylineSeq objects);
+				void innerModelChanged(const std::shared_ptr<InnerModel> &innerModel_, SNGPersonSeq persons, SNGPolylineSeq intimate,SNGPolylineSeq personal,SNGPolylineSeq social, SNGPolylineSeq objects,SNGPolylineSeq objectsblocking);
 						
 				void run();
 				///////////////////////////

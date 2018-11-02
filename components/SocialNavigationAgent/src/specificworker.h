@@ -98,6 +98,7 @@ public:
 	void checkHumanBlock();
 	vector <int32_t> previous_blockinglist = {};
 	vector <int32_t> previous_softblockinglist = {};
+    vector <int32_t> previous_affordanceslist = {};
 
 	//Trajectory
 	float goBackwards(const TargetPose &target){return 0.0;};

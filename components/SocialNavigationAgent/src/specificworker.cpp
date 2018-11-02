@@ -180,8 +180,9 @@ void SpecificWorker::checkHumanBlock()
 
     vector <int32_t> pId_blocking = pathfinder.getHumanBlocking();
 	vector <int32_t> pId_softblocking = pathfinder.getHumanSoftBlocking();
+    vector <int32_t> pId_affblocking = pathfinder.getAffordanceBlocking();
 
-    if ((previous_blockinglist != pId_blocking) or (previous_softblockinglist != pId_softblocking))
+    if ((previous_blockinglist != pId_blocking) or (previous_softblockinglist != pId_softblocking) or (previous_affordanceslist != pId_affblocking))
     {
         try
         {
@@ -257,6 +258,37 @@ void SpecificWorker::checkHumanBlock()
 
 		}
 
+        for (auto id1:previous_affordanceslist)
+        {
+            try
+            {
+                newModel->removeEdgeByIdentifiers(id1, robotID, "affordanceBlock");
+                qDebug ()<<"Se elimina el enlace affordanceBlock a la persona  " << id1;
+            }
+
+            catch(...)
+            {
+                std::cout<<__FUNCTION__<<"No existe el enlace"<<std::endl;
+
+            }
+        }
+
+        for (auto id1:pId_affblocking)
+        {
+
+            try
+            {
+                newModel->addEdgeByIdentifiers(id1, robotID,  "affordanceBlock");
+                qDebug ()<<"Se añade el enlace affordanceblock a la persona  " << id1;
+            }
+
+            catch(...)
+            {
+                std::cout<<__FUNCTION__<<"No se puede añadir el enlace"<<std::endl;
+            }
+
+        }
+
         try
         {
             sendModificationProposal(newModel,worldModel , "block");
@@ -269,6 +301,7 @@ void SpecificWorker::checkHumanBlock()
 
     previous_blockinglist = pId_blocking;
 	previous_softblockinglist = pId_softblocking;
+	previous_affordanceslist = pId_affblocking;
 }
 
 float SpecificWorker::go(const TargetPose &target)
