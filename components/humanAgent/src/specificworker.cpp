@@ -46,17 +46,45 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 */
 SpecificWorker::~SpecificWorker()
 {
+
     astra::terminate();
+
+
+
 }
 
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 {
-
-    //////////////////////////////////
+    //////////////initializing astra////////////////
     astra::initialize();
 
 
-    //////////////////////////////////
+	reader = new astra::StreamReader(sensor.create_reader());
+	listener = new BodyVisualizer();
+
+    //.........................................................//
+
+    auto depthStream = reader->stream<astra::DepthStream>();
+
+    //We don't have to set the mode to start the stream, but if you want to here is how:
+    astra::ImageStreamMode depthMode;
+
+    depthMode.set_width(640);
+    depthMode.set_height(480);
+    depthMode.set_pixel_format(astra_pixel_formats::ASTRA_PIXEL_FORMAT_DEPTH_MM);
+    depthMode.set_fps(30);
+
+    depthStream.set_mode(depthMode);
+    depthStream.start();
+    //.........................................................//
+    auto bodyStream = reader->stream<astra::BodyStream>();
+    bodyStream.start();
+
+	reader->add_listener(*listener);
+
+    ///////////////////////////////////////////////////
+
+
 #ifdef USE_QTGUI
 	innerModelViewer = new InnerModelViewer (innerModel, "root", osgView->getRootGroup(), true);
 #endif
@@ -81,17 +109,59 @@ void SpecificWorker::compute()
 {
 	QMutexLocker locker(mutex);
 
-    astra::StreamSet sensor;
-    astra::StreamReader reader = sensor.create_reader();
+	if (first){
+        try{
+            qDebug()<<"Creating window";
+            window.create(sf::VideoMode(1280, 960), "Simple Body Viewer");
+            qDebug()<<"Window created";
+        }
 
-    BodyVisualizer listener;
+        catch(...) {
+
+        }
+        first = false;
+
+    }
 
 
-    auto bodyStream = reader.stream<astra::BodyStream>();
-    bodyStream.start();
-    reader.add_listener(listener);
+    while (window.isOpen())
+    {
 
-    astra_update();
+        astra_update();
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            switch (event.type)
+            {
+                case sf::Event::Closed:
+
+                    window.close();
+                    break;
+                case sf::Event::KeyPressed:
+                {
+                    if ((event.key.code == sf::Keyboard::C and event.key.control) or (event.key.code == sf::Keyboard::Escape))
+                    {
+
+                        window.close();
+                        break;
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+
+        // clear the window with black color
+
+        window.clear(sf::Color::Black);
+
+        listener->draw_to(window);
+        window.display();
+
+    }
+
+
 
 #ifdef USE_QTGUI
 	if (innerModelViewer) innerModelViewer->update();
