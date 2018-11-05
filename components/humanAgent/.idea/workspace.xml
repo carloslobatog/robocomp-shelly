@@ -13,14 +13,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46ef7260-9210-4d3e-9ca9-aa4b4e9d00db" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/bodyVisualizer.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/Project.cbp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bodyVisualizer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/bodyVisualizer.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/bodyVisualizer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/bodyVisualizer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/humanAgent.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/src/humanAgent.cbp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/specificworker.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/specificworker.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../socialnavigationGaussian/log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../socialnavigationGaussian/log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/specificworker.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/specificworker.h" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/CMakeFiles/" />
@@ -97,8 +94,8 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="cpp" value="2050" />
-          <entry key="h" value="89" />
+          <entry key="cpp" value="2516" />
+          <entry key="h" value="137" />
           <entry key="txt" value="64" />
         </counts>
       </usages-collector>
@@ -106,13 +103,13 @@
         <counts>
           <entry key="CMakeLists.txt" value="64" />
           <entry key="Doxygen file" value="1" />
-          <entry key="ObjectiveC" value="2138" />
+          <entry key="ObjectiveC" value="2652" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="cpp" value="4" />
-          <entry key="h" value="1" />
+          <entry key="cpp" value="6" />
+          <entry key="h" value="2" />
           <entry key="hpp" value="6" />
           <entry key="txt" value="4" />
         </counts>
@@ -120,7 +117,7 @@
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="CMakeLists.txt" value="2" />
-          <entry key="ObjectiveC" value="11" />
+          <entry key="ObjectiveC" value="14" />
           <entry key="PLAIN_TEXT" value="2" />
         </counts>
       </usages-collector>
@@ -174,8 +171,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/specificworker.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="615">
-              <caret line="41" column="43" selection-start-line="41" selection-start-column="43" selection-end-line="41" selection-end-column="43" />
+            <state relative-caret-position="228">
+              <caret line="66" column="58" selection-start-line="66" selection-start-column="58" selection-end-line="66" selection-end-column="58" />
               <folding>
                 <element signature="e#877#903#0" expanded="true" />
                 <element signature="e#957#987#0" expanded="true" />
@@ -185,12 +182,21 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/specificworker.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="203">
+              <caret line="152" selection-start-line="152" selection-end-line="152" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/bodyVisualizer.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-70">
-              <caret line="18" column="4" selection-start-line="18" selection-start-column="4" selection-end-line="18" selection-end-column="4" />
+            <state relative-caret-position="465">
+              <caret line="36" column="40" selection-start-line="36" selection-start-column="40" selection-end-line="36" selection-end-column="40" />
               <folding>
-                <element signature="e#109#137#0" expanded="true" />
+                <element signature="e#109#126#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -199,17 +205,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/bodyVisualizer.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3414">
-              <caret line="147" column="35" selection-start-line="147" selection-start-column="35" selection-end-line="147" selection-end-column="35" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/specificworker.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="136" column="26" lean-forward="true" selection-start-line="136" selection-start-column="26" selection-end-line="136" selection-end-column="26" />
+            <state relative-caret-position="510">
+              <caret line="43" column="2" selection-start-line="43" selection-start-column="2" selection-end-line="43" selection-end-column="2" />
             </state>
           </provider>
         </entry>
@@ -219,6 +216,26 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="900">
               <caret line="60" selection-start-line="60" selection-end-line="60" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/genericworker.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1024">
+              <caret line="127" column="24" selection-start-line="127" selection-start-column="24" selection-end-line="127" selection-end-column="24" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/genericworker.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <element signature="e#804#823#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -239,10 +256,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>memset</find>
-      <find>main</find>
-      <find>body.joints</find>
-      <find>::COlor</find>
       <find>color</find>
       <find>color::</find>
       <find>sfLine</find>
@@ -267,6 +280,12 @@
       <find>init_overlay_texture</find>
       <find>update</find>
       <find>compute</find>
+      <find>frame.get&lt;astra::BodyFrame&gt;</find>
+      <find>frame</find>
+      <find>osg</find>
+      <find>processBodies</find>
+      <find>qDebug</find>
+      <find>getjoints</find>
     </findStrings>
     <replaceStrings>
       <replace>sfline</replace>
@@ -283,8 +302,8 @@
         <option value="$PROJECT_DIR$/src/sfLine.h" />
         <option value="$PROJECT_DIR$/src/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/src/specificworker.h" />
-        <option value="$PROJECT_DIR$/src/bodyVisualizer.h" />
         <option value="$PROJECT_DIR$/src/bodyVisualizer.cpp" />
+        <option value="$PROJECT_DIR$/src/bodyVisualizer.h" />
         <option value="$PROJECT_DIR$/src/specificworker.cpp" />
       </list>
     </option>
@@ -425,12 +444,12 @@
       <workItem from="1540899113169" duration="3969000" />
       <workItem from="1541404462213" duration="3661000" />
       <workItem from="1541414946194" duration="283000" />
-      <workItem from="1541418807533" duration="1852000" />
+      <workItem from="1541418807533" duration="4615000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="25497000" />
+    <option name="totallyTimeSpent" value="28260000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -483,7 +502,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/src/specificworker.cpp</url>
-          <line>147</line>
+          <line>150</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
@@ -561,17 +580,6 @@
     <entry file="file://$PROJECT_DIR$/src/genericmonitor.h">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/specificworker.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="615">
-          <caret line="41" column="43" selection-start-line="41" selection-start-column="43" selection-end-line="41" selection-end-column="43" />
-          <folding>
-            <element signature="e#877#903#0" expanded="true" />
-            <element signature="e#957#987#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/genericmonitor.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1515">
@@ -589,30 +597,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/bodyVisualizer.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-70">
-          <caret line="18" column="4" selection-start-line="18" selection-start-column="4" selection-end-line="18" selection-end-column="4" />
-          <folding>
-            <element signature="e#109#137#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/bodyVisualizer.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3414">
-          <caret line="147" column="35" selection-start-line="147" selection-start-column="35" selection-end-line="147" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/genericworker.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1085">
-          <caret line="127" column="24" selection-start-line="127" selection-start-column="24" selection-end-line="127" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/CMakeListsSpecific.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -627,10 +611,54 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/genericworker.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#804#823#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/bodyVisualizer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="43" column="2" selection-start-line="43" selection-start-column="2" selection-end-line="43" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/specificworker.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="66" column="58" selection-start-line="66" selection-start-column="58" selection-end-line="66" selection-end-column="58" />
+          <folding>
+            <element signature="e#877#903#0" expanded="true" />
+            <element signature="e#957#987#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/specificworker.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="136" column="26" lean-forward="true" selection-start-line="136" selection-start-column="26" selection-end-line="136" selection-end-column="26" />
+        <state relative-caret-position="203">
+          <caret line="152" selection-start-line="152" selection-end-line="152" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/bodyVisualizer.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="36" column="40" selection-start-line="36" selection-start-column="40" selection-end-line="36" selection-end-column="40" />
+          <folding>
+            <element signature="e#109#126#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/genericworker.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1024">
+          <caret line="127" column="24" selection-start-line="127" selection-start-column="24" selection-end-line="127" selection-end-column="24" />
         </state>
       </provider>
     </entry>

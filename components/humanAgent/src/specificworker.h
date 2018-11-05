@@ -70,6 +70,7 @@ public:
 	void symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence &modifications);
 
 
+
 public slots:
 	void compute();
 

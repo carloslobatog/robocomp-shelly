@@ -9,9 +9,39 @@ void BodyVisualizer::on_frame_ready(astra::StreamReader& reader,
 {
     processDepth(frame);
     processBodies(frame);
+    getJoints(frame);
 
 //        check_fps();
 }
+
+
+void BodyVisualizer::getJoints(astra::Frame& frame){
+
+    qDebug()<<"--------------------2----------------------";
+    astra::BodyFrame bodyFrame = frame.get<astra::BodyFrame>();
+    qDebug()<<"--------------------3----------------------";
+    const auto& bodies = bodyFrame.bodies();
+    qDebug()<<"--------------------4----------------------";
+    for (auto& body : bodies)
+    {
+        const auto& joints = body.joints();
+
+        if (!joints.empty())
+        {
+            for (const auto& joint : joints)
+            {
+                astra::JointType type = joint.type();
+
+                if (joint.status() == astra::JointStatus::Tracked)
+                {
+                    auto &j = joint.world_position();
+                    std::cout << j.x << " " <<j.y <<" " <<j.z << std::endl;
+                }
+            }
+        }
+    }
+    qDebug()<<"--------------------5----------------------";
+};
 
 
 sf::Color BodyVisualizer::get_body_color(std::uint8_t bodyId)
@@ -159,6 +189,7 @@ void BodyVisualizer::processDepth(astra::Frame& frame)
 
     texture_.update(displayBuffer_.get());
 }
+
 
 void BodyVisualizer::processBodies(astra::Frame& frame)
 {

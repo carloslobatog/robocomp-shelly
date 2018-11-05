@@ -5,6 +5,7 @@
 #ifndef PROJECT_BODYVISUALIZER_H
 #define PROJECT_BODYVISUALIZER_H
 
+#include <QDebug>
 #include <SFML/Graphics.hpp>
 #include <astra/astra.hpp>
 #include <iostream>
@@ -32,6 +33,8 @@ public:
     void clear_overlay();
     void draw_bodies(sf::RenderWindow& window);
     void draw_to(sf::RenderWindow& window);
+
+    void getJoints(astra::Frame& frame);
 
 
 private:

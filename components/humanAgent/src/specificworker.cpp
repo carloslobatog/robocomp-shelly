@@ -34,6 +34,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	tb->setHomePosition(eye, center, up, true);
 	tb->setByMatrix(osg::Matrixf::lookAt(eye,center,up));
 	osgView->setCameraManipulator(tb);
+
 #endif
 	active = false;
 	worldModel = AGMModel::SPtr(new AGMModel());
@@ -92,6 +93,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 	return true;
 }
 
+
 void SpecificWorker::compute()
 {
 	QMutexLocker locker(mutex);
@@ -115,6 +117,7 @@ void SpecificWorker::compute()
     {
 
         astra_update();
+
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -148,13 +151,14 @@ void SpecificWorker::compute()
         listener->draw_to(window);
         window.display();
 
+
     }
 
 
 
 #ifdef USE_QTGUI
-	if (innerModelViewer) innerModelViewer->update();
-	osgView->frame();
+    if (innerModelViewer) innerModelViewer->update();
+    osgView->frame();
 #endif
 }
 
