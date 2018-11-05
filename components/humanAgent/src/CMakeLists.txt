@@ -27,7 +27,7 @@ SET ( SOURCES
   genericworker.cpp
   specificworker.cpp
   agmcommonbehaviorI.cpp
-  agmexecutivetopicI.cpp)
+  agmexecutivetopicI.cpp bodyVisualizer.cpp)
 
 
 find_package(SFML  COMPONENTS graphics window system)

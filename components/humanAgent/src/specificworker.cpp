@@ -46,10 +46,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 */
 SpecificWorker::~SpecificWorker()
 {
-
     astra::terminate();
-
-
 
 }
 
@@ -65,16 +62,6 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
     //.........................................................//
 
     auto depthStream = reader->stream<astra::DepthStream>();
-
-    //We don't have to set the mode to start the stream, but if you want to here is how:
-    astra::ImageStreamMode depthMode;
-
-    depthMode.set_width(640);
-    depthMode.set_height(480);
-    depthMode.set_pixel_format(astra_pixel_formats::ASTRA_PIXEL_FORMAT_DEPTH_MM);
-    depthMode.set_fps(30);
-
-    depthStream.set_mode(depthMode);
     depthStream.start();
     //.........................................................//
     auto bodyStream = reader->stream<astra::BodyStream>();
@@ -136,6 +123,7 @@ void SpecificWorker::compute()
                 case sf::Event::Closed:
 
                     window.close();
+                    astra::terminate();
                     break;
                 case sf::Event::KeyPressed:
                 {
@@ -143,6 +131,7 @@ void SpecificWorker::compute()
                     {
 
                         window.close();
+                        astra::terminate();
                         break;
                     }
                     break;

@@ -155,6 +155,12 @@
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/agmexecutivetopicI.h">
 			<Option target="humanAgent"/>
 		</Unit>
+		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/bodyVisualizer.cpp">
+			<Option target="humanAgent"/>
+		</Unit>
+		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/bodyVisualizer.h">
+			<Option target="humanAgent"/>
+		</Unit>
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/commonbehaviorI.cpp">
 			<Option target="humanAgent"/>
 		</Unit>
