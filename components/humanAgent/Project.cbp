@@ -194,6 +194,15 @@
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/CommonBehavior.h">
 			<Option target="humanAgent"/>
 		</Unit>
+		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/HumanTracker.cpp">
+			<Option target="humanAgent"/>
+		</Unit>
+		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/HumanTracker.cpp.rule">
+			<Option target="humanAgent"/>
+		</Unit>
+		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/HumanTracker.h">
+			<Option target="humanAgent"/>
+		</Unit>
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/Planning.cpp">
 			<Option target="humanAgent"/>
 		</Unit>
@@ -292,6 +301,9 @@
 		</Unit>
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/../../../../../../../opt/robocomp/cmake/robocomp.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\opt\robocomp\cmake\"/>
+		</Unit>
+		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/../../../../../../../opt/robocomp/cmake/modules/FindSFML.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\opt\robocomp\cmake\modules\"/>
 		</Unit>
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/../../../../../../../opt/robocomp/cmake/modules/astra.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\opt\robocomp\cmake\modules\"/>

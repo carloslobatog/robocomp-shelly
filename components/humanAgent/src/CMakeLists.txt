@@ -27,15 +27,16 @@ SET ( SOURCES
   genericworker.cpp
   specificworker.cpp
   agmcommonbehaviorI.cpp
-  agmexecutivetopicI.cpp bodyVisualizer.cpp)
+  agmexecutivetopicI.cpp
+  bodyVisualizer.cpp
+
+)
 
 
-find_package(SFML  COMPONENTS graphics window system)
-include_directories(${SFML_INCLUDE_DIR})
 
 #ROBOCOMP
 ROBOCOMP_INITIALIZE( $ENV{ROBOCOMP}/ )
-ROBOCOMP_WRAP_ICE( CommonBehavior AGMExecutive AGMWorldModel Planning AGMCommonBehavior )
+ROBOCOMP_WRAP_ICE( CommonBehavior HumanTracker  AGMExecutive AGMWorldModel Planning AGMCommonBehavior )
 SET (EXECUTABLE_OUTPUT_PATH ${RC_COMPONENT_DEVEL_PATH}/bin)
 
 # Qt4
@@ -50,7 +51,6 @@ SET( CMAKE_AUTOMOC TRUE )
 SET( CMAKE_AUTOUIC TRUE )
 INCLUDE( ${QT_USE_FILE} )
 QT4_WRAP_UI( UI_HEADERS mainUI.ui )
-
 
 # Specify construction and link process
 SET(LIBS ${LIBS} -lagm)

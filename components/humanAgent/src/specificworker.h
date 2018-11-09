@@ -36,21 +36,16 @@
     #include <SFML/Graphics.hpp>
     #include <astra/astra.hpp>
 	#include <bodyVisualizer.h>
-
 #endif
 
 class SpecificWorker : public GenericWorker
 {
 Q_OBJECT
 
-    sf::RenderWindow window;
-    astra::StreamSet sensor;
-    astra::StreamReader *reader;
-    BodyVisualizer *listener;
-	bool first= true;
-
-
 public:
+
+
+
 	SpecificWorker(MapPrx& mprx);
 	~SpecificWorker();
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
@@ -75,6 +70,13 @@ public slots:
 	void compute();
 
 private:
+
+	sf::RenderWindow window;
+	astra::StreamSet sensor;
+	astra::StreamReader *reader;
+	BodyVisualizer *listener;
+	bool first= true;
+
 	InnerModel *innerModel;
 
 #ifdef USE_QTGUI

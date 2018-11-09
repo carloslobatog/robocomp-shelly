@@ -16,6 +16,11 @@
 class BodyVisualizer : public astra::FrameListener
 {
 public:
+
+
+    BodyVisualizer();
+    ~BodyVisualizer();
+
     virtual void on_frame_ready(astra::StreamReader& reader,
                                 astra::Frame& frame) override;
     static  sf::Color get_body_color(std::uint8_t bodyId);
@@ -34,7 +39,6 @@ public:
     void draw_bodies(sf::RenderWindow& window);
     void draw_to(sf::RenderWindow& window);
 
-    void getJoints(astra::Frame& frame);
 
 
 private:

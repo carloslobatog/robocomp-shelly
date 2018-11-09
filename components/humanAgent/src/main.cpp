@@ -84,6 +84,7 @@
 #include <agmcommonbehaviorI.h>
 #include <agmexecutivetopicI.h>
 
+#include <HumanTracker.h>
 
 
 // User includes here
@@ -135,10 +136,28 @@ int ::humanAgent::run(int argc, char* argv[])
 
 	int status=EXIT_SUCCESS;
 
+	HumanTrackerPrx humantracker_proxy;
 	AGMExecutivePrx agmexecutive_proxy;
 
 	string proxy, tmp;
 	initialize();
+
+
+	try
+	{
+		if (not GenericMonitor::configGetString(communicator(), prefix, "HumanTrackerProxy", proxy, ""))
+		{
+			cout << "[" << PROGRAM_NAME << "]: Can't read configuration for proxy HumanTrackerProxy\n";
+		}
+		humantracker_proxy = HumanTrackerPrx::uncheckedCast( communicator()->stringToProxy( proxy ) );
+	}
+	catch(const Ice::Exception& ex)
+	{
+		cout << "[" << PROGRAM_NAME << "]: Exception: " << ex;
+		return EXIT_FAILURE;
+	}
+	rInfo("HumanTrackerProxy initialized Ok!");
+	mprx["HumanTrackerProxy"] = (::IceProxy::Ice::Object*)(&humantracker_proxy);//Remote server proxy creation example
 
 
 	try

@@ -40,6 +40,7 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 	worldModel = AGMModel::SPtr(new AGMModel());
 	worldModel->name = "worldModel";
 	innerModel = new InnerModel();
+
 }
 
 /**
@@ -53,24 +54,24 @@ SpecificWorker::~SpecificWorker()
 
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 {
-    //////////////initializing astra////////////////
-    astra::initialize();
-
-
-	reader = new astra::StreamReader(sensor.create_reader());
-	listener = new BodyVisualizer();
-
-    //.........................................................//
-
-    auto depthStream = reader->stream<astra::DepthStream>();
-    depthStream.start();
-    //.........................................................//
-    auto bodyStream = reader->stream<astra::BodyStream>();
-    bodyStream.start();
-
-	reader->add_listener(*listener);
-
-    ///////////////////////////////////////////////////
+//    //////////////initializing astra////////////////
+//    astra::initialize();
+//
+//
+//	reader = new astra::StreamReader(sensor.create_reader());
+//	listener = new BodyVisualizer();
+//
+//    //.........................................................//
+//
+//    auto depthStream = reader->stream<astra::DepthStream>();
+//    depthStream.start();
+//    //.........................................................//
+//    auto bodyStream = reader->stream<astra::BodyStream>();
+//    bodyStream.start();
+//
+//	reader->add_listener(*listener);
+//
+//    ///////////////////////////////////////////////////
 
 
 #ifdef USE_QTGUI
@@ -98,61 +99,89 @@ void SpecificWorker::compute()
 {
 	QMutexLocker locker(mutex);
 
-	if (first){
-        try{
-            qDebug()<<"Creating window";
-            window.create(sf::VideoMode(1280, 960), "Simple Body Viewer");
-            qDebug()<<"Window created";
-        }
+//	if (first){
+//        try{
+//            qDebug()<<"Creating window";
+//            window.create(sf::VideoMode(1280, 960), "Simple Body Viewer");
+//            qDebug()<<"Window created";
+//        }
+//
+//        catch(...) {
+//
+//        }
+//        first = false;
+//
+//    }
 
-        catch(...) {
-
-        }
-        first = false;
-
-    }
-
-
-    while (window.isOpen())
+    try
     {
+        PersonList users;
+        humantracker_proxy-> getUsersList(users);
+        qDebug()<<"SIZE OF USERS "<<users.size();
 
-        astra_update();
-
-        sf::Event event;
-        while (window.pollEvent(event))
+        for(auto what : users)
         {
-            switch (event.type)
+            qDebug()<<"ID " <<what.first << "STATUS"<<what.second.state;
+            jointListType jointsperson;
+
+            jointsperson = what.second.joints;
+            qDebug()<<"-----------------JOINTS---------------------";
+            for (auto j : jointsperson)
             {
-                case sf::Event::Closed:
-
-                    window.close();
-                    astra::terminate();
-                    break;
-                case sf::Event::KeyPressed:
-                {
-                    if ((event.key.code == sf::Keyboard::C and event.key.control) or (event.key.code == sf::Keyboard::Escape))
-                    {
-
-                        window.close();
-                        astra::terminate();
-                        break;
-                    }
-                    break;
-                }
-                default:
-                    break;
+               std::cout << j.first << " " <<j.second << endl;
             }
         }
 
-        // clear the window with black color
-
-        window.clear(sf::Color::Black);
-
-        listener->draw_to(window);
-        window.display();
-
-
     }
+
+
+    catch(...)
+    {
+        qDebug()<<"Si no enciendes la camara poco podemos hacer chiqui" ;
+    }
+
+
+
+//    while (window.isOpen())
+//    {
+//
+//        astra_update();
+//
+//        sf::Event event;
+//        while (window.pollEvent(event))
+//        {
+//            switch (event.type)
+//            {
+//                case sf::Event::Closed:
+//
+//                      window.close();
+//                    astra::terminate();
+//                    break;
+//                case sf::Event::KeyPressed:
+//                {
+//                    if ((event.key.code == sf::Keyboard::C and event.key.control) or (event.key.code == sf::Keyboard::Escape))
+//                    {
+//
+//                        window.close();
+//                        astra::terminate();
+//                        break;
+//                    }
+//                    break;
+//                }
+//                default:
+//                    break;
+//            }
+//        }
+//
+//        // clear the window with black color
+//
+//        window.clear(sf::Color::Black);
+//
+//        listener->draw_to(window);
+//        window.display();
+//
+//
+//    }
 
 
 
