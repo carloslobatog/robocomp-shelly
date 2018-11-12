@@ -48,7 +48,6 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 */
 SpecificWorker::~SpecificWorker()
 {
-	qDebug()<<"DESTRUCTOOOOOOOOOOOOOOOOOOOR";
 }
 
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
@@ -57,8 +56,6 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 #ifdef USE_QTGUI
 	innerModelViewer = new InnerModelViewer (innerModel, "root", osgView->getRootGroup(), true);
 #endif
-
-
 
 
 	try
@@ -71,31 +68,162 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 		printf("The executive is probably not running, waiting for first AGM model publication...");
 	}
 
+    Period = 200;
+    timer.start(Period);
+
 	return true;
+}
+
+
+
+int SpecificWorker::includeInAGM(int id,const Pose3D &pose)
+{
+	printf("includeInAGM begins\n");
+
+	std::string name = "person";
+	std::string imName = "person" + std::to_string(id);
+	int personSymbolId = -1;
+	int idx=0;
+	while ((personSymbolId = worldModel->getIdentifierByType(name, idx++)) != -1)
+	{
+		printf("%d %d\n", idx, personSymbolId);
+		if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == imName)
+		{
+			printf("found %d!!\n", personSymbolId);
+			break;
+		}
+	}
+	if (personSymbolId != -1)
+	{
+		printf("Person already in the AGM model\n");
+		return personSymbolId;
+	}
+
+	AGMModel::SPtr newModel(new AGMModel(worldModel));
+
+	// Symbolic part
+	AGMModelSymbol::SPtr person = newModel->newSymbol("person");
+	personSymbolId = person->identifier;
+	printf("Got personSymbolId: %d\n", personSymbolId);
+	person->setAttribute("imName", imName);
+	person->setAttribute("imType", "transform");
+	AGMModelSymbol::SPtr personSt = newModel->newSymbol("personSt" + std::to_string(id));
+	printf("person %d status %d\n", person->identifier, personSt->identifier);
+
+	newModel->addEdge(person, personSt, "hasStatus");
+	newModel->addEdge(person, personSt, "noReach");
+	newModel->addEdge(person, personSt, name);
+    newModel->addEdgeByIdentifiers(person->identifier, 3, "in");
+
+
+	// Geometric part
+	std::map<std::string, std::string> edgeRTAtrs;
+	edgeRTAtrs["tx"] = std::to_string(pose.x);
+	edgeRTAtrs["ty"] = "0";
+	edgeRTAtrs["tz"] = std::to_string(pose.z);
+	edgeRTAtrs["rx"] = "0";
+	edgeRTAtrs["ry"] = std::to_string(pose.ry);
+	edgeRTAtrs["rz"] = "0";
+	newModel->addEdgeByIdentifiers(100, person->identifier, "RT", edgeRTAtrs);
+
+
+	AGMModelSymbol::SPtr personMesh = newModel->newSymbol("human01.3ds");
+	printf("personMesh %d\n", personMesh->identifier);
+	personMesh->setAttribute("collidable", "false");
+	personMesh->setAttribute("imName", imName + "_Mesh");
+	personMesh->setAttribute("imType", "mesh");
+	std::string meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/human01.3ds";
+	personMesh->setAttribute("path", meshPath);
+	personMesh->setAttribute("render", "NormalRendering");
+	personMesh->setAttribute("scalex", "12");
+	personMesh->setAttribute("scaley", "12");
+	personMesh->setAttribute("scalez", "12");
+
+	edgeRTAtrs["tx"] = "0";
+	edgeRTAtrs["ty"] = "0";
+	edgeRTAtrs["tz"] = "0";
+	edgeRTAtrs["rx"] = "1.570796326794";
+	edgeRTAtrs["ry"] = "0";
+	edgeRTAtrs["rz"] = "3.1415926535";
+	newModel->addEdge(person, personMesh, "RT", edgeRTAtrs);
+
+	while (true)
+	{
+		if(sendModificationProposal(worldModel, newModel))
+		{
+			break;
+		}
+		sleep(1);
+	}
+	printf("includeInAGM ends\n");
+	return personSymbolId;
 }
 
 
 void SpecificWorker::compute()
 {
 	QMutexLocker locker(mutex);
+//
+//	if (first)
+//	{
+//		Pose3D personpose;
+//		personpose.x = 1000;
+//		personpose.y = 0;
+//		personpose.z = 2500;
+//		personpose.rx = 0;
+//		personpose.ry = 0;
+//		personpose.rz = 0;
+//
+//		qDebug()<<"FIRST, INCLUDING IN AGM";
+//		includeInAGM(666,personpose);
+//		first = false;
+//
+//	}
+
 
     try
     {
         PersonList users;
         humantracker_proxy-> getUsersList(users);
+        //leer usuarios desde la camara
 
-        for(auto what : users)
-        {
-            qDebug()<<"ID " <<what.first << "STATUS"<<what.second.state;
-            jointListType jointsperson;
+        if(!users.empty())
+        {	//si ha detectado personas:
 
-            jointsperson = what.second.joints;
-            qDebug()<<"-----------------JOINTS---------------------";
-            for (auto j : jointsperson)
-            {
-               std::cout << j.first << " " <<j.second << endl;
-            }
+			for (auto p:users)
+			{
+				//comprobar si existe o si se ha eliminado
+				//si no existe
+				auto id = p.first;
+				auto personpose = getPoseRot(p.second.joints);
+
+				includeInAGM(id,personpose);
+				//si se ha eliminado
+				removeFromAGM(id);
+
+				moveInAGM (id, personpose);
+				//si id está en id list -> comprobar movimiento
+				//si id no está -> incluir en agm
+				//si id_list tiene id que no está entre users -> eliminar agm
+
+
+			}
         }
+
+//        for(auto u : users)
+//        {
+//
+//
+//            qDebug()<<"ID " <<u.first << "STATUS"<<u.second.state;
+//            jointListType jointsperson;
+//
+//            jointsperson = u.second.joints;
+//            qDebug()<<"-----------------JOINTS---------------------";
+//            for (auto j : jointsperson)
+//            {
+//               std::cout << j.first << " " <<j.second << endl;
+//            }
+//        }
 
     }
 
@@ -104,6 +232,10 @@ void SpecificWorker::compute()
     {
         qDebug()<<"Si no enciendes la camara poco podemos hacer, chiqui" ;
     }
+
+
+
+
 
 
 #ifdef USE_QTGUI
@@ -252,42 +384,34 @@ void SpecificWorker::regenerateInnerModelViewer()
 }
 
 
-bool SpecificWorker::setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated)
-{
+bool SpecificWorker::setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated) {
 	printf("<<< setParametersAndPossibleActivation\n");
 	// We didn't reactivate the component
 	reactivated = false;
 
 	// Update parameters
 	params.clear();
-	for (ParameterMap::const_iterator it=prs.begin(); it!=prs.end(); it++)
-	{
+	for (ParameterMap::const_iterator it = prs.begin(); it != prs.end(); it++) {
 		params[it->first] = it->second;
 	}
 
-	try
-	{
+	try {
 		action = params["action"].value;
 		std::transform(action.begin(), action.end(), action.begin(), ::tolower);
 		//TYPE YOUR ACTION NAME
-		if (action == "actionname")
-		{
+		if (action == "actionname") {
 			active = true;
-		}
-		else
-		{
+		} else {
 			active = true;
 		}
 	}
-	catch (...)
-	{
+	catch (...) {
 		printf("exception in setParametersAndPossibleActivation %d\n", __LINE__);
 		return false;
 	}
 
 	// Check if we should reactivate the component
-	if (active)
-	{
+	if (active) {
 		active = true;
 		reactivated = true;
 	}
@@ -295,25 +419,33 @@ bool SpecificWorker::setParametersAndPossibleActivation(const ParameterMap &prs,
 	printf("setParametersAndPossibleActivation >>>\n");
 
 	return true;
+
 }
-void SpecificWorker::sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel)
+
+bool SpecificWorker::sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel)
 {
+	bool result = false;
 	try
-	{
-		AGMMisc::publishModification(newModel, agmexecutive_proxy, "humanAgentAgent");
+	{	qDebug()<<"Intentando sendModificationProposal";
+		AGMMisc::publishModification(newModel, agmexecutive_proxy, "HumanAgent");
+		qDebug()<<"sendModificationProposal";
+		result = true;
 	}
-/*	catch(const RoboCompAGMExecutive::Locked &e)
+	catch(const RoboCompAGMExecutive::Locked &e)
 	{
+		printf("agmexecutive locked...\n");
 	}
 	catch(const RoboCompAGMExecutive::OldModel &e)
 	{
+		printf("agmexecutive oldModel...\n");
 	}
 	catch(const RoboCompAGMExecutive::InvalidChange &e)
 	{
+		printf("agmexecutive InvalidChange...\n");
 	}
-*/
 	catch(const Ice::Exception& e)
 	{
 		exit(1);
 	}
+	return result;
 }

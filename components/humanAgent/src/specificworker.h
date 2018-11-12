@@ -41,12 +41,25 @@ class SpecificWorker : public GenericWorker
 Q_OBJECT
 
 public:
+    struct Pose3D
+    {
+        float x;
+        float y;
+        float z;
+        float rx;
+        float ry;
+        float rz;
+    };
 
+    vector <int> list_id = {};
 
+    bool first = true;
 
-	SpecificWorker(MapPrx& mprx);
+    SpecificWorker(MapPrx& mprx);
 	~SpecificWorker();
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
+	int includeInAGM(int id,const Pose3D &pose);
+	bool removeFromAGM(int id);
 
 	bool reloadConfigAgent();
 	bool activateAgent(const ParameterMap &prs);
@@ -82,7 +95,7 @@ private:
 	bool active;
 	void regenerateInnerModelViewer();
 	bool setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated);
-	void sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel);
+	bool sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel);
 
 };
 
