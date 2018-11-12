@@ -1,14 +1,14 @@
 ```
 ```
 #
-``` SocialNavigationAgent
+``` humanAgent
 ```
 Intro to component here
 
 
 ## Configuration parameters
 As any other component,
-``` *SocialNavigationAgent* ```
+``` *humanAgent* ```
 needs a configuration file to start. In
 
     etc/config
@@ -23,7 +23,7 @@ To avoid changing the *config* file in the repository, we can copy it to the com
 
     cd
 
-``` <SocialNavigationAgent 's path> ```
+``` <humanAgent 's path> ```
 
     cp etc/config config
 
@@ -31,6 +31,6 @@ After editing the new config file we can run the component:
 
     bin/
 
-```SocialNavigationAgent ```
+```humanAgent ```
 
     --Ice.Config=config

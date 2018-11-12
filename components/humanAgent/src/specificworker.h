@@ -33,9 +33,7 @@
 #ifdef USE_QTGUI
 	#include <osgviewer/osgview.h>
 	#include <innermodel/innermodelviewer.h>
-    #include <SFML/Graphics.hpp>
-    #include <astra/astra.hpp>
-	#include <bodyVisualizer.h>
+
 #endif
 
 class SpecificWorker : public GenericWorker
@@ -71,11 +69,6 @@ public slots:
 
 private:
 
-	sf::RenderWindow window;
-	astra::StreamSet sensor;
-	astra::StreamReader *reader;
-	BodyVisualizer *listener;
-	bool first= true;
 
 	InnerModel *innerModel;
 

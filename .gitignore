@@ -92,3 +92,9 @@ moc_*
 CXX.*
 telegrammission.conf
 
+
+components/humanBodyViewer/\.idea/
+
+components/humanBodyViewer/cmake-build-debug/
+
+*.new

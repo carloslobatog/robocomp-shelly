@@ -164,16 +164,10 @@
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMCommonBehavior.cpp.rule">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMCommonBehavior.h">
-			<Option target="humanAgent"/>
-		</Unit>
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMExecutive.cpp">
 			<Option target="humanAgent"/>
 		</Unit>
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMExecutive.cpp.rule">
-			<Option target="humanAgent"/>
-		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMExecutive.h">
 			<Option target="humanAgent"/>
 		</Unit>
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMWorldModel.cpp">
@@ -182,16 +176,10 @@
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMWorldModel.cpp.rule">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/AGMWorldModel.h">
-			<Option target="humanAgent"/>
-		</Unit>
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/CommonBehavior.cpp">
 			<Option target="humanAgent"/>
 		</Unit>
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/CommonBehavior.cpp.rule">
-			<Option target="humanAgent"/>
-		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/CommonBehavior.h">
 			<Option target="humanAgent"/>
 		</Unit>
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/HumanTracker.cpp">
@@ -200,16 +188,10 @@
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/HumanTracker.cpp.rule">
 			<Option target="humanAgent"/>
 		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/HumanTracker.h">
-			<Option target="humanAgent"/>
-		</Unit>
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/Planning.cpp">
 			<Option target="humanAgent"/>
 		</Unit>
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/Planning.cpp.rule">
-			<Option target="humanAgent"/>
-		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/Planning.h">
 			<Option target="humanAgent"/>
 		</Unit>
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/agmcommonbehaviorI.cpp">
@@ -222,12 +204,6 @@
 			<Option target="humanAgent"/>
 		</Unit>
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/agmexecutivetopicI.h">
-			<Option target="humanAgent"/>
-		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/bodyVisualizer.cpp">
-			<Option target="humanAgent"/>
-		</Unit>
-		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/bodyVisualizer.h">
 			<Option target="humanAgent"/>
 		</Unit>
 		<Unit filename="/home/robolab/robocomp/components/robocomp-araceli/components/humanAgent/src/commonbehaviorI.cpp">

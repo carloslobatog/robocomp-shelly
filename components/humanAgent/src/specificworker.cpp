@@ -48,38 +48,18 @@ SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 */
 SpecificWorker::~SpecificWorker()
 {
-    astra::terminate();
-
+	qDebug()<<"DESTRUCTOOOOOOOOOOOOOOOOOOOR";
 }
 
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 {
-//    //////////////initializing astra////////////////
-//    astra::initialize();
-//
-//
-//	reader = new astra::StreamReader(sensor.create_reader());
-//	listener = new BodyVisualizer();
-//
-//    //.........................................................//
-//
-//    auto depthStream = reader->stream<astra::DepthStream>();
-//    depthStream.start();
-//    //.........................................................//
-//    auto bodyStream = reader->stream<astra::BodyStream>();
-//    bodyStream.start();
-//
-//	reader->add_listener(*listener);
-//
-//    ///////////////////////////////////////////////////
-
 
 #ifdef USE_QTGUI
 	innerModelViewer = new InnerModelViewer (innerModel, "root", osgView->getRootGroup(), true);
 #endif
 
 
-	timer.start(Period);
+
 
 	try
 	{
@@ -99,25 +79,10 @@ void SpecificWorker::compute()
 {
 	QMutexLocker locker(mutex);
 
-//	if (first){
-//        try{
-//            qDebug()<<"Creating window";
-//            window.create(sf::VideoMode(1280, 960), "Simple Body Viewer");
-//            qDebug()<<"Window created";
-//        }
-//
-//        catch(...) {
-//
-//        }
-//        first = false;
-//
-//    }
-
     try
     {
         PersonList users;
         humantracker_proxy-> getUsersList(users);
-        qDebug()<<"SIZE OF USERS "<<users.size();
 
         for(auto what : users)
         {
@@ -137,52 +102,8 @@ void SpecificWorker::compute()
 
     catch(...)
     {
-        qDebug()<<"Si no enciendes la camara poco podemos hacer chiqui" ;
+        qDebug()<<"Si no enciendes la camara poco podemos hacer, chiqui" ;
     }
-
-
-
-//    while (window.isOpen())
-//    {
-//
-//        astra_update();
-//
-//        sf::Event event;
-//        while (window.pollEvent(event))
-//        {
-//            switch (event.type)
-//            {
-//                case sf::Event::Closed:
-//
-//                      window.close();
-//                    astra::terminate();
-//                    break;
-//                case sf::Event::KeyPressed:
-//                {
-//                    if ((event.key.code == sf::Keyboard::C and event.key.control) or (event.key.code == sf::Keyboard::Escape))
-//                    {
-//
-//                        window.close();
-//                        astra::terminate();
-//                        break;
-//                    }
-//                    break;
-//                }
-//                default:
-//                    break;
-//            }
-//        }
-//
-//        // clear the window with black color
-//
-//        window.clear(sf::Color::Black);
-//
-//        listener->draw_to(window);
-//        window.display();
-//
-//
-//    }
-
 
 
 #ifdef USE_QTGUI
@@ -190,6 +111,12 @@ void SpecificWorker::compute()
     osgView->frame();
 #endif
 }
+
+
+
+
+
+
 
 
 bool SpecificWorker::reloadConfigAgent()

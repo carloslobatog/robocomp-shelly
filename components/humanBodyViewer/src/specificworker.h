@@ -1,5 +1,5 @@
 /*
- *    Copyright (C)2017 by YOUR NAME HERE
+ *    Copyright (C)2018 by YOUR NAME HERE
  *
  *    This file is part of RoboComp
  *
@@ -30,6 +30,10 @@
 
 #include <genericworker.h>
 #include <innermodel/innermodel.h>
+#include <SFML/Graphics.hpp>
+#include <astra/astra.hpp>
+#include <bodyVisualizer.h>
+
 
 class SpecificWorker : public GenericWorker
 {
@@ -39,31 +43,19 @@ public:
 	~SpecificWorker();
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
 
-	bool reloadConfigAgent();
-	bool activateAgent(const ParameterMap &prs);
-	bool setAgentParameters(const ParameterMap &prs);
-	ParameterMap getAgentParameters();
-	void killAgent();
-	int uptimeAgent();
-	bool deactivateAgent();
-	StateStruct getAgentState();
-	void structuralChange(const RoboCompAGMWorldModel::World &w);
-	void edgesUpdated(const RoboCompAGMWorldModel::EdgeSequence &modifications);
-	void edgeUpdated(const RoboCompAGMWorldModel::Edge &modification);
-	void symbolUpdated(const RoboCompAGMWorldModel::Node &modification);
-	void symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence &modifications);
 
 public slots:
 	void compute();
 
 private:
+
+	sf::RenderWindow window;
+	astra::StreamSet sensor;
+	astra::StreamReader *reader;
+	BodyVisualizer *listener;
+	bool first= true;
+
 	InnerModel *innerModel;
-	std::string action;
-	ParameterMap params;
-	AGMModel::SPtr worldModel;
-	bool active;
-	bool setParametersAndPossibleActivation(const ParameterMap &prs, bool &reactivated);
-	void sendModificationProposal(AGMModel::SPtr &worldModel, AGMModel::SPtr &newModel);
 
 };
 

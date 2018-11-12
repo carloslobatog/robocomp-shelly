@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>guiDlg</class>
- <widget class="o" name="guiDlg">
+ <widget class="QWidget" name="guiDlg">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>socialnavigationGaussian</string>
+   <string>humanAgent</string>
   </property>
  </widget>
  <resources/>

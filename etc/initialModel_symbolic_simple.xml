@@ -23,7 +23,7 @@
 	<link src="1" dst="3" label="know" > </link>
 	<link src="1" dst="3" label="in" > </link>
 
-<symbol id="3000" type="object_interaction">
+	<symbol id="3000" type="object_interaction">
 		<attribute key="imType" value="transform" />
 		<attribute key="imName" value="board" />
 		<attribute key="interaction" value="10" />
@@ -53,5 +53,7 @@
 		<linkAttribute key="ry" value="0" />
 		<linkAttribute key="rz" value="0" />
 	</link>
+
+
 
 </AGMModel>
