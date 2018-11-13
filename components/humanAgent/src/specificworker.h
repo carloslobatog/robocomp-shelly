@@ -60,6 +60,7 @@ public:
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
 	int includeInAGM(int id,const Pose3D &pose);
 	bool removeFromAGM(int id);
+    Pose3D getPoseRot (jointListType list);
 
 	bool reloadConfigAgent();
 	bool activateAgent(const ParameterMap &prs);
@@ -82,7 +83,7 @@ public slots:
 
 private:
 
-
+    QMutex *mux;
 	InnerModel *innerModel;
 
 #ifdef USE_QTGUI

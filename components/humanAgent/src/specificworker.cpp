@@ -159,27 +159,74 @@ int SpecificWorker::includeInAGM(int id,const Pose3D &pose)
 	return personSymbolId;
 }
 
+SpecificWorker::Pose3D SpecificWorker::getPoseRot (jointListType list)
+{
+
+	Pose3D personpose;
+    int32_t SymbolId = -1;
+
+    int idx=0;
+    while ((SymbolId = worldModel->getIdentifierByType("camera_astra", idx++)) != -1)
+    {
+        if (worldModel->getSymbolByIdentifier(SymbolId)->getAttribute("imName") == "astraRGBD")
+            qDebug()<<"CameraFound";
+            break;
+
+    }
+
+    if (SymbolId == -1)
+    {
+        printf("Camera not found \n");
+    }
+
+    else
+        {
+
+            try
+            {
+                qDebug()<<"Reading MidSpine position";
+                auto j = list["MidSpine"];
+
+                if (j.size() == 3)
+                {
+                    std::cout<<"EN EL MUNDO DE LA CAMARA "<<j[0] <<" " <<j[1] << " "<<j[2] << std::endl;
+
+                    QVec jointinworld = innerModel->transform("world", QVec::vec3(j[0],j[1],j[2]), "camera_astra");
+
+                    std::cout<<"EN EL MUNDO"<<jointinworld.x() <<" " <<jointinworld.y() << " "<<jointinworld.z() << std::endl;
+
+                    personpose.x =jointinworld.x();
+                    personpose.y = 0;
+                    personpose.z= jointinworld.z();
+
+                    personpose.rx = 0;
+                    personpose.ry = 0;
+                    personpose.rz = 0;
+
+                    qDebug()<<"FIRST, INCLUDING IN AGM";
+                    includeInAGM(666,personpose);
+
+                }
+                else
+                    qDebug()<<"Joint Error";
+            }
+
+            catch(...)
+            {
+                qDebug()<<"NO EXISTE EL JOINT MidSpine";
+            }
+        }
+
+
+
+	return personpose;
+
+}
+
 
 void SpecificWorker::compute()
 {
 	QMutexLocker locker(mutex);
-//
-//	if (first)
-//	{
-//		Pose3D personpose;
-//		personpose.x = 1000;
-//		personpose.y = 0;
-//		personpose.z = 2500;
-//		personpose.rx = 0;
-//		personpose.ry = 0;
-//		personpose.rz = 0;
-//
-//		qDebug()<<"FIRST, INCLUDING IN AGM";
-//		includeInAGM(666,personpose);
-//		first = false;
-//
-//	}
-
 
     try
     {
@@ -187,7 +234,7 @@ void SpecificWorker::compute()
         humantracker_proxy-> getUsersList(users);
         //leer usuarios desde la camara
 
-        if(!users.empty())
+        if(users.size()!=0)
         {	//si ha detectado personas:
 
 			for (auto p:users)
@@ -195,13 +242,16 @@ void SpecificWorker::compute()
 				//comprobar si existe o si se ha eliminado
 				//si no existe
 				auto id = p.first;
-				auto personpose = getPoseRot(p.second.joints);
+                jointListType joints_person = p.second.joints;
 
-				includeInAGM(id,personpose);
-				//si se ha eliminado
-				removeFromAGM(id);
+				auto personpose = getPoseRot(joints_person);
 
-				moveInAGM (id, personpose);
+
+//				includeInAGM(id,personpose);
+//				//si se ha eliminado
+//				removeFromAGM(id);
+//
+//				moveInAGM (id, personpose);
 				//si id está en id list -> comprobar movimiento
 				//si id no está -> incluir en agm
 				//si id_list tiene id que no está entre users -> eliminar agm
@@ -250,7 +300,7 @@ void SpecificWorker::compute()
 
 
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool SpecificWorker::reloadConfigAgent()
 {
 //implementCODE
