@@ -75,10 +75,49 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 }
 
 
-
-int SpecificWorker::includeInAGM(int id,const Pose3D &pose)
+void SpecificWorker::includeInAGM(int id,const Pose3D pose)
 {
 	printf("includeInAGM begins\n");
+	std::string meshname;
+	std::string scale;
+	std::string rotationz;
+
+	if (mesh == 6) mesh = 1;
+	switch(mesh)
+	{
+		case 1:
+			meshname = "human01.3ds";
+			scale = "12";
+			rotationz= "3.1415926535";
+			break;
+		case 2:
+			meshname = "human02.3ds";
+			scale = "1.12";
+			rotationz= "3.1415926535";
+			break;
+		case 3:
+			meshname = "human03.3ds";
+			scale = "8";
+			rotationz= "1.57079632679";
+			break;
+		case 4:
+			meshname = "human04.3ds";
+			scale = "900";
+			rotationz= "0";
+			break;
+		case 5:meshname = "human05.3ds";
+			scale = "800";
+			rotationz= "0";
+			break;
+		case 6:meshname = "human06.3ds";
+			scale = "23";
+			rotationz= "3.1415926535";
+			break;
+		default:
+			qDebug()<< "Mesh error";
+			return;
+	}
+
 
 	std::string name = "person";
 	std::string imName = "person" + std::to_string(id);
@@ -96,7 +135,7 @@ int SpecificWorker::includeInAGM(int id,const Pose3D &pose)
 	if (personSymbolId != -1)
 	{
 		printf("Person already in the AGM model\n");
-		return personSymbolId;
+		return;
 	}
 
 	AGMModel::SPtr newModel(new AGMModel(worldModel));
@@ -127,24 +166,24 @@ int SpecificWorker::includeInAGM(int id,const Pose3D &pose)
 	newModel->addEdgeByIdentifiers(100, person->identifier, "RT", edgeRTAtrs);
 
 
-	AGMModelSymbol::SPtr personMesh = newModel->newSymbol("human01.3ds");
+	AGMModelSymbol::SPtr personMesh = newModel->newSymbol(meshname);
 	printf("personMesh %d\n", personMesh->identifier);
 	personMesh->setAttribute("collidable", "false");
 	personMesh->setAttribute("imName", imName + "_Mesh");
 	personMesh->setAttribute("imType", "mesh");
-	std::string meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/human01.3ds";
+	std::string meshPath = "/home/robocomp/robocomp/components/robocomp-araceli/models/" +meshname;
 	personMesh->setAttribute("path", meshPath);
 	personMesh->setAttribute("render", "NormalRendering");
-	personMesh->setAttribute("scalex", "12");
-	personMesh->setAttribute("scaley", "12");
-	personMesh->setAttribute("scalez", "12");
+	personMesh->setAttribute("scalex", scale);
+	personMesh->setAttribute("scaley", scale);
+	personMesh->setAttribute("scalez", scale);
 
 	edgeRTAtrs["tx"] = "0";
 	edgeRTAtrs["ty"] = "0";
 	edgeRTAtrs["tz"] = "0";
 	edgeRTAtrs["rx"] = "1.570796326794";
 	edgeRTAtrs["ry"] = "0";
-	edgeRTAtrs["rz"] = "3.1415926535";
+	edgeRTAtrs["rz"] = rotationz;
 	newModel->addEdge(person, personMesh, "RT", edgeRTAtrs);
 
 	while (true)
@@ -155,136 +194,156 @@ int SpecificWorker::includeInAGM(int id,const Pose3D &pose)
 		}
 		sleep(1);
 	}
+
 	printf("includeInAGM ends\n");
-	return personSymbolId;
+
+	mesh++;
+
 }
 
-SpecificWorker::Pose3D SpecificWorker::getPoseRot (jointListType list)
+void SpecificWorker::movePersonInAGM(int id,const Pose3D pose)
 {
 
-	Pose3D personpose;
-    int32_t SymbolId = -1;
+	std::string name = "person";
+	std::string imName = "person" + std::to_string(id);
+	int personSymbolId = -1;
+	int idx=0;
+	while ((personSymbolId = worldModel->getIdentifierByType(name, idx++)) != -1)
+	{
+		if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == imName)
+		{
+			break;
+		}
+	}
 
-    int idx=0;
-    while ((SymbolId = worldModel->getIdentifierByType("camera_astra", idx++)) != -1)
-    {
-        if (worldModel->getSymbolByIdentifier(SymbolId)->getAttribute("imName") == "astraRGBD")
-            qDebug()<<"CameraFound";
-            break;
-
-    }
-
-    if (SymbolId == -1)
-    {
-        printf("Camera not found \n");
-    }
-
-    else
-        {
-
-            try
-            {
-                qDebug()<<"Reading MidSpine position";
-                auto j = list["MidSpine"];
-
-                if (j.size() == 3)
-                {
-                    std::cout<<"EN EL MUNDO DE LA CAMARA "<<j[0] <<" " <<j[1] << " "<<j[2] << std::endl;
-
-                    QVec jointinworld = innerModel->transform("world", QVec::vec3(j[0],j[1],j[2]), "camera_astra");
-
-                    std::cout<<"EN EL MUNDO"<<jointinworld.x() <<" " <<jointinworld.y() << " "<<jointinworld.z() << std::endl;
-
-                    personpose.x =jointinworld.x();
-                    personpose.y = 0;
-                    personpose.z= jointinworld.z();
-
-                    personpose.rx = 0;
-                    personpose.ry = 0;
-                    personpose.rz = 0;
-
-                    qDebug()<<"FIRST, INCLUDING IN AGM";
-                    includeInAGM(666,personpose);
-
-                }
-                else
-                    qDebug()<<"Joint Error";
-            }
-
-            catch(...)
-            {
-                qDebug()<<"NO EXISTE EL JOINT MidSpine";
-            }
-        }
-
-
-
-	return personpose;
+	//move in AGM
+	AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(personSymbolId, "RT");
+	AGMModelEdge &edgeRT  = worldModel->getEdgeByIdentifiers(personParent->identifier, personSymbolId, "RT");
+	edgeRT.attributes["tx"] = float2str(pose.x);
+	edgeRT.attributes["ty"] = "0";
+	edgeRT.attributes["tz"] = float2str(pose.z);
+	edgeRT.attributes["rx"] = "0";
+	edgeRT.attributes["ry"] = float2str(pose.ry);
+	edgeRT.attributes["rz"] = "0";
+	try
+	{
+		AGMMisc::publishEdgeUpdate(edgeRT, agmexecutive_proxy);
+	}
+	catch(std::exception& e)
+	{
+		std::cout<<"Exception moving in AGM: "<<e.what()<<std::endl;
+	}
 
 }
 
 
-void SpecificWorker::compute()
+void SpecificWorker::getDataFromAstra()
 {
-	QMutexLocker locker(mutex);
-
     try
     {
         PersonList users;
         humantracker_proxy-> getUsersList(users);
-        //leer usuarios desde la camara
 
         if(users.size()!=0)
-        {	//si ha detectado personas:
+        {
+            for (auto p:users)
+            {
+                Pose3D personpose;
 
-			for (auto p:users)
-			{
-				//comprobar si existe o si se ha eliminado
-				//si no existe
-				auto id = p.first;
-                jointListType joints_person = p.second.joints;
+                auto id = p.first;
 
-				auto personpose = getPoseRot(joints_person);
+				jointListType joints_person = p.second.joints;
 
+				if (!getPoseRot(joints_person, personpose))
+				{
+				    qDebug()<<"Joints are wrong";
+				    return;
+				}
 
-//				includeInAGM(id,personpose);
-//				//si se ha eliminado
-//				removeFromAGM(id);
-//
-//				moveInAGM (id, personpose);
-				//si id está en id list -> comprobar movimiento
-				//si id no está -> incluir en agm
-				//si id_list tiene id que no está entre users -> eliminar agm
+				if ( humans_in_world.find(id) == humans_in_world.end() ) //not found
+				{
+					includeInAGM(id, personpose);
+				}
+				else // found
+				{
+					if (p.second.state == RoboCompHumanTracker::TrackingState::Tracking)
+					{
+                        movePersonInAGM(id,personpose);
+                    }
+				}
 
-
-			}
+				humans_in_world[id] = personpose;
+            }
         }
-
-//        for(auto u : users)
-//        {
-//
-//
-//            qDebug()<<"ID " <<u.first << "STATUS"<<u.second.state;
-//            jointListType jointsperson;
-//
-//            jointsperson = u.second.joints;
-//            qDebug()<<"-----------------JOINTS---------------------";
-//            for (auto j : jointsperson)
-//            {
-//               std::cout << j.first << " " <<j.second << endl;
-//            }
-//        }
 
     }
 
 
     catch(...)
     {
-        qDebug()<<"Si no enciendes la camara poco podemos hacer, chiqui" ;
+        qDebug()<<"Si no enciendes la camara poco podemos hacer chiqui" ;
     }
 
+}
+
+bool SpecificWorker::getPoseRot (jointListType list, Pose3D &personpose) {
+
+    //////////////////////////////////GETTING POSITION//////////////////////
+    int countjoints = 0;
+    float newposez;
+    float newposex;
+    
+    vector<string> tronco = {"Head", "Neck", "ShoulderSpine", "MidSpine", "BaseSpine"};
+    for (auto idjoint : tronco)
+    {
+        if (list.find(idjoint) != list.end()) // found
+        {
+            auto j = list[idjoint];
+
+            if (j.size() == 3)
+            {
+                countjoints++;
+                QVec jointinworld = innerModel->transform("world", QVec::vec3(-j[0],0,j[2]), "camera_astra");
+                newposex += jointinworld.x();
+                newposez += jointinworld.z();
+            }
+        }
+    }
+
+		if (countjoints != 0 )
+		{
+			newposex = newposex/countjoints;
+			newposez = newposez/countjoints;
+		}
+		else
+			return false;
+
+		
+	//////////////////////////////GETTING ROTATION //////////////////////////////////////
+		
+	//  ¿?
+		
+		
+	personpose.x = newposex;
+	personpose.y = 0;
+	personpose.z = newposez;
+
+	personpose.rx = 0;
+	personpose.ry = 3.1415926535;
+	personpose.rz = 0;
+	
+	return true;
+
+}
 
 
+
+
+void SpecificWorker::compute()
+{
+	QMutexLocker locker(mutex);
+
+    getDataFromAstra();
 
 
 

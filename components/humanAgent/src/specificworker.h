@@ -51,16 +51,24 @@ public:
         float rz;
     };
 
-    vector <int> list_id = {};
+    typedef map <int,Pose3D> list_humans;
+    list_humans humans_in_world;
+    int mesh = 1;
 
     bool first = true;
 
     SpecificWorker(MapPrx& mprx);
 	~SpecificWorker();
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
-	int includeInAGM(int id,const Pose3D &pose);
-	bool removeFromAGM(int id);
-    Pose3D getPoseRot (jointListType list);
+	void includeInAGM(int id,Pose3D pose);
+	void movePersonInAGM(int id, Pose3D pose);
+
+//	bool removeFromAGM(int id);
+
+    void getDataFromAstra();
+
+    bool getPoseRot (jointListType list, Pose3D &personpose);
+
 
 	bool reloadConfigAgent();
 	bool activateAgent(const ParameterMap &prs);

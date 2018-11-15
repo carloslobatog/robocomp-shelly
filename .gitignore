@@ -154,3 +154,7 @@ components/SocialNavigationAgent/src/SocialNavigationGaussian\.h
 components/SocialNavigationAgent/src/TrajectoryRobot2D\.cpp
 
 components/SocialNavigationAgent/src/TrajectoryRobot2D\.h
+
+components/humanAgent/src/HumanTracker\.cpp
+
+components/humanAgent/src/HumanTracker\.h

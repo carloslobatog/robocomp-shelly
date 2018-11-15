@@ -548,11 +548,11 @@
 </link>
 <link src="3" dst="3014" label="RT">
 	<linkAttribute key="rx" value="0" />
-	<linkAttribute key="ry" value="3.14152" />
+	<linkAttribute key="ry" value="0" />
 	<linkAttribute key="rz" value="0" />
-	<linkAttribute key="tx" value="4000" />
+	<linkAttribute key="tx" value="0" />
 	<linkAttribute key="ty" value="925" />
-	<linkAttribute key="tz" value="4000" />
+	<linkAttribute key="tz" value="0" />
 </link>
 <link src="3014" dst="3015" label="RT">
 	<linkAttribute key="rx" value="0" />
