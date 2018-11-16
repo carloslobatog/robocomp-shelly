@@ -44,28 +44,30 @@ public:
     struct Pose3D
     {
         float x;
-        float y;
         float z;
-        float rx;
         float ry;
-        float rz;
     };
 
     typedef map <int,Pose3D> list_humans;
+    int idhuman;
     list_humans humans_in_world;
     int mesh = 1;
 
     bool first = true;
+    bool movement_correct = false;
+    bool rotation_correct = false;
+
 
     SpecificWorker(MapPrx& mprx);
 	~SpecificWorker();
 	bool setParams(RoboCompCommonBehavior::ParameterList params);
 	void includeInAGM(int id,Pose3D pose);
 	void movePersonInAGM(int id, Pose3D pose);
+    void getDataFromAstra();
 
 //	bool removeFromAGM(int id);
 
-    void getDataFromAstra();
+
 
     bool getPoseRot (jointListType list, Pose3D &personpose);
 

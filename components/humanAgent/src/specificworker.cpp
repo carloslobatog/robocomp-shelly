@@ -1,9 +1,9 @@
-/*
+/*    This file is part of RoboComp
+*
+*    RoboComp is free software: you can redistribute it and/or modify
+*
  *    Copyright (C)2018 by YOUR NAME HERE
  *
- *    This file is part of RoboComp
- *
- *    RoboComp is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU General Public License as published by
  *    the Free Software Foundation, either version 3 of the License, or
  *    (at your option) any later version.
@@ -24,18 +24,18 @@
 SpecificWorker::SpecificWorker(MapPrx& mprx) : GenericWorker(mprx)
 {
 
-#ifdef USE_QTGUI
-	innerModelViewer = NULL;
-	osgView = new OsgView(this);
-	osgGA::TrackballManipulator *tb = new osgGA::TrackballManipulator;
-	osg::Vec3d eye(osg::Vec3(4000.,4000.,-1000.));
-	osg::Vec3d center(osg::Vec3(0.,0.,-0.));
-	osg::Vec3d up(osg::Vec3(0.,1.,0.));
-	tb->setHomePosition(eye, center, up, true);
-	tb->setByMatrix(osg::Matrixf::lookAt(eye,center,up));
-	osgView->setCameraManipulator(tb);
+//#ifdef USE_QTGUI
+//	innerModelViewer = NULL;
+//	osgView = new OsgView(this);
+//	osgGA::TrackballManipulator *tb = new osgGA::TrackballManipulator;
+//	osg::Vec3d eye(osg::Vec3(4000.,4000.,-1000.));
+//	osg::Vec3d center(osg::Vec3(0.,0.,-0.));
+//	osg::Vec3d up(osg::Vec3(0.,1.,0.));
+//	tb->setHomePosition(eye, center, up, true);
+//	tb->setByMatrix(osg::Matrixf::lookAt(eye,center,up));
+//	osgView->setCameraManipulator(tb);
+//#endif
 
-#endif
 	active = false;
 	worldModel = AGMModel::SPtr(new AGMModel());
 	worldModel->name = "worldModel";
@@ -53,9 +53,10 @@ SpecificWorker::~SpecificWorker()
 bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 {
 
-#ifdef USE_QTGUI
-	innerModelViewer = new InnerModelViewer (innerModel, "root", osgView->getRootGroup(), true);
-#endif
+//
+//#ifdef USE_QTGUI
+//	innerModelViewer = new InnerModelViewer (innerModel, "root", osgView->getRootGroup(), true);
+//#endif
 
 
 	try
@@ -119,11 +120,11 @@ void SpecificWorker::includeInAGM(int id,const Pose3D pose)
 	}
 
 
-	std::string name = "person";
+	std::string type = "person";
 	std::string imName = "person" + std::to_string(id);
 	int personSymbolId = -1;
 	int idx=0;
-	while ((personSymbolId = worldModel->getIdentifierByType(name, idx++)) != -1)
+	while ((personSymbolId = worldModel->getIdentifierByType(type, idx++)) != -1)
 	{
 		printf("%d %d\n", idx, personSymbolId);
 		if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == imName)
@@ -151,7 +152,7 @@ void SpecificWorker::includeInAGM(int id,const Pose3D pose)
 
 	newModel->addEdge(person, personSt, "hasStatus");
 	newModel->addEdge(person, personSt, "noReach");
-	newModel->addEdge(person, personSt, name);
+	newModel->addEdge(person, personSt, type);
     newModel->addEdgeByIdentifiers(person->identifier, 3, "in");
 
 
@@ -186,14 +187,9 @@ void SpecificWorker::includeInAGM(int id,const Pose3D pose)
 	edgeRTAtrs["rz"] = rotationz;
 	newModel->addEdge(person, personMesh, "RT", edgeRTAtrs);
 
-	while (true)
-	{
-		if(sendModificationProposal(worldModel, newModel))
-		{
-			break;
-		}
-		sleep(1);
-	}
+	try{ sendModificationProposal(worldModel, newModel); }
+	catch(...) {qDebug()<<"Error including the person in the AGM";}
+
 
 	printf("includeInAGM ends\n");
 
@@ -204,11 +200,11 @@ void SpecificWorker::includeInAGM(int id,const Pose3D pose)
 void SpecificWorker::movePersonInAGM(int id,const Pose3D pose)
 {
 
-	std::string name = "person";
+	std::string type = "person";
 	std::string imName = "person" + std::to_string(id);
 	int personSymbolId = -1;
 	int idx=0;
-	while ((personSymbolId = worldModel->getIdentifierByType(name, idx++)) != -1)
+	while ((personSymbolId = worldModel->getIdentifierByType(type, idx++)) != -1)
 	{
 		if (worldModel->getSymbolByIdentifier(personSymbolId)->getAttribute("imName") == imName)
 		{
@@ -219,12 +215,24 @@ void SpecificWorker::movePersonInAGM(int id,const Pose3D pose)
 	//move in AGM
 	AGMModelSymbol::SPtr personParent = worldModel->getParentByLink(personSymbolId, "RT");
 	AGMModelEdge &edgeRT  = worldModel->getEdgeByIdentifiers(personParent->identifier, personSymbolId, "RT");
-	edgeRT.attributes["tx"] = float2str(pose.x);
-	edgeRT.attributes["ty"] = "0";
-	edgeRT.attributes["tz"] = float2str(pose.z);
-	edgeRT.attributes["rx"] = "0";
-	edgeRT.attributes["ry"] = float2str(pose.ry);
-	edgeRT.attributes["rz"] = "0";
+
+	if (movement_correct)
+	{
+		edgeRT.attributes["tx"] = float2str(pose.x);
+		edgeRT.attributes["ty"] = "0";
+		edgeRT.attributes["tz"] = float2str(pose.z);
+	}
+
+	if (rotation_correct)
+	{
+		edgeRT.attributes["rx"] = "0";
+		edgeRT.attributes["ry"] = float2str(pose.ry);
+		edgeRT.attributes["rz"] = "0";
+	}
+
+	if(!movement_correct and !rotation_correct)
+		return;
+
 	try
 	{
 		AGMMisc::publishEdgeUpdate(edgeRT, agmexecutive_proxy);
@@ -234,6 +242,9 @@ void SpecificWorker::movePersonInAGM(int id,const Pose3D pose)
 		std::cout<<"Exception moving in AGM: "<<e.what()<<std::endl;
 	}
 
+	movement_correct = false;
+	rotation_correct = false;
+
 }
 
 
@@ -241,17 +252,17 @@ void SpecificWorker::getDataFromAstra()
 {
     try
     {
+
         PersonList users;
         humantracker_proxy-> getUsersList(users);
 
-        if(users.size()!=0)
+        if(users.size()!= 0)
         {
+            qDebug()<<"HUMANS FOUND";
             for (auto p:users)
             {
                 Pose3D personpose;
-
                 auto id = p.first;
-
 				jointListType joints_person = p.second.joints;
 
 				if (!getPoseRot(joints_person, personpose))
@@ -266,27 +277,45 @@ void SpecificWorker::getDataFromAstra()
 				}
 				else // found
 				{
-					if (p.second.state == RoboCompHumanTracker::TrackingState::Tracking)
-					{
                         movePersonInAGM(id,personpose);
-                    }
 				}
 
 				humans_in_world[id] = personpose;
-            }
+				////////////////////printing state////////////////////////////////////
+//				qDebug()<< "Person " << id <<"---------->";
+//
+//                switch (p.second.state){
+//                    case RoboCompHumanTracker::TrackingState::NotTracking:
+//                        qDebug()<<"NOT TRACKING";
+//                        break;
+//                    case RoboCompHumanTracker::TrackingState::TrackingLost:
+//                        qDebug()<<"TRACKING LOST";
+//                        break;
+//                    case RoboCompHumanTracker::TrackingState::TrackingStarted:
+//                        qDebug()<<"TRACKING STARTED";
+//                        break;
+//                    case RoboCompHumanTracker::TrackingState::Tracking:
+//                        qDebug()<<"TRACKING";
+//
+//                        break;
+//                    default:
+//                        qDebug()<<"CAGOENTO";
+//                }
+			}
+
         }
 
     }
 
-
     catch(...)
     {
-        qDebug()<<"Si no enciendes la camara poco podemos hacer chiqui" ;
+        qDebug()<<"Enciende la camara";
     }
 
 }
 
 bool SpecificWorker::getPoseRot (jointListType list, Pose3D &personpose) {
+
 
     //////////////////////////////////GETTING POSITION//////////////////////
     int countjoints = 0;
@@ -314,24 +343,46 @@ bool SpecificWorker::getPoseRot (jointListType list, Pose3D &personpose) {
 		{
 			newposex = newposex/countjoints;
 			newposez = newposez/countjoints;
+			movement_correct = true;
 		}
 		else
 			return false;
 
-		
-	//////////////////////////////GETTING ROTATION //////////////////////////////////////
-		
-	//  ¿?
-		
-		
-	personpose.x = newposex;
-	personpose.y = 0;
-	personpose.z = newposez;
 
-	personpose.rx = 0;
-	personpose.ry = 3.1415926535;
-	personpose.rz = 0;
-	
+    personpose.x = newposex;
+    personpose.z = newposez;
+
+    //////////////////////////////GETTING ROTATION //////////////////////////////////////
+
+    // arc tag xHiz -xHder /ziq - zder
+    bool lefts = false;
+    bool rights = false;
+
+    if ((list.find("LeftShoulder") != list.end()) and (list["LeftShoulder"].size()==3))
+    {
+        lefts = true;
+    }
+    if ((list.find("RightShoulder") != list.end()) and (list["LeftShoulder"].size()==3))
+    {
+        rights = true;
+    }
+
+    if (lefts and rights)
+    {
+        auto l = list["LeftShoulder"];
+        QVec joint_left = innerModel->transform("world", QVec::vec3(-l[0],0,l[2]), "camera_astra");
+        auto r = list["RightShoulder"];
+        QVec joint_right = innerModel->transform("world", QVec::vec3(-r[0],0,r[2]), "camera_astra");
+
+		personpose.ry = 3.1415926535 - (atan2(joint_left.z()-joint_right.z(),joint_left.x() - joint_right.x()));
+
+		rotation_correct = true;
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////
+
+
 	return true;
 
 }
@@ -345,12 +396,10 @@ void SpecificWorker::compute()
 
     getDataFromAstra();
 
-
-
-#ifdef USE_QTGUI
-    if (innerModelViewer) innerModelViewer->update();
-    osgView->frame();
-#endif
+//#ifdef USE_QTGUI
+//    if (innerModelViewer) innerModelViewer->update();
+//    osgView->frame();
+//#endif
 }
 
 
@@ -484,12 +533,12 @@ void SpecificWorker::symbolsUpdated(const RoboCompAGMWorldModel::NodeSequence &m
 
 void SpecificWorker::regenerateInnerModelViewer()
 {
-	if (innerModelViewer)
-	{
-		osgView->getRootGroup()->removeChild(innerModelViewer);
-	}
-
-	innerModelViewer = new InnerModelViewer(innerModel, "root", osgView->getRootGroup(), true);
+//	if (innerModelViewer)
+//	{
+//		osgView->getRootGroup()->removeChild(innerModelViewer);
+//	}
+//
+//	innerModelViewer = new InnerModelViewer(innerModel, "root", osgView->getRootGroup(), true);
 }
 
 
