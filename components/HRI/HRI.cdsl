@@ -1,0 +1,11 @@
+//import "AGMExecutive.idsl";
+
+Component HRI
+{
+	Communications
+	{
+           // requires AGMExecutive;
+	};
+	language python;
+};
+
