@@ -3,28 +3,28 @@
 		
 		<!-- FLOOR -->
 		<transform id="floor">
-			<plane id="floor_plane" ny="1" size="10000,10000,10" texture="#eebb77" />
+			<plane id="floor_plane" ny="1" size="2000,10000,10" texture="#eebb77" />
 		</transform>
 		
 		<transform id="room_3">
 
-			<transform id="april" tz="3070" ty="1810" >
+		<!--	<transform id="april" tz="3070" ty="1810" >
 				<plane id="marca" size="370,370,50"  texture="#FFFFFF" />
-			</transform>
+			</transform> -->
 			
 			<transform id="pared1" tz="5000" ty="950" >
-				<plane id="muro1" size="10000,1900,50"  texture="#FF8800" />
+				<plane id="muro1" size="2000,1900,50"  texture="#FF8800" />
 			</transform>
 
 			<transform id="pared2" tz="-5000" ty="950" >
-				<plane id="muro2" size="10000,1900,50"  texture="#FF8800" />
+				<plane id="muro2" size="2000,1900,50"  texture="#FF8800" />
 			</transform>
 
-			<transform id="pared3" tx="-5000" ty="950">
+			<transform id="pared3" tx="-1000" ty="950">
 				<plane id="muro3" nx="2500" size="10000,1900,50"  texture="#FF8800" />
 			</transform>
 			
-			<transform id="pared4" tx="5000" ty="950">
+			<transform id="pared4" tx="1000" ty="950">
 				<plane id="muro4" nx="2500" size="10000,1900,50"  texture="#FF8800" />
 			</transform>
 
