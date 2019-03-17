@@ -182,14 +182,27 @@
   <color value="#33FF33" />
  </node>
 
+  <node alias="keyword" endpoint="agmcommonbehavior:tcp -h localhost -p 22222">
+   <dependence alias="executive" />
+   <workingDir path="/home/robocomp/" />
+   <upCommand command="rcremote localhost keyword /home/robocomp/robocomp/components/robocomp-araceli/components/keyword python src/keyword.py etc/config" />
+   <downCommand command="killall -9 keyword" />
+   <configFile path="/home/robocomp/robocomp/components/robocomp-araceli/etcSim/keyword.conf" />
+  <xpos value="68.22150957623" />
+  <ypos value="-155.512538117" />
+   <radius value="10.0" />
+   <color value="#FF3333" />
+  </node>
+
+
   <node alias="HRI" endpoint="agmcommonbehavior:tcp -h localhost -p 22222">
    <dependence alias="executive" />
    <workingDir path="/home/robocomp/" />
    <upCommand command="rcremote localhost HRI /home/robocomp/robocomp/components/robocomp-araceli/components/HRI python src/HRI.py etc/config" />
    <downCommand command="killall -9 HRI" />
    <configFile path="/home/robocomp/robocomp/components/robocomp-araceli/etcSim/HRI.conf" />
-   <xpos value="-301.097569307" />
-   <ypos value="-20" />
+  <xpos value="68.22150957623" />
+  <ypos value="-115.512538117" />
    <radius value="10.0" />
    <color value="#FF3333" />
   </node>
