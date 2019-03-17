@@ -15,3 +15,5 @@ python setup.py install
 
 Se ha utilizado de matthewayne:
 https://github.com/dialogflow/dialogflow-python-client
+Hacer un git pull en robocomp-araceli/components/HRI/src
+y sustituir la carpeta samples.
